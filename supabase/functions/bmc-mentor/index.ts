@@ -24,16 +24,18 @@ serve(async (req) => {
     const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
     const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
-    // Authenticate first before any other logic
+    // Authenticate using getClaims for JWT verification
     const anonClient = createClient(SUPABASE_URL, Deno.env.get("SUPABASE_ANON_KEY")!, {
       global: { headers: { Authorization: authHeader } },
     });
-    const { data: { user } } = await anonClient.auth.getUser();
-    if (!user) {
+    const token = authHeader.replace("Bearer ", "");
+    const { data: claimsData, error: claimsError } = await anonClient.auth.getClaims(token);
+    if (claimsError || !claimsData?.claims) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+    const userId = claimsData.claims.sub as string;
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
@@ -53,7 +55,7 @@ serve(async (req) => {
     const { data: cached } = await supabase
       .from("ai_feedback_cache")
       .select("response")
-      .eq("user_id", user.id)
+      .eq("user_id", userId)
       .eq("feedback_type", feedbackType)
       .eq("input_hash", inputHash)
       .eq("lang", lang || "en")
@@ -71,7 +73,7 @@ serve(async (req) => {
     const { count } = await supabase
       .from("ai_rate_limits")
       .select("id", { count: "exact", head: true })
-      .eq("user_id", user.id)
+      .eq("user_id", userId)
       .gte("requested_at", todayStart.toISOString());
 
     if ((count ?? 0) >= DAILY_LIMIT) {
@@ -196,11 +198,11 @@ Cost Structure: ${bmc.bmc_cost_structure || "(empty)"}`;
     const remaining = DAILY_LIMIT - (count ?? 0) - 1;
 
     // Record rate limit
-    await supabase.from("ai_rate_limits").insert({ user_id: user.id, feedback_type: feedbackType });
+    await supabase.from("ai_rate_limits").insert({ user_id: userId, feedback_type: feedbackType });
 
     // Cache
     await supabase.from("ai_feedback_cache").upsert({
-      user_id: user.id,
+      user_id: userId,
       feedback_type: feedbackType,
       input_hash: inputHash,
       lang: lang || "en",

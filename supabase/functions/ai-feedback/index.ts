@@ -27,17 +27,19 @@ serve(async (req) => {
 
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
-    // Get user from auth
+    // Get user from auth using getClaims
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
     const anonClient = createClient(SUPABASE_URL, Deno.env.get("SUPABASE_ANON_KEY")!, {
       global: { headers: { Authorization: authHeader } },
     });
-    const { data: { user } } = await anonClient.auth.getUser();
-    if (!user) {
+    const token = authHeader.replace("Bearer ", "");
+    const { data: claimsData, error: claimsError } = await anonClient.auth.getClaims(token);
+    if (claimsError || !claimsData?.claims) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+    const userId = claimsData.claims.sub as string;
 
     const langLabel = lang === "bg" ? "Bulgarian" : "English";
     const feedbackType = type || "startup_project";
@@ -50,7 +52,7 @@ serve(async (req) => {
     const { data: cached } = await supabase
       .from("ai_feedback_cache")
       .select("response")
-      .eq("user_id", user.id)
+      .eq("user_id", userId)
       .eq("feedback_type", feedbackType)
       .eq("input_hash", inputHash)
       .eq("lang", lang || "en")
@@ -68,7 +70,7 @@ serve(async (req) => {
     const { count } = await supabase
       .from("ai_rate_limits")
       .select("id", { count: "exact", head: true })
-      .eq("user_id", user.id)
+      .eq("user_id", userId)
       .gte("requested_at", todayStart.toISOString());
 
     if ((count ?? 0) >= DAILY_LIMIT) {
@@ -143,11 +145,11 @@ Structure your response with these sections:
     const remaining = DAILY_LIMIT - (count ?? 0) - 1;
 
     // Record rate limit entry
-    await supabase.from("ai_rate_limits").insert({ user_id: user.id, feedback_type: feedbackType });
+    await supabase.from("ai_rate_limits").insert({ user_id: userId, feedback_type: feedbackType });
 
     // Cache the response
     await supabase.from("ai_feedback_cache").upsert({
-      user_id: user.id,
+      user_id: userId,
       feedback_type: feedbackType,
       input_hash: inputHash,
       lang: lang || "en",
