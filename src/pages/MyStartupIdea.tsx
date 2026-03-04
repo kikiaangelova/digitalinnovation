@@ -249,14 +249,23 @@ export default function MyStartupIdea() {
     scheduleAutoSave(newData);
   };
 
+  const [submittingProject, setSubmittingProject] = useState(false);
+
   const handleSubmit = async () => {
-    if (!user) return;
-    await saveProject(data);
-    await supabase.from('startup_projects').update({
-      is_submitted: true, submitted_at: new Date().toISOString(),
-    }).eq('user_id', user.id);
-    setData(d => ({ ...d, is_submitted: true }));
-    toast.success(t('Project submitted!', 'Проектът е предаден!'));
+    if (!user || submittingProject) return;
+    setSubmittingProject(true);
+    try {
+      await saveProject(data);
+      await supabase.from('startup_projects').update({
+        is_submitted: true, submitted_at: new Date().toISOString(),
+      }).eq('user_id', user.id);
+      setData(d => ({ ...d, is_submitted: true }));
+      toast.success(t('Project submitted!', 'Проектът е предаден!'));
+    } catch {
+      toast.error(t('Failed to submit', 'Грешка при изпращане'));
+    } finally {
+      setSubmittingProject(false);
+    }
   };
 
   const filledCount = SECTIONS.filter(s => ((data as any)[s.key] || '').trim().length > 20).length;
