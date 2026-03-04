@@ -400,42 +400,44 @@ export default function CasePlayer() {
             </div>
             {allStepQuestionsAnswered ? (
               showInsight[currentStep] ? (
-                <div className="space-y-4">
-                  {/* Key Insight */}
-                  <div className="rounded-lg bg-sim-success/10 border border-sim-success/20 p-4">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Zap className="h-4 w-4 text-sim-success" />
-                      <span className="text-xs font-semibold text-sim-success uppercase tracking-wider">
-                        {tl('Key Insight', 'Ключов извод')}
-                      </span>
+                (() => {
+                  // Find the insight step (step_order 5) to get case-specific insight text
+                  const insightStep = steps.find(s => s.step_order === 5);
+                  const insightText = insightStep ? tx(insightStep.exhibit_text, insightStep.exhibit_text_bg) : '';
+                  // Parse KEY INSIGHT and LEARNING OUTCOME sections
+                  const keyInsightMatch = insightText.match(/KEY INSIGHT:\n?([\s\S]*?)(?:\n\nLEARNING OUTCOME:|$)/i);
+                  const outcomeMatch = insightText.match(/LEARNING OUTCOME:\n?([\s\S]*?)$/i);
+                  const keyInsight = keyInsightMatch?.[1]?.trim() || tl(
+                    'Strategic decision-making requires analyzing competitors, assessing risks, and identifying unique opportunities.',
+                    'Стратегическото вземане на решения изисква анализ на конкурентите, оценка на рисковете и идентифициране на уникални възможности.'
+                  );
+                  const outcome = outcomeMatch?.[1]?.trim() || tl(
+                    'Analytical thinking & strategic decision-making',
+                    'Аналитично мислене и стратегическо вземане на решения'
+                  );
+                  return (
+                    <div className="space-y-4">
+                      <div className="rounded-lg bg-sim-success/10 border border-sim-success/20 p-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Zap className="h-4 w-4 text-sim-success" />
+                          <span className="text-xs font-semibold text-sim-success uppercase tracking-wider">
+                            {tl('Key Insight', 'Ключов извод')}
+                          </span>
+                        </div>
+                        <p className="text-sm text-foreground leading-relaxed whitespace-pre-line">{keyInsight}</p>
+                      </div>
+                      <div className="rounded-lg bg-primary/5 border border-primary/20 p-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Award className="h-4 w-4 text-primary" />
+                          <span className="text-xs font-semibold text-primary uppercase tracking-wider">
+                            {tl('Learning Outcome', 'Учебен резултат')}
+                          </span>
+                        </div>
+                        <p className="text-sm text-foreground leading-relaxed whitespace-pre-line">{outcome}</p>
+                      </div>
                     </div>
-                    <p className="text-sm text-foreground leading-relaxed">
-                      {tl(
-                        'The most successful digital innovations combine deep customer understanding with technology that creates genuine value. Strategic decision-making requires analyzing competitors, assessing risks, and identifying unique opportunities before committing resources.',
-                        'Най-успешните дигитални иновации съчетават дълбоко разбиране на клиента с технология, която създава истинска стойност. Стратегическото вземане на решения изисква анализ на конкурентите, оценка на рисковете и идентифициране на уникални възможности.'
-                      )}
-                    </p>
-                  </div>
-                  {/* Learning Outcome */}
-                  <div className="rounded-lg bg-primary/5 border border-primary/20 p-4">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Award className="h-4 w-4 text-primary" />
-                      <span className="text-xs font-semibold text-primary uppercase tracking-wider">
-                        {tl('Learning Outcome', 'Учебен резултат')}
-                      </span>
-                    </div>
-                    <p className="text-sm text-foreground leading-relaxed">
-                      {currentStep <= 2
-                        ? tl('Understand digital disruption strategies and industry analysis.', 'Разбиране на стратегии за дигитална трансформация и индустриален анализ.')
-                        : currentStep <= 4
-                        ? tl('Develop analytical thinking and strategic decision-making skills.', 'Развиване на аналитично мислене и умения за стратегическо вземане на решения.')
-                        : tl('Apply innovation frameworks to real business challenges.', 'Прилагане на иновационни рамки към реални бизнес предизвикателства.')}
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-2 italic">
-                      {tl('Skill developed: analytical thinking & strategic decision-making', 'Развито умение: аналитично мислене и стратегическо вземане на решения')}
-                    </p>
-                  </div>
-                </div>
+                  );
+                })()
               ) : (
                 <Button
                   variant="outline"
