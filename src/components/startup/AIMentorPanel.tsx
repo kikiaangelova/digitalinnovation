@@ -36,6 +36,8 @@ export default function AIMentorPanel({ data, lang }: Props) {
   const [feedback, setFeedback] = useState<BMCFeedback | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [remaining, setRemaining] = useState<number | null>(null);
+  const [cached, setCached] = useState(false);
 
   const filledCount = Object.values(data).filter(v => (v || '').trim().length > 10).length;
 
@@ -57,7 +59,14 @@ export default function AIMentorPanel({ data, lang }: Props) {
 
       if (fnError) throw fnError;
       if (result?.error) throw new Error(result.error);
-      setFeedback(result as BMCFeedback);
+      if (result?.rateLimited) {
+        toast.error(result.error);
+        return;
+      }
+      const { remaining: rem, cached: isCached, ...fbData } = result;
+      setFeedback(fbData as BMCFeedback);
+      if (rem !== undefined) setRemaining(rem);
+      setCached(!!isCached);
     } catch (e: any) {
       const msg = e?.message || 'Failed to get AI feedback';
       setError(msg);
@@ -89,15 +98,22 @@ export default function AIMentorPanel({ data, lang }: Props) {
             {t('Get intelligent feedback on your Business Model Canvas', 'Получете интелигентна обратна връзка за вашия Business Model Canvas')}
           </p>
         </div>
-        <Button
-          onClick={requestFeedback}
-          disabled={loading || filledCount < 3}
-          size="sm"
-          className="gap-1.5"
-        >
-          {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
-          {loading ? t('Analyzing...', 'Анализиране...') : t('Get Feedback', 'Поискай обратна връзка')}
-        </Button>
+        <div className="flex items-center gap-2">
+          {remaining !== null && (
+            <Badge variant="outline" className="text-xs">
+              {remaining} {t('left', 'остават')}
+            </Badge>
+          )}
+          <Button
+            onClick={requestFeedback}
+            disabled={loading || filledCount < 3}
+            size="sm"
+            className="gap-1.5"
+          >
+            {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+            {loading ? t('Analyzing...', 'Анализиране...') : t('Get Feedback', 'Поискай обратна връзка')}
+          </Button>
+        </div>
       </div>
 
       {filledCount < 3 && !feedback && (
@@ -109,6 +125,10 @@ export default function AIMentorPanel({ data, lang }: Props) {
         </p>
       )}
 
+      <p className="text-xs text-muted-foreground">
+        {t('Limited to 3 requests per day. Identical inputs use cached responses.', 'Лимит: 3 заявки на ден. Идентичните входове използват кеширани отговори.')}
+      </p>
+
       {error && (
         <div className="flex items-center gap-2 text-sm text-destructive bg-destructive/10 rounded-lg p-3">
           <AlertCircle className="h-4 w-4 shrink-0" />
@@ -119,6 +139,12 @@ export default function AIMentorPanel({ data, lang }: Props) {
       {/* Feedback results */}
       {feedback && (
         <div className="space-y-5">
+          {cached && (
+            <p className="text-xs text-muted-foreground italic">
+              {t('📋 Cached response (no AI credits used)', '📋 Кеширан отговор (без използване на AI кредити)')}
+            </p>
+          )}
+
           {/* Innovation Score */}
           <div className="text-center p-4 rounded-lg bg-accent/30 border border-border">
             <p className="text-xs text-muted-foreground mb-1">

@@ -14,6 +14,57 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_feedback_cache: {
+        Row: {
+          created_at: string
+          feedback_type: string
+          id: string
+          input_hash: string
+          lang: string
+          response: Json
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          feedback_type: string
+          id?: string
+          input_hash: string
+          lang?: string
+          response: Json
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          feedback_type?: string
+          id?: string
+          input_hash?: string
+          lang?: string
+          response?: Json
+          user_id?: string
+        }
+        Relationships: []
+      }
+      ai_rate_limits: {
+        Row: {
+          feedback_type: string
+          id: string
+          requested_at: string
+          user_id: string
+        }
+        Insert: {
+          feedback_type: string
+          id?: string
+          requested_at?: string
+          user_id: string
+        }
+        Update: {
+          feedback_type?: string
+          id?: string
+          requested_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       assessment_questions: {
         Row: {
           assessment_id: string

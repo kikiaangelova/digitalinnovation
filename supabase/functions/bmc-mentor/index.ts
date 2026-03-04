@@ -1,40 +1,96 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+const DAILY_LIMIT = 3;
+
+async function hashInput(str: string): Promise<string> {
+  const data = new TextEncoder().encode(str);
+  const buf = await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
+    const authHeader = req.headers.get("Authorization") || "";
     const { bmc, lang } = await req.json();
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
+    const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+    const anonClient = createClient(SUPABASE_URL, Deno.env.get("SUPABASE_ANON_KEY")!, {
+      global: { headers: { Authorization: authHeader } },
+    });
+    const { data: { user } } = await anonClient.auth.getUser();
+    if (!user) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    const feedbackType = "bmc";
+    const inputStr = JSON.stringify({ bmc });
+    const inputHash = await hashInput(inputStr);
+
+    // Check cache
+    const { data: cached } = await supabase
+      .from("ai_feedback_cache")
+      .select("response")
+      .eq("user_id", user.id)
+      .eq("feedback_type", feedbackType)
+      .eq("input_hash", inputHash)
+      .eq("lang", lang || "en")
+      .maybeSingle();
+
+    if (cached) {
+      return new Response(JSON.stringify({ ...cached.response, cached: true }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // Rate limit
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+    const { count } = await supabase
+      .from("ai_rate_limits")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", user.id)
+      .gte("requested_at", todayStart.toISOString());
+
+    if ((count ?? 0) >= DAILY_LIMIT) {
+      const errMsg = lang === "bg"
+        ? `Достигнахте дневния лимит от ${DAILY_LIMIT} AI заявки. Опитайте утре.`
+        : `Daily limit of ${DAILY_LIMIT} AI requests reached. Try again tomorrow.`;
+      return new Response(JSON.stringify({ error: errMsg, rateLimited: true, remaining: 0 }), {
+        status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
     const langLabel = lang === "bg" ? "Bulgarian" : "English";
 
     const systemPrompt = `You are an expert startup mentor and Business Model Canvas evaluator for 11th grade business students.
 
-CRITICAL: Respond ENTIRELY in ${langLabel}. Do not mix languages. All text in your output must be in ${langLabel}.
+CRITICAL: Respond ENTIRELY in ${langLabel}. Do not mix languages. All text must be in ${langLabel}.
 
-You will receive the 9 blocks of a Business Model Canvas. Analyze them and return structured feedback using the tool provided.
-
-Keep your language simple and suitable for high school students. Be encouraging but honest.
+Keep responses concise (under 200 words for text fields).
 
 Evaluation criteria:
-1. Market Clarity (0-25): How well-defined are customer segments and channels?
-2. Value Proposition Strength (0-25): Is the value proposition clear, unique, and compelling?
-3. Revenue Model Feasibility (0-25): Is the revenue model realistic and sustainable?
-4. Innovation Potential (0-25): How innovative and differentiated is the overall concept?
+1. Market Clarity (0-25)
+2. Value Proposition Strength (0-25)
+3. Revenue Model Feasibility (0-25)
+4. Innovation Potential (0-25)
 
-Provide:
-- An overall score (sum of 4 criteria, 0-100)
-- A brief overall assessment (2-3 sentences) in ${langLabel}
-- Specific feedback for each BMC block that has content, in ${langLabel}
-- 3-5 actionable improvement suggestions in ${langLabel}
-- Scores for each of the 4 criteria`;
+Provide: overall score, brief assessment (2-3 sentences), specific feedback per block, and 3-5 suggestions.`;
 
     const userPrompt = `Analyze this Business Model Canvas:
 
@@ -55,7 +111,8 @@ Cost Structure: ${bmc.bmc_cost_structure || "(empty)"}`;
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
+        model: "google/gemini-2.5-flash-lite",
+        max_tokens: 600,
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
@@ -69,12 +126,12 @@ Cost Structure: ${bmc.bmc_cost_structure || "(empty)"}`;
               parameters: {
                 type: "object",
                 properties: {
-                  overall_score: { type: "number", description: "Total score 0-100" },
-                  market_clarity: { type: "number", description: "Score 0-25" },
-                  value_strength: { type: "number", description: "Score 0-25" },
-                  revenue_feasibility: { type: "number", description: "Score 0-25" },
-                  innovation_potential: { type: "number", description: "Score 0-25" },
-                  overall_assessment: { type: "string", description: "2-3 sentence overall assessment" },
+                  overall_score: { type: "number" },
+                  market_clarity: { type: "number" },
+                  value_strength: { type: "number" },
+                  revenue_feasibility: { type: "number" },
+                  innovation_potential: { type: "number" },
+                  overall_assessment: { type: "string" },
                   block_feedback: {
                     type: "object",
                     properties: {
@@ -90,11 +147,7 @@ Cost Structure: ${bmc.bmc_cost_structure || "(empty)"}`;
                     },
                     additionalProperties: false,
                   },
-                  suggestions: {
-                    type: "array",
-                    items: { type: "string" },
-                    description: "3-5 actionable improvement suggestions",
-                  },
+                  suggestions: { type: "array", items: { type: "string" } },
                 },
                 required: ["overall_score", "market_clarity", "value_strength", "revenue_feasibility", "innovation_potential", "overall_assessment", "block_feedback", "suggestions"],
                 additionalProperties: false,
@@ -108,12 +161,12 @@ Cost Structure: ${bmc.bmc_cost_structure || "(empty)"}`;
 
     if (!response.ok) {
       if (response.status === 429) {
-        return new Response(JSON.stringify({ error: "Rate limit exceeded. Please try again later." }), {
+        return new Response(JSON.stringify({ error: "Rate limit exceeded." }), {
           status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
       if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "AI credits exhausted. Please add funds." }), {
+        return new Response(JSON.stringify({ error: "AI credits exhausted." }), {
           status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
@@ -133,7 +186,21 @@ Cost Structure: ${bmc.bmc_cost_structure || "(empty)"}`;
     }
 
     const feedback = JSON.parse(toolCall.function.arguments);
-    return new Response(JSON.stringify(feedback), {
+    const remaining = DAILY_LIMIT - (count ?? 0) - 1;
+
+    // Record rate limit
+    await supabase.from("ai_rate_limits").insert({ user_id: user.id, feedback_type: feedbackType });
+
+    // Cache
+    await supabase.from("ai_feedback_cache").upsert({
+      user_id: user.id,
+      feedback_type: feedbackType,
+      input_hash: inputHash,
+      lang: lang || "en",
+      response: feedback,
+    }, { onConflict: "user_id,feedback_type,input_hash,lang" });
+
+    return new Response(JSON.stringify({ ...feedback, remaining, cached: false }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e) {
