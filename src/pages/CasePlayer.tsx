@@ -69,7 +69,8 @@ export default function CasePlayer() {
   const autosaveRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    if (!id || !user) return;
+    if (!id) return;
+    if (!user) { navigate(`/auth?redirect=${encodeURIComponent(`/case/${id}`)}`); return; }
     const fetchCase = async () => {
       const [caseRes, stepsRes] = await Promise.all([
         supabase.from('case_studies').select('id, title, description, topic, difficulty, reading_url, reading_button_label, reading_title').eq('id', id).single(),
