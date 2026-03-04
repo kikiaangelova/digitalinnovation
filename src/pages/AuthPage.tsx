@@ -35,6 +35,10 @@ export default function AuthPage() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [fullName, setFullName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [studentClass, setStudentClass] = useState('');
+  const [school, setSchool] = useState('');
+  const [country, setCountry] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -125,17 +129,24 @@ export default function AuthPage() {
       }
     } else {
       const trimmedName = fullName.trim();
+      const trimmedLastName = lastName.trim();
       if (!trimmedName || trimmedName.length < 2) {
         toast.error(t.nameTooShort);
         setLoading(false);
         return;
       }
-      if (trimmedName.length > 100) {
+      if (!trimmedLastName || trimmedLastName.length < 2) {
+        toast.error(tx('Last name must be at least 2 characters', 'Фамилията трябва да бъде поне 2 символа'));
+        setLoading(false);
+        return;
+      }
+      if (trimmedName.length > 100 || trimmedLastName.length > 100) {
         toast.error(t.nameTooLong);
         setLoading(false);
         return;
       }
-      const { error } = await signUp(trimmedEmail, password, trimmedName);
+      const displayName = `${trimmedName} ${trimmedLastName}`;
+      const { error } = await signUp(trimmedEmail, password, displayName);
       if (error) {
         toast.error(error.message);
       } else {
@@ -168,15 +179,37 @@ export default function AuthPage() {
             {isLogin ? t.welcomeBack : t.createAccount}
           </h2>
           <p className="text-muted-foreground mb-6">
-            {isLogin ? t.signInToContinue : tx('Create your account in seconds. Only a name, email and password needed.', 'Създай акаунт за секунди. Нужни са само име, имейл и парола.')}
+            {isLogin ? t.signInToContinue : tx('Create your account to start your innovation journey.', 'Създай акаунт, за да започнеш своето иновационно пътешествие.')}
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {!isLogin && (
-              <div>
-                <Label htmlFor="fullName">{tx('First Name', 'Име')}</Label>
-                <Input id="fullName" value={fullName} onChange={e => setFullName(e.target.value)} placeholder={tx('e.g. Maria', 'напр. Мария')} required={!isLogin} />
-              </div>
+              <>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <Label htmlFor="fullName">{tx('First Name', 'Име')}</Label>
+                    <Input id="fullName" value={fullName} onChange={e => setFullName(e.target.value)} placeholder={tx('e.g. Maria', 'напр. Мария')} required={!isLogin} />
+                  </div>
+                  <div>
+                    <Label htmlFor="lastName">{tx('Last Name', 'Фамилия')}</Label>
+                    <Input id="lastName" value={lastName} onChange={e => setLastName(e.target.value)} placeholder={tx('e.g. Ivanova', 'напр. Иванова')} required={!isLogin} />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <Label htmlFor="studentClass">{tx('Class', 'Клас')}</Label>
+                    <Input id="studentClass" value={studentClass} onChange={e => setStudentClass(e.target.value)} placeholder={tx('e.g. 11A', 'напр. 11А')} required={!isLogin} />
+                  </div>
+                  <div>
+                    <Label htmlFor="country">{tx('Country', 'Държава')}</Label>
+                    <Input id="country" value={country} onChange={e => setCountry(e.target.value)} placeholder={tx('e.g. Bulgaria', 'напр. България')} required={!isLogin} />
+                  </div>
+                </div>
+                <div>
+                  <Label htmlFor="school">{tx('School (optional)', 'Училище (незадължително)')}</Label>
+                  <Input id="school" value={school} onChange={e => setSchool(e.target.value)} placeholder={tx('e.g. Sofia High School', 'напр. СМГ')} />
+                </div>
+              </>
             )}
             <div>
               <Label htmlFor="email">{t.email}</Label>

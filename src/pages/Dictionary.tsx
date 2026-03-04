@@ -134,8 +134,10 @@ export default function Dictionary() {
                 {lang === 'bg' ? 'Термин на седмицата' : 'Term of the Week'}
               </span>
             </div>
-            <h3 className="font-display font-bold text-foreground text-lg">{termOfTheWeek.term}</h3>
-            <p className="text-sm text-primary/70 font-medium">{termOfTheWeek.termBg}</p>
+            <h3 className="font-display font-bold text-foreground text-lg">
+              {lang === 'bg' ? termOfTheWeek.termBg : termOfTheWeek.term}
+            </h3>
+            <p className="text-sm text-primary/70 font-medium">{lang === 'bg' ? termOfTheWeek.term : termOfTheWeek.termBg}</p>
             <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
               {lang === 'bg' ? termOfTheWeek.definitionBg : termOfTheWeek.definition}
             </p>
