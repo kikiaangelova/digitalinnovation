@@ -4,7 +4,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { GraduationCap, LogOut, LayoutDashboard, Play, Shield, User, BarChart3, Users, BookOpen, Book, Menu, Globe } from 'lucide-react';
+import { GraduationCap, LogOut, LayoutDashboard, Play, Shield, User, BarChart3, Users, BookOpen, Book, Menu, Globe, Lightbulb } from 'lucide-react';
 
 export default function AppHeader() {
   const { user, profile, isAdmin, signOut } = useAuth();
@@ -35,9 +35,13 @@ export default function AppHeader() {
           { to: '/cases', icon: BookOpen, label: t.cases },
           { to: '/simulator', icon: Play, label: t.simulator },
           { to: '/dictionary', icon: Book, label: t.dictionary },
+          { to: '/about', icon: Lightbulb, label: t.about },
           { to: '/profile', icon: User, label: t.profile },
         ]
-      : [{ to: '/dictionary', icon: Book, label: t.dictionary }]),
+      : [
+          { to: '/dictionary', icon: Book, label: t.dictionary },
+          { to: '/about', icon: Lightbulb, label: t.about },
+        ]),
   ];
 
   const adminLinks = isAdmin
