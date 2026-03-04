@@ -12,6 +12,10 @@ import StudentDashboard from "./pages/StudentDashboard";
 import CasePlayer from "./pages/CasePlayer";
 import CaseResults from "./pages/CaseResults";
 import AdminDashboard from "./pages/AdminDashboard";
+import ProfilePage from "./pages/ProfilePage";
+import TeamWorkspace from "./pages/TeamWorkspace";
+import AssessmentPlayer from "./pages/AssessmentPlayer";
+import AssessmentResults from "./pages/AssessmentResults";
 import StudentLanding from "./pages/simulator/StudentLanding";
 import SeasonView from "./pages/simulator/SeasonView";
 import RoundView from "./pages/simulator/RoundView";
@@ -32,8 +36,12 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<AuthPage />} />
               <Route path="/dashboard" element={<StudentDashboard />} />
+              <Route path="/profile" element={<ProfilePage />} />
               <Route path="/case/:id" element={<CasePlayer />} />
               <Route path="/case/:id/results" element={<CaseResults />} />
+              <Route path="/team/:teamId" element={<TeamWorkspace />} />
+              <Route path="/assessment/:id" element={<AssessmentPlayer />} />
+              <Route path="/assessment/:id/results" element={<AssessmentResults />} />
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/simulator" element={<StudentLanding />} />
               <Route path="/simulator/season/:id" element={<SeasonView />} />
