@@ -19,8 +19,8 @@ export default function SimulatorCard() {
   const [expanded, setExpanded] = useState(false);
 
   const handleClick = () => {
-    if (user) navigate('/simulator');
-    else navigate('/auth?redirect=/simulator');
+    if (user) navigate('/simulator/preview');
+    else navigate('/auth?redirect=/simulator/preview');
   };
 
   const features: string[] = [

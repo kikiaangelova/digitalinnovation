@@ -112,7 +112,7 @@ export default function CaseLibrary() {
         ) : (
           <div className="grid gap-4 md:grid-cols-2">
             {filtered.map(cs => (
-              <Link key={cs.id} to={`/case/${cs.id}`} className="group block rounded-lg border border-border bg-card p-5 hover:border-primary/50 hover:shadow-md transition-all">
+              <Link key={cs.id} to={`/case/${cs.id}/preview`} className="group block rounded-lg border border-border bg-card p-5 hover:border-primary/50 hover:shadow-md transition-all">
                 <div className="flex items-start justify-between mb-3">
                   <h3 className="font-display font-semibold text-foreground group-hover:text-primary transition-colors">{cs.title}</h3>
                   <Badge variant="outline" className={diffColor(cs.difficulty)}>{diffLabel(cs.difficulty)}</Badge>
