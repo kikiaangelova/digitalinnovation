@@ -1,0 +1,1 @@
+ALTER TABLE public.startup_projects ADD COLUMN IF NOT EXISTS industry text DEFAULT '' NOT NULL;

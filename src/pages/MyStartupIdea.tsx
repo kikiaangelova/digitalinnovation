@@ -11,8 +11,9 @@ import { Progress } from '@/components/ui/progress';
 import { toast } from 'sonner';
 import {
   Lightbulb, Users, Zap, Monitor, DollarSign, TrendingUp,
-  Presentation, ChevronRight, Check, Save, Rocket, HelpCircle
+  Presentation, ChevronRight, Check, Save, Rocket, HelpCircle, Globe
 } from 'lucide-react';
+import { INDUSTRIES } from '@/data/industry-map-data';
 
 interface SectionConfig {
   key: string;
@@ -129,11 +130,12 @@ interface ProjectData {
   growth_strategy: string;
   final_pitch: string;
   is_submitted: boolean;
+  industry: string;
 }
 
 const EMPTY_PROJECT: ProjectData = {
   problem: '', customer: '', value_proposition: '', digital_product: '',
-  business_model: '', growth_strategy: '', final_pitch: '', is_submitted: false,
+  business_model: '', growth_strategy: '', final_pitch: '', is_submitted: false, industry: '',
 };
 
 export default function MyStartupIdea() {
@@ -152,7 +154,7 @@ export default function MyStartupIdea() {
     const load = async () => {
       const { data: proj } = await supabase
         .from('startup_projects')
-        .select('problem, customer, value_proposition, digital_product, business_model, growth_strategy, final_pitch, is_submitted')
+        .select('problem, customer, value_proposition, digital_product, business_model, growth_strategy, final_pitch, is_submitted, industry')
         .eq('user_id', user.id)
         .maybeSingle();
       if (proj) { setData(proj as ProjectData); setHasRecord(true); }
@@ -250,7 +252,30 @@ export default function MyStartupIdea() {
             </div>
           </div>
 
-          {/* Progress */}
+          {/* Industry badge */}
+          {data.industry && (() => {
+            const ind = INDUSTRIES.find(i => i.id === data.industry);
+            return ind ? (
+              <div className="mt-3 flex items-center gap-2 rounded-lg border border-border bg-accent/30 px-3 py-2">
+                <span className="text-lg">{ind.icon}</span>
+                <span className="text-sm text-foreground font-medium">
+                  {lang === 'bg' ? ind.nameBg : ind.nameEn}
+                </span>
+                <Badge variant="secondary" className="text-xs ml-auto">
+                  <Globe className="h-3 w-3 mr-1" />
+                  {lang === 'bg' ? 'Избрана индустрия' : 'Chosen Industry'}
+                </Badge>
+              </div>
+            ) : null;
+          })()}
+          {!data.industry && (
+            <Link to="/industries" className="mt-3 flex items-center gap-2 rounded-lg border border-dashed border-primary/30 bg-primary/5 px-3 py-2 hover:bg-primary/10 transition-colors">
+              <Globe className="h-4 w-4 text-primary" />
+              <span className="text-sm text-primary font-medium">
+                {lang === 'bg' ? 'Изберете индустрия от картата на иновациите →' : 'Choose an industry from the Innovation Map →'}
+              </span>
+            </Link>
+          )}
           <div className="mt-4 rounded-lg border border-border bg-card p-4">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium text-foreground">
