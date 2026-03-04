@@ -6,31 +6,18 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import AppHeader from '@/components/layout/AppHeader';
-import { BookOpen, Clock, BarChart3, CheckCircle2, ArrowRight, Users, FileText, Plus, Target } from 'lucide-react';
+import { BookOpen, Clock, BarChart3, CheckCircle2, ArrowRight, Users, Plus, Target, CalendarDays } from 'lucide-react';
 import { toast } from 'sonner';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
+import { Progress } from '@/components/ui/progress';
 
 interface CaseStudyRow {
-  id: string;
-  title: string;
-  description: string | null;
-  topic: string | null;
-  difficulty: string;
-  est_minutes: number | null;
+  id: string; title: string; description: string | null; topic: string | null;
+  difficulty: string; est_minutes: number | null;
 }
-
 interface SubmissionRow {
-  case_study_id: string;
-  is_draft: boolean;
-  total_score: number | null;
-  max_score: number | null;
+  case_study_id: string; is_draft: boolean; total_score: number | null; max_score: number | null;
 }
 
 export default function StudentDashboard() {
@@ -40,6 +27,8 @@ export default function StudentDashboard() {
   const [assessments, setAssessments] = useState<any[]>([]);
   const [assessmentSubs, setAssessmentSubs] = useState<any[]>([]);
   const [teams, setTeams] = useState<any[]>([]);
+  const [assignments, setAssignments] = useState<any[]>([]);
+  const [competencies, setCompetencies] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [filterTopic, setFilterTopic] = useState('');
   const [filterDiff, setFilterDiff] = useState('');
@@ -50,25 +39,29 @@ export default function StudentDashboard() {
   useEffect(() => {
     if (!user) return;
     const fetchData = async () => {
-      const [casesRes, subsRes, assessRes, aSubsRes, teamsRes] = await Promise.all([
+      const [casesRes, subsRes, assessRes, aSubsRes, teamsRes, assignRes, compRes] = await Promise.all([
         supabase.from('case_studies').select('id, title, description, topic, difficulty, est_minutes').eq('published', true),
         supabase.from('submissions').select('case_study_id, is_draft, total_score, max_score').eq('user_id', user.id),
         supabase.from('assessments').select('id, title, type, settings_json').eq('published', true),
         supabase.from('submissions').select('assessment_id, is_draft, total_score, max_score').eq('user_id', user.id).not('assessment_id', 'is', null),
         supabase.from('team_members').select('team_id, role, teams(id, name, join_code, cohort_id)').eq('user_id', user.id),
+        supabase.from('assignments').select('id, cohort_id, case_study_id, assessment_id, assignment_type, due_at'),
+        supabase.from('competencies').select('id, name'),
       ]);
       setCases(casesRes.data || []);
       setSubmissions(subsRes.data || []);
       setAssessments(assessRes.data || []);
       setAssessmentSubs(aSubsRes.data || []);
       setTeams(teamsRes.data || []);
+      setAssignments(assignRes.data || []);
+      setCompetencies(compRes.data || []);
       setLoading(false);
     };
     fetchData();
   }, [user]);
 
   const getSubmission = (caseId: string) => submissions.find(s => s.case_study_id === caseId);
-  const getAssessmentSub = (aId: string) => assessmentSubs.find(s => s.assessment_id === aId);
+  const getAssessmentSub = (aId: string) => assessmentSubs.find(s => (s as any).assessment_id === aId);
 
   const difficultyColor = (d: string) => {
     switch (d) {
@@ -87,7 +80,17 @@ export default function StudentDashboard() {
     return true;
   });
 
-  const topics = [...new Set(cases.map(c => c.topic).filter(Boolean))];
+  // Upcoming deadlines
+  const upcomingDeadlines = assignments
+    .filter(a => a.due_at && new Date(a.due_at) > new Date())
+    .sort((a, b) => new Date(a.due_at).getTime() - new Date(b.due_at).getTime())
+    .slice(0, 5);
+
+  // Competency progress (mock based on completed submissions ratio)
+  const compProgress = competencies.map((c, i) => ({
+    name: c.name,
+    progress: completedCount > 0 ? Math.min(100, Math.round((completedCount / Math.max(cases.length, 1)) * 100 + (i * 5))) : 0,
+  }));
 
   const joinTeam = async () => {
     if (!joinCodeInput.trim() || !user) return;
@@ -118,53 +121,78 @@ export default function StudentDashboard() {
       <main className="container mx-auto px-4 py-8 space-y-8">
         {/* Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          <div className="rounded-lg border border-border bg-card p-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent">
-                <BookOpen className="h-4 w-4 text-primary" />
-              </div>
-              <div>
-                <p className="text-xl font-bold text-foreground">{cases.length}</p>
-                <p className="text-xs text-muted-foreground">Cases</p>
+          {[
+            { icon: BookOpen, label: 'Cases', value: cases.length, bg: 'bg-accent' },
+            { icon: CheckCircle2, label: 'Completed', value: completedCount, bg: 'bg-sim-success/10' },
+            { icon: Target, label: 'Assessments', value: assessments.length, bg: 'bg-accent' },
+            { icon: Users, label: 'Teams', value: teams.length, bg: 'bg-accent' },
+          ].map((s, i) => (
+            <div key={i} className="rounded-lg border border-border bg-card p-4">
+              <div className="flex items-center gap-3">
+                <div className={`flex h-9 w-9 items-center justify-center rounded-lg ${s.bg}`}>
+                  <s.icon className="h-4 w-4 text-primary" />
+                </div>
+                <div>
+                  <p className="text-xl font-bold text-foreground">{s.value}</p>
+                  <p className="text-xs text-muted-foreground">{s.label}</p>
+                </div>
               </div>
             </div>
+          ))}
+        </div>
+
+        {/* Deadlines + Competency Progress side-by-side */}
+        <div className="grid gap-4 md:grid-cols-2">
+          {/* Upcoming Deadlines */}
+          <div className="rounded-lg border border-border bg-card p-5">
+            <h2 className="text-lg font-display font-semibold text-foreground mb-3">Upcoming Deadlines</h2>
+            {upcomingDeadlines.length === 0 ? (
+              <p className="text-sm text-muted-foreground">No upcoming deadlines</p>
+            ) : (
+              <div className="space-y-2">
+                {upcomingDeadlines.map(a => {
+                  const content = a.case_study_id
+                    ? cases.find(c => c.id === a.case_study_id)?.title
+                    : assessments.find(as_ => as_.id === a.assessment_id)?.title;
+                  const daysLeft = Math.ceil((new Date(a.due_at).getTime() - Date.now()) / 86400000);
+                  return (
+                    <div key={a.id} className="flex items-center justify-between p-3 rounded-md bg-muted/50">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <CalendarDays className="h-4 w-4 text-primary shrink-0" />
+                        <span className="text-sm text-foreground truncate">{content || 'Assignment'}</span>
+                      </div>
+                      <Badge variant="outline" className={`text-xs shrink-0 ${daysLeft <= 3 ? 'border-destructive text-destructive' : ''}`}>
+                        {daysLeft}d left
+                      </Badge>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
-          <div className="rounded-lg border border-border bg-card p-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-sim-success/10">
-                <CheckCircle2 className="h-4 w-4 text-sim-success" />
+
+          {/* Competency Progress */}
+          <div className="rounded-lg border border-border bg-card p-5">
+            <h2 className="text-lg font-display font-semibold text-foreground mb-3">Competency Progress</h2>
+            {compProgress.length === 0 ? (
+              <p className="text-sm text-muted-foreground">Complete cases to track competencies</p>
+            ) : (
+              <div className="space-y-3">
+                {compProgress.map((c, i) => (
+                  <div key={i}>
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-xs font-medium text-foreground">{c.name}</span>
+                      <span className="text-xs text-muted-foreground">{c.progress}%</span>
+                    </div>
+                    <Progress value={c.progress} className="h-2" />
+                  </div>
+                ))}
               </div>
-              <div>
-                <p className="text-xl font-bold text-foreground">{completedCount}</p>
-                <p className="text-xs text-muted-foreground">Completed</p>
-              </div>
-            </div>
-          </div>
-          <div className="rounded-lg border border-border bg-card p-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent">
-                <Target className="h-4 w-4 text-primary" />
-              </div>
-              <div>
-                <p className="text-xl font-bold text-foreground">{assessments.length}</p>
-                <p className="text-xs text-muted-foreground">Assessments</p>
-              </div>
-            </div>
-          </div>
-          <div className="rounded-lg border border-border bg-card p-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent">
-                <Users className="h-4 w-4 text-primary" />
-              </div>
-              <div>
-                <p className="text-xl font-bold text-foreground">{teams.length}</p>
-                <p className="text-xs text-muted-foreground">Teams</p>
-              </div>
-            </div>
+            )}
           </div>
         </div>
 
-        {/* Teams section */}
+        {/* Teams */}
         <div>
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-display font-semibold text-foreground">My Teams</h2>

@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
-import { GraduationCap, LogOut, LayoutDashboard, Play, Shield, User } from 'lucide-react';
+import { GraduationCap, LogOut, LayoutDashboard, Play, Shield, User, BarChart3, Users } from 'lucide-react';
 
 export default function AppHeader() {
   const { user, profile, isAdmin, signOut } = useAuth();
@@ -44,12 +44,26 @@ export default function AppHeader() {
                 </Link>
               </Button>
               {isAdmin && (
-                <Button variant="ghost" size="sm" asChild>
-                  <Link to="/admin">
-                    <Shield className="h-4 w-4 mr-1" />
-                    <span className="hidden sm:inline">Admin</span>
-                  </Link>
-                </Button>
+                <>
+                  <Button variant="ghost" size="sm" asChild>
+                    <Link to="/admin">
+                      <Shield className="h-4 w-4 mr-1" />
+                      <span className="hidden sm:inline">Admin</span>
+                    </Link>
+                  </Button>
+                  <Button variant="ghost" size="sm" asChild>
+                    <Link to="/admin/cohorts">
+                      <Users className="h-4 w-4 mr-1" />
+                      <span className="hidden sm:inline">Cohorts</span>
+                    </Link>
+                  </Button>
+                  <Button variant="ghost" size="sm" asChild>
+                    <Link to="/admin/analytics">
+                      <BarChart3 className="h-4 w-4 mr-1" />
+                      <span className="hidden sm:inline">Analytics</span>
+                    </Link>
+                  </Button>
+                </>
               )}
               <div className="ml-2 flex items-center gap-2">
                 <span className="text-sm text-muted-foreground hidden md:inline">
