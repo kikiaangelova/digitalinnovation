@@ -10,7 +10,7 @@ import {
   ArrowRight, BookOpen, Cpu, BarChart3,
   User, Heart, GraduationCap, Brain,
   CheckCircle2, Sparkles, FlaskConical,
-  Network, Building2, Banknote, Bot, Layers, Workflow,
+  Network, Banknote, Bot, Layers, Workflow,
   Database, Shield, Leaf, CircuitBoard,
 } from 'lucide-react';
 
@@ -40,33 +40,6 @@ const academicTopics = [
       {
         en: '**Key enablers:** Cloud computing, AI/ML, IoT, blockchain, big data analytics, 5G connectivity.',
         bg: '**Ключови двигатели:** Облачни изчисления, AI/ML, IoT, блокчейн, анализ на големи данни, 5G свързаност.',
-      },
-    ],
-  },
-  {
-    id: 'dih',
-    icon: Building2,
-    title: { en: 'Digital Innovation Hubs (DIH)', bg: 'Хъбове за дигитални иновации (DIH)' },
-    intro: {
-      en: 'A Digital Innovation Hub (DIH) is a one-stop-shop ecosystem that helps companies — especially SMEs and startups — become more competitive by adopting digital technologies. The European Union has funded over 200 European Digital Innovation Hubs (EDIHs) through the Digital Europe Programme, creating a continent-wide support network for digital transformation.',
-      bg: 'Хъбът за дигитални иновации (DIH) е екосистема на едно гише, която помага на компаниите — особено МСП и стартъпи — да станат по-конкурентоспособни чрез възприемане на дигитални технологии. Европейският съюз е финансирал над 200 Европейски хъба за дигитални иновации (EDIH) чрез програмата „Цифрова Европа", създавайки континентална мрежа за подкрепа на дигиталната трансформация.',
-    },
-    points: [
-      {
-        en: '**Access to Technology** — AI, IoT, blockchain, cloud computing, and big data tools and infrastructure provided to businesses.',
-        bg: '**Достъп до технологии** — AI, IoT, блокчейн, облачни изчисления, инструменти и инфраструктура за големи данни, предоставени на бизнеса.',
-      },
-      {
-        en: '**Test Before Invest** — Companies can experiment with digital solutions in a low-risk environment before full-scale deployment.',
-        bg: '**Тествай преди да инвестираш** — Компаниите могат да експериментират с дигитални решения в среда с нисък риск преди пълномащабно внедряване.',
-      },
-      {
-        en: '**Skills & Training** — Digital upskilling programs, mentoring, and workforce development for employees and entrepreneurs.',
-        bg: '**Умения и обучение** — Програми за дигитално повишаване на квалификацията, менторство и развитие на работната сила.',
-      },
-      {
-        en: '**Funding & Networking** — Access to EU grants, venture capital connections, and cross-border innovation partnerships.',
-        bg: '**Финансиране и мрежи** — Достъп до грантове на ЕС, връзки с рисков капитал и трансгранични иновационни партньорства.',
       },
     ],
   },
