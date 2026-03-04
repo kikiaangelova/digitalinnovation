@@ -2,3 +2,9 @@ project_id = "rsnjydiaewuiyyvxlxwo"
 
 [functions.bmc-mentor]
 verify_jwt = false
+
+[functions.ai-feedback]
+verify_jwt = false
+
+[functions.grade-submission]
+verify_jwt = false
