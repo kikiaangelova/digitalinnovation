@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import AppHeader from '@/components/layout/AppHeader';
-import { BookOpen, Clock, BarChart3, CheckCircle2, ArrowRight, Users, Plus, Target, CalendarDays } from 'lucide-react';
+import { BookOpen, Clock, BarChart3, CheckCircle2, ArrowRight, Users, Plus, Target, CalendarDays, Rocket } from 'lucide-react';
 import { toast } from 'sonner';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
@@ -29,6 +29,7 @@ export default function StudentDashboard() {
   const [teams, setTeams] = useState<any[]>([]);
   const [assignments, setAssignments] = useState<any[]>([]);
   const [competencies, setCompetencies] = useState<any[]>([]);
+  const [startupProject, setStartupProject] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [filterTopic, setFilterTopic] = useState('');
   const [filterDiff, setFilterDiff] = useState('');
@@ -39,7 +40,7 @@ export default function StudentDashboard() {
   useEffect(() => {
     if (!user) return;
     const fetchData = async () => {
-      const [casesRes, subsRes, assessRes, aSubsRes, teamsRes, assignRes, compRes] = await Promise.all([
+      const [casesRes, subsRes, assessRes, aSubsRes, teamsRes, assignRes, compRes, projRes] = await Promise.all([
         supabase.from('case_studies').select('id, title, description, topic, difficulty, est_minutes').eq('published', true),
         supabase.from('submissions').select('case_study_id, is_draft, total_score, max_score').eq('user_id', user.id),
         supabase.from('assessments').select('id, title, type, settings_json').eq('published', true),
@@ -47,6 +48,7 @@ export default function StudentDashboard() {
         supabase.from('team_members').select('team_id, role, teams(id, name, join_code, cohort_id)').eq('user_id', user.id),
         supabase.from('assignments').select('id, cohort_id, case_study_id, assessment_id, assignment_type, due_at'),
         supabase.from('competencies').select('id, name'),
+        supabase.from('startup_projects').select('problem, customer, value_proposition, digital_product, business_model, growth_strategy, final_pitch, is_submitted').eq('user_id', user.id).maybeSingle(),
       ]);
       setCases(casesRes.data || []);
       setSubmissions(subsRes.data || []);
@@ -55,6 +57,7 @@ export default function StudentDashboard() {
       setTeams(teamsRes.data || []);
       setAssignments(assignRes.data || []);
       setCompetencies(compRes.data || []);
+      setStartupProject(projRes.data || null);
       setLoading(false);
     };
     fetchData();
@@ -140,6 +143,38 @@ export default function StudentDashboard() {
             </div>
           ))}
         </div>
+
+        {/* My Startup Idea */}
+        <Link to="/my-startup" className="block rounded-lg border border-border bg-card p-5 hover:border-primary/40 transition-colors group">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-3">
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg sim-gradient">
+                <Rocket className="h-4 w-4 text-primary-foreground" />
+              </div>
+              <div>
+                <h2 className="text-lg font-display font-semibold text-foreground group-hover:text-primary transition-colors">My Startup Idea</h2>
+                <p className="text-xs text-muted-foreground">Develop your startup step by step</p>
+              </div>
+            </div>
+            {startupProject?.is_submitted && (
+              <Badge className="bg-[hsl(var(--sim-success))]/10 text-[hsl(var(--sim-success))] border-0 text-xs">
+                <CheckCircle2 className="h-3 w-3 mr-1" /> Submitted
+              </Badge>
+            )}
+            <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
+          </div>
+          {(() => {
+            const sections = ['problem', 'customer', 'value_proposition', 'digital_product', 'business_model', 'growth_strategy', 'final_pitch'];
+            const filled = startupProject ? sections.filter(s => ((startupProject as any)[s] || '').trim().length > 20).length : 0;
+            const pct = Math.round((filled / sections.length) * 100);
+            return (
+              <div className="flex items-center gap-3">
+                <Progress value={pct} className="h-2 flex-1" />
+                <span className="text-sm font-medium text-muted-foreground shrink-0">{pct}%</span>
+              </div>
+            );
+          })()}
+        </Link>
 
         {/* Deadlines + Competency Progress side-by-side */}
         <div className="grid gap-4 md:grid-cols-2">
