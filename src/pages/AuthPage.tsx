@@ -76,7 +76,7 @@ export default function AuthPage() {
       const checks = checkPassword(password, fullName || trimmedEmail);
       const strength = getStrength(checks);
       if (!checks.minLength) {
-        toast.error(tx('Password must be at least 12 characters', 'Паролата трябва да бъде поне 12 символа'));
+        toast.error(tx('Password must be at least 8 characters', 'Паролата трябва да бъде поне 8 символа'));
         return;
       }
       if (!checks.complexityMet) {
@@ -164,14 +164,14 @@ export default function AuthPage() {
             {isLogin ? t.welcomeBack : t.createAccount}
           </h2>
           <p className="text-muted-foreground mb-6">
-            {isLogin ? t.signInToContinue : t.getStartedJourney}
+            {isLogin ? t.signInToContinue : tx('Create your account in seconds. Only a name, email and password needed.', 'Създай акаунт за секунди. Нужни са само име, имейл и парола.')}
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {!isLogin && (
               <div>
-                <Label htmlFor="fullName">{t.fullName}</Label>
-                <Input id="fullName" value={fullName} onChange={e => setFullName(e.target.value)} placeholder="Jane Doe" required={!isLogin} />
+                <Label htmlFor="fullName">{tx('First Name', 'Име')}</Label>
+                <Input id="fullName" value={fullName} onChange={e => setFullName(e.target.value)} placeholder={tx('e.g. Maria', 'напр. Мария')} required={!isLogin} />
               </div>
             )}
             <div>
@@ -237,6 +237,12 @@ export default function AuthPage() {
                 <><UserPlus className="h-4 w-4 mr-2" /> {t.createAccount}</>
               )}
             </Button>
+
+            {!isLogin && (
+              <p className="text-[11px] text-muted-foreground text-center mt-2">
+                {tx('We collect only minimal information to create your account.', 'Събираме само минимална информация за създаване на акаунта ви.')}
+              </p>
+            )}
           </form>
 
           <p className="mt-6 text-center text-sm text-muted-foreground">
