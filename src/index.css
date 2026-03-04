@@ -139,4 +139,12 @@
   .font-display {
     font-family: 'Playfair Display', serif;
   }
+  .glow-primary {
+    box-shadow: 0 0 20px hsl(226 70% 55% / 0.25), 0 0 60px hsl(226 70% 55% / 0.1);
+  }
+  .gradient-explorer { background: linear-gradient(135deg, hsl(226 70% 55%), hsl(200 80% 50%)); }
+  .gradient-strategist { background: linear-gradient(135deg, hsl(280 60% 55%), hsl(226 70% 55%)); }
+  .gradient-builder { background: linear-gradient(135deg, hsl(173 58% 39%), hsl(152 60% 40%)); }
+  .gradient-designer { background: linear-gradient(135deg, hsl(38 92% 50%), hsl(25 90% 50%)); }
+  .gradient-founder { background: linear-gradient(135deg, hsl(0 72% 51%), hsl(330 70% 50%)); }
 }
