@@ -76,21 +76,43 @@ const SECTION_HINTS_BG: Record<number, string> = {
   7: 'Напишете финалната си препоръка като професионален бриф.',
 };
 
-/* ── Apply-to-startup prompts shown on steps 5+ ── */
-const STARTUP_PROMPTS_EN = [
-  'Who are the competitors in your market?',
-  'What gap can your product fill based on this case?',
-  'What is your unique competitive advantage?',
-  'How would you avoid the risks identified in this case?',
-  'What strategy from this case could you apply to your startup?',
-];
-const STARTUP_PROMPTS_BG = [
-  'Кои са конкурентите на вашия пазар?',
-  'Каква празнина може да запълни вашият продукт на база на този казус?',
-  'Какво е вашето уникално конкурентно предимство?',
-  'Как бихте избегнали рисковете, идентифицирани в казуса?',
-  'Каква стратегия от този казус бихте приложили към стартъпа си?',
-];
+/* ── Structured startup analysis fields ── */
+const STARTUP_FIELDS = [
+  {
+    key: 'competitor_analysis',
+    icon: Target,
+    xp: 10,
+    labelEn: 'Competitor Analysis',
+    labelBg: 'Анализ на конкуренцията',
+    promptEn: 'Who are the main competitors in your market? List at least two and briefly describe what they do.',
+    promptBg: 'Кои са основните конкуренти на вашия пазар? Посочете поне двама и опишете накратко какво правят.',
+    placeholderEn: 'List at least 2 competitors and describe their products/services...',
+    placeholderBg: 'Посочете поне 2 конкуренти и опишете техните продукти/услуги...',
+  },
+  {
+    key: 'market_gap',
+    icon: Lightbulb,
+    xp: 20,
+    labelEn: 'Market Gap',
+    labelBg: 'Пазарна празнина',
+    promptEn: 'What gap in the market do these competitors leave open?',
+    promptBg: 'Каква празнина на пазара оставят тези конкуренти?',
+    placeholderEn: 'Describe the unmet need or underserved segment...',
+    placeholderBg: 'Опишете незадоволената нужда или неподдържания сегмент...',
+  },
+  {
+    key: 'unique_advantage',
+    icon: Zap,
+    xp: 20,
+    labelEn: 'Unique Advantage',
+    labelBg: 'Уникално предимство',
+    promptEn: 'What is your startup\'s unique advantage compared to these competitors?',
+    promptBg: 'Какво е уникалното предимство на вашия стартъп в сравнение с тези конкуренти?',
+    placeholderEn: 'Explain what makes your solution different and better...',
+    placeholderBg: 'Обяснете какво прави вашето решение различно и по-добро...',
+  },
+] as const;
+const MIN_FIELD_LENGTH = 100;
 
 function wordCount(text: string): number {
   return text.trim().split(/\s+/).filter(Boolean).length;
@@ -113,7 +135,8 @@ export default function CasePlayer() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [startupNotes, setStartupNotes] = useState<Record<number, string>>({});
+  const [startupNotes, setStartupNotes] = useState<Record<string, string>>({});
+  const [startupTouched, setStartupTouched] = useState<Record<string, boolean>>({});
   const [showInsight, setShowInsight] = useState<Record<number, boolean>>({});
   const autosaveRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -475,51 +498,80 @@ export default function CasePlayer() {
           </div>
         )}
 
-        {/* ── 5. APPLY TO YOUR STARTUP ── */}
+        {/* ── 5. APPLY THIS CASE TO YOUR STARTUP ── */}
         {showStartupPanel && (
-          <div className="rounded-lg border-2 border-primary/20 bg-accent p-6">
-            <div className="flex items-center gap-3 mb-4">
+          <div className="rounded-lg border-2 border-primary/20 bg-accent p-6 space-y-5">
+            <div className="flex items-center gap-3">
               <div className="flex h-10 w-10 items-center justify-center rounded-lg sim-gradient shrink-0">
                 <Rocket className="h-5 w-5 text-primary-foreground" />
               </div>
               <div>
                 <h3 className="font-display font-semibold text-foreground">
-                  {tl('Apply to Your Startup', 'Приложи към стартъпа си')}
+                  {tl('Apply This Case to Your Startup', 'Приложи казуса към стартъпа си')}
                 </h3>
                 <p className="text-xs text-muted-foreground">
-                  {tl('Connect this case to your own startup project', 'Свържете казуса с вашия стартъп проект')}
+                  {tl(
+                    'Complete all three fields below to earn 50 XP. Each must be at least 100 characters.',
+                    'Попълнете и трите полета по-долу, за да спечелите 50 XP. Всяко трябва да е поне 100 символа.'
+                  )}
                 </p>
               </div>
             </div>
-            <div className="space-y-3 mb-4">
-              {(lang === 'bg' ? STARTUP_PROMPTS_BG : STARTUP_PROMPTS_EN)
-                .slice(0, 3)
-                .map((prompt, i) => (
-                  <div key={i} className="flex items-start gap-2 text-sm text-foreground/80">
-                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary shrink-0 mt-0.5">{i + 1}</span>
-                    <span>{prompt}</span>
+
+            {STARTUP_FIELDS.map((field) => {
+              const val = startupNotes[field.key] || '';
+              const touched = startupTouched[field.key] || false;
+              const charCount = val.length;
+              const isValid = charCount >= MIN_FIELD_LENGTH;
+              const showError = touched && !isValid;
+              const FieldIcon = field.icon;
+              return (
+                <div key={field.key} className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <FieldIcon className="h-4 w-4 text-primary" />
+                      <span className="text-sm font-semibold text-foreground">
+                        {lang === 'bg' ? field.labelBg : field.labelEn}
+                      </span>
+                      <Badge variant="outline" className="text-[10px] px-1.5 py-0 font-bold text-sim-warning border-sim-warning/30">
+                        +{field.xp} XP
+                      </Badge>
+                    </div>
+                    {isValid && <CheckCircle2 className="h-4 w-4 text-sim-success" />}
                   </div>
-                ))}
-            </div>
-            <Textarea
-              value={startupNotes[currentStep] || ''}
-              onChange={e => setStartupNotes(prev => ({ ...prev, [currentStep]: e.target.value }))}
-              placeholder={tl(
-                'Write your reflections on how this case connects to your startup idea...',
-                'Напишете размишленията си как този казус се свързва с вашата стартъп идея...'
-              )}
-              className="min-h-[120px] bg-background"
-              disabled={isSubmitted}
-            />
-            <div className="mt-3 flex items-center gap-2">
+                  <p className="text-xs text-muted-foreground">
+                    {lang === 'bg' ? field.promptBg : field.promptEn}
+                  </p>
+                  <Textarea
+                    value={val}
+                    onChange={e => setStartupNotes(prev => ({ ...prev, [field.key]: e.target.value }))}
+                    onBlur={() => setStartupTouched(prev => ({ ...prev, [field.key]: true }))}
+                    placeholder={lang === 'bg' ? field.placeholderBg : field.placeholderEn}
+                    className={`min-h-[100px] bg-background ${showError ? 'border-destructive' : ''}`}
+                    disabled={isSubmitted}
+                  />
+                  <div className="flex items-center justify-between">
+                    <span className={`text-xs ${showError ? 'text-destructive font-medium' : 'text-muted-foreground'}`}>
+                      {charCount}/{MIN_FIELD_LENGTH} {tl('characters', 'символа')}
+                      {showError && ` — ${tl('minimum 100 characters required', 'минимум 100 символа')}`}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+
+            {/* XP Summary */}
+            <div className="flex items-center justify-between pt-3 border-t border-border">
+              <div className="flex items-center gap-2">
+                <Zap className="h-4 w-4 text-sim-warning" />
+                <span className="text-sm font-semibold text-foreground">
+                  {tl('XP Earned', 'Спечелени XP')}: {STARTUP_FIELDS.reduce((sum, f) => sum + ((startupNotes[f.key] || '').length >= MIN_FIELD_LENGTH ? f.xp : 0), 0)}/50
+                </span>
+              </div>
               <Button variant="outline" size="sm" onClick={() => navigate('/my-startup')}>
                 <Rocket className="h-3.5 w-3.5 mr-1" />
                 {tl('Go to My Startup', 'Отиди на Моят стартъп')}
               </Button>
-              <span className="text-xs text-muted-foreground">
-                {tl('Your notes here are for reflection — edit your startup project for official submission.',
-                   'Бележките тук са за размисъл — редактирайте стартъп проекта за официално подаване.')}
-              </span>
             </div>
           </div>
         )}
