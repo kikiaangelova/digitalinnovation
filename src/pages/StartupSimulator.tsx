@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
@@ -9,11 +9,13 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Checkbox } from '@/components/ui/checkbox';
 import {
-  ChevronRight, ChevronLeft, Play, BarChart3, Users, DollarSign,
-  TrendingUp, Smile, Award, RotateCcw, CheckCircle2, Layers, Target, Megaphone, Briefcase
+  ChevronRight, Play, RotateCcw, CheckCircle2,
+  Lightbulb, TrendingUp, Layers, ShieldAlert, Rocket,
+  Factory, Target, Swords, Wrench, DollarSign, Megaphone
 } from 'lucide-react';
 import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend
+  RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
+  ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Cell
 } from 'recharts';
 import {
   SIM_WEEKS, INITIAL_KPIS, applyDecisionEffects, combineEffects, getStartupGrade,
@@ -22,63 +24,21 @@ import {
 
 type Phase = 'intro' | 'playing' | 'results';
 
-interface WeekRecord {
-  week: number;
+interface StepRecord {
+  step: number;
   choices: string[];
   kpis: SimWeekKPIs;
 }
 
-// Helpers to extract strategy summary from history choices
-function extractStrategyFromHistory(history: WeekRecord[]) {
-  const allChoices = history.flatMap(h => h.choices);
+const STEP_ICONS = [Factory, Target, Swords, Wrench, DollarSign, Megaphone];
 
-  const productMap: Record<string, { en: string; bg: string }> = {
-    'w3-mobile': { en: 'Mobile App', bg: 'Мобилно приложение' },
-    'w3-web': { en: 'Web Platform', bg: 'Уеб платформа' },
-    'w3-ai': { en: 'AI-Powered Tool', bg: 'AI инструмент' },
-    'w3-data': { en: 'Data Platform', bg: 'Платформа за данни' },
-    'w3-marketplace': { en: 'Marketplace Platform', bg: 'Маркетплейс платформа' },
-  };
-
-  const revenueMap: Record<string, { en: string; bg: string }> = {
-    'w4-subscription': { en: 'Subscription', bg: 'Абонамент' },
-    'w4-freemium': { en: 'Freemium', bg: 'Freemium' },
-    'w4-payperuse': { en: 'Pay-per-use', bg: 'Плащане при ползване' },
-    'w4-iap': { en: 'In-app purchases', bg: 'Покупки в приложението' },
-    'w4-commission': { en: 'Marketplace commission', bg: 'Комисиона' },
-    'w4-ads': { en: 'Advertising', bg: 'Реклами' },
-    'w4-enterprise': { en: 'Enterprise licensing', bg: 'Корпоративен лиценз' },
-    'w4-onetime': { en: 'One-time purchase', bg: 'Еднократна покупка' },
-  };
-
-  const marketMap: Record<string, { en: string; bg: string }> = {
-    'w4-mass': { en: 'Mass Market', bg: 'Масов пазар' },
-    'w4-nichemarket': { en: 'Niche Market', bg: 'Нишов пазар' },
-    'w4-b2b-target': { en: 'B2B', bg: 'B2B' },
-    'w4-b2c-target': { en: 'B2C', bg: 'B2C' },
-    'w4-enterprise-target': { en: 'Enterprise', bg: 'Корпоративен' },
-  };
-
-  const marketingMap: Record<string, { en: string; bg: string }> = {
-    'w5-social': { en: 'Social Media', bg: 'Социални медии' },
-    'w5-influencer': { en: 'Influencer Marketing', bg: 'Инфлуенсър маркетинг' },
-    'w5-seo': { en: 'SEO / Content', bg: 'SEO / Съдържание' },
-    'w5-paid': { en: 'Paid Ads', bg: 'Платени реклами' },
-    'w5-community': { en: 'Community', bg: 'Общност' },
-    'w5-partnerships': { en: 'Partnerships', bg: 'Партньорства' },
-    'w5-plg': { en: 'Product-Led Growth', bg: 'Растеж чрез продукта' },
-    'w5-referral': { en: 'Referral Programs', bg: 'Реферални програми' },
-    'w5-email': { en: 'Email Marketing', bg: 'Имейл маркетинг' },
-    'w5-events': { en: 'Events / Webinars', bg: 'Събития / Уебинари' },
-  };
-
-  return {
-    product: allChoices.filter(c => productMap[c]).map(c => productMap[c]),
-    revenue: allChoices.filter(c => revenueMap[c]).map(c => revenueMap[c]),
-    market: allChoices.filter(c => marketMap[c]).map(c => marketMap[c]),
-    marketing: allChoices.filter(c => marketingMap[c]).map(c => marketingMap[c]),
-  };
-}
+const KPI_META: { key: keyof SimWeekKPIs; en: string; bg: string; icon: React.ElementType; color: string; invertedLabel?: boolean }[] = [
+  { key: 'innovation', en: 'Innovation', bg: 'Иновация', icon: Lightbulb, color: 'hsl(var(--chart-1))' },
+  { key: 'marketPotential', en: 'Market Potential', bg: 'Пазарен потенциал', icon: TrendingUp, color: 'hsl(var(--chart-2))' },
+  { key: 'scalability', en: 'Scalability', bg: 'Мащабируемост', icon: Layers, color: 'hsl(var(--chart-3))' },
+  { key: 'riskLevel', en: 'Risk Level', bg: 'Ниво на риск', icon: ShieldAlert, color: 'hsl(var(--sim-danger))', invertedLabel: true },
+  { key: 'growthPotential', en: 'Growth Potential', bg: 'Потенциал за растеж', icon: Rocket, color: 'hsl(var(--chart-4))' },
+];
 
 export default function StartupSimulator() {
   const { user, loading: authLoading } = useAuth();
@@ -86,13 +46,12 @@ export default function StartupSimulator() {
   const { lang } = useLang();
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
   const [phase, setPhase] = useState<Phase>('intro');
-  const [currentWeek, setCurrentWeek] = useState(0);
+  const [currentStep, setCurrentStep] = useState(0);
   const [currentDecision, setCurrentDecision] = useState(0);
   const [kpis, setKpis] = useState<SimWeekKPIs>({ ...INITIAL_KPIS });
-  const [history, setHistory] = useState<WeekRecord[]>([]);
-  const [weekChoices, setWeekChoices] = useState<string[]>([]);
+  const [history, setHistory] = useState<StepRecord[]>([]);
+  const [stepChoices, setStepChoices] = useState<string[]>([]);
   const [simId, setSimId] = useState<string | null>(null);
-  // Multi-select state
   const [multiSelections, setMultiSelections] = useState<string[]>([]);
 
   useEffect(() => {
@@ -112,27 +71,29 @@ export default function StartupSimulator() {
         if (data) {
           setSimId(data.id);
           const savedKpis = data.kpis as any as SimWeekKPIs;
-          const savedDecisions = data.decisions as any as WeekRecord[];
-          setKpis(savedKpis);
-          setHistory(savedDecisions);
-          setCurrentWeek(Math.min(data.current_week - 1, SIM_WEEKS.length - 1));
-          if (data.is_complete) {
-            setPhase('results');
-          } else if (savedDecisions.length > 0) {
-            setPhase('playing');
+          const savedDecisions = data.decisions as any as StepRecord[];
+          if (savedKpis && savedDecisions) {
+            setKpis(savedKpis);
+            setHistory(savedDecisions);
+            setCurrentStep(Math.min(data.current_week - 1, SIM_WEEKS.length - 1));
+            if (data.is_complete) {
+              setPhase('results');
+            } else if (savedDecisions.length > 0) {
+              setPhase('playing');
+            }
           }
         }
       });
   }, [user]);
 
   const saveProgress = useCallback(async (
-    newKpis: SimWeekKPIs, newHistory: WeekRecord[], weekNum: number, complete: boolean
+    newKpis: SimWeekKPIs, newHistory: StepRecord[], stepNum: number, complete: boolean
   ) => {
     if (!user) return;
     const grade = complete ? getStartupGrade(newKpis).grade : null;
     const payload = {
       user_id: user.id,
-      current_week: weekNum,
+      current_week: stepNum,
       kpis: newKpis as any,
       decisions: newHistory as any,
       is_complete: complete,
@@ -148,58 +109,55 @@ export default function StartupSimulator() {
 
   const reset = useCallback(async () => {
     setPhase('intro');
-    setCurrentWeek(0);
+    setCurrentStep(0);
     setCurrentDecision(0);
     setKpis({ ...INITIAL_KPIS });
     setHistory([]);
-    setWeekChoices([]);
+    setStepChoices([]);
     setSimId(null);
     setMultiSelections([]);
   }, []);
 
   const advanceDecision = (newKpis: SimWeekKPIs, newChoices: string[]) => {
     setKpis(newKpis);
-    setWeekChoices(newChoices);
+    setStepChoices(newChoices);
     setMultiSelections([]);
 
-    const week = SIM_WEEKS[currentWeek];
-    if (currentDecision < week.decisions.length - 1) {
+    const step = SIM_WEEKS[currentStep];
+    if (currentDecision < step.decisions.length - 1) {
       setCurrentDecision(d => d + 1);
     } else {
-      const record: WeekRecord = { week: currentWeek + 1, choices: newChoices, kpis: { ...newKpis } };
+      const record: StepRecord = { step: currentStep + 1, choices: newChoices, kpis: { ...newKpis } };
       const newHistory = [...history, record];
       setHistory(newHistory);
-      setWeekChoices([]);
+      setStepChoices([]);
       setCurrentDecision(0);
 
-      if (currentWeek < SIM_WEEKS.length - 1) {
-        setCurrentWeek(w => w + 1);
-        saveProgress(newKpis, newHistory, currentWeek + 2, false);
+      if (currentStep < SIM_WEEKS.length - 1) {
+        setCurrentStep(w => w + 1);
+        saveProgress(newKpis, newHistory, currentStep + 2, false);
       } else {
         setPhase('results');
-        saveProgress(newKpis, newHistory, currentWeek + 1, true);
+        saveProgress(newKpis, newHistory, currentStep + 1, true);
       }
     }
   };
 
   const handleSingleChoice = (optionId: string, effects: Partial<SimWeekKPIs>) => {
     const newKpis = applyDecisionEffects(kpis, effects);
-    const newChoices = [...weekChoices, optionId];
-    advanceDecision(newKpis, newChoices);
+    advanceDecision(newKpis, [...stepChoices, optionId]);
   };
 
   const handleMultiConfirm = () => {
     if (multiSelections.length === 0) return;
-    const week = SIM_WEEKS[currentWeek];
-    const decision = week.decisions[currentDecision];
+    const decision = SIM_WEEKS[currentStep].decisions[currentDecision];
     const selectedEffects = multiSelections.map(id => {
       const opt = decision.options.find(o => o.id === id);
       return opt?.effects || {};
     });
     const combined = combineEffects(selectedEffects);
     const newKpis = applyDecisionEffects(kpis, combined);
-    const newChoices = [...weekChoices, ...multiSelections];
-    advanceDecision(newKpis, newChoices);
+    advanceDecision(newKpis, [...stepChoices, ...multiSelections]);
   };
 
   const toggleMultiSelection = (optionId: string) => {
@@ -208,6 +166,11 @@ export default function StartupSimulator() {
     );
   };
 
+  const performanceScore = Math.round(
+    kpis.innovation * 0.25 + kpis.marketPotential * 0.2 + kpis.scalability * 0.2 +
+    (100 - kpis.riskLevel) * 0.15 + kpis.growthPotential * 0.2
+  );
+
   // ── INTRO ──
   if (phase === 'intro') {
     return (
@@ -215,13 +178,9 @@ export default function StartupSimulator() {
         <AppHeader />
         <div className="container mx-auto max-w-3xl px-4 py-8">
           <nav className="flex items-center gap-1.5 text-sm text-muted-foreground mb-6">
-            <Link to="/dashboard" className="hover:text-foreground transition-colors">
-              {t('Dashboard', 'Табло')}
-            </Link>
+            <Link to="/dashboard" className="hover:text-foreground transition-colors">{t('Dashboard', 'Табло')}</Link>
             <ChevronRight className="h-3.5 w-3.5" />
-            <span className="text-foreground font-medium">
-              {t('Startup Simulator', 'Стартъп симулатор')}
-            </span>
+            <span className="text-foreground font-medium">{t('Startup Simulator', 'Стартъп симулатор')}</span>
           </nav>
 
           <div className="text-center py-10">
@@ -231,16 +190,16 @@ export default function StartupSimulator() {
             </h1>
             <p className="text-muted-foreground max-w-lg mx-auto mb-6">
               {t(
-                'Simulate the process of building a startup over 6 weeks. Make strategic decisions about technology, business models, and marketing — just like real founders at MIT and Harvard case studies.',
-                'Симулирайте процеса на изграждане на стартъп за 6 седмици. Вземайте стратегически решения за технологии, бизнес модели и маркетинг — точно като в казуси от MIT и Harvard.'
+                'Build a startup step by step. Every decision affects your innovation score, market potential, scalability, risk level, and growth potential. Think strategically — like a real founder.',
+                'Изградете стартъп стъпка по стъпка. Всяко решение влияе на вашата иновация, пазарен потенциал, мащабируемост, ниво на риск и потенциал за растеж.'
               )}
             </p>
 
             <div className="grid gap-3 sm:grid-cols-3 max-w-md mx-auto mb-8 text-left">
               {[
-                { icon: '📋', en: '6 weekly challenges', bg: '6 седмични предизвикателства' },
-                { icon: '📊', en: 'Live KPI tracking', bg: 'Проследяване на KPI в реално време' },
-                { icon: '🏆', en: 'Final startup grade', bg: 'Финална оценка на стартъпа' },
+                { icon: '🎯', en: '6 strategic decisions', bg: '6 стратегически решения' },
+                { icon: '📊', en: 'Live performance dashboard', bg: 'Табло с показатели в реално време' },
+                { icon: '🏆', en: 'Startup Performance Score', bg: 'Оценка на стартъп представянето' },
               ].map((f, i) => (
                 <div key={i} className="rounded-lg border border-border bg-card p-3 text-center">
                   <span className="text-2xl block mb-1">{f.icon}</span>
@@ -256,19 +215,20 @@ export default function StartupSimulator() {
           </div>
 
           <div className="space-y-2 mt-4">
-            {SIM_WEEKS.map(w => (
-              <div key={w.week} className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3">
-                <span className="text-xl">{w.icon}</span>
-                <div className="flex-1">
-                  <span className="text-xs text-muted-foreground">
-                    {t(`Week ${w.week}`, `Седмица ${w.week}`)}
-                  </span>
-                  <h3 className="text-sm font-medium text-foreground">
-                    {lang === 'bg' ? w.titleBg : w.titleEn}
-                  </h3>
+            {SIM_WEEKS.map((w, i) => {
+              const Icon = STEP_ICONS[i] || Target;
+              return (
+                <div key={w.week} className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10">
+                    <Icon className="h-4 w-4 text-primary" />
+                  </div>
+                  <div className="flex-1">
+                    <span className="text-xs text-muted-foreground">{t(`Step ${w.week}`, `Стъпка ${w.week}`)}</span>
+                    <h3 className="text-sm font-medium text-foreground">{lang === 'bg' ? w.titleBg : w.titleEn}</h3>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>
@@ -278,116 +238,61 @@ export default function StartupSimulator() {
   // ── RESULTS ──
   if (phase === 'results') {
     const grade = getStartupGrade(kpis);
-    const chartData = [
-      { name: t('Start', 'Старт'), users: 0, revenue: 0, satisfaction: 50, growth: 0 },
-      ...history.map(h => ({
-        name: `${t('W', 'С')}${h.week}`,
-        users: h.kpis.users,
-        revenue: h.kpis.revenue,
-        satisfaction: h.kpis.satisfaction,
-        growth: h.kpis.growthRate,
-      })),
-    ];
 
-    const strategy = extractStrategyFromHistory(history);
+    const radarData = KPI_META.map(m => ({
+      metric: lang === 'bg' ? m.bg : m.en,
+      value: m.key === 'riskLevel' ? 100 - kpis[m.key] : kpis[m.key],
+      fullMark: 100,
+    }));
+
+    const barData = KPI_META.map(m => ({
+      name: lang === 'bg' ? m.bg : m.en,
+      value: kpis[m.key],
+      color: m.color,
+      isRisk: m.key === 'riskLevel',
+    }));
 
     return (
       <div className="min-h-screen bg-background">
         <AppHeader />
         <div className="container mx-auto max-w-4xl px-4 py-8">
           <nav className="flex items-center gap-1.5 text-sm text-muted-foreground mb-6">
-            <Link to="/dashboard" className="hover:text-foreground transition-colors">
-              {t('Dashboard', 'Табло')}
-            </Link>
+            <Link to="/dashboard" className="hover:text-foreground transition-colors">{t('Dashboard', 'Табло')}</Link>
             <ChevronRight className="h-3.5 w-3.5" />
-            <span className="text-foreground font-medium">
-              {t('Simulation Results', 'Резултати от симулацията')}
-            </span>
+            <span className="text-foreground font-medium">{t('Simulation Results', 'Резултати от симулацията')}</span>
           </nav>
 
           {/* Grade */}
           <div className="text-center mb-8">
-            <div className="inline-flex h-20 w-20 items-center justify-center rounded-full border-4 mb-3" style={{ borderColor: grade.color }}>
-              <span className="text-3xl font-display font-bold" style={{ color: grade.color }}>{grade.grade}</span>
+            <div className="inline-flex h-24 w-24 items-center justify-center rounded-full border-4 mb-3" style={{ borderColor: grade.color }}>
+              <span className="text-4xl font-display font-bold" style={{ color: grade.color }}>{grade.grade}</span>
             </div>
             <h1 className="text-2xl font-display font-bold text-foreground">
               {lang === 'bg' ? grade.labelBg : grade.labelEn}
             </h1>
-            <p className="text-sm text-muted-foreground mt-1">
-              {t('Your final startup grade', 'Вашата финална оценка на стартъпа')}
+            <p className="text-lg font-semibold text-primary mt-1">
+              {t('Performance Score', 'Оценка на представянето')}: {performanceScore}/100
             </p>
           </div>
 
-          {/* Strategy Summary Card */}
+          {/* Feedback */}
           <div className="rounded-xl border-2 border-primary/30 bg-primary/5 p-6 mb-8">
-            <h3 className="text-lg font-display font-bold text-foreground mb-4 flex items-center gap-2">
-              <Layers className="h-5 w-5 text-primary" />
-              {t('Startup Architecture', 'Архитектура на стартъпа')}
+            <h3 className="text-base font-display font-bold text-foreground mb-2 flex items-center gap-2">
+              <Lightbulb className="h-5 w-5 text-primary" />
+              {t('Strategic Feedback', 'Стратегическа обратна връзка')}
             </h3>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {/* Product */}
-              <div className="space-y-1">
-                <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
-                  <Briefcase className="h-4 w-4" />
-                  {t('Product', 'Продукт')}
-                </div>
-                <div className="flex flex-wrap gap-1.5">
-                  {strategy.product.length > 0 ? strategy.product.map((p, i) => (
-                    <Badge key={i} variant="secondary">{lang === 'bg' ? p.bg : p.en}</Badge>
-                  )) : <span className="text-xs text-muted-foreground">—</span>}
-                </div>
-              </div>
-              {/* Revenue */}
-              <div className="space-y-1">
-                <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
-                  <DollarSign className="h-4 w-4" />
-                  {t('Revenue Model', 'Приходен модел')}
-                </div>
-                <div className="flex flex-wrap gap-1.5">
-                  {strategy.revenue.length > 0 ? strategy.revenue.map((r, i) => (
-                    <Badge key={i} variant="secondary">{lang === 'bg' ? r.bg : r.en}</Badge>
-                  )) : <span className="text-xs text-muted-foreground">—</span>}
-                </div>
-              </div>
-              {/* Market */}
-              <div className="space-y-1">
-                <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
-                  <Target className="h-4 w-4" />
-                  {t('Market', 'Пазар')}
-                </div>
-                <div className="flex flex-wrap gap-1.5">
-                  {strategy.market.length > 0 ? strategy.market.map((m, i) => (
-                    <Badge key={i} variant="secondary">{lang === 'bg' ? m.bg : m.en}</Badge>
-                  )) : <span className="text-xs text-muted-foreground">—</span>}
-                </div>
-              </div>
-              {/* Marketing */}
-              <div className="space-y-1">
-                <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
-                  <Megaphone className="h-4 w-4" />
-                  {t('Marketing Strategy', 'Маркетингова стратегия')}
-                </div>
-                <div className="flex flex-wrap gap-1.5">
-                  {strategy.marketing.length > 0 ? strategy.marketing.map((m, i) => (
-                    <Badge key={i} variant="secondary">{lang === 'bg' ? m.bg : m.en}</Badge>
-                  )) : <span className="text-xs text-muted-foreground">—</span>}
-                </div>
-              </div>
-            </div>
+            <p className="text-sm text-muted-foreground leading-relaxed">
+              {lang === 'bg' ? grade.feedbackBg : grade.feedbackEn}
+            </p>
           </div>
 
           {/* KPI Cards */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
-            {[
-              { labelEn: 'Users', labelBg: 'Потребители', value: kpis.users.toLocaleString(), icon: Users, color: 'hsl(var(--chart-1))' },
-              { labelEn: 'Revenue', labelBg: 'Приходи', value: `$${kpis.revenue.toLocaleString()}`, icon: DollarSign, color: 'hsl(var(--chart-2))' },
-              { labelEn: 'Satisfaction', labelBg: 'Удовлетвореност', value: `${kpis.satisfaction}%`, icon: Smile, color: 'hsl(var(--chart-3))' },
-              { labelEn: 'Growth Rate', labelBg: 'Растеж', value: `${kpis.growthRate}%`, icon: TrendingUp, color: 'hsl(var(--chart-4))' },
-            ].map(kpi => (
-              <div key={kpi.labelEn} className="rounded-xl border border-border bg-card p-4 text-center">
-                <kpi.icon className="h-5 w-5 mx-auto mb-1" style={{ color: kpi.color }} />
-                <div className="text-xl font-bold text-foreground">{kpi.value}</div>
-                <div className="text-xs text-muted-foreground">{lang === 'bg' ? kpi.labelBg : kpi.labelEn}</div>
+          <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-8">
+            {KPI_META.map(m => (
+              <div key={m.key} className="rounded-xl border border-border bg-card p-4 text-center">
+                <m.icon className="h-5 w-5 mx-auto mb-1" style={{ color: m.color }} />
+                <div className="text-xl font-bold text-foreground">{kpis[m.key]}</div>
+                <div className="text-xs text-muted-foreground">{lang === 'bg' ? m.bg : m.en}</div>
               </div>
             ))}
           </div>
@@ -395,36 +300,37 @@ export default function StartupSimulator() {
           {/* Charts */}
           <div className="grid gap-6 md:grid-cols-2 mb-8">
             <div className="rounded-xl border border-border bg-card p-4">
-              <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
-                <Users className="h-4 w-4 text-primary" />
-                {t('User Growth', 'Растеж на потребителите')}
+              <h3 className="text-sm font-semibold text-foreground mb-3">
+                {t('Strategy Radar', 'Стратегически радар')}
               </h3>
-              <div className="h-48">
+              <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={chartData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                    <XAxis dataKey="name" tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" />
-                    <YAxis tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" />
-                    <Tooltip />
-                    <Line type="monotone" dataKey="users" stroke="hsl(var(--chart-1))" strokeWidth={2} dot={{ r: 3 }} />
-                  </LineChart>
+                  <RadarChart data={radarData}>
+                    <PolarGrid stroke="hsl(var(--border))" />
+                    <PolarAngleAxis dataKey="metric" tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }} />
+                    <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: 10 }} />
+                    <Radar name="Score" dataKey="value" stroke="hsl(var(--primary))" fill="hsl(var(--primary))" fillOpacity={0.3} strokeWidth={2} />
+                  </RadarChart>
                 </ResponsiveContainer>
               </div>
             </div>
             <div className="rounded-xl border border-border bg-card p-4">
-              <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
-                <DollarSign className="h-4 w-4 text-[hsl(var(--chart-2))]" />
-                {t('Revenue ($)', 'Приходи ($)')}
+              <h3 className="text-sm font-semibold text-foreground mb-3">
+                {t('Performance Metrics', 'Метрики на представянето')}
               </h3>
-              <div className="h-48">
+              <div className="h-64">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={chartData}>
+                  <BarChart data={barData} layout="vertical">
                     <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                    <XAxis dataKey="name" tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" />
-                    <YAxis tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" />
+                    <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" />
+                    <YAxis type="category" dataKey="name" tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" width={100} />
                     <Tooltip />
-                    <Line type="monotone" dataKey="revenue" stroke="hsl(var(--chart-2))" strokeWidth={2} dot={{ r: 3 }} />
-                  </LineChart>
+                    <Bar dataKey="value" radius={[0, 4, 4, 0]}>
+                      {barData.map((entry, i) => (
+                        <Cell key={i} fill={entry.color} />
+                      ))}
+                    </Bar>
+                  </BarChart>
                 </ResponsiveContainer>
               </div>
             </div>
@@ -433,25 +339,24 @@ export default function StartupSimulator() {
           {/* Decision history */}
           <div className="rounded-xl border border-border bg-card p-5 mb-6">
             <h3 className="text-base font-display font-semibold text-foreground mb-4 flex items-center gap-2">
-              <BarChart3 className="h-4 w-4 text-primary" />
-              {t('Your Decisions', 'Вашите решения')}
+              <Target className="h-4 w-4 text-primary" />
+              {t('Your Strategic Decisions', 'Вашите стратегически решения')}
             </h3>
             <div className="space-y-3">
               {history.map((h, i) => {
-                const week = SIM_WEEKS[i];
+                const step = SIM_WEEKS[i];
+                const Icon = STEP_ICONS[i] || Target;
                 return (
                   <div key={i} className="flex items-start gap-3 pb-3 border-b border-border last:border-0 last:pb-0">
-                    <span className="text-lg">{week.icon}</span>
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 shrink-0 mt-0.5">
+                      <Icon className="h-4 w-4 text-primary" />
+                    </div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-xs text-muted-foreground">
-                        {t(`Week ${week.week}`, `Седмица ${week.week}`)}
-                      </div>
-                      <div className="text-sm font-medium text-foreground">
-                        {lang === 'bg' ? week.titleBg : week.titleEn}
-                      </div>
+                      <div className="text-xs text-muted-foreground">{t(`Step ${step.week}`, `Стъпка ${step.week}`)}</div>
+                      <div className="text-sm font-medium text-foreground">{lang === 'bg' ? step.titleBg : step.titleEn}</div>
                       <div className="flex flex-wrap gap-1.5 mt-1">
                         {h.choices.map(c => {
-                          const opt = week.decisions.flatMap(d => d.options).find(o => o.id === c);
+                          const opt = step.decisions.flatMap(d => d.options).find(o => o.id === c);
                           return opt ? (
                             <Badge key={c} variant="secondary" className="text-xs">
                               {lang === 'bg' ? opt.labelBg : opt.labelEn}
@@ -472,9 +377,7 @@ export default function StartupSimulator() {
               {t('Play Again', 'Играй отново')}
             </Button>
             <Button asChild>
-              <Link to="/my-startup">
-                {t('Go to Startup Project →', 'Отиди към Стартъп проект →')}
-              </Link>
+              <Link to="/my-startup">{t('Go to Startup Project →', 'Отиди към Стартъп проект →')}</Link>
             </Button>
           </div>
         </div>
@@ -483,65 +386,58 @@ export default function StartupSimulator() {
   }
 
   // ── PLAYING ──
-  const week = SIM_WEEKS[currentWeek];
-  const decision = week.decisions[currentDecision];
+  const step = SIM_WEEKS[currentStep];
+  const decision = step.decisions[currentDecision];
   const isMulti = !!decision.multiSelect;
-  const totalDecisions = SIM_WEEKS.reduce((sum, w) => sum + w.decisions.length, 0);
-  const completedDecisions = history.reduce((sum, _, i) => sum + SIM_WEEKS[i].decisions.length, 0) + currentDecision;
-  const weekProgress = Math.round((completedDecisions / totalDecisions) * 100);
+  const totalSteps = SIM_WEEKS.length;
+  const stepProgress = Math.round(((currentStep + (currentDecision / step.decisions.length)) / totalSteps) * 100);
+  const StepIcon = STEP_ICONS[currentStep] || Target;
 
   return (
     <div className="min-h-screen bg-background">
       <AppHeader />
       <div className="container mx-auto max-w-3xl px-4 py-8">
         <nav className="flex items-center gap-1.5 text-sm text-muted-foreground mb-6">
-          <Link to="/dashboard" className="hover:text-foreground transition-colors">
-            {t('Dashboard', 'Табло')}
-          </Link>
+          <Link to="/dashboard" className="hover:text-foreground transition-colors">{t('Dashboard', 'Табло')}</Link>
           <ChevronRight className="h-3.5 w-3.5" />
-          <span className="text-foreground font-medium">
-            {t('Startup Simulator', 'Стартъп симулатор')}
-          </span>
+          <span className="text-foreground font-medium">{t('Startup Simulator', 'Стартъп симулатор')}</span>
         </nav>
 
         {/* Progress */}
         <div className="flex items-center gap-3 mb-6">
-          <Progress value={weekProgress} className="h-2 flex-1" />
+          <Progress value={stepProgress} className="h-2 flex-1" />
           <span className="text-xs font-medium text-muted-foreground shrink-0">
-            {t(`Week ${currentWeek + 1}/6`, `Седмица ${currentWeek + 1}/6`)}
+            {t(`Step ${currentStep + 1}/${totalSteps}`, `Стъпка ${currentStep + 1}/${totalSteps}`)}
           </span>
         </div>
 
-        {/* KPI mini bar */}
-        <div className="grid grid-cols-4 gap-2 mb-6">
-          {[
-            { label: t('Users', 'Потребители'), val: kpis.users, icon: Users },
-            { label: t('Revenue', 'Приходи'), val: `$${kpis.revenue}`, icon: DollarSign },
-            { label: t('Satisf.', 'Удовл.'), val: `${kpis.satisfaction}%`, icon: Smile },
-            { label: t('Growth', 'Растеж'), val: `${kpis.growthRate}%`, icon: TrendingUp },
-          ].map(k => (
-            <div key={k.label} className="rounded-lg border border-border bg-card px-2 py-2 text-center">
-              <k.icon className="h-3.5 w-3.5 mx-auto text-muted-foreground mb-0.5" />
-              <div className="text-sm font-bold text-foreground">{k.val}</div>
-              <div className="text-[10px] text-muted-foreground truncate">{k.label}</div>
+        {/* KPI Dashboard */}
+        <div className="grid grid-cols-5 gap-2 mb-6">
+          {KPI_META.map(m => (
+            <div key={m.key} className="rounded-lg border border-border bg-card px-2 py-2 text-center">
+              <m.icon className="h-3.5 w-3.5 mx-auto mb-0.5" style={{ color: m.color }} />
+              <div className="text-sm font-bold text-foreground">{kpis[m.key]}</div>
+              <div className="text-[10px] text-muted-foreground truncate">{lang === 'bg' ? m.bg : m.en}</div>
             </div>
           ))}
         </div>
 
-        {/* Week header */}
+        {/* Step header */}
         <div className="flex items-center gap-3 mb-2">
-          <span className="text-3xl">{week.icon}</span>
+          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-primary/10">
+            <StepIcon className="h-5 w-5 text-primary" />
+          </div>
           <div>
             <Badge variant="outline" className="text-xs mb-1">
-              {t(`Week ${week.week}`, `Седмица ${week.week}`)}
+              {t(`Step ${step.week}`, `Стъпка ${step.week}`)}
             </Badge>
             <h2 className="text-xl font-display font-bold text-foreground">
-              {lang === 'bg' ? week.titleBg : week.titleEn}
+              {lang === 'bg' ? step.titleBg : step.titleEn}
             </h2>
           </div>
         </div>
         <p className="text-sm text-muted-foreground mb-6">
-          {lang === 'bg' ? week.descBg : week.descEn}
+          {lang === 'bg' ? step.descBg : step.descEn}
         </p>
 
         {/* Decision */}
@@ -570,18 +466,10 @@ export default function StartupSimulator() {
                         : 'border-border hover:border-primary/40 hover:bg-accent/50'
                     }`}
                   >
-                    <Checkbox
-                      checked={isSelected}
-                      className="mt-0.5 pointer-events-none"
-                      tabIndex={-1}
-                    />
+                    <Checkbox checked={isSelected} className="mt-0.5 pointer-events-none" tabIndex={-1} />
                     <div className="flex-1">
-                      <div className="font-medium text-foreground">
-                        {lang === 'bg' ? opt.labelBg : opt.labelEn}
-                      </div>
-                      <p className="text-sm text-muted-foreground mt-0.5">
-                        {lang === 'bg' ? opt.descBg : opt.descEn}
-                      </p>
+                      <div className="font-medium text-foreground">{lang === 'bg' ? opt.labelBg : opt.labelEn}</div>
+                      <p className="text-sm text-muted-foreground mt-0.5">{lang === 'bg' ? opt.descBg : opt.descEn}</p>
                     </div>
                     {isSelected && <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />}
                   </button>
@@ -597,15 +485,12 @@ export default function StartupSimulator() {
                   <div className="font-medium text-foreground group-hover:text-primary transition-colors">
                     {lang === 'bg' ? opt.labelBg : opt.labelEn}
                   </div>
-                  <p className="text-sm text-muted-foreground mt-0.5">
-                    {lang === 'bg' ? opt.descBg : opt.descEn}
-                  </p>
+                  <p className="text-sm text-muted-foreground mt-0.5">{lang === 'bg' ? opt.descBg : opt.descEn}</p>
                 </button>
               );
             })}
           </div>
 
-          {/* Multi-select hint & confirm */}
           {isMulti && multiSelections.length > 1 && decision.multiSelectHintEn && (
             <div className="mt-4 rounded-lg bg-primary/10 border border-primary/20 p-3 text-sm text-primary">
               💡 {lang === 'bg' ? decision.multiSelectHintBg : decision.multiSelectHintEn}
@@ -617,10 +502,7 @@ export default function StartupSimulator() {
               <span className="text-sm text-muted-foreground">
                 {multiSelections.length} {t('selected', 'избрани')}
               </span>
-              <Button
-                onClick={handleMultiConfirm}
-                disabled={multiSelections.length === 0}
-              >
+              <Button onClick={handleMultiConfirm} disabled={multiSelections.length === 0}>
                 {t('Confirm Choices', 'Потвърдете избора')}
                 <ChevronRight className="h-4 w-4 ml-1" />
               </Button>
