@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -7,15 +7,16 @@ import AppHeader from '@/components/layout/AppHeader';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import {
   ArrowLeft, ArrowRight, ExternalLink, CheckCircle2, Save,
   BookOpen, FileText, AlertTriangle, ChevronUp, ChevronDown, Lock,
   Building2, TrendingUp, BarChart3, Brain, PenTool, Rocket, Award,
+  Lightbulb, Target, Zap, HelpCircle,
 } from 'lucide-react';
 import type { Json } from '@/integrations/supabase/types';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 
 /* ── Types ── */
 interface CaseStudy {
@@ -37,21 +38,59 @@ interface Question {
   options: Json; points: number;
 }
 
+/* ── Section meta – now 5-part structure ── */
 const SECTION_ICONS: Record<number, React.ElementType> = {
-  0: BookOpen, 1: Building2, 2: TrendingUp, 3: BarChart3,
-  4: Brain, 5: PenTool, 6: Rocket, 7: Award,
+  0: BookOpen, 1: Building2, 2: Target, 3: Brain,
+  4: Lightbulb, 5: Rocket, 6: PenTool, 7: Award,
 };
-
 const SECTION_LABELS_EN: Record<number, string> = {
-  0: 'Research & Reading', 1: 'Business Context', 2: 'Industry Disruption',
-  3: 'Data & Exhibits', 4: 'Strategic Analysis', 5: 'Innovation Proposal',
+  0: 'Research & Reading', 1: 'Context', 2: 'The Problem',
+  3: 'Analysis Questions', 4: 'Key Insight', 5: 'Apply to Your Startup',
   6: 'Final Recommendation', 7: 'Conclusion',
 };
 const SECTION_LABELS_BG: Record<number, string> = {
-  0: 'Проучване', 1: 'Бизнес контекст', 2: 'Индустриална трансформация',
-  3: 'Данни и експонати', 4: 'Стратегически анализ', 5: 'Иновационно предложение',
+  0: 'Проучване', 1: 'Контекст', 2: 'Проблемът',
+  3: 'Въпроси за анализ', 4: 'Ключов урок', 5: 'Приложи към стартъпа си',
   6: 'Финална препоръка', 7: 'Заключение',
 };
+
+/* ── Section descriptions for students ── */
+const SECTION_HINTS_EN: Record<number, string> = {
+  0: 'Read the required material and take research notes.',
+  1: 'Understand the company background, industry context, and strategic situation.',
+  2: 'Identify the main decision or challenge the company faces.',
+  3: 'Analyze the situation using guided strategic questions.',
+  4: 'Discover the key strategic lesson from this case.',
+  5: 'Connect the case insights to your own startup project.',
+  6: 'Propose your innovation recommendation.',
+  7: 'Summarize your conclusions and key takeaways.',
+};
+const SECTION_HINTS_BG: Record<number, string> = {
+  0: 'Прочетете задължителния материал и направете бележки.',
+  1: 'Разберете компанията, индустрията и стратегическата ситуация.',
+  2: 'Идентифицирайте основното решение или предизвикателство.',
+  3: 'Анализирайте ситуацията чрез стратегически въпроси.',
+  4: 'Открийте ключовия стратегически урок от казуса.',
+  5: 'Свържете прозренията от казуса с вашия стартъп проект.',
+  6: 'Предложете вашата иновационна препоръка.',
+  7: 'Обобщете заключенията и ключовите изводи.',
+};
+
+/* ── Apply-to-startup prompts shown on steps 5+ ── */
+const STARTUP_PROMPTS_EN = [
+  'Who are the competitors in your market?',
+  'What gap can your product fill based on this case?',
+  'What is your unique competitive advantage?',
+  'How would you avoid the risks identified in this case?',
+  'What strategy from this case could you apply to your startup?',
+];
+const STARTUP_PROMPTS_BG = [
+  'Кои са конкурентите на вашия пазар?',
+  'Каква празнина може да запълни вашият продукт на база на този казус?',
+  'Какво е вашето уникално конкурентно предимство?',
+  'Как бихте избегнали рисковете, идентифицирани в казуса?',
+  'Каква стратегия от този казус бихте приложили към стартъпа си?',
+];
 
 function wordCount(text: string): number {
   return text.trim().split(/\s+/).filter(Boolean).length;
@@ -74,6 +113,8 @@ export default function CasePlayer() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [startupNotes, setStartupNotes] = useState<Record<number, string>>({});
+  const [showInsight, setShowInsight] = useState<Record<number, boolean>>({});
   const autosaveRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -113,6 +154,12 @@ export default function CasePlayer() {
     ? questions.filter(q => q.case_step_id === currentStepData.id).sort((a, b) => a.question_order - b.question_order)
     : [];
 
+  /* ── Check if all questions in current step are answered ── */
+  const allStepQuestionsAnswered = stepQuestions.length > 0 && stepQuestions.every(q => {
+    const a = answers[q.id];
+    return a && String(a).trim().length > 0;
+  });
+
   const saveDraft = useCallback(async () => {
     if (!user || !id || isSubmitted) return;
     setSaving(true);
@@ -140,7 +187,6 @@ export default function CasePlayer() {
     await saveDraft();
     if (!submissionId) return;
     setSaving(true);
-
     try {
       const { data, error } = await supabase.functions.invoke('grade-submission', {
         body: { submission_id: submissionId, source: 'case', lang },
@@ -187,6 +233,14 @@ export default function CasePlayer() {
   const sectionLabel = lang === 'bg'
     ? SECTION_LABELS_BG[currentStep] || `Секция ${currentStep + 1}`
     : SECTION_LABELS_EN[currentStep] || `Section ${currentStep + 1}`;
+  const sectionHint = lang === 'bg'
+    ? SECTION_HINTS_BG[currentStep] || ''
+    : SECTION_HINTS_EN[currentStep] || '';
+
+  /* Should we show the "Apply to Startup" panel on this step? Show on steps 3+ (after analysis) */
+  const showStartupPanel = currentStep >= 3 && !isStep0;
+  /* Should we show "Key Insight" reveal? Show on steps with questions, after all answered */
+  const showInsightPanel = stepQuestions.length > 0 && currentStep >= 1;
 
   return (
     <div className="min-h-screen bg-background">
@@ -223,16 +277,23 @@ export default function CasePlayer() {
       </div>
 
       <main className="container mx-auto px-4 py-8 max-w-3xl space-y-6">
-        <div className="flex items-center gap-4">
+        {/* Section header with hint */}
+        <div className="flex items-start gap-4">
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 shrink-0">
             <SectionIcon className="h-6 w-6 text-primary" />
           </div>
           <div>
             <p className="text-xs text-muted-foreground font-sans uppercase tracking-wider">{sectionLabel}</p>
             <h2 className="text-2xl font-display font-bold text-foreground">{tx(currentStepData.title, currentStepData.title_bg)}</h2>
+            {sectionHint && (
+              <p className="text-sm text-muted-foreground mt-1 flex items-center gap-1.5">
+                <HelpCircle className="h-3.5 w-3.5 shrink-0" /> {sectionHint}
+              </p>
+            )}
           </div>
         </div>
 
+        {/* Required reading (step 0 only) */}
         {isStep0 && caseStudy.reading_url && (
           <a href={caseStudy.reading_url} target="_blank" rel="noopener noreferrer"
             className="flex items-center gap-4 rounded-lg border-2 border-primary/30 bg-accent p-5 hover:border-primary/60 transition-all group">
@@ -249,11 +310,16 @@ export default function CasePlayer() {
           </a>
         )}
 
+        {/* ── 1. CONTEXT ── */}
         {(currentStepData.narrative || currentStepData.narrative_bg) && (
           <div className="rounded-lg border border-border bg-card p-6">
             <div className="flex items-center gap-2 mb-3">
-              <BookOpen className="h-4 w-4 text-primary" />
-              <h3 className="font-display font-semibold text-foreground">{tl('Context', 'Контекст')}</h3>
+              <Building2 className="h-4 w-4 text-primary" />
+              <h3 className="font-display font-semibold text-foreground">
+                {currentStep <= 1
+                  ? tl('Company & Industry Context', 'Контекст на компанията и индустрията')
+                  : tl('Context', 'Контекст')}
+              </h3>
             </div>
             <div className="text-sm text-foreground/85 whitespace-pre-line leading-relaxed">
               {tx(currentStepData.narrative, currentStepData.narrative_bg)}
@@ -261,11 +327,16 @@ export default function CasePlayer() {
           </div>
         )}
 
+        {/* ── 2. THE PROBLEM / DATA ── */}
         {(currentStepData.exhibit_text || currentStepData.exhibit_text_bg) && (
-          <div className="rounded-lg border border-primary/20 bg-accent p-6">
+          <div className="rounded-lg border-2 border-sim-warning/30 bg-sim-warning/5 p-6">
             <div className="flex items-center gap-2 mb-3">
-              <BarChart3 className="h-4 w-4 text-accent-foreground" />
-              <h3 className="font-display font-semibold text-foreground">{tl('Data & Exhibit', 'Данни и експонат')}</h3>
+              <Target className="h-4 w-4 text-sim-warning" />
+              <h3 className="font-display font-semibold text-foreground">
+                {currentStep === 2
+                  ? tl('The Problem', 'Проблемът')
+                  : tl('Data & Evidence', 'Данни и доказателства')}
+              </h3>
             </div>
             <div className="text-sm text-foreground/85 whitespace-pre-line leading-relaxed font-sans">
               {tx(currentStepData.exhibit_text, currentStepData.exhibit_text_bg)}
@@ -273,8 +344,15 @@ export default function CasePlayer() {
           </div>
         )}
 
+        {/* ── 3. ANALYSIS QUESTIONS ── */}
         {stepQuestions.length > 0 && (
           <div className="space-y-6">
+            {stepQuestions.length > 1 && (
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Brain className="h-4 w-4" />
+                <span>{tl(`Answer ${stepQuestions.length} analysis questions`, `Отговорете на ${stepQuestions.length} въпроса за анализ`)}</span>
+              </div>
+            )}
             {stepQuestions.map((q, idx) => (
               <QuestionCard key={q.id} question={q} index={idx} answer={answers[q.id]}
                 isSubmitted={isSubmitted} isStep0={isStep0} step0NotesId={step0NotesQuestion?.id}
@@ -283,6 +361,7 @@ export default function CasePlayer() {
           </div>
         )}
 
+        {/* ── Reading gate (step 0) ── */}
         {isStep0 && !step0Gate && (
           <div className="flex items-center gap-2 rounded-lg border border-sim-warning/30 bg-sim-warning/5 p-4">
             <AlertTriangle className="h-5 w-5 text-sim-warning shrink-0" />
@@ -295,6 +374,113 @@ export default function CasePlayer() {
           </div>
         )}
 
+        {/* ── 4. KEY INSIGHT (revealed after all questions answered) ── */}
+        {showInsightPanel && (
+          <div className={`rounded-lg border p-6 transition-all ${
+            allStepQuestionsAnswered
+              ? 'border-sim-success/40 bg-sim-success/5'
+              : 'border-border bg-muted/30 opacity-60'
+          }`}>
+            <div className="flex items-center gap-2 mb-3">
+              <Lightbulb className={`h-5 w-5 ${allStepQuestionsAnswered ? 'text-sim-success' : 'text-muted-foreground'}`} />
+              <h3 className="font-display font-semibold text-foreground">
+                {tl('Key Insight', 'Ключов урок')}
+              </h3>
+              {!allStepQuestionsAnswered && (
+                <Badge variant="outline" className="text-xs ml-auto">
+                  <Lock className="h-3 w-3 mr-1" />
+                  {tl('Answer all questions to reveal', 'Отговорете на всички въпроси')}
+                </Badge>
+              )}
+            </div>
+            {allStepQuestionsAnswered ? (
+              showInsight[currentStep] ? (
+                <div className="text-sm text-foreground/85 leading-relaxed space-y-2">
+                  <p>
+                    {tl(
+                      'Great work! Think about what this analysis reveals about strategic decision-making. The most successful digital innovations combine deep customer understanding with technology that creates genuine value — not just automation.',
+                      'Чудесна работа! Помислете какво разкрива този анализ за стратегическото вземане на решения. Най-успешните дигитални иновации съчетават дълбоко разбиране на клиента с технология, която създава истинска стойност.'
+                    )}
+                  </p>
+                  <p className="text-xs text-muted-foreground italic">
+                    {tl(
+                      'Consider: How does this insight apply to your own startup idea?',
+                      'Помислете: Как се отнася този урок към вашата стартъп идея?'
+                    )}
+                  </p>
+                </div>
+              ) : (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setShowInsight(prev => ({ ...prev, [currentStep]: true }))}
+                  className="text-sim-success border-sim-success/30 hover:bg-sim-success/10"
+                >
+                  <Zap className="h-3.5 w-3.5 mr-1" />
+                  {tl('Reveal Key Insight', 'Покажи ключовия урок')}
+                </Button>
+              )
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                {tl(
+                  'Complete all analysis questions above to unlock the strategic insight for this section.',
+                  'Завършете всички въпроси за анализ, за да отключите стратегическия урок.'
+                )}
+              </p>
+            )}
+          </div>
+        )}
+
+        {/* ── 5. APPLY TO YOUR STARTUP ── */}
+        {showStartupPanel && (
+          <div className="rounded-lg border-2 border-primary/20 bg-accent p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg sim-gradient shrink-0">
+                <Rocket className="h-5 w-5 text-primary-foreground" />
+              </div>
+              <div>
+                <h3 className="font-display font-semibold text-foreground">
+                  {tl('Apply to Your Startup', 'Приложи към стартъпа си')}
+                </h3>
+                <p className="text-xs text-muted-foreground">
+                  {tl('Connect this case to your own startup project', 'Свържете казуса с вашия стартъп проект')}
+                </p>
+              </div>
+            </div>
+            <div className="space-y-3 mb-4">
+              {(lang === 'bg' ? STARTUP_PROMPTS_BG : STARTUP_PROMPTS_EN)
+                .slice(0, 3)
+                .map((prompt, i) => (
+                  <div key={i} className="flex items-start gap-2 text-sm text-foreground/80">
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary shrink-0 mt-0.5">{i + 1}</span>
+                    <span>{prompt}</span>
+                  </div>
+                ))}
+            </div>
+            <Textarea
+              value={startupNotes[currentStep] || ''}
+              onChange={e => setStartupNotes(prev => ({ ...prev, [currentStep]: e.target.value }))}
+              placeholder={tl(
+                'Write your reflections on how this case connects to your startup idea...',
+                'Напишете размишленията си как този казус се свързва с вашата стартъп идея...'
+              )}
+              className="min-h-[120px] bg-background"
+              disabled={isSubmitted}
+            />
+            <div className="mt-3 flex items-center gap-2">
+              <Button variant="outline" size="sm" onClick={() => navigate('/my-startup')}>
+                <Rocket className="h-3.5 w-3.5 mr-1" />
+                {tl('Go to My Startup', 'Отиди на Моят стартъп')}
+              </Button>
+              <span className="text-xs text-muted-foreground">
+                {tl('Your notes here are for reflection — edit your startup project for official submission.',
+                   'Бележките тук са за размисъл — редактирайте стартъп проекта за официално подаване.')}
+              </span>
+            </div>
+          </div>
+        )}
+
+        {/* Navigation */}
         <div className="flex items-center justify-between pt-4 pb-10 border-t border-border">
           <Button variant="outline" onClick={() => setCurrentStep(prev => prev - 1)} disabled={isFirstStep}>
             <ArrowLeft className="h-4 w-4 mr-1" /> {tl('Previous', 'Назад')}
