@@ -33,6 +33,7 @@ import CohortManager from "./pages/admin/CohortManager";
 import MyStartupIdea from "./pages/MyStartupIdea";
 import StartupProjectsAdmin from "./pages/admin/StartupProjectsAdmin";
 import IndustryInnovationMap from "./pages/IndustryInnovationMap";
+import StartupSimulator from "./pages/StartupSimulator";
 
 const queryClient = new QueryClient();
 
@@ -66,6 +67,7 @@ const App = () => (
                   <Route path="/admin/cohorts" element={<CohortManager />} />
                   <Route path="/my-startup" element={<MyStartupIdea />} />
                   <Route path="/industries" element={<IndustryInnovationMap />} />
+                  <Route path="/startup-simulator" element={<StartupSimulator />} />
                   <Route path="/simulator" element={<StudentLanding />} />
                   <Route path="/simulator/season/:id" element={<SeasonView />} />
                   <Route path="/simulator/season/:id/round/:n" element={<RoundView />} />
