@@ -854,6 +854,36 @@ export type Database = {
           },
         ]
       }
+      teacher_feedback: {
+        Row: {
+          comment: string
+          created_at: string
+          id: string
+          student_id: string
+          target_id: string
+          target_type: string
+          teacher_id: string
+        }
+        Insert: {
+          comment?: string
+          created_at?: string
+          id?: string
+          student_id: string
+          target_id: string
+          target_type: string
+          teacher_id: string
+        }
+        Update: {
+          comment?: string
+          created_at?: string
+          id?: string
+          student_id?: string
+          target_id?: string
+          target_type?: string
+          teacher_id?: string
+        }
+        Relationships: []
+      }
       team_members: {
         Row: {
           id: string
