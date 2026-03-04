@@ -41,6 +41,7 @@ import LeaderboardPage from "./pages/LeaderboardPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import PeerReview from "./pages/PeerReview";
 import PeerReviewAdmin from "./pages/admin/PeerReviewAdmin";
+import LearningJourney from "./pages/LearningJourney";
 
 const queryClient = new QueryClient();
 
@@ -87,6 +88,7 @@ const App = () => (
                   <Route path="/peer-review" element={<PeerReview />} />
                   <Route path="/my-report" element={<LearningReport />} />
                   <Route path="/admin/system-status" element={<SystemStatus />} />
+                  <Route path="/journey" element={<LearningJourney />} />
                   <Route path="/leaderboard" element={<LeaderboardPage />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
