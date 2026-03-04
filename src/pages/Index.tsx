@@ -4,7 +4,7 @@ import { useLang } from '@/context/LangContext';
 import { Button } from '@/components/ui/button';
 import AppHeader from '@/components/layout/AppHeader';
 import SimulatorCard from '@/components/landing/SimulatorCard';
-import { GraduationCap, BookOpen, ArrowRight, CheckCircle2 } from 'lucide-react';
+import { GraduationCap, BookOpen, ArrowRight, CheckCircle2, Lightbulb, Rocket, BarChart3, Award } from 'lucide-react';
 
 const Index = () => {
   const { user } = useAuth();
@@ -53,6 +53,37 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Learning Journey */}
+      <section className="py-16 px-4 border-t border-border">
+        <div className="container mx-auto max-w-4xl">
+          <div className="text-center mb-10">
+            <h2 className="text-2xl sm:text-3xl font-display font-bold text-foreground mb-3">
+              {t.learningJourney}
+            </h2>
+            <p className="text-muted-foreground max-w-lg mx-auto">
+              {t.learningJourneyDesc}
+            </p>
+          </div>
+
+          <div className="grid gap-5 md:grid-cols-3">
+            {[
+              { icon: Lightbulb, title: t.level1Title, desc: t.level1Desc, color: 'bg-accent' },
+              { icon: Rocket, title: t.level2Title, desc: t.level2Desc, color: 'bg-accent' },
+              { icon: BarChart3, title: t.level3Title, desc: t.level3Desc, color: 'bg-accent' },
+            ].map((level, i) => (
+              <div key={i} className="rounded-xl border border-border bg-card p-6 relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-1 sim-gradient" />
+                <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${level.color} mb-4`}>
+                  <level.icon className="h-5 w-5 text-primary" />
+                </div>
+                <h3 className="font-display font-bold text-base text-foreground mb-2">{level.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{level.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Features */}
       <section className="py-16 px-4 border-t border-border">
         <div className="container mx-auto max-w-5xl">
@@ -72,19 +103,19 @@ const Index = () => {
               </span>
             </button>
 
-            {/* Business Simulator — expanded card */}
+            {/* Business Simulator */}
             <SimulatorCard />
 
-            {/* Instant Feedback Card */}
+            {/* Gamification Card */}
             <button
               onClick={() => handleCardClick('/dashboard')}
               className="group rounded-xl border border-border bg-card p-6 text-center hover:border-primary/50 hover:shadow-md transition-all cursor-pointer"
             >
               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-accent mx-auto mb-4">
-                <CheckCircle2 className="h-6 w-6 text-primary" />
+                <Award className="h-6 w-6 text-primary" />
               </div>
-              <h3 className="font-display font-bold text-lg text-foreground mb-2">{t.instantFeedback}</h3>
-              <p className="text-sm text-muted-foreground mb-4">{t.instantFeedbackDesc}</p>
+              <h3 className="font-display font-bold text-lg text-foreground mb-2">{t.gamification}</h3>
+              <p className="text-sm text-muted-foreground mb-4">{t.earnXp}</p>
               <span className="inline-flex items-center text-sm font-medium text-primary group-hover:underline">
                 {t.viewDashboard} <ArrowRight className="ml-1 h-3 w-3" />
               </span>

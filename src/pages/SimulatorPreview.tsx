@@ -25,7 +25,7 @@ export default function SimulatorPreview() {
   };
 
   const activities = [t.simPrevAct1, t.simPrevAct2, t.simPrevAct3, t.simPrevAct4, t.simPrevAct5];
-  const weeks = [t.simWeek1, t.simWeek2, t.simWeek3, t.simWeek4, t.simWeek5, t.simWeek6, t.simWeek7, t.simWeek8];
+  const weeks = [t.simWeek1, t.simWeek2, t.simWeek3, t.simWeek4, t.simWeek5, t.simWeek6];
   const kpis = [
     { icon: Users, label: t.simKpiUsers },
     { icon: TrendingUp, label: t.simKpiRevenue },
