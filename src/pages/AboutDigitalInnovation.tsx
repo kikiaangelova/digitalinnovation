@@ -8,7 +8,9 @@ import { useAuth } from '@/context/AuthContext';
 import {
   Lightbulb, Target, Users, Rocket, Globe, TrendingUp,
   ArrowRight, BookOpen, Cpu, BarChart3, ShoppingCart,
-  Music, Ship, Tractor, CreditCard, Factory
+  Music, Ship, Tractor, CreditCard, Factory,
+  User, Heart, GraduationCap, Brain, MessageSquare,
+  CheckCircle2, Sparkles, Search, FlaskConical,
 } from 'lucide-react';
 
 const caseStudies = [
@@ -88,30 +90,184 @@ export default function AboutDigitalInnovation() {
   const { t, lang } = useLang();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const tx = (en: string, bg: string) => lang === 'bg' ? bg : en;
+
+  const learningMethods = [
+    { icon: BookOpen, en: 'Analyzing real business case studies', bg: 'Анализ на реални бизнес казуси' },
+    { icon: Rocket, en: 'Building their own startup ideas', bg: 'Създаване на собствена стартъп идея' },
+    { icon: FlaskConical, en: 'Testing strategies in a simulator', bg: 'Тестване на стратегии в симулатор' },
+    { icon: Brain, en: 'Receiving feedback from mentors and AI tools', bg: 'Получаване на обратна връзка от ментори и AI инструменти' },
+  ];
 
   return (
     <div className="min-h-screen bg-background">
       <AppHeader />
 
-      {/* Hero */}
+      {/* ═══════════════════ ABOUT THE CREATOR ═══════════════════ */}
       <section className="py-16 px-4 border-b border-border">
-        <div className="container mx-auto max-w-4xl text-center">
-          <div className="flex justify-center mb-6">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl sim-gradient shadow-lg">
-              <Lightbulb className="h-7 w-7 text-primary-foreground" />
+        <div className="container mx-auto max-w-4xl">
+          <div className="text-center mb-10">
+            <h2 className="text-3xl sm:text-4xl font-display font-bold text-foreground">
+              {tx('About the Creator', 'За създателя на платформата')}
+            </h2>
+          </div>
+
+          <div className="rounded-2xl border border-border bg-card p-8 md:p-10">
+            <div className="flex flex-col md:flex-row gap-8 items-center md:items-start">
+              {/* Profile image placeholder */}
+              <div className="shrink-0">
+                <div className="flex h-28 w-28 items-center justify-center rounded-full sim-gradient shadow-xl glow-primary">
+                  <User className="h-14 w-14 text-primary-foreground" />
+                </div>
+              </div>
+
+              <div className="flex-1 text-center md:text-left">
+                <h3 className="text-xl font-display font-bold text-foreground mb-1">
+                  {tx('Kirilka Angelova', 'Кирилка Ангелова')}
+                </h3>
+                <div className="flex flex-wrap gap-2 justify-center md:justify-start mb-4">
+                  <Badge variant="outline" className="text-xs">{tx('Educator', 'Преподавател')}</Badge>
+                  <Badge variant="outline" className="text-xs">{tx('Mentor', 'Ментор')}</Badge>
+                  <Badge variant="outline" className="text-xs">{tx('Digital Innovation', 'Дигитални иновации')}</Badge>
+                </div>
+                <div className="space-y-3 text-sm text-muted-foreground leading-relaxed">
+                  <p>
+                    {tx(
+                      'This platform was created by Kirilka Angelova, an educator, mentor, and professional specializing in digital innovation, entrepreneurship, and digital business strategy.',
+                      'Тази платформа е създадена от Кирилка Ангелова – преподавател и ментор в областта на дигиталните иновации, предприемачеството и дигиталния бизнес.'
+                    )}
+                  </p>
+                  <p>
+                    {tx(
+                      'Her work focuses on helping students understand how technology transforms industries and how innovative ideas can become successful startups.',
+                      'Нейната работа е насочена към това да помогне на учениците да разберат как технологиите трансформират индустриите и как иновативните идеи могат да се превърнат в успешни стартъпи.'
+                    )}
+                  </p>
+                  <p>
+                    {tx(
+                      'Instead of learning only theory, students are encouraged to analyze real companies, explore digital transformation, and build their own startup ideas.',
+                      'Вместо да учат само теория, учениците анализират реални компании, изследват дигиталната трансформация и създават собствени стартъп идеи.'
+                    )}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-display font-bold text-foreground mb-4">
-            {t.aboutTitle}
-          </h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            {t.aboutSubtitle}
-          </p>
         </div>
       </section>
 
+      {/* ═══════════════════ MISSION ═══════════════════ */}
+      <section className="py-16 px-4 bg-muted/30 border-b border-border">
+        <div className="container mx-auto max-w-4xl">
+          <div className="flex items-start gap-5">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl sim-gradient shadow-lg shrink-0 mt-1">
+              <Heart className="h-6 w-6 text-primary-foreground" />
+            </div>
+            <div>
+              <h2 className="text-2xl sm:text-3xl font-display font-bold text-foreground mb-4">
+                {tx('Mission of the Platform', 'Мисия на платформата')}
+              </h2>
+              <div className="space-y-3 text-muted-foreground leading-relaxed">
+                <p>
+                  {tx(
+                    'DigiInnov Case Lab was created to help students understand and apply digital innovation through practice.',
+                    'DigiInnov Case Lab е създадена, за да помогне на учениците да разберат и прилагат дигиталните иновации чрез практика.'
+                  )}
+                </p>
+                <p>
+                  {tx(
+                    'The platform combines real-world case studies, startup simulation, and interactive tools to create an experiential learning environment.',
+                    'Платформата комбинира реални бизнес казуси, симулации и интерактивни инструменти, за да създаде практическа обучителна среда.'
+                  )}
+                </p>
+                <p>
+                  {tx(
+                    'The goal is to prepare students for a world where technology, innovation, and entrepreneurship play a central role.',
+                    'Целта е учениците да се подготвят за свят, в който технологиите, иновациите и предприемачеството играят ключова роля.'
+                  )}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════ WHY IT MATTERS ═══════════════════ */}
+      <section className="py-16 px-4 border-b border-border">
+        <div className="container mx-auto max-w-4xl">
+          <div className="text-center mb-10">
+            <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-accent px-3 py-1 mb-4">
+              <Sparkles className="h-3 w-3 text-primary" />
+              <span className="text-[11px] font-semibold text-primary uppercase tracking-wider">
+                {tx('Why It Matters', 'Защо е важно')}
+              </span>
+            </div>
+            <h2 className="text-2xl sm:text-3xl font-display font-bold text-foreground mb-3">
+              {tx('Why Digital Innovation Education Matters', 'Защо обучението по дигитални иновации е важно')}
+            </h2>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-3">
+            {[
+              {
+                icon: Globe,
+                en: 'Digital technologies are transforming every industry, from healthcare and finance to agriculture and education.',
+                bg: 'Дигиталните технологии трансформират всяка индустрия – от здравеопазване и финанси до земеделие и образование.',
+              },
+              {
+                icon: GraduationCap,
+                en: 'Understanding how digital innovation works is becoming an essential skill for future professionals and entrepreneurs.',
+                bg: 'Разбирането на дигиталните иновации става ключово умение за бъдещите професионалисти и предприемачи.',
+              },
+              {
+                icon: Target,
+                en: 'This platform helps students develop strategic thinking, innovation skills, and an entrepreneurial mindset.',
+                bg: 'Платформата помага на учениците да развият стратегическо мислене, иновативност и предприемаческо мислене.',
+              },
+            ].map((item, i) => (
+              <Card key={i} className="p-6 border-border hover:border-primary/30 transition-all hover:shadow-md">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent mb-4">
+                  <item.icon className="h-5 w-5 text-primary" />
+                </div>
+                <p className="text-sm text-muted-foreground leading-relaxed">{tx(item.en, item.bg)}</p>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════ EDUCATIONAL APPROACH ═══════════════════ */}
+      <section className="py-16 px-4 bg-muted/30 border-b border-border">
+        <div className="container mx-auto max-w-4xl">
+          <div className="text-center mb-10">
+            <h2 className="text-2xl sm:text-3xl font-display font-bold text-foreground mb-3">
+              {tx('How Students Learn on This Platform', 'Как учениците учат в тази платформа')}
+            </h2>
+            <p className="text-muted-foreground max-w-lg mx-auto">
+              {tx('A hands-on, practice-first approach to digital innovation education.', 'Практически подход към обучението по дигитални иновации.')}
+            </p>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            {learningMethods.map((method, i) => (
+              <div key={i} className="flex items-center gap-4 rounded-xl border border-border bg-card p-5 hover:border-primary/30 transition-colors">
+                <div className="flex h-11 w-11 items-center justify-center rounded-xl sim-gradient shrink-0 shadow-md">
+                  <method.icon className="h-5 w-5 text-primary-foreground" />
+                </div>
+                <div className="flex items-center gap-2 flex-1">
+                  <CheckCircle2 className="h-4 w-4 text-sim-success shrink-0" />
+                  <p className="text-sm font-medium text-foreground">{tx(method.en, method.bg)}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════ ORIGINAL ABOUT CONTENT ═══════════════════ */}
+
       {/* What is a DIH */}
-      <section className="py-12 px-4">
+      <section className="py-12 px-4 border-b border-border">
         <div className="container mx-auto max-w-4xl">
           <h2 className="text-2xl font-display font-bold text-foreground mb-3">{t.whatIsDIH}</h2>
           <p className="text-muted-foreground mb-8 leading-relaxed">{t.dihExplanation}</p>
@@ -133,7 +289,7 @@ export default function AboutDigitalInnovation() {
       </section>
 
       {/* Why this platform */}
-      <section className="py-12 px-4 bg-accent/30 border-y border-border">
+      <section className="py-12 px-4 bg-accent/30 border-b border-border">
         <div className="container mx-auto max-w-4xl">
           <div className="flex items-start gap-4">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 shrink-0 mt-1">
@@ -148,7 +304,7 @@ export default function AboutDigitalInnovation() {
       </section>
 
       {/* Real Case Studies */}
-      <section className="py-12 px-4">
+      <section className="py-12 px-4 border-b border-border">
         <div className="container mx-auto max-w-4xl">
           <div className="flex items-center gap-2 mb-2">
             <BookOpen className="h-5 w-5 text-primary" />
@@ -190,7 +346,7 @@ export default function AboutDigitalInnovation() {
       </section>
 
       {/* CTA */}
-      <section className="py-16 px-4 border-t border-border">
+      <section className="py-16 px-4">
         <div className="container mx-auto max-w-3xl text-center">
           <h2 className="text-2xl font-display font-bold text-foreground mb-3">{t.readyToLearn}</h2>
           <p className="text-muted-foreground mb-6">{t.readyToLearnDesc}</p>
