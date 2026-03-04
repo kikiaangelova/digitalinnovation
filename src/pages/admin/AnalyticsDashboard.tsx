@@ -33,6 +33,7 @@ export default function AnalyticsDashboard() {
   const [onlineCount, setOnlineCount] = useState(1);
 
   useEffect(() => {
+    if (!isAdmin) return;
     const fetchAll = async () => {
       const [p, s, c, st, sim, cp] = await Promise.all([
         supabase.from('profiles').select('user_id, full_name, created_at'),
@@ -51,7 +52,7 @@ export default function AnalyticsDashboard() {
       setLoading(false);
     };
     fetchAll();
-  }, []);
+  }, [isAdmin]);
 
   // Realtime presence for online count
   useEffect(() => {
