@@ -10,11 +10,12 @@ export default function ProfileGate({ children }: { children: React.ReactNode })
   const location = useLocation();
   const [checked, setChecked] = useState(false);
 
-  const EXEMPT = ['/profile', '/auth', '/', '/dictionary', '/about'];
+  const EXEMPT_PREFIXES = ['/profile', '/auth', '/dictionary', '/about', '/cases', '/case/', '/simulator', '/industries', '/startup-simulator', '/my-startup', '/my-report', '/assessment', '/team/', '/admin'];
 
   useEffect(() => {
     if (loading || !user) { setChecked(true); return; }
-    if (EXEMPT.includes(location.pathname)) { setChecked(true); return; }
+    const isExempt = location.pathname === '/' || EXEMPT_PREFIXES.some(p => location.pathname.startsWith(p));
+    if (isExempt) { setChecked(true); return; }
 
     const check = async () => {
       const { data } = await supabase
