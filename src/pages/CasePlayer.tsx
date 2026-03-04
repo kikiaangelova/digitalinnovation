@@ -38,42 +38,42 @@ interface Question {
   options: Json; points: number;
 }
 
-/* ── Section meta – 5-part structure ── */
+/* ── Section meta – 8-part MIT case structure ── */
 const SECTION_ICONS: Record<number, React.ElementType> = {
-  0: BookOpen, 1: Building2, 2: Target, 3: Brain,
-  4: PenTool, 5: Lightbulb, 6: Rocket, 7: Award,
+  0: BookOpen, 1: Building2, 2: TrendingUp, 3: BarChart3,
+  4: Brain, 5: PenTool, 6: Rocket, 7: Award,
 };
 const SECTION_LABELS_EN: Record<number, string> = {
-  0: 'Research & Reading', 1: 'Context', 2: 'Strategic Problem',
-  3: 'Analysis Questions', 4: 'Decision', 5: 'Case Insight',
-  6: 'Apply to Your Startup', 7: 'Conclusion',
+  0: 'Research & Reading', 1: 'Industry Context', 2: 'Digital Disruption & Data',
+  3: 'Strategic Problem & Exhibits', 4: 'Strategic Question',
+  5: 'Student Analysis', 6: 'Innovation Proposal', 7: 'Final Recommendation',
 };
 const SECTION_LABELS_BG: Record<number, string> = {
-  0: 'Проучване', 1: 'Контекст', 2: 'Стратегически проблем',
-  3: 'Въпроси за анализ', 4: 'Решение', 5: 'Извод от казуса',
-  6: 'Приложи към стартъпа си', 7: 'Заключение',
+  0: 'Проучване', 1: 'Индустриален контекст', 2: 'Дигитална трансформация и данни',
+  3: 'Стратегически проблем и приложения', 4: 'Стратегически въпрос',
+  5: 'Студентски анализ', 6: 'Иновационно предложение', 7: 'Финална препоръка',
 };
 
 /* ── Section descriptions for students ── */
 const SECTION_HINTS_EN: Record<number, string> = {
   0: 'Read the required material and take research notes.',
-  1: 'Understand the company background, industry context, and strategic situation.',
-  2: 'Identify the key strategic decision the company must make.',
-  3: 'Analyze the situation: competitors, strengths, risks, and opportunities.',
-  4: 'Choose or explain the strategic decision you would make.',
-  5: 'Discover the key insight and the skill this case develops.',
-  6: 'Connect the case insights to your own startup project.',
-  7: 'Summarize your conclusions and key takeaways.',
+  1: 'Understand the industry landscape, market data, and key trends.',
+  2: 'Analyze how digital technologies are disrupting this industry.',
+  3: 'Study the strategic scenario, exhibits, and data tables provided.',
+  4: 'Identify the key strategic decision and answer analytical questions.',
+  5: 'Apply critical thinking to analyze the situation using the data.',
+  6: 'Design your strategic recommendation with supporting evidence.',
+  7: 'Write your final recommendation as a professional brief.',
 };
 const SECTION_HINTS_BG: Record<number, string> = {
   0: 'Прочетете задължителния материал и направете бележки.',
-  1: 'Разберете компанията, индустрията и стратегическата ситуация.',
-  2: 'Идентифицирайте ключовото стратегическо решение на компанията.',
-  3: 'Анализирайте ситуацията: конкуренти, силни страни, рискове и възможности.',
-  4: 'Изберете или обяснете стратегическото решение, което бихте взели.',
-  5: 'Открийте ключовия извод и уменията, които казусът развива.',
-  6: 'Свържете прозренията от казуса с вашия стартъп проект.',
-  7: 'Обобщете заключенията и ключовите изводи.',
+  1: 'Разберете индустриалния пейзаж, пазарни данни и ключови тенденции.',
+  2: 'Анализирайте как дигиталните технологии трансформират тази индустрия.',
+  3: 'Изучете стратегическия сценарий, приложенията и таблиците с данни.',
+  4: 'Идентифицирайте ключовото стратегическо решение и отговорете на аналитичните въпроси.',
+  5: 'Приложете критично мислене за анализ на ситуацията чрез данните.',
+  6: 'Проектирайте стратегическата си препоръка с подкрепящи доказателства.',
+  7: 'Напишете финалната си препоръка като професионален бриф.',
 };
 
 /* ── Apply-to-startup prompts shown on steps 5+ ── */
@@ -310,14 +310,26 @@ export default function CasePlayer() {
           </a>
         )}
 
-        {/* ── 1. CONTEXT ── */}
+        {/* ── 1. NARRATIVE / CONTEXT ── */}
         {(currentStepData.narrative || currentStepData.narrative_bg) && (
           <div className="rounded-lg border border-border bg-card p-6">
             <div className="flex items-center gap-2 mb-3">
               <Building2 className="h-4 w-4 text-primary" />
               <h3 className="font-display font-semibold text-foreground">
-                {currentStep <= 1
-                  ? tl('Company & Industry Context', 'Контекст на компанията и индустрията')
+                {currentStep === 1
+                  ? tl('Industry Context', 'Индустриален контекст')
+                  : currentStep === 2
+                  ? tl('Digital Disruption Analysis', 'Анализ на дигиталната трансформация')
+                  : currentStep === 3
+                  ? tl('Strategic Scenario', 'Стратегически сценарий')
+                  : currentStep === 4
+                  ? tl('Strategic Question', 'Стратегически въпрос')
+                  : currentStep === 5
+                  ? tl('Analysis Framework', 'Рамка за анализ')
+                  : currentStep === 6
+                  ? tl('Your Proposal', 'Вашето предложение')
+                  : currentStep === 7
+                  ? tl('Final Recommendation', 'Финална препоръка')
                   : tl('Context', 'Контекст')}
               </h3>
             </div>
@@ -327,23 +339,26 @@ export default function CasePlayer() {
           </div>
         )}
 
-        {/* ── 2. STRATEGIC PROBLEM / DATA ── */}
+        {/* ── 2. EXHIBITS / INDUSTRY DATA / STRATEGIC PROBLEM ── */}
         {(currentStepData.exhibit_text || currentStepData.exhibit_text_bg) && (
           <div className="rounded-lg border-2 border-sim-warning/30 bg-sim-warning/5 p-6">
             <div className="flex items-center gap-2 mb-3">
-              <Target className="h-4 w-4 text-sim-warning" />
+              <BarChart3 className="h-4 w-4 text-sim-warning" />
               <h3 className="font-display font-semibold text-foreground">
-                {currentStep === 2
-                  ? tl('Strategic Problem', 'Стратегически проблем')
+                {currentStep === 1
+                  ? tl('Industry Data & Statistics', 'Индустриални данни и статистика')
+                  : currentStep === 2
+                  ? tl('Exhibits & Evidence', 'Приложения и доказателства')
+                  : currentStep === 3
+                  ? tl('Strategic Data & Exhibits', 'Стратегически данни и приложения')
                   : tl('Data & Evidence', 'Данни и доказателства')}
               </h3>
             </div>
-            <p className="text-xs text-muted-foreground mb-2">
-              {currentStep === 2
-                ? tl('This is the key decision the company must make.', 'Това е ключовото решение, което компанията трябва да вземе.')
-                : tl('Review the data and evidence below.', 'Прегледайте данните и доказателствата по-долу.')}
+            <p className="text-xs text-muted-foreground mb-3">
+              {tl('Analyze the data below carefully — you will need it to answer the strategic questions.',
+                 'Анализирайте данните внимателно — ще ви трябват за отговорите на стратегическите въпроси.')}
             </p>
-            <div className="text-sm text-foreground/85 whitespace-pre-line leading-relaxed font-sans">
+            <div className="text-sm text-foreground/85 whitespace-pre-line leading-relaxed font-mono bg-background/50 rounded-md p-4 border border-border/50 overflow-x-auto">
               {tx(currentStepData.exhibit_text, currentStepData.exhibit_text_bg)}
             </div>
           </div>

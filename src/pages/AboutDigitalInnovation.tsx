@@ -266,28 +266,6 @@ export default function AboutDigitalInnovation() {
 
       {/* ═══════════════════ ORIGINAL ABOUT CONTENT ═══════════════════ */}
 
-      {/* What is a DIH */}
-      <section className="py-12 px-4 border-b border-border">
-        <div className="container mx-auto max-w-4xl">
-          <h2 className="text-2xl font-display font-bold text-foreground mb-3">{t.whatIsDIH}</h2>
-          <p className="text-muted-foreground mb-8 leading-relaxed">{t.dihExplanation}</p>
-
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {pillars.map(p => (
-              <Card key={p.key} className="p-5 text-center border-border hover:border-primary/40 transition-colors">
-                <div className="flex justify-center mb-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent">
-                    <p.icon className="h-5 w-5 text-primary" />
-                  </div>
-                </div>
-                <h3 className="font-semibold text-foreground text-sm mb-1">{t[`pillar_${p.key}` as keyof typeof t]}</h3>
-                <p className="text-xs text-muted-foreground">{t[`pillar_${p.key}_desc` as keyof typeof t]}</p>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Why this platform */}
       <section className="py-12 px-4 bg-accent/30 border-b border-border">
         <div className="container mx-auto max-w-4xl">
