@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
+import { useLang } from '@/context/LangContext';
 import { supabase } from '@/integrations/supabase/client';
 import AppHeader from '@/components/layout/AppHeader';
 import { Button } from '@/components/ui/button';
@@ -17,6 +18,8 @@ interface CompetencyScore {
 export default function AssessmentResults() {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
+  const { lang } = useLang();
+  const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
   const [title, setTitle] = useState('');
   const [totalScore, setTotalScore] = useState(0);
   const [maxScore, setMaxScore] = useState(0);
@@ -45,7 +48,7 @@ export default function AssessmentResults() {
       const compScores: Record<string, { name: string; earned: number; total: number }> = {};
       const qResults = (qs || []).map(q => {
         const r = resps?.find(r => r.question_id === q.id);
-        const compName = q.competency_id ? compMap[q.competency_id] || 'General' : 'General';
+        const compName = q.competency_id ? compMap[q.competency_id] || t('General', 'Общо') : t('General', 'Общо');
         if (!compScores[compName]) compScores[compName] = { name: compName, earned: 0, total: 0 };
         compScores[compName].total += q.points;
         compScores[compName].earned += r?.score || 0;
@@ -58,7 +61,7 @@ export default function AssessmentResults() {
     fetch();
   }, [id, user]);
 
-  if (loading) return <div className="min-h-screen bg-background"><AppHeader /><div className="flex items-center justify-center py-20 text-muted-foreground">Loading...</div></div>;
+  if (loading) return <div className="min-h-screen bg-background"><AppHeader /><div className="flex items-center justify-center py-20 text-muted-foreground">{t('Loading...', 'Зареждане...')}</div></div>;
 
   const scorePercent = maxScore > 0 ? Math.round((totalScore / maxScore) * 100) : 0;
   const weakest = [...competencyScores].sort((a, b) => a.percent - b.percent).slice(0, 2);
@@ -67,7 +70,7 @@ export default function AssessmentResults() {
     <div className="min-h-screen bg-background">
       <AppHeader />
       <main className="container mx-auto px-4 py-8 max-w-4xl space-y-8">
-        <Button variant="ghost" size="sm" asChild><Link to="/dashboard"><ArrowLeft className="h-4 w-4 mr-1" /> Dashboard</Link></Button>
+        <Button variant="ghost" size="sm" asChild><Link to="/dashboard"><ArrowLeft className="h-4 w-4 mr-1" /> {t('Dashboard', 'Табло')}</Link></Button>
 
         <div className="rounded-lg border border-border bg-card p-8 text-center">
           <Trophy className={`h-14 w-14 mx-auto mb-4 ${scorePercent >= 60 ? 'text-sim-success' : 'text-sim-warning'}`} />
@@ -78,7 +81,7 @@ export default function AssessmentResults() {
 
         {/* Competency breakdown */}
         <div className="rounded-lg border border-border bg-card p-6">
-          <h2 className="font-display font-semibold text-foreground mb-4 flex items-center gap-2"><Target className="h-5 w-5 text-primary" /> Competency Breakdown</h2>
+          <h2 className="font-display font-semibold text-foreground mb-4 flex items-center gap-2"><Target className="h-5 w-5 text-primary" /> {t('Competency Breakdown', 'Разбивка по компетенции')}</h2>
           <div className="space-y-3">
             {competencyScores.map(c => (
               <div key={c.name}>
@@ -97,19 +100,21 @@ export default function AssessmentResults() {
         {/* Recommended practice */}
         {weakest.length > 0 && weakest[0].percent < 80 && (
           <div className="rounded-lg border border-sim-warning/30 bg-sim-warning/5 p-5">
-            <h3 className="font-display font-semibold text-foreground mb-2">Recommended Practice</h3>
-            <p className="text-sm text-muted-foreground">Focus on strengthening: {weakest.map(w => w.name).join(', ')}. Look for case studies tagged with these competencies.</p>
+            <h3 className="font-display font-semibold text-foreground mb-2">{t('Recommended Practice', 'Препоръчителна практика')}</h3>
+            <p className="text-sm text-muted-foreground">
+              {t('Focus on strengthening:', 'Фокусирайте се върху укрепване на:')} {weakest.map(w => w.name).join(', ')}. {t('Look for case studies tagged with these competencies.', 'Потърсете казуси, маркирани с тези компетенции.')}
+            </p>
           </div>
         )}
 
         {/* Question details */}
         <div className="space-y-4">
-          <h2 className="font-display font-semibold text-foreground">Question Details</h2>
+          <h2 className="font-display font-semibold text-foreground">{t('Question Details', 'Детайли по въпроси')}</h2>
           {results.map((r, i) => (
             <div key={r.id} className="rounded-lg border border-border bg-card overflow-hidden">
               <div className="flex items-center justify-between px-5 py-3 bg-muted/30 border-b border-border">
                 <div className="flex items-center gap-2">
-                  <span className="text-xs text-muted-foreground">Q{i + 1}</span>
+                  <span className="text-xs text-muted-foreground">{t('Q', 'В')}{i + 1}</span>
                   <Badge variant="outline" className="text-xs">{r.compName}</Badge>
                 </div>
                 <div className="flex items-center gap-2">
@@ -121,13 +126,13 @@ export default function AssessmentResults() {
               </div>
               <div className="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-border">
                 <div className="p-5">
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">Your Answer</p>
-                  <p className="text-sm text-foreground">{r.answer ? (typeof r.answer === 'string' ? r.answer : JSON.stringify(r.answer)) : 'No answer'}</p>
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">{t('Your Answer', 'Вашият отговор')}</p>
+                  <p className="text-sm text-foreground">{r.answer ? (typeof r.answer === 'string' ? r.answer : JSON.stringify(r.answer)) : t('No answer', 'Няма отговор')}</p>
                   {r.feedback && <p className="text-xs text-muted-foreground mt-2 italic">{r.feedback}</p>}
                 </div>
                 <div className="p-5 bg-accent/30">
-                  <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-2 flex items-center gap-1"><BookOpen className="h-3 w-3" /> Model Answer</p>
-                  <p className="text-sm text-foreground/80 whitespace-pre-line">{r.model_answer || (r.correct_answer ? `Correct: ${r.correct_answer}` : 'Instructor graded')}</p>
+                  <p className="text-xs font-semibold text-primary uppercase tracking-wider mb-2 flex items-center gap-1"><BookOpen className="h-3 w-3" /> {t('Model Answer', 'Примерен отговор')}</p>
+                  <p className="text-sm text-foreground/80 whitespace-pre-line">{r.model_answer || (r.correct_answer ? `${t('Correct:', 'Правилно:')} ${r.correct_answer}` : t('Instructor graded', 'Оценено от инструктор'))}</p>
                 </div>
               </div>
             </div>

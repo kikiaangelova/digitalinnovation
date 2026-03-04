@@ -1,10 +1,13 @@
 import { useSimulator } from '@/context/SimulatorContext';
+import { useLang } from '@/context/LangContext';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Play, Users, BarChart3, Settings, ArrowRight } from 'lucide-react';
 
 export default function StudentLanding() {
   const { seasons, getTeamForSeason, currentUser, switchRole } = useSimulator();
+  const { lang } = useLang();
+  const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
 
   return (
     <div className="min-h-screen bg-background">
@@ -16,26 +19,26 @@ export default function StudentLanding() {
               <Play className="h-4 w-4 text-primary-foreground" />
             </div>
             <div>
-              <h1 className="text-lg font-bold text-foreground">DigiInnov Simulator</h1>
+              <h1 className="text-lg font-bold text-foreground">DigiInnov {t('Simulator', 'Симулатор')}</h1>
               <p className="text-xs text-muted-foreground">Digital Innovation Case Lab</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
             <span className="text-sm text-muted-foreground">
-              {currentUser.name} · <span className="capitalize">{currentUser.role}</span>
+              {currentUser.name} · <span className="capitalize">{currentUser.role === 'student' ? t('Student', 'Ученик') : t('Admin', 'Админ')}</span>
             </span>
             <Button
               variant="outline"
               size="sm"
               onClick={() => switchRole(currentUser.role === 'student' ? 'admin' : 'student')}
             >
-              Switch to {currentUser.role === 'student' ? 'Admin' : 'Student'}
+              {t('Switch to', 'Превключи към')} {currentUser.role === 'student' ? t('Admin', 'Админ') : t('Student', 'Ученик')}
             </Button>
             {currentUser.role === 'admin' && (
               <Button variant="outline" size="sm" asChild>
                 <Link to="/admin/simulator">
                   <Settings className="h-4 w-4 mr-1" />
-                  Admin
+                  {t('Admin', 'Админ')}
                 </Link>
               </Button>
             )}
@@ -45,8 +48,8 @@ export default function StudentLanding() {
 
       <main className="container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h2 className="text-2xl font-bold text-foreground">Your Simulations</h2>
-          <p className="mt-1 text-muted-foreground">Run a virtual startup and make strategic decisions that shape your company's future.</p>
+          <h2 className="text-2xl font-bold text-foreground">{t('Your Simulations', 'Вашите симулации')}</h2>
+          <p className="mt-1 text-muted-foreground">{t('Run a virtual startup and make strategic decisions that shape your company\'s future.', 'Управлявайте виртуален стартъп и вземайте стратегически решения, които оформят бъдещето на компанията ви.')}</p>
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -63,7 +66,7 @@ export default function StudentLanding() {
                     <BarChart3 className="h-6 w-6 text-primary-foreground" />
                   </div>
                   <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
-                    {season.weeks} weeks
+                    {season.weeks} {t('weeks', 'седмици')}
                   </span>
                 </div>
 
@@ -76,10 +79,10 @@ export default function StudentLanding() {
                   {team ? (
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <Users className="h-4 w-4" />
-                      <span>{team.name} · {team.members.length} members</span>
+                      <span>{team.name} · {team.members.length} {t('members', 'члена')}</span>
                     </div>
                   ) : (
-                    <span className="text-sm text-muted-foreground">No team yet</span>
+                    <span className="text-sm text-muted-foreground">{t('No team yet', 'Все още няма екип')}</span>
                   )}
                   <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
                 </div>

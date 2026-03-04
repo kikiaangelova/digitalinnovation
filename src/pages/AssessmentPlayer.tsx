@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
+import { useLang } from '@/context/LangContext';
 import { supabase } from '@/integrations/supabase/client';
 import AppHeader from '@/components/layout/AppHeader';
 import { Button } from '@/components/ui/button';
@@ -25,6 +26,8 @@ interface AssessmentQ {
 export default function AssessmentPlayer() {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
+  const { lang } = useLang();
+  const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
   const navigate = useNavigate();
   const [assessment, setAssessment] = useState<any>(null);
   const [questions, setQuestions] = useState<AssessmentQ[]>([]);
@@ -45,7 +48,6 @@ export default function AssessmentPlayer() {
       const { data: qs } = await supabase.from('assessment_questions').select('id, type, prompt, options, points, correct_answer, question_order, competency_id').eq('assessment_id', id).order('question_order');
       if (qs) setQuestions(qs);
 
-      // Check existing submission
       const { data: sub } = await supabase.from('submissions').select('id, is_draft, started_at').eq('assessment_id', id).eq('user_id', user.id).maybeSingle();
       if (sub) {
         setSubmissionId(sub.id);
@@ -92,7 +94,7 @@ export default function AssessmentPlayer() {
       assessment_id: id,
       user_id: user.id,
       is_draft: true,
-      case_study_id: '00000000-0000-0000-0000-000000000000', // placeholder
+      case_study_id: '00000000-0000-0000-0000-000000000000',
       started_at: new Date().toISOString(),
     }).select('id, started_at').single();
     if (data) {
@@ -136,7 +138,7 @@ export default function AssessmentPlayer() {
         totalScore += score;
         await supabase.from('responses').update({
           score,
-          feedback: score > 0 ? 'Correct!' : `Incorrect. Answer: ${q.correct_answer}`,
+          feedback: score > 0 ? t('Correct!', 'Правилно!') : `${t('Incorrect. Answer:', 'Грешно. Отговор:')} ${q.correct_answer}`,
           auto_graded: true,
         }).eq('submission_id', submissionId).eq('question_id', q.id);
       }
@@ -148,7 +150,7 @@ export default function AssessmentPlayer() {
       max_score: maxScore,
     }).eq('id', submissionId);
 
-    toast.success('Assessment submitted!');
+    toast.success(t('Assessment submitted!', 'Оценката е изпратена!'));
     navigate(`/assessment/${id}/results`);
   };
 
@@ -157,8 +159,8 @@ export default function AssessmentPlayer() {
     setAnswers(prev => ({ ...prev, [qId]: val }));
   };
 
-  if (loading) return <div className="min-h-screen bg-background"><AppHeader /><div className="flex items-center justify-center py-20 text-muted-foreground">Loading...</div></div>;
-  if (!assessment) return <div className="min-h-screen bg-background"><AppHeader /><div className="flex items-center justify-center py-20 text-muted-foreground">Assessment not found</div></div>;
+  if (loading) return <div className="min-h-screen bg-background"><AppHeader /><div className="flex items-center justify-center py-20 text-muted-foreground">{t('Loading...', 'Зареждане...')}</div></div>;
+  if (!assessment) return <div className="min-h-screen bg-background"><AppHeader /><div className="flex items-center justify-center py-20 text-muted-foreground">{t('Assessment not found', 'Оценката не е намерена')}</div></div>;
 
   const settings = assessment.settings_json || {};
 
@@ -170,17 +172,17 @@ export default function AssessmentPlayer() {
         <main className="container mx-auto px-4 py-12 max-w-xl text-center space-y-6">
           <h1 className="text-3xl font-display font-bold text-foreground">{assessment.title}</h1>
           <div className="flex justify-center gap-4">
-            {settings.timed && <Badge variant="outline"><Clock className="h-3 w-3 mr-1" /> {settings.time_limit_minutes} min</Badge>}
-            <Badge variant="outline">{questions.length} questions</Badge>
-            <Badge variant="outline">{questions.reduce((s: number, q: AssessmentQ) => s + q.points, 0)} points</Badge>
+            {settings.timed && <Badge variant="outline"><Clock className="h-3 w-3 mr-1" /> {settings.time_limit_minutes} {t('min', 'мин')}</Badge>}
+            <Badge variant="outline">{questions.length} {t('questions', 'въпроса')}</Badge>
+            <Badge variant="outline">{questions.reduce((s: number, q: AssessmentQ) => s + q.points, 0)} {t('points', 'точки')}</Badge>
           </div>
           {settings.timed && (
             <div className="flex items-center gap-2 justify-center text-sm text-sim-warning">
-              <AlertTriangle className="h-4 w-4" /> This is a timed assessment. The timer starts when you begin.
+              <AlertTriangle className="h-4 w-4" /> {t('This is a timed assessment. The timer starts when you begin.', 'Това е оценка с времево ограничение. Таймерът започва, когато започнете.')}
             </div>
           )}
-          <Button onClick={startAssessment} size="lg" className="sim-gradient border-0">Begin Assessment</Button>
-          <Button variant="ghost" size="sm" asChild><Link to="/dashboard"><ArrowLeft className="h-4 w-4 mr-1" /> Back</Link></Button>
+          <Button onClick={startAssessment} size="lg" className="sim-gradient border-0">{t('Begin Assessment', 'Започнете оценката')}</Button>
+          <Button variant="ghost" size="sm" asChild><Link to="/dashboard"><ArrowLeft className="h-4 w-4 mr-1" /> {t('Back', 'Назад')}</Link></Button>
         </main>
       </div>
     );
@@ -198,8 +200,8 @@ export default function AssessmentPlayer() {
           <div className="flex items-center justify-between mb-2">
             <h2 className="text-sm font-display font-semibold text-foreground truncate">{assessment.title}</h2>
             <div className="flex items-center gap-3 text-xs text-muted-foreground">
-              <span>Q {currentQ + 1}/{questions.length}</span>
-              <span>{answeredCount} answered</span>
+              <span>{t('Q', 'В')} {currentQ + 1}/{questions.length}</span>
+              <span>{answeredCount} {t('answered', 'отговорени')}</span>
               {timeLeft !== null && (
                 <Badge className={timeLeft < 300 ? 'bg-sim-danger/10 text-sim-danger border-0' : 'bg-accent text-accent-foreground'}>
                   <Clock className="h-3 w-3 mr-1" /> {formatTime(timeLeft)}
@@ -216,7 +218,7 @@ export default function AssessmentPlayer() {
           <div className="rounded-lg border border-border bg-card p-6">
             <div className="flex items-center gap-2 mb-4">
               <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary">{currentQ + 1}</span>
-              <Badge variant="outline" className="text-xs">{q.points} pts</Badge>
+              <Badge variant="outline" className="text-xs">{q.points} {t('pts', 'т.')}</Badge>
               <Badge variant="outline" className="text-xs capitalize">{q.type.replace(/_/g, ' ')}</Badge>
             </div>
             <p className="text-sm font-medium text-foreground mb-4 leading-relaxed">{q.prompt}</p>
@@ -232,8 +234,8 @@ export default function AssessmentPlayer() {
               </div>
             )}
 
-            {q.type === 'short_answer' && (
-              <Textarea value={answers[q.id] || ''} onChange={e => updateAnswer(q.id, e.target.value)} placeholder="Write your answer..." disabled={isSubmitted} className="min-h-[120px]" />
+            {(q.type === 'short_answer' || q.type === 'long_answer') && (
+              <Textarea value={answers[q.id] || ''} onChange={e => updateAnswer(q.id, e.target.value)} placeholder={t('Write your answer...', 'Напишете отговора си...')} disabled={isSubmitted} className="min-h-[120px]" />
             )}
           </div>
         )}
@@ -252,15 +254,15 @@ export default function AssessmentPlayer() {
 
         <div className="flex items-center justify-between pt-4 border-t border-border">
           <Button variant="outline" onClick={() => setCurrentQ(p => p - 1)} disabled={currentQ === 0}>
-            <ArrowLeft className="h-4 w-4 mr-1" /> Previous
+            <ArrowLeft className="h-4 w-4 mr-1" /> {t('Previous', 'Назад')}
           </Button>
           <div className="flex items-center gap-2">
-            {saving && <span className="text-xs text-muted-foreground animate-pulse">Saving...</span>}
+            {saving && <span className="text-xs text-muted-foreground animate-pulse">{t('Saving...', 'Запазване...')}</span>}
           </div>
           {currentQ === questions.length - 1 ? (
-            <Button onClick={handleSubmit} className="sim-gradient border-0"><Lock className="h-4 w-4 mr-1" /> Submit</Button>
+            <Button onClick={handleSubmit} className="sim-gradient border-0"><Lock className="h-4 w-4 mr-1" /> {t('Submit', 'Изпрати')}</Button>
           ) : (
-            <Button onClick={() => setCurrentQ(p => p + 1)}>Next <ArrowRight className="h-4 w-4 ml-1" /></Button>
+            <Button onClick={() => setCurrentQ(p => p + 1)}>{t('Next', 'Напред')} <ArrowRight className="h-4 w-4 ml-1" /></Button>
           )}
         </div>
       </main>
