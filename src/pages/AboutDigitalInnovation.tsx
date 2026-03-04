@@ -7,83 +7,150 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import {
   Lightbulb, Target, Users, Rocket, Globe, TrendingUp,
-  ArrowRight, BookOpen, Cpu, BarChart3, ShoppingCart,
-  Music, Ship, Tractor, CreditCard, Factory,
-  User, Heart, GraduationCap, Brain, MessageSquare,
-  CheckCircle2, Sparkles, Search, FlaskConical,
+  ArrowRight, BookOpen, Cpu, BarChart3,
+  User, Heart, GraduationCap, Brain,
+  CheckCircle2, Sparkles, FlaskConical,
+  Network, Building2, Banknote, Bot, Layers, Workflow,
+  Database, Shield, Leaf, CircuitBoard,
 } from 'lucide-react';
 
-const caseStudies = [
+/* ── Academic topic data ── */
+const academicTopics = [
   {
-    company: 'Netflix',
-    icon: Globe,
-    color: 'text-red-500',
-    bgColor: 'bg-red-500/10',
-    innovation: { en: 'From DVD rental to AI-driven streaming platform', bg: 'От DVD под наем до стрийминг платформа с изкуствен интелект' },
-    impact: { en: '280M+ subscribers; disrupted the entire entertainment industry with personalized recommendations', bg: '280M+ абонати; преобрази цялата развлекателна индустрия с персонализирани препоръки' },
-    lesson: { en: 'Digital transformation means rethinking your entire business model, not just digitizing existing processes.', bg: 'Дигиталната трансформация означава преосмисляне на целия бизнес модел, а не просто дигитализиране на съществуващи процеси.' },
+    id: 'digital-innovation',
+    icon: Lightbulb,
+    title: { en: 'What is Digital Innovation?', bg: 'Какво е дигитална иновация?' },
+    intro: {
+      en: 'Digital innovation is the application of digital technologies to create new — or modify existing — business processes, products, and customer experiences. It goes beyond simple digitization (converting analog to digital) and digitalization (using digital tools to improve processes). True digital innovation fundamentally transforms how value is created and delivered.',
+      bg: 'Дигиталната иновация е прилагането на дигитални технологии за създаване на нови — или модифициране на съществуващи — бизнес процеси, продукти и клиентски изживявания. Тя надхвърля простата дигитизация (конвертиране от аналогово в дигитално) и дигитализация (използване на дигитални инструменти за подобряване на процеси). Истинската дигитална иновация фундаментално трансформира начина, по който се създава и доставя стойност.',
+    },
+    points: [
+      {
+        en: '**Digitization** — Converting physical information into digital format (e.g., scanning paper documents).',
+        bg: '**Дигитизация** — Конвертиране на физическа информация в цифров формат (напр. сканиране на хартиени документи).',
+      },
+      {
+        en: '**Digitalization** — Using digital tools to optimize existing workflows (e.g., CRM systems, automated invoicing).',
+        bg: '**Дигитализация** — Използване на дигитални инструменти за оптимизиране на съществуващи работни потоци (напр. CRM системи, автоматично фактуриране).',
+      },
+      {
+        en: '**Digital Transformation** — Rethinking the entire business model using technology (e.g., Netflix shifting from DVD rental to a data-driven streaming platform).',
+        bg: '**Дигитална трансформация** — Преосмисляне на целия бизнес модел чрез технологии (напр. Netflix преминава от DVD наем към стрийминг платформа, управлявана от данни).',
+      },
+      {
+        en: '**Key enablers:** Cloud computing, AI/ML, IoT, blockchain, big data analytics, 5G connectivity.',
+        bg: '**Ключови двигатели:** Облачни изчисления, AI/ML, IoT, блокчейн, анализ на големи данни, 5G свързаност.',
+      },
+    ],
   },
   {
-    company: 'Zara (Inditex)',
-    icon: ShoppingCart,
-    color: 'text-emerald-500',
-    bgColor: 'bg-emerald-500/10',
-    innovation: { en: 'Real-time supply chain with RFID inventory tracking', bg: 'Верига за доставки в реално време с RFID проследяване на инвентара' },
-    impact: { en: 'Design-to-shelf in 2 weeks vs industry average of 6 months', bg: 'От дизайн до рафт за 2 седмици срещу средно 6 месеца в индустрията' },
-    lesson: { en: 'Speed and data-driven decisions create unbeatable competitive advantage in traditional industries.', bg: 'Бързината и решенията, базирани на данни, създават непобедимо конкурентно предимство в традиционните индустрии.' },
+    id: 'dih',
+    icon: Building2,
+    title: { en: 'Digital Innovation Hubs (DIH)', bg: 'Хъбове за дигитални иновации (DIH)' },
+    intro: {
+      en: 'A Digital Innovation Hub (DIH) is a one-stop-shop ecosystem that helps companies — especially SMEs and startups — become more competitive by adopting digital technologies. The European Union has funded over 200 European Digital Innovation Hubs (EDIHs) through the Digital Europe Programme, creating a continent-wide support network for digital transformation.',
+      bg: 'Хъбът за дигитални иновации (DIH) е екосистема на едно гише, която помага на компаниите — особено МСП и стартъпи — да станат по-конкурентоспособни чрез възприемане на дигитални технологии. Европейският съюз е финансирал над 200 Европейски хъба за дигитални иновации (EDIH) чрез програмата „Цифрова Европа", създавайки континентална мрежа за подкрепа на дигиталната трансформация.',
+    },
+    points: [
+      {
+        en: '**Access to Technology** — AI, IoT, blockchain, cloud computing, and big data tools and infrastructure provided to businesses.',
+        bg: '**Достъп до технологии** — AI, IoT, блокчейн, облачни изчисления, инструменти и инфраструктура за големи данни, предоставени на бизнеса.',
+      },
+      {
+        en: '**Test Before Invest** — Companies can experiment with digital solutions in a low-risk environment before full-scale deployment.',
+        bg: '**Тествай преди да инвестираш** — Компаниите могат да експериментират с дигитални решения в среда с нисък риск преди пълномащабно внедряване.',
+      },
+      {
+        en: '**Skills & Training** — Digital upskilling programs, mentoring, and workforce development for employees and entrepreneurs.',
+        bg: '**Умения и обучение** — Програми за дигитално повишаване на квалификацията, менторство и развитие на работната сила.',
+      },
+      {
+        en: '**Funding & Networking** — Access to EU grants, venture capital connections, and cross-border innovation partnerships.',
+        bg: '**Финансиране и мрежи** — Достъп до грантове на ЕС, връзки с рисков капитал и трансгранични иновационни партньорства.',
+      },
+    ],
   },
   {
-    company: 'John Deere',
-    icon: Tractor,
-    color: 'text-green-600',
-    bgColor: 'bg-green-600/10',
-    innovation: { en: 'IoT sensors and precision agriculture platform', bg: 'IoT сензори и платформа за прецизно земеделие' },
-    impact: { en: 'Farmers reduced water usage by 20% and increased crop yields', bg: 'Фермерите намалиха потреблението на вода с 20% и увеличиха добивите' },
-    lesson: { en: 'IoT transforms even the oldest industries. Digital innovation is not only for tech companies.', bg: 'IoT трансформира дори най-старите индустрии. Дигиталните иновации не са само за технологични компании.' },
+    id: 'ai-data',
+    icon: Bot,
+    title: { en: 'AI and the Data Economy', bg: 'AI и икономика на данните' },
+    intro: {
+      en: 'Artificial Intelligence (AI) and the data economy represent the most transformative forces in modern business. The global AI market is projected to exceed $500 billion by 2027. Organizations that effectively leverage data as a strategic asset and deploy AI for decision-making gain exponential competitive advantages across every industry.',
+      bg: 'Изкуственият интелект (AI) и икономиката на данните представляват най-трансформиращите сили в съвременния бизнес. Глобалният AI пазар се очаква да надхвърли $500 милиарда до 2027 г. Организациите, които ефективно използват данните като стратегически актив и прилагат AI за вземане на решения, получават експоненциални конкурентни предимства.',
+    },
+    points: [
+      {
+        en: '**Machine Learning** — Algorithms that learn from data to make predictions (e.g., Netflix recommendations, fraud detection in banking).',
+        bg: '**Машинно обучение** — Алгоритми, които учат от данни, за да правят прогнози (напр. препоръки на Netflix, откриване на измами в банкирането).',
+      },
+      {
+        en: '**Natural Language Processing (NLP)** — AI that understands and generates human language (e.g., ChatGPT, customer service chatbots).',
+        bg: '**Обработка на естествен език (NLP)** — AI, който разбира и генерира човешки език (напр. ChatGPT, чатботове за обслужване на клиенти).',
+      },
+      {
+        en: '**Computer Vision** — AI that interprets images and video (e.g., autonomous vehicles, medical imaging diagnostics).',
+        bg: '**Компютърно зрение** — AI, който интерпретира изображения и видео (напр. автономни превозни средства, медицинска диагностика).',
+      },
+      {
+        en: '**Data Monetization** — Turning raw data into revenue through analytics, personalization, and data-as-a-service models.',
+        bg: '**Монетизация на данни** — Превръщане на необработени данни в приходи чрез анализи, персонализация и модели данни-като-услуга.',
+      },
+    ],
   },
   {
-    company: 'Revolut',
-    icon: CreditCard,
-    color: 'text-blue-500',
-    bgColor: 'bg-blue-500/10',
-    innovation: { en: 'Mobile-first neobank with API-driven financial services', bg: 'Необанка с приоритет към мобилни устройства и API-базирани финансови услуги' },
-    impact: { en: '40M+ users; challenged traditional banking with zero-fee transfers', bg: '40M+ потребители; предизвика традиционното банкиране с безплатни трансфери' },
-    lesson: { en: 'Platform thinking and API ecosystems enable startups to compete with century-old institutions.', bg: 'Платформеното мислене и API екосистемите позволяват на стартъпи да се конкурират със столетни институции.' },
+    id: 'platform-economy',
+    icon: Network,
+    title: { en: 'Platform Economy & Network Effects', bg: 'Платформена икономика и мрежови ефекти' },
+    intro: {
+      en: 'The platform economy is a business model where value is created by facilitating exchanges between two or more interdependent groups — typically consumers and producers. Platforms like Uber, Airbnb, Amazon, and Spotify have disrupted traditional industries by leveraging network effects: the more users join, the more valuable the platform becomes for everyone.',
+      bg: 'Платформената икономика е бизнес модел, при който стойността се създава чрез улесняване на обмена между две или повече взаимозависими групи — обикновено потребители и производители. Платформи като Uber, Airbnb, Amazon и Spotify трансформираха традиционните индустрии чрез мрежови ефекти: колкото повече потребители се присъединяват, толкова по-ценна става платформата за всички.',
+    },
+    points: [
+      {
+        en: '**Direct Network Effects** — Each new user increases value for all existing users (e.g., WhatsApp — more contacts means more utility).',
+        bg: '**Преки мрежови ефекти** — Всеки нов потребител увеличава стойността за всички съществуващи потребители (напр. WhatsApp — повече контакти означава повече полезност).',
+      },
+      {
+        en: '**Indirect Network Effects** — Growth on one side attracts the other (e.g., more Uber drivers attract more riders and vice versa).',
+        bg: '**Непреки мрежови ефекти** — Растежът от едната страна привлича другата (напр. повече шофьори на Uber привличат повече пътници и обратно).',
+      },
+      {
+        en: '**Winner-Takes-Most Dynamics** — Platforms tend toward monopoly because switching costs increase as network grows.',
+        bg: '**Динамика „Победителят взема почти всичко"** — Платформите клонят към монопол, защото разходите за преминаване се увеличават с растежа на мрежата.',
+      },
+      {
+        en: '**Multi-sided Markets** — Platforms must balance value for all sides (buyers, sellers, advertisers) to sustain growth.',
+        bg: '**Многостранни пазари** — Платформите трябва да балансират стойността за всички страни (купувачи, продавачи, рекламодатели) за устойчив растеж.',
+      },
+    ],
   },
   {
-    company: 'Siemens',
-    icon: Factory,
-    color: 'text-slate-500',
-    bgColor: 'bg-slate-500/10',
-    innovation: { en: 'Digital twin technology for smart manufacturing', bg: 'Технология за цифров двойник за интелигентно производство' },
-    impact: { en: '30% reduction in time-to-market for new products', bg: '30% намаление на времето за пускане на нови продукти' },
-    lesson: { en: 'Digital twins allow companies to simulate, test, and optimize before spending real resources.', bg: 'Цифровите двойници позволяват на компаниите да симулират, тестват и оптимизират преди да изразходват реални ресурси.' },
+    id: 'startup-ecosystems',
+    icon: Rocket,
+    title: { en: 'Startup Ecosystems', bg: 'Стартъп екосистеми' },
+    intro: {
+      en: 'A startup ecosystem is the interconnected network of entrepreneurs, investors, mentors, universities, governments, and support organizations that together create conditions for new ventures to emerge and scale. Successful ecosystems like Silicon Valley, Tel Aviv, Berlin, and Singapore share common elements: access to talent, capital, mentorship, and a culture that tolerates risk and failure.',
+      bg: 'Стартъп екосистемата е взаимосвързаната мрежа от предприемачи, инвеститори, ментори, университети, правителства и поддържащи организации, които заедно създават условия за зараждане и мащабиране на нови начинания. Успешните екосистеми като Силициевата долина, Тел Авив, Берлин и Сингапур споделят общи елементи: достъп до таланти, капитал, менторство и култура, която толерира риска и неуспеха.',
+    },
+    points: [
+      {
+        en: '**Funding Stages** — Pre-seed → Seed → Series A → Series B → IPO. Each stage has different investors and expectations.',
+        bg: '**Етапи на финансиране** — Pre-seed → Seed → Series A → Series B → IPO. Всеки етап има различни инвеститори и очаквания.',
+      },
+      {
+        en: '**Lean Startup Methodology** — Build → Measure → Learn cycle. Validate assumptions with MVPs before scaling.',
+        bg: '**Методология Lean Startup** — Цикъл Създай → Измери → Научи. Валидирайте допускания с MVP преди мащабиране.',
+      },
+      {
+        en: '**Accelerators & Incubators** — Programs like Y Combinator, Techstars, and 500 Startups provide mentorship, funding, and network access.',
+        bg: '**Акселератори и инкубатори** — Програми като Y Combinator, Techstars и 500 Startups предоставят менторство, финансиране и достъп до мрежи.',
+      },
+      {
+        en: '**EU Startup Support** — Programs like Horizon Europe, EIC Accelerator, and the European Innovation Council fund early-stage deep tech startups.',
+        bg: '**Подкрепа за стартъпи в ЕС** — Програми като Horizon Europe, EIC Accelerator и Европейския съвет по иновации финансират стартъпи в ранен етап.',
+      },
+    ],
   },
-  {
-    company: 'Spotify',
-    icon: Music,
-    color: 'text-green-500',
-    bgColor: 'bg-green-500/10',
-    innovation: { en: 'ML-powered recommendation engine (Discover Weekly)', bg: 'Препоръчващ механизъм с ML (Discover Weekly)' },
-    impact: { en: '600M+ users; transformed how people discover music', bg: '600M+ потребители; промени начина, по който хората откриват музика' },
-    lesson: { en: 'AI and machine learning create massive value by personalizing user experiences at scale.', bg: 'AI и машинното обучение създават огромна стойност чрез персонализиране на потребителското изживяване в мащаб.' },
-  },
-  {
-    company: 'Maersk & IBM',
-    icon: Ship,
-    color: 'text-sky-600',
-    bgColor: 'bg-sky-600/10',
-    innovation: { en: 'TradeLens blockchain for global shipping logistics', bg: 'TradeLens блокчейн за глобална корабна логистика' },
-    impact: { en: 'Digitized 10M+ shipping events, reduced paperwork by 80%', bg: 'Дигитализирани 10M+ транспортни събития, намалена документация с 80%' },
-    lesson: { en: 'Blockchain solves real problems in trust and transparency across complex supply chains.', bg: 'Блокчейн решава реални проблеми на доверие и прозрачност в сложни вериги за доставки.' },
-  },
-];
-
-const pillars = [
-  { icon: Cpu, key: 'technology' as const },
-  { icon: Target, key: 'testing' as const },
-  { icon: Users, key: 'skills' as const },
-  { icon: TrendingUp, key: 'funding' as const },
 ];
 
 export default function AboutDigitalInnovation() {
@@ -92,18 +159,94 @@ export default function AboutDigitalInnovation() {
   const navigate = useNavigate();
   const tx = (en: string, bg: string) => lang === 'bg' ? bg : en;
 
-  const learningMethods = [
-    { icon: BookOpen, en: 'Analyzing real business case studies', bg: 'Анализ на реални бизнес казуси' },
-    { icon: Rocket, en: 'Building their own startup ideas', bg: 'Създаване на собствена стартъп идея' },
-    { icon: FlaskConical, en: 'Testing strategies in a simulator', bg: 'Тестване на стратегии в симулатор' },
-    { icon: Brain, en: 'Receiving feedback from mentors and AI tools', bg: 'Получаване на обратна връзка от ментори и AI инструменти' },
-  ];
-
   return (
     <div className="min-h-screen bg-background">
       <AppHeader />
 
-      {/* ═══════════════════ ABOUT THE CREATOR ═══════════════════ */}
+      {/* ═══════════════ HERO ═══════════════ */}
+      <section className="py-16 px-4 border-b border-border">
+        <div className="container mx-auto max-w-4xl text-center">
+          <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-accent px-3 py-1 mb-5">
+            <GraduationCap className="h-3 w-3 text-primary" />
+            <span className="text-[11px] font-semibold text-primary uppercase tracking-wider">
+              {tx('Educational Reference', 'Образователен справочник')}
+            </span>
+          </div>
+          <h1 className="text-3xl sm:text-4xl font-display font-bold text-foreground mb-4">
+            {tx('About Digital Innovation', 'За дигиталните иновации')}
+          </h1>
+          <p className="text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            {tx(
+              'Academic reference material covering the key concepts, frameworks, and ecosystems that drive digital transformation in the modern economy.',
+              'Академичен справочен материал, обхващащ ключовите концепции, рамки и екосистеми, които движат дигиталната трансформация в съвременната икономика.'
+            )}
+          </p>
+        </div>
+      </section>
+
+      {/* ═══════════════ TOPIC NAVIGATION ═══════════════ */}
+      <section className="py-6 px-4 bg-muted/30 border-b border-border sticky top-0 z-10 backdrop-blur-sm">
+        <div className="container mx-auto max-w-4xl">
+          <div className="flex flex-wrap gap-2 justify-center">
+            {academicTopics.map(topic => (
+              <a
+                key={topic.id}
+                href={`#${topic.id}`}
+                className="inline-flex items-center gap-1.5 rounded-full border border-border bg-card px-3 py-1.5 text-xs font-medium text-foreground hover:border-primary/40 hover:bg-accent transition-colors"
+              >
+                <topic.icon className="h-3.5 w-3.5 text-primary" />
+                {topic.title[lang]}
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════ ACADEMIC TOPICS ═══════════════ */}
+      {academicTopics.map((topic, idx) => (
+        <section
+          key={topic.id}
+          id={topic.id}
+          className={`py-14 px-4 border-b border-border ${idx % 2 === 1 ? 'bg-muted/30' : ''}`}
+        >
+          <div className="container mx-auto max-w-4xl">
+            <div className="flex items-start gap-5 mb-6">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl sim-gradient shadow-lg shrink-0 mt-1">
+                <topic.icon className="h-6 w-6 text-primary-foreground" />
+              </div>
+              <div>
+                <h2 className="text-2xl sm:text-3xl font-display font-bold text-foreground mb-3">
+                  {topic.title[lang]}
+                </h2>
+                <p className="text-muted-foreground leading-relaxed">
+                  {topic.intro[lang]}
+                </p>
+              </div>
+            </div>
+
+            <div className="grid gap-3 sm:grid-cols-2 mt-6">
+              {topic.points.map((point, pi) => (
+                <Card key={pi} className="p-5 border-border hover:border-primary/30 transition-colors">
+                  <div className="flex items-start gap-3">
+                    <CheckCircle2 className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+                    <p
+                      className="text-sm text-muted-foreground leading-relaxed"
+                      dangerouslySetInnerHTML={{
+                        __html: (lang === 'bg' ? point.bg : point.en).replace(
+                          /\*\*(.*?)\*\*/g,
+                          '<strong class="text-foreground">$1</strong>'
+                        ),
+                      }}
+                    />
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+      ))}
+
+      {/* ═══════════════ ABOUT THE CREATOR ═══════════════ */}
       <section className="py-16 px-4 border-b border-border">
         <div className="container mx-auto max-w-4xl">
           <div className="text-center mb-10">
@@ -114,13 +257,11 @@ export default function AboutDigitalInnovation() {
 
           <div className="rounded-2xl border border-border bg-card p-8 md:p-10">
             <div className="flex flex-col md:flex-row gap-8 items-center md:items-start">
-              {/* Profile image placeholder */}
               <div className="shrink-0">
                 <div className="flex h-28 w-28 items-center justify-center rounded-full sim-gradient shadow-xl glow-primary">
                   <User className="h-14 w-14 text-primary-foreground" />
                 </div>
               </div>
-
               <div className="flex-1 text-center md:text-left">
                 <h3 className="text-xl font-display font-bold text-foreground mb-1">
                   {tx('Kirilka Angelova', 'Кирилка Ангелова')}
@@ -131,24 +272,14 @@ export default function AboutDigitalInnovation() {
                   <Badge variant="outline" className="text-xs">{tx('Digital Innovation', 'Дигитални иновации')}</Badge>
                 </div>
                 <div className="space-y-3 text-sm text-muted-foreground leading-relaxed">
-                  <p>
-                    {tx(
-                      'This platform was created by Kirilka Angelova, an educator, mentor, and professional specializing in digital innovation, entrepreneurship, and digital business strategy.',
-                      'Тази платформа е създадена от Кирилка Ангелова – преподавател и ментор в областта на дигиталните иновации, предприемачеството и дигиталния бизнес.'
-                    )}
-                  </p>
-                  <p>
-                    {tx(
-                      'Her work focuses on helping students understand how technology transforms industries and how innovative ideas can become successful startups.',
-                      'Нейната работа е насочена към това да помогне на учениците да разберат как технологиите трансформират индустриите и как иновативните идеи могат да се превърнат в успешни стартъпи.'
-                    )}
-                  </p>
-                  <p>
-                    {tx(
-                      'Instead of learning only theory, students are encouraged to analyze real companies, explore digital transformation, and build their own startup ideas.',
-                      'Вместо да учат само теория, учениците анализират реални компании, изследват дигиталната трансформация и създават собствени стартъп идеи.'
-                    )}
-                  </p>
+                  <p>{tx(
+                    'This platform was created by Kirilka Angelova, an educator, mentor, and professional specializing in digital innovation, entrepreneurship, and digital business strategy.',
+                    'Тази платформа е създадена от Кирилка Ангелова – преподавател и ментор в областта на дигиталните иновации, предприемачеството и дигиталния бизнес.'
+                  )}</p>
+                  <p>{tx(
+                    'Her work focuses on helping students understand how technology transforms industries and how innovative ideas can become successful startups.',
+                    'Нейната работа е насочена към това да помогне на учениците да разберат как технологиите трансформират индустриите и как иновативните идеи могат да се превърнат в успешни стартъпи.'
+                  )}</p>
                 </div>
               </div>
             </div>
@@ -156,174 +287,7 @@ export default function AboutDigitalInnovation() {
         </div>
       </section>
 
-      {/* ═══════════════════ MISSION ═══════════════════ */}
-      <section className="py-16 px-4 bg-muted/30 border-b border-border">
-        <div className="container mx-auto max-w-4xl">
-          <div className="flex items-start gap-5">
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl sim-gradient shadow-lg shrink-0 mt-1">
-              <Heart className="h-6 w-6 text-primary-foreground" />
-            </div>
-            <div>
-              <h2 className="text-2xl sm:text-3xl font-display font-bold text-foreground mb-4">
-                {tx('Mission of the Platform', 'Мисия на платформата')}
-              </h2>
-              <div className="space-y-3 text-muted-foreground leading-relaxed">
-                <p>
-                  {tx(
-                    'DigiInnov Case Lab was created to help students understand and apply digital innovation through practice.',
-                    'DigiInnov Case Lab е създадена, за да помогне на учениците да разберат и прилагат дигиталните иновации чрез практика.'
-                  )}
-                </p>
-                <p>
-                  {tx(
-                    'The platform combines real-world case studies, startup simulation, and interactive tools to create an experiential learning environment.',
-                    'Платформата комбинира реални бизнес казуси, симулации и интерактивни инструменти, за да създаде практическа обучителна среда.'
-                  )}
-                </p>
-                <p>
-                  {tx(
-                    'The goal is to prepare students for a world where technology, innovation, and entrepreneurship play a central role.',
-                    'Целта е учениците да се подготвят за свят, в който технологиите, иновациите и предприемачеството играят ключова роля.'
-                  )}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════ WHY IT MATTERS ═══════════════════ */}
-      <section className="py-16 px-4 border-b border-border">
-        <div className="container mx-auto max-w-4xl">
-          <div className="text-center mb-10">
-            <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-accent px-3 py-1 mb-4">
-              <Sparkles className="h-3 w-3 text-primary" />
-              <span className="text-[11px] font-semibold text-primary uppercase tracking-wider">
-                {tx('Why It Matters', 'Защо е важно')}
-              </span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-display font-bold text-foreground mb-3">
-              {tx('Why Digital Innovation Education Matters', 'Защо обучението по дигитални иновации е важно')}
-            </h2>
-          </div>
-
-          <div className="grid gap-6 md:grid-cols-3">
-            {[
-              {
-                icon: Globe,
-                en: 'Digital technologies are transforming every industry, from healthcare and finance to agriculture and education.',
-                bg: 'Дигиталните технологии трансформират всяка индустрия – от здравеопазване и финанси до земеделие и образование.',
-              },
-              {
-                icon: GraduationCap,
-                en: 'Understanding how digital innovation works is becoming an essential skill for future professionals and entrepreneurs.',
-                bg: 'Разбирането на дигиталните иновации става ключово умение за бъдещите професионалисти и предприемачи.',
-              },
-              {
-                icon: Target,
-                en: 'This platform helps students develop strategic thinking, innovation skills, and an entrepreneurial mindset.',
-                bg: 'Платформата помага на учениците да развият стратегическо мислене, иновативност и предприемаческо мислене.',
-              },
-            ].map((item, i) => (
-              <Card key={i} className="p-6 border-border hover:border-primary/30 transition-all hover:shadow-md">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent mb-4">
-                  <item.icon className="h-5 w-5 text-primary" />
-                </div>
-                <p className="text-sm text-muted-foreground leading-relaxed">{tx(item.en, item.bg)}</p>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════ EDUCATIONAL APPROACH ═══════════════════ */}
-      <section className="py-16 px-4 bg-muted/30 border-b border-border">
-        <div className="container mx-auto max-w-4xl">
-          <div className="text-center mb-10">
-            <h2 className="text-2xl sm:text-3xl font-display font-bold text-foreground mb-3">
-              {tx('How Students Learn on This Platform', 'Как учениците учат в тази платформа')}
-            </h2>
-            <p className="text-muted-foreground max-w-lg mx-auto">
-              {tx('A hands-on, practice-first approach to digital innovation education.', 'Практически подход към обучението по дигитални иновации.')}
-            </p>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
-            {learningMethods.map((method, i) => (
-              <div key={i} className="flex items-center gap-4 rounded-xl border border-border bg-card p-5 hover:border-primary/30 transition-colors">
-                <div className="flex h-11 w-11 items-center justify-center rounded-xl sim-gradient shrink-0 shadow-md">
-                  <method.icon className="h-5 w-5 text-primary-foreground" />
-                </div>
-                <div className="flex items-center gap-2 flex-1">
-                  <CheckCircle2 className="h-4 w-4 text-sim-success shrink-0" />
-                  <p className="text-sm font-medium text-foreground">{tx(method.en, method.bg)}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════ ORIGINAL ABOUT CONTENT ═══════════════════ */}
-
-      {/* Why this platform */}
-      <section className="py-12 px-4 bg-accent/30 border-b border-border">
-        <div className="container mx-auto max-w-4xl">
-          <div className="flex items-start gap-4">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 shrink-0 mt-1">
-              <Rocket className="h-5 w-5 text-primary" />
-            </div>
-            <div>
-              <h2 className="text-xl font-display font-bold text-foreground mb-2">{t.whyPlatform}</h2>
-              <p className="text-muted-foreground leading-relaxed">{t.whyPlatformDesc}</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Real Case Studies */}
-      <section className="py-12 px-4 border-b border-border">
-        <div className="container mx-auto max-w-4xl">
-          <div className="flex items-center gap-2 mb-2">
-            <BookOpen className="h-5 w-5 text-primary" />
-            <h2 className="text-2xl font-display font-bold text-foreground">{t.realCaseStudies}</h2>
-          </div>
-          <p className="text-muted-foreground mb-8">{t.realCaseStudiesDesc}</p>
-
-          <div className="space-y-4">
-            {caseStudies.map(cs => (
-              <Card key={cs.company} className="p-5 border-border hover:border-primary/30 transition-colors">
-                <div className="flex items-start gap-4">
-                  <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${cs.bgColor} shrink-0`}>
-                    <cs.icon className={`h-5 w-5 ${cs.color}`} />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1">
-                      <h3 className="font-display font-semibold text-foreground">{cs.company}</h3>
-                    </div>
-                    <p className="text-sm text-foreground/80 mb-1">
-                      <span className="font-medium">{lang === 'bg' ? 'Иновация:' : 'Innovation:'}</span>{' '}
-                      {cs.innovation[lang]}
-                    </p>
-                    <p className="text-sm text-muted-foreground mb-2">
-                      <span className="font-medium">{lang === 'bg' ? 'Въздействие:' : 'Impact:'}</span>{' '}
-                      {cs.impact[lang]}
-                    </p>
-                    <div className="bg-accent/50 rounded px-3 py-2">
-                      <p className="text-xs text-foreground/70">
-                        <span className="font-semibold">💡 {lang === 'bg' ? 'Урок:' : 'Lesson:'}</span>{' '}
-                        {cs.lesson[lang]}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
+      {/* ═══════════════ CTA ═══════════════ */}
       <section className="py-16 px-4">
         <div className="container mx-auto max-w-3xl text-center">
           <h2 className="text-2xl font-display font-bold text-foreground mb-3">{t.readyToLearn}</h2>
