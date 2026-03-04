@@ -3,7 +3,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
 import { Button } from '@/components/ui/button';
 import AppHeader from '@/components/layout/AppHeader';
-import Leaderboard from '@/components/dashboard/Leaderboard';
+import InnovationShowcase from '@/components/landing/InnovationShowcase';
 import {
   GraduationCap, ArrowRight, Lightbulb, Search, Rocket, Brain,
   Sparkles, Presentation, Compass, Briefcase, Hammer, Palette, Crown,
@@ -444,21 +444,8 @@ const Index = () => {
         </div>
       </section>
 
-      {/* ═══════════════════ TOP INNOVATORS LEADERBOARD ═══════════════════ */}
-      <section className="py-20 px-4 border-t border-border bg-muted/30">
-        <div className="container mx-auto max-w-3xl">
-          <div className="text-center mb-14">
-            <SectionBadge label={t('Competition', 'Състезание')} />
-            <h2 className="text-3xl sm:text-4xl font-display font-bold text-foreground mt-4 mb-3">
-              {t('Top Innovators', 'Топ иноватори')}
-            </h2>
-            <p className="text-muted-foreground max-w-lg mx-auto">
-              {t('See who leads the innovation challenge. Earn XP to climb the ranks!', 'Виж кой води иновационното предизвикателство. Спечели XP, за да се изкачиш!')}
-            </p>
-          </div>
-          <Leaderboard lang={lang} limit={5} showTitle={false} />
-        </div>
-      </section>
+      {/* ═══════════════════ INNOVATION SHOWCASE ═══════════════════ */}
+      <InnovationShowcase lang={lang} />
 
       {/* ═══════════════════ CTA ═══════════════════ */}
       <section className="relative py-24 px-4 border-t border-border overflow-hidden">
