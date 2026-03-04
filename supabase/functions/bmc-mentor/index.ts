@@ -202,7 +202,7 @@ Cost Structure: ${bmc.bmc_cost_structure || "(empty)"}`;
 
     // Cache
     await supabase.from("ai_feedback_cache").upsert({
-      user_id: user.id,
+      user_id: userId,
       feedback_type: feedbackType,
       input_hash: inputHash,
       lang: lang || "en",

@@ -59,7 +59,7 @@ serve(async (req) => {
       .eq("id", submission_id)
       .single();
 
-    if (subErr || !sub || sub.user_id !== user.id) {
+    if (subErr || !sub || sub.user_id !== userId) {
       return new Response(JSON.stringify({ error: "Submission not found or unauthorized" }), {
         status: 403,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
