@@ -45,20 +45,21 @@ function getTermOfTheWeek(): DictionaryTerm {
   return TERMS[weekNum % TERMS.length];
 }
 
-// Generate a quiz question from a random term
-function generateQuiz(exclude?: string): { term: DictionaryTerm; options: string[]; correctIndex: number } {
+// Generate a quiz question from a random term (language-aware)
+function generateQuiz(lang: string, exclude?: string): { term: DictionaryTerm; options: string[]; correctIndex: number } {
+  const isBg = lang === 'bg';
   const pool = TERMS.filter(t => t.term !== exclude);
   const term = pool[Math.floor(Math.random() * pool.length)];
   const wrongPool = TERMS.filter(t => t.term !== term.term);
   const wrongs: string[] = [];
   while (wrongs.length < 3 && wrongPool.length > 0) {
     const idx = Math.floor(Math.random() * wrongPool.length);
-    wrongs.push(wrongPool[idx].definition);
+    wrongs.push(isBg ? wrongPool[idx].definitionBg : wrongPool[idx].definition);
     wrongPool.splice(idx, 1);
   }
   const correctIndex = Math.floor(Math.random() * 4);
   const options = [...wrongs];
-  options.splice(correctIndex, 0, term.definition);
+  options.splice(correctIndex, 0, isBg ? term.definitionBg : term.definition);
   return { term, options, correctIndex };
 }
 
@@ -68,7 +69,7 @@ export default function Dictionary() {
   const [catFilter, setCatFilter] = useState('all');
   const [letterFilter, setLetterFilter] = useState('');
   const [showQuiz, setShowQuiz] = useState(false);
-  const [quiz, setQuiz] = useState(() => generateQuiz());
+  const [quiz, setQuiz] = useState(() => generateQuiz('en'));
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
 
   const termOfTheWeek = useMemo(() => getTermOfTheWeek(), []);
@@ -92,9 +93,17 @@ export default function Dictionary() {
   const catColor = (c: string) => CATEGORY_COLORS[c] || 'bg-muted text-muted-foreground';
 
   const nextQuiz = useCallback(() => {
-    setQuiz(generateQuiz(quiz.term.term));
+    setQuiz(generateQuiz(lang, quiz.term.term));
     setSelectedAnswer(null);
-  }, [quiz.term.term]);
+  }, [quiz.term.term, lang]);
+
+  // Regenerate quiz when language changes
+  const [prevLang, setPrevLang] = useState(lang);
+  if (lang !== prevLang) {
+    setPrevLang(lang);
+    setQuiz(generateQuiz(lang));
+    setSelectedAnswer(null);
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -162,10 +171,9 @@ export default function Dictionary() {
               </div>
             ) : (
               <div>
-                <p className="text-sm font-semibold text-foreground mb-1">
-                  {lang === 'bg' ? 'Какво е' : 'What is'} <span className="text-primary">{quiz.term.term}</span>?
+                <p className="text-sm font-semibold text-foreground mb-3">
+                  {lang === 'bg' ? 'Какво е' : 'What is'} <span className="text-primary">{lang === 'bg' ? quiz.term.termBg : quiz.term.term}</span>?
                 </p>
-                <p className="text-xs text-muted-foreground mb-3">{quiz.term.termBg}</p>
                 <div className="space-y-2">
                   {quiz.options.map((opt, i) => {
                     const isCorrect = i === quiz.correctIndex;
