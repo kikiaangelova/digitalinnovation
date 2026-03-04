@@ -31,10 +31,26 @@ export default function AuthPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Input validation
+    const trimmedEmail = email.trim();
+    if (!trimmedEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+      toast.error('Please enter a valid email address');
+      return;
+    }
+    if (password.length < 8) {
+      toast.error('Password must be at least 8 characters');
+      return;
+    }
+    if (password.length > 128) {
+      toast.error('Password is too long');
+      return;
+    }
+
     setLoading(true);
 
     if (isLogin) {
-      const { error } = await signIn(email, password);
+      const { error } = await signIn(trimmedEmail, password);
       if (error) {
         toast.error(error.message);
       } else {
@@ -42,12 +58,18 @@ export default function AuthPage() {
         navigate(redirectTo);
       }
     } else {
-      if (!fullName.trim()) {
-        toast.error('Please enter your full name');
+      const trimmedName = fullName.trim();
+      if (!trimmedName || trimmedName.length < 2) {
+        toast.error('Please enter your full name (at least 2 characters)');
         setLoading(false);
         return;
       }
-      const { error } = await signUp(email, password, fullName);
+      if (trimmedName.length > 100) {
+        toast.error('Name is too long');
+        setLoading(false);
+        return;
+      }
+      const { error } = await signUp(trimmedEmail, password, trimmedName);
       if (error) {
         toast.error(error.message);
       } else {

@@ -1,7 +1,8 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
+import { supabase } from '@/integrations/supabase/client';
 import AppHeader from '@/components/layout/AppHeader';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -35,14 +36,64 @@ export default function StartupSimulator() {
   const [kpis, setKpis] = useState<SimWeekKPIs>({ ...INITIAL_KPIS });
   const [history, setHistory] = useState<WeekRecord[]>([]);
   const [weekChoices, setWeekChoices] = useState<string[]>([]);
+  const [simId, setSimId] = useState<string | null>(null);
 
-  const reset = useCallback(() => {
+  // Load existing progress
+  useEffect(() => {
+    if (!user) return;
+    supabase.from('simulator_progress')
+      .select('*')
+      .eq('user_id', user.id)
+      .eq('is_complete', false)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (data) {
+          setSimId(data.id);
+          const savedKpis = data.kpis as any as SimWeekKPIs;
+          const savedDecisions = data.decisions as any as WeekRecord[];
+          setKpis(savedKpis);
+          setHistory(savedDecisions);
+          setCurrentWeek(Math.min(data.current_week - 1, SIM_WEEKS.length - 1));
+          if (data.is_complete) {
+            setPhase('results');
+          } else if (savedDecisions.length > 0) {
+            setPhase('playing');
+          }
+        }
+      });
+  }, [user]);
+
+  const saveProgress = useCallback(async (
+    newKpis: SimWeekKPIs, newHistory: WeekRecord[], weekNum: number, complete: boolean
+  ) => {
+    if (!user) return;
+    const grade = complete ? getStartupGrade(newKpis).grade : null;
+    const payload = {
+      user_id: user.id,
+      current_week: weekNum,
+      kpis: newKpis as any,
+      decisions: newHistory as any,
+      is_complete: complete,
+      grade,
+    };
+    if (simId) {
+      await supabase.from('simulator_progress').update(payload).eq('id', simId);
+    } else {
+      const { data } = await supabase.from('simulator_progress').insert(payload).select('id').single();
+      if (data) setSimId(data.id);
+    }
+  }, [user, simId]);
+
+  const reset = useCallback(async () => {
     setPhase('intro');
     setCurrentWeek(0);
     setCurrentDecision(0);
     setKpis({ ...INITIAL_KPIS });
     setHistory([]);
     setWeekChoices([]);
+    setSimId(null);
   }, []);
 
   const handleChoice = (optionId: string, effects: Partial<SimWeekKPIs>) => {
@@ -55,16 +106,18 @@ export default function StartupSimulator() {
     if (currentDecision < week.decisions.length - 1) {
       setCurrentDecision(d => d + 1);
     } else {
-      // Week complete
       const record: WeekRecord = { week: currentWeek + 1, choices: newChoices, kpis: { ...newKpis } };
-      setHistory(h => [...h, record]);
+      const newHistory = [...history, record];
+      setHistory(newHistory);
       setWeekChoices([]);
       setCurrentDecision(0);
 
       if (currentWeek < SIM_WEEKS.length - 1) {
         setCurrentWeek(w => w + 1);
+        saveProgress(newKpis, newHistory, currentWeek + 2, false);
       } else {
         setPhase('results');
+        saveProgress(newKpis, newHistory, currentWeek + 1, true);
       }
     }
   };
