@@ -16,7 +16,7 @@ const SKILL_OPTIONS = ['UX', 'Data', 'Strategy', 'PM', 'Marketing', 'AI', 'Engin
 
 export default function ProfilePage() {
   const { user, profile: authProfile } = useAuth();
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const navigate = useNavigate();
   const [fullName, setFullName] = useState('');
   const [bio, setBio] = useState('');
@@ -26,6 +26,7 @@ export default function ProfilePage() {
   const [linkedIn, setLinkedIn] = useState('');
   const [portfolio, setPortfolio] = useState('');
   const [profileVisible, setProfileVisible] = useState(true);
+  const [leaderboardVisible, setLeaderboardVisible] = useState(false);
   const [submissions, setSubmissions] = useState<any[]>([]);
   const [badges, setBadges] = useState<any[]>([]);
   const [teams, setTeams] = useState<any[]>([]);
@@ -45,6 +46,7 @@ export default function ProfilePage() {
         setLinkedIn(links.linkedin || '');
         setPortfolio(links.portfolio || '');
         setProfileVisible((p as any).profile_visible ?? true);
+        setLeaderboardVisible((p as any).leaderboard_visible ?? false);
       }
       const { data: subs } = await supabase.from('submissions').select('case_study_id, total_score, max_score, is_draft').eq('user_id', user.id).eq('is_draft', false);
       setSubmissions(subs || []);
@@ -67,6 +69,7 @@ export default function ProfilePage() {
       interests,
       links_json: { linkedin: linkedIn, portfolio },
       profile_visible: profileVisible,
+      leaderboard_visible: leaderboardVisible,
     } as any).eq('user_id', user.id);
     if (error) toast.error(t.profileSaveFailed);
     else toast.success(t.profileSaved);
@@ -199,9 +202,15 @@ export default function ProfilePage() {
               ))}
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <input type="checkbox" checked={profileVisible} onChange={e => setProfileVisible(e.target.checked)} className="rounded" />
-            <Label>{t.visibleToClassmates}</Label>
+          <div className="space-y-3">
+            <div className="flex items-center gap-3">
+              <input type="checkbox" checked={profileVisible} onChange={e => setProfileVisible(e.target.checked)} className="rounded" />
+              <Label>{t.visibleToClassmates}</Label>
+            </div>
+            <div className="flex items-center gap-3">
+              <input type="checkbox" checked={leaderboardVisible} onChange={e => setLeaderboardVisible(e.target.checked)} className="rounded" />
+              <Label>{lang === 'bg' ? 'Покажи ме в публичната класация' : 'Show me on public leaderboard'}</Label>
+            </div>
           </div>
           <Button onClick={handleSave} disabled={saving} className="sim-gradient border-0">
             <Save className="h-4 w-4 mr-1" /> {saving ? t.saving : t.saveProfile}

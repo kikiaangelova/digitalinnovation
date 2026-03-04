@@ -561,6 +561,7 @@ export type Database = {
           full_name: string | null
           id: string
           interests: string[] | null
+          leaderboard_visible: boolean
           links_json: Json | null
           profile_visible: boolean | null
           skills_tags: string[] | null
@@ -575,6 +576,7 @@ export type Database = {
           full_name?: string | null
           id?: string
           interests?: string[] | null
+          leaderboard_visible?: boolean
           links_json?: Json | null
           profile_visible?: boolean | null
           skills_tags?: string[] | null
@@ -589,6 +591,7 @@ export type Database = {
           full_name?: string | null
           id?: string
           interests?: string[] | null
+          leaderboard_visible?: boolean
           links_json?: Json | null
           profile_visible?: boolean | null
           skills_tags?: string[] | null
