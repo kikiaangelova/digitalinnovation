@@ -1,1 +1,4 @@
 project_id = "rsnjydiaewuiyyvxlxwo"
+
+[functions.bmc-mentor]
+verify_jwt = false
