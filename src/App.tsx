@@ -3,9 +3,15 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "@/context/AuthContext";
 import { SimulatorProvider } from "@/context/SimulatorContext";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import AuthPage from "./pages/AuthPage";
+import StudentDashboard from "./pages/StudentDashboard";
+import CasePlayer from "./pages/CasePlayer";
+import CaseResults from "./pages/CaseResults";
+import AdminDashboard from "./pages/AdminDashboard";
 import StudentLanding from "./pages/simulator/StudentLanding";
 import SeasonView from "./pages/simulator/SeasonView";
 import RoundView from "./pages/simulator/RoundView";
@@ -19,19 +25,26 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <SimulatorProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/simulator" element={<StudentLanding />} />
-            <Route path="/simulator/season/:id" element={<SeasonView />} />
-            <Route path="/simulator/season/:id/round/:n" element={<RoundView />} />
-            <Route path="/admin/simulator" element={<SimulatorAdmin />} />
-            <Route path="/admin/simulator/season/:id" element={<SeasonAnalytics />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </SimulatorProvider>
+      <AuthProvider>
+        <SimulatorProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/auth" element={<AuthPage />} />
+              <Route path="/dashboard" element={<StudentDashboard />} />
+              <Route path="/case/:id" element={<CasePlayer />} />
+              <Route path="/case/:id/results" element={<CaseResults />} />
+              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/simulator" element={<StudentLanding />} />
+              <Route path="/simulator/season/:id" element={<SeasonView />} />
+              <Route path="/simulator/season/:id/round/:n" element={<RoundView />} />
+              <Route path="/admin/simulator" element={<SimulatorAdmin />} />
+              <Route path="/admin/simulator/season/:id" element={<SeasonAnalytics />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </SimulatorProvider>
+      </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
