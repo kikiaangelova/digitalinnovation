@@ -1105,6 +1105,33 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_assessment_results_questions: {
+        Args: { _assessment_id: string }
+        Returns: {
+          competency_id: string
+          correct_answer: string
+          id: string
+          model_answer: string
+          points: number
+          prompt: string
+          question_order: number
+          type: string
+        }[]
+      }
+      get_case_results_questions: {
+        Args: { _case_study_id: string }
+        Returns: {
+          case_step_id: string
+          correct_answer: string
+          id: string
+          model_answer: string
+          points: number
+          prompt: string
+          question_order: number
+          rubric: string
+          type: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
