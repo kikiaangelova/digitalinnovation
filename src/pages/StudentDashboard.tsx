@@ -1,348 +1,163 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
+import { useLang } from '@/context/LangContext';
 import { supabase } from '@/integrations/supabase/client';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
 import AppHeader from '@/components/layout/AppHeader';
-import { BookOpen, Clock, BarChart3, CheckCircle2, ArrowRight, Users, Plus, Target, CalendarDays, Rocket } from 'lucide-react';
-import { toast } from 'sonner';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import { Progress } from '@/components/ui/progress';
+import LevelCard from '@/components/dashboard/LevelCard';
+import ProgressCards from '@/components/dashboard/ProgressCards';
+import AchievementBadges from '@/components/dashboard/AchievementBadges';
+import AIMentorWidget from '@/components/dashboard/AIMentorWidget';
+import CourseTimeline from '@/components/dashboard/CourseTimeline';
+import { Zap, BookOpen, Rocket, BarChart3 } from 'lucide-react';
 
-interface CaseStudyRow {
-  id: string; title: string; description: string | null; topic: string | null;
-  difficulty: string; est_minutes: number | null;
-}
-interface SubmissionRow {
-  case_study_id: string; is_draft: boolean; total_score: number | null; max_score: number | null;
-}
+interface CaseRow { id: string; title: string; difficulty: string; est_minutes: number | null; }
+interface SubRow { case_study_id: string; is_draft: boolean; }
 
 export default function StudentDashboard() {
   const { user } = useAuth();
-  const [cases, setCases] = useState<CaseStudyRow[]>([]);
-  const [submissions, setSubmissions] = useState<SubmissionRow[]>([]);
-  const [assessments, setAssessments] = useState<any[]>([]);
-  const [assessmentSubs, setAssessmentSubs] = useState<any[]>([]);
-  const [teams, setTeams] = useState<any[]>([]);
-  const [assignments, setAssignments] = useState<any[]>([]);
-  const [competencies, setCompetencies] = useState<any[]>([]);
+  const { lang } = useLang();
+  const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
+
+  const [cases, setCases] = useState<CaseRow[]>([]);
+  const [submissions, setSubmissions] = useState<SubRow[]>([]);
   const [startupProject, setStartupProject] = useState<any>(null);
+  const [simProgress, setSimProgress] = useState<any>(null);
+  const [usedAIMentor, setUsedAIMentor] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [filterTopic, setFilterTopic] = useState('');
-  const [filterDiff, setFilterDiff] = useState('');
-  const [joinCodeInput, setJoinCodeInput] = useState('');
-  const [teamNameInput, setTeamNameInput] = useState('');
-  const [showTeamDialog, setShowTeamDialog] = useState(false);
 
   useEffect(() => {
     if (!user) return;
-    const fetchData = async () => {
-      const [casesRes, subsRes, assessRes, aSubsRes, teamsRes, assignRes, compRes, projRes] = await Promise.all([
-        supabase.from('case_studies').select('id, title, description, topic, difficulty, est_minutes').eq('published', true),
-        supabase.from('submissions').select('case_study_id, is_draft, total_score, max_score').eq('user_id', user.id),
-        supabase.from('assessments').select('id, title, type, settings_json').eq('published', true),
-        supabase.from('submissions').select('assessment_id, is_draft, total_score, max_score').eq('user_id', user.id).not('assessment_id', 'is', null),
-        supabase.from('team_members').select('team_id, role, teams(id, name, join_code, cohort_id)').eq('user_id', user.id),
-        supabase.from('assignments').select('id, cohort_id, case_study_id, assessment_id, assignment_type, due_at'),
-        supabase.from('competencies').select('id, name'),
+    const fetch = async () => {
+      const [casesRes, subsRes, projRes, simRes] = await Promise.all([
+        supabase.from('case_studies').select('id, title, difficulty, est_minutes').eq('published', true),
+        supabase.from('submissions').select('case_study_id, is_draft').eq('user_id', user.id),
         supabase.from('startup_projects').select('problem, customer, value_proposition, digital_product, business_model, growth_strategy, final_pitch, is_submitted').eq('user_id', user.id).maybeSingle(),
+        supabase.from('simulator_progress').select('current_week, is_complete').eq('user_id', user.id).maybeSingle(),
       ]);
       setCases(casesRes.data || []);
       setSubmissions(subsRes.data || []);
-      setAssessments(assessRes.data || []);
-      setAssessmentSubs(aSubsRes.data || []);
-      setTeams(teamsRes.data || []);
-      setAssignments(assignRes.data || []);
-      setCompetencies(compRes.data || []);
       setStartupProject(projRes.data || null);
+      setSimProgress(simRes.data || null);
       setLoading(false);
     };
-    fetchData();
+    fetch();
   }, [user]);
 
-  const getSubmission = (caseId: string) => submissions.find(s => s.case_study_id === caseId);
-  const getAssessmentSub = (aId: string) => assessmentSubs.find(s => (s as any).assessment_id === aId);
+  // XP calculation
+  const casesCompleted = submissions.filter(s => !s.is_draft).length;
+  const casesInProgress = submissions.filter(s => s.is_draft).length;
+  const simWeek = simProgress?.current_week || 1;
+  const simComplete = simProgress?.is_complete || false;
 
-  const difficultyColor = (d: string) => {
-    switch (d) {
-      case 'beginner': return 'bg-sim-success/10 text-sim-success';
-      case 'intermediate': return 'bg-sim-warning/10 text-sim-warning';
-      case 'advanced': return 'bg-sim-danger/10 text-sim-danger';
-      default: return 'bg-muted text-muted-foreground';
-    }
-  };
+  const startupSections = ['problem', 'customer', 'value_proposition', 'digital_product', 'business_model', 'growth_strategy', 'final_pitch'];
+  const startupFilled = startupProject
+    ? startupSections.filter(s => ((startupProject as any)[s] || '').trim().length > 20).length
+    : 0;
+  const startupPct = Math.round((startupFilled / startupSections.length) * 100);
 
-  const completedCount = submissions.filter(s => !s.is_draft).length;
+  // XP: 50 per case, 100 per sim week, 75 per startup section, 200 bonus for submission
+  const xp =
+    casesCompleted * 50 +
+    (simWeek - 1) * 100 + (simComplete ? 100 : 0) +
+    startupFilled * 75 +
+    (startupProject?.is_submitted ? 200 : 0);
 
-  const filteredCases = cases.filter(c => {
-    if (filterTopic && !c.topic?.toLowerCase().includes(filterTopic.toLowerCase())) return false;
-    if (filterDiff && c.difficulty !== filterDiff) return false;
-    return true;
-  });
+  // Next incomplete case
+  const completedIds = new Set(submissions.filter(s => !s.is_draft).map(s => s.case_study_id));
+  const nextCase = cases.find(c => !completedIds.has(c.id));
 
-  // Upcoming deadlines
-  const upcomingDeadlines = assignments
-    .filter(a => a.due_at && new Date(a.due_at) > new Date())
-    .sort((a, b) => new Date(a.due_at).getTime() - new Date(b.due_at).getTime())
-    .slice(0, 5);
+  // Current course week estimate (simplified)
+  const courseWeek = Math.min(6, Math.max(1, Math.ceil((casesCompleted + startupFilled * 0.5 + (simWeek - 1) * 0.5) / 1.5) + 1));
 
-  // Competency progress (mock based on completed submissions ratio)
-  const compProgress = competencies.map((c, i) => ({
-    name: c.name,
-    progress: completedCount > 0 ? Math.min(100, Math.round((completedCount / Math.max(cases.length, 1)) * 100 + (i * 5))) : 0,
-  }));
+  // XP actions list
+  const xpActions = [
+    { action: t('Complete case study', 'Завърши казус'), xp: '+50 XP', icon: BookOpen },
+    { action: t('Finish simulator week', 'Завърши седмица от симулатора'), xp: '+100 XP', icon: BarChart3 },
+    { action: t('Submit startup section', 'Подай секция от стартъп'), xp: '+75 XP', icon: Rocket },
+    { action: t('Submit final pitch', 'Подай финално представяне'), xp: '+200 XP', icon: Zap },
+  ];
 
-  const joinTeam = async () => {
-    if (!joinCodeInput.trim() || !user) return;
-    const { data: team } = await supabase.from('teams').select('id').eq('join_code', joinCodeInput.trim()).single();
-    if (!team) { toast.error('Invalid join code'); return; }
-    const { error } = await supabase.from('team_members').insert({ team_id: team.id, user_id: user.id, role: 'member' });
-    if (error) { toast.error(error.message.includes('duplicate') ? 'Already a member' : 'Failed to join'); return; }
-    toast.success('Joined team!');
-    setJoinCodeInput('');
-    setShowTeamDialog(false);
-    window.location.reload();
-  };
-
-  const createTeam = async () => {
-    if (!teamNameInput.trim() || !user) return;
-    const { data: team, error } = await supabase.from('teams').insert({ name: teamNameInput.trim(), created_by: user.id }).select('id').single();
-    if (error || !team) { toast.error('Failed to create team'); return; }
-    await supabase.from('team_members').insert({ team_id: team.id, user_id: user.id, role: 'leader' });
-    toast.success('Team created!');
-    setTeamNameInput('');
-    setShowTeamDialog(false);
-    window.location.reload();
-  };
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background">
+        <AppHeader />
+        <div className="flex items-center justify-center py-20">
+          <div className="animate-pulse text-muted-foreground">{t('Loading...', 'Зареждане...')}</div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
       <AppHeader />
-      <main className="container mx-auto px-4 py-8 space-y-8">
-        {/* Stats */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-          {[
-            { icon: BookOpen, label: 'Cases', value: cases.length, bg: 'bg-accent' },
-            { icon: CheckCircle2, label: 'Completed', value: completedCount, bg: 'bg-sim-success/10' },
-            { icon: Target, label: 'Assessments', value: assessments.length, bg: 'bg-accent' },
-            { icon: Users, label: 'Teams', value: teams.length, bg: 'bg-accent' },
-          ].map((s, i) => (
-            <div key={i} className="rounded-lg border border-border bg-card p-4">
-              <div className="flex items-center gap-3">
-                <div className={`flex h-9 w-9 items-center justify-center rounded-lg ${s.bg}`}>
-                  <s.icon className="h-4 w-4 text-primary" />
-                </div>
-                <div>
-                  <p className="text-xl font-bold text-foreground">{s.value}</p>
-                  <p className="text-xs text-muted-foreground">{s.label}</p>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* My Startup Idea */}
-        <Link to="/my-startup" className="block rounded-lg border border-border bg-card p-5 hover:border-primary/40 transition-colors group">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-3">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg sim-gradient">
-                <Rocket className="h-4 w-4 text-primary-foreground" />
-              </div>
-              <div>
-                <h2 className="text-lg font-display font-semibold text-foreground group-hover:text-primary transition-colors">My Startup Idea</h2>
-                <p className="text-xs text-muted-foreground">Develop your startup step by step</p>
-              </div>
-            </div>
-            {startupProject?.is_submitted && (
-              <Badge className="bg-[hsl(var(--sim-success))]/10 text-[hsl(var(--sim-success))] border-0 text-xs">
-                <CheckCircle2 className="h-3 w-3 mr-1" /> Submitted
-              </Badge>
-            )}
-            <ArrowRight className="h-5 w-5 text-muted-foreground group-hover:text-primary transition-colors" />
-          </div>
-          {(() => {
-            const sections = ['problem', 'customer', 'value_proposition', 'digital_product', 'business_model', 'growth_strategy', 'final_pitch'];
-            const filled = startupProject ? sections.filter(s => ((startupProject as any)[s] || '').trim().length > 20).length : 0;
-            const pct = Math.round((filled / sections.length) * 100);
-            return (
-              <div className="flex items-center gap-3">
-                <Progress value={pct} className="h-2 flex-1" />
-                <span className="text-sm font-medium text-muted-foreground shrink-0">{pct}%</span>
-              </div>
-            );
-          })()}
-        </Link>
-
-        {/* Deadlines + Competency Progress side-by-side */}
-        <div className="grid gap-4 md:grid-cols-2">
-          {/* Upcoming Deadlines */}
-          <div className="rounded-lg border border-border bg-card p-5">
-            <h2 className="text-lg font-display font-semibold text-foreground mb-3">Upcoming Deadlines</h2>
-            {upcomingDeadlines.length === 0 ? (
-              <p className="text-sm text-muted-foreground">No upcoming deadlines</p>
-            ) : (
-              <div className="space-y-2">
-                {upcomingDeadlines.map(a => {
-                  const content = a.case_study_id
-                    ? cases.find(c => c.id === a.case_study_id)?.title
-                    : assessments.find(as_ => as_.id === a.assessment_id)?.title;
-                  const daysLeft = Math.ceil((new Date(a.due_at).getTime() - Date.now()) / 86400000);
-                  return (
-                    <div key={a.id} className="flex items-center justify-between p-3 rounded-md bg-muted/50">
-                      <div className="flex items-center gap-2 min-w-0">
-                        <CalendarDays className="h-4 w-4 text-primary shrink-0" />
-                        <span className="text-sm text-foreground truncate">{content || 'Assignment'}</span>
-                      </div>
-                      <Badge variant="outline" className={`text-xs shrink-0 ${daysLeft <= 3 ? 'border-destructive text-destructive' : ''}`}>
-                        {daysLeft}d left
-                      </Badge>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-
-          {/* Competency Progress */}
-          <div className="rounded-lg border border-border bg-card p-5">
-            <h2 className="text-lg font-display font-semibold text-foreground mb-3">Competency Progress</h2>
-            {compProgress.length === 0 ? (
-              <p className="text-sm text-muted-foreground">Complete cases to track competencies</p>
-            ) : (
-              <div className="space-y-3">
-                {compProgress.map((c, i) => (
-                  <div key={i}>
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="text-xs font-medium text-foreground">{c.name}</span>
-                      <span className="text-xs text-muted-foreground">{c.progress}%</span>
-                    </div>
-                    <Progress value={c.progress} className="h-2" />
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Teams */}
+      <main className="container mx-auto px-4 py-8 space-y-6 max-w-6xl">
+        {/* Header */}
         <div>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-display font-semibold text-foreground">My Teams</h2>
-            <Dialog open={showTeamDialog} onOpenChange={setShowTeamDialog}>
-              <DialogTrigger asChild>
-                <Button variant="outline" size="sm"><Plus className="h-4 w-4 mr-1" /> Join / Create</Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader><DialogTitle className="font-display">Join or Create Team</DialogTitle></DialogHeader>
-                <div className="space-y-4">
-                  <div>
-                    <Label>Join by Code</Label>
-                    <div className="flex gap-2 mt-1">
-                      <Input value={joinCodeInput} onChange={e => setJoinCodeInput(e.target.value)} placeholder="Enter join code" />
-                      <Button onClick={joinTeam} size="sm">Join</Button>
-                    </div>
-                  </div>
-                  <div className="border-t border-border pt-4">
-                    <Label>Create New Team</Label>
-                    <div className="flex gap-2 mt-1">
-                      <Input value={teamNameInput} onChange={e => setTeamNameInput(e.target.value)} placeholder="Team name" />
-                      <Button onClick={createTeam} size="sm" className="sim-gradient border-0">Create</Button>
-                    </div>
-                  </div>
-                </div>
-              </DialogContent>
-            </Dialog>
+          <h1 className="text-2xl md:text-3xl font-display font-bold text-foreground">
+            {t('Your Innovation Dashboard', 'Твоето иновационно табло')}
+          </h1>
+          <p className="text-muted-foreground text-sm mt-1">
+            {t('Track your progress, earn XP, and build your startup', 'Проследи напредъка си, спечели XP и изгради своя стартъп')}
+          </p>
+        </div>
+
+        {/* Level + XP Actions */}
+        <div className="grid gap-4 md:grid-cols-3">
+          <div className="md:col-span-2">
+            <LevelCard xp={xp} lang={lang} />
           </div>
-          {teams.length === 0 ? (
-            <p className="text-sm text-muted-foreground">No teams yet. Join or create one!</p>
-          ) : (
-            <div className="grid gap-3 sm:grid-cols-2">
-              {teams.map((t: any) => (
-                <Link key={t.team_id} to={`/team/${t.team_id}`} className="rounded-lg border border-border bg-card p-4 hover:border-primary/40 transition-colors group">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Users className="h-4 w-4 text-primary" />
-                      <span className="font-medium text-foreground">{(t.teams as any)?.name || 'Team'}</span>
-                    </div>
-                    <Badge variant="outline" className="text-xs capitalize">{t.role}</Badge>
+          <div className="rounded-xl border border-border bg-card p-5">
+            <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+              <Zap className="h-4 w-4 text-sim-warning" />
+              {t('Earn XP', 'Спечели XP')}
+            </h3>
+            <div className="space-y-2">
+              {xpActions.map((a, i) => (
+                <div key={i} className="flex items-center justify-between py-1.5">
+                  <div className="flex items-center gap-2 text-sm text-foreground">
+                    <a.icon className="h-3.5 w-3.5 text-muted-foreground" />
+                    <span className="text-xs">{a.action}</span>
                   </div>
-                </Link>
+                  <span className="text-xs font-bold text-sim-warning">{a.xp}</span>
+                </div>
               ))}
             </div>
-          )}
+          </div>
         </div>
 
-        {/* Assessments */}
-        {assessments.length > 0 && (
-          <div>
-            <h2 className="text-lg font-display font-semibold text-foreground mb-4">Assessments</h2>
-            <div className="grid gap-3 sm:grid-cols-2">
-              {assessments.map(a => {
-                const sub = getAssessmentSub(a.id);
-                const isComplete = sub && !sub.is_draft;
-                return (
-                  <Link key={a.id} to={isComplete ? `/assessment/${a.id}/results` : `/assessment/${a.id}`}
-                    className="rounded-lg border border-border bg-card p-5 hover:border-primary/40 transition-colors group">
-                    <div className="flex items-center justify-between mb-2">
-                      <Badge variant="outline" className="text-xs capitalize">{a.type}</Badge>
-                      {isComplete && <Badge className="bg-sim-success/10 text-sim-success border-0 text-xs"><CheckCircle2 className="h-3 w-3 mr-1" />{sub.total_score}/{sub.max_score}</Badge>}
-                    </div>
-                    <h3 className="font-display font-semibold text-foreground group-hover:text-primary transition-colors">{a.title}</h3>
-                    {a.settings_json?.timed && <p className="text-xs text-muted-foreground mt-1"><Clock className="h-3 w-3 inline mr-1" />{a.settings_json.time_limit_minutes} min timed</p>}
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-        )}
+        {/* Progress Cards */}
+        <ProgressCards
+          lang={lang}
+          casesCompleted={casesCompleted}
+          casesTotal={cases.length}
+          startupProgress={startupPct}
+          startupSubmitted={startupProject?.is_submitted || false}
+          simulatorWeek={simWeek}
+          simulatorComplete={simComplete}
+          nextCaseTitle={nextCase?.title}
+          nextCaseDifficulty={nextCase?.difficulty}
+          nextCaseMinutes={nextCase?.est_minutes || undefined}
+          nextCaseId={nextCase?.id}
+        />
 
-        {/* Case Library */}
-        <div>
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-display font-semibold text-foreground">Case Library</h2>
-          </div>
-          <div className="flex gap-2 mb-4 flex-wrap">
-            <Input value={filterTopic} onChange={e => setFilterTopic(e.target.value)} placeholder="Filter by topic..." className="w-48" />
-            <select value={filterDiff} onChange={e => setFilterDiff(e.target.value)} className="rounded-lg border border-border bg-background px-3 py-2 text-sm">
-              <option value="">All difficulties</option>
-              <option value="beginner">Beginner</option>
-              <option value="intermediate">Intermediate</option>
-              <option value="advanced">Advanced</option>
-            </select>
-          </div>
-          {loading ? (
-            <div className="text-center py-12 text-muted-foreground">Loading...</div>
-          ) : (
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {filteredCases.map(c => {
-                const sub = getSubmission(c.id);
-                const isComplete = sub && !sub.is_draft;
-                const isDraft = sub && sub.is_draft;
-                return (
-                  <Link key={c.id} to={isComplete ? `/case/${c.id}/results` : `/case/${c.id}`}
-                    className="group rounded-lg border border-border bg-card p-5 transition-all hover:shadow-lg hover:border-primary/40">
-                    <div className="flex items-start justify-between mb-3">
-                      <Badge variant="outline" className={`text-xs ${difficultyColor(c.difficulty)}`}>{c.difficulty}</Badge>
-                      {isComplete && <Badge className="bg-sim-success/10 text-sim-success border-0"><CheckCircle2 className="h-3 w-3 mr-1" />{sub.total_score}/{sub.max_score}</Badge>}
-                      {isDraft && <Badge className="bg-sim-warning/10 text-sim-warning border-0">In Progress</Badge>}
-                    </div>
-                    <h3 className="font-display font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-2 mb-2">{c.title}</h3>
-                    <p className="text-sm text-muted-foreground line-clamp-2 mb-3">{c.description}</p>
-                    <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                      {c.topic && <span className="truncate">{c.topic}</span>}
-                      {c.est_minutes && <span className="flex items-center gap-1 shrink-0"><Clock className="h-3 w-3" />{c.est_minutes} min</span>}
-                    </div>
-                    <div className="mt-3 flex items-center gap-1 text-sm font-medium text-primary opacity-0 group-hover:opacity-100 transition-opacity">
-                      {isComplete ? 'View Results' : isDraft ? 'Continue' : 'Start Case'} <ArrowRight className="h-4 w-4" />
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-          )}
+        {/* Badges */}
+        <AchievementBadges
+          lang={lang}
+          casesCompleted={casesCompleted}
+          startupSubmitted={startupProject?.is_submitted || false}
+          simulatorComplete={simComplete}
+          usedAIMentor={usedAIMentor}
+        />
+
+        {/* AI Mentor + Course Timeline */}
+        <div className="grid gap-4 md:grid-cols-2">
+          <AIMentorWidget
+            lang={lang}
+            startupData={startupProject}
+            onFeedbackReceived={() => setUsedAIMentor(true)}
+          />
+          <CourseTimeline lang={lang} currentWeek={courseWeek} />
         </div>
       </main>
     </div>
