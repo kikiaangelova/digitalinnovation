@@ -14,6 +14,178 @@ export type Database = {
   }
   public: {
     Tables: {
+      assessment_questions: {
+        Row: {
+          assessment_id: string
+          competency_id: string | null
+          correct_answer: string | null
+          created_at: string
+          id: string
+          model_answer: string | null
+          options: Json | null
+          points: number
+          prompt: string
+          question_order: number
+          rubric: string | null
+          type: string
+        }
+        Insert: {
+          assessment_id: string
+          competency_id?: string | null
+          correct_answer?: string | null
+          created_at?: string
+          id?: string
+          model_answer?: string | null
+          options?: Json | null
+          points?: number
+          prompt: string
+          question_order?: number
+          rubric?: string | null
+          type?: string
+        }
+        Update: {
+          assessment_id?: string
+          competency_id?: string | null
+          correct_answer?: string | null
+          created_at?: string
+          id?: string
+          model_answer?: string | null
+          options?: Json | null
+          points?: number
+          prompt?: string
+          question_order?: number
+          rubric?: string | null
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assessment_questions_assessment_id_fkey"
+            columns: ["assessment_id"]
+            isOneToOne: false
+            referencedRelation: "assessments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assessment_questions_competency_id_fkey"
+            columns: ["competency_id"]
+            isOneToOne: false
+            referencedRelation: "competencies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      assessments: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          id: string
+          published: boolean
+          settings_json: Json | null
+          title: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          published?: boolean
+          settings_json?: Json | null
+          title: string
+          type?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          published?: boolean
+          settings_json?: Json | null
+          title?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      assignments: {
+        Row: {
+          assessment_id: string | null
+          assignment_type: string
+          case_study_id: string | null
+          cohort_id: string
+          created_at: string
+          created_by: string | null
+          due_at: string | null
+          id: string
+        }
+        Insert: {
+          assessment_id?: string | null
+          assignment_type?: string
+          case_study_id?: string | null
+          cohort_id: string
+          created_at?: string
+          created_by?: string | null
+          due_at?: string | null
+          id?: string
+        }
+        Update: {
+          assessment_id?: string | null
+          assignment_type?: string
+          case_study_id?: string | null
+          cohort_id?: string
+          created_at?: string
+          created_by?: string | null
+          due_at?: string | null
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "assignments_assessment_id_fkey"
+            columns: ["assessment_id"]
+            isOneToOne: false
+            referencedRelation: "assessments"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assignments_case_study_id_fkey"
+            columns: ["case_study_id"]
+            isOneToOne: false
+            referencedRelation: "case_studies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assignments_cohort_id_fkey"
+            columns: ["cohort_id"]
+            isOneToOne: false
+            referencedRelation: "cohorts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      badges: {
+        Row: {
+          created_at: string
+          description: string | null
+          icon: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
       case_assignments: {
         Row: {
           assigned_at: string
@@ -201,36 +373,128 @@ export type Database = {
         }
         Relationships: []
       }
+      competencies: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      peer_reviews: {
+        Row: {
+          collaboration_score: number | null
+          comments: string | null
+          created_at: string
+          id: string
+          participation_score: number | null
+          quality_score: number | null
+          reviewee_user_id: string
+          reviewer_user_id: string
+          submission_id: string
+        }
+        Insert: {
+          collaboration_score?: number | null
+          comments?: string | null
+          created_at?: string
+          id?: string
+          participation_score?: number | null
+          quality_score?: number | null
+          reviewee_user_id: string
+          reviewer_user_id: string
+          submission_id: string
+        }
+        Update: {
+          collaboration_score?: number | null
+          comments?: string | null
+          created_at?: string
+          id?: string
+          participation_score?: number | null
+          quality_score?: number | null
+          reviewee_user_id?: string
+          reviewer_user_id?: string
+          submission_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "peer_reviews_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: false
+            referencedRelation: "submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string | null
+          bio: string | null
+          cohort_id: string | null
           created_at: string
           full_name: string | null
           id: string
+          interests: string[] | null
+          links_json: Json | null
+          profile_visible: boolean | null
+          skills_tags: string[] | null
           updated_at: string
           user_id: string
         }
         Insert: {
           avatar_url?: string | null
+          bio?: string | null
+          cohort_id?: string | null
           created_at?: string
           full_name?: string | null
           id?: string
+          interests?: string[] | null
+          links_json?: Json | null
+          profile_visible?: boolean | null
+          skills_tags?: string[] | null
           updated_at?: string
           user_id: string
         }
         Update: {
           avatar_url?: string | null
+          bio?: string | null
+          cohort_id?: string | null
           created_at?: string
           full_name?: string | null
           id?: string
+          interests?: string[] | null
+          links_json?: Json | null
+          profile_visible?: boolean | null
+          skills_tags?: string[] | null
           updated_at?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_cohort_id_fkey"
+            columns: ["cohort_id"]
+            isOneToOne: false
+            referencedRelation: "cohorts"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       questions: {
         Row: {
           case_step_id: string
+          competency_id: string | null
           correct_answer: string | null
           created_at: string
           id: string
@@ -244,6 +508,7 @@ export type Database = {
         }
         Insert: {
           case_step_id: string
+          competency_id?: string | null
           correct_answer?: string | null
           created_at?: string
           id?: string
@@ -257,6 +522,7 @@ export type Database = {
         }
         Update: {
           case_step_id?: string
+          competency_id?: string | null
           correct_answer?: string | null
           created_at?: string
           id?: string
@@ -274,6 +540,13 @@ export type Database = {
             columns: ["case_step_id"]
             isOneToOne: false
             referencedRelation: "case_steps"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "questions_competency_id_fkey"
+            columns: ["competency_id"]
+            isOneToOne: false
+            referencedRelation: "competencies"
             referencedColumns: ["id"]
           },
         ]
@@ -331,44 +604,163 @@ export type Database = {
       }
       submissions: {
         Row: {
+          assessment_id: string | null
           case_study_id: string
           created_at: string
           id: string
           is_draft: boolean
           max_score: number | null
+          started_at: string | null
           submitted_at: string | null
+          team_id: string | null
           total_score: number | null
           updated_at: string
           user_id: string
         }
         Insert: {
+          assessment_id?: string | null
           case_study_id: string
           created_at?: string
           id?: string
           is_draft?: boolean
           max_score?: number | null
+          started_at?: string | null
           submitted_at?: string | null
+          team_id?: string | null
           total_score?: number | null
           updated_at?: string
           user_id: string
         }
         Update: {
+          assessment_id?: string | null
           case_study_id?: string
           created_at?: string
           id?: string
           is_draft?: boolean
           max_score?: number | null
+          started_at?: string | null
           submitted_at?: string | null
+          team_id?: string | null
           total_score?: number | null
           updated_at?: string
           user_id?: string
         }
         Relationships: [
           {
+            foreignKeyName: "submissions_assessment_id_fkey"
+            columns: ["assessment_id"]
+            isOneToOne: false
+            referencedRelation: "assessments"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "submissions_case_study_id_fkey"
             columns: ["case_study_id"]
             isOneToOne: false
             referencedRelation: "case_studies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "submissions_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      team_members: {
+        Row: {
+          id: string
+          joined_at: string
+          role: string
+          team_id: string
+          user_id: string
+        }
+        Insert: {
+          id?: string
+          joined_at?: string
+          role?: string
+          team_id: string
+          user_id: string
+        }
+        Update: {
+          id?: string
+          joined_at?: string
+          role?: string
+          team_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "team_members_team_id_fkey"
+            columns: ["team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      teams: {
+        Row: {
+          cohort_id: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          join_code: string | null
+          name: string
+        }
+        Insert: {
+          cohort_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          join_code?: string | null
+          name: string
+        }
+        Update: {
+          cohort_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          join_code?: string | null
+          name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "teams_cohort_id_fkey"
+            columns: ["cohort_id"]
+            isOneToOne: false
+            referencedRelation: "cohorts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_badges: {
+        Row: {
+          badge_id: string
+          earned_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          badge_id: string
+          earned_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          badge_id?: string
+          earned_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_badges_badge_id_fkey"
+            columns: ["badge_id"]
+            isOneToOne: false
+            referencedRelation: "badges"
             referencedColumns: ["id"]
           },
         ]

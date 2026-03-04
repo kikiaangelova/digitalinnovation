@@ -1,7 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
-import { GraduationCap, LogOut, LayoutDashboard, BookOpen, Play, Shield } from 'lucide-react';
+import { GraduationCap, LogOut, LayoutDashboard, Play, Shield, User } from 'lucide-react';
 
 export default function AppHeader() {
   const { user, profile, isAdmin, signOut } = useAuth();
@@ -19,7 +19,7 @@ export default function AppHeader() {
           <div className="flex h-8 w-8 items-center justify-center rounded-lg sim-gradient">
             <GraduationCap className="h-4 w-4 text-primary-foreground" />
           </div>
-          <span className="font-bold text-foreground hidden sm:inline">DigiInnov Case Lab</span>
+          <span className="font-display font-bold text-foreground hidden sm:inline">DigiInnov Case Lab</span>
         </Link>
 
         <nav className="flex items-center gap-1">
@@ -35,6 +35,12 @@ export default function AppHeader() {
                 <Link to="/simulator">
                   <Play className="h-4 w-4 mr-1" />
                   <span className="hidden sm:inline">Simulator</span>
+                </Link>
+              </Button>
+              <Button variant="ghost" size="sm" asChild>
+                <Link to="/profile">
+                  <User className="h-4 w-4 mr-1" />
+                  <span className="hidden sm:inline">Profile</span>
                 </Link>
               </Button>
               {isAdmin && (
