@@ -37,6 +37,15 @@ const SECTION_LABELS = [
   { key: 'business_model', en: 'Business Model', bg: 'Бизнес модел' },
   { key: 'growth_strategy', en: 'Growth Strategy', bg: 'Стратегия за растеж' },
   { key: 'final_pitch', en: 'Final Pitch', bg: 'Финално представяне' },
+  { key: 'bmc_key_partners', en: 'BMC: Key Partners', bg: 'BMC: Ключови партньори' },
+  { key: 'bmc_key_activities', en: 'BMC: Key Activities', bg: 'BMC: Ключови дейности' },
+  { key: 'bmc_key_resources', en: 'BMC: Key Resources', bg: 'BMC: Ключови ресурси' },
+  { key: 'bmc_value_proposition', en: 'BMC: Value Proposition', bg: 'BMC: Стойностно предложение' },
+  { key: 'bmc_customer_relationships', en: 'BMC: Customer Relationships', bg: 'BMC: Взаимоотношения с клиентите' },
+  { key: 'bmc_channels', en: 'BMC: Channels', bg: 'BMC: Канали' },
+  { key: 'bmc_customer_segments', en: 'BMC: Customer Segments', bg: 'BMC: Клиентски сегменти' },
+  { key: 'bmc_cost_structure', en: 'BMC: Cost Structure', bg: 'BMC: Структура на разходите' },
+  { key: 'bmc_revenue_streams', en: 'BMC: Revenue Streams', bg: 'BMC: Приходни потоци' },
 ];
 
 export default function StartupProjectsAdmin() {
