@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -21,7 +22,7 @@ import {
   Users, BookOpen, Rocket, Activity, Search, ChevronDown, ChevronRight,
   MessageSquare, Sparkles, Download, TrendingUp, Target, BarChart3, User,
   Check, Clock, Send, ArrowLeft, Trophy, GraduationCap, Printer, FileText,
-  AlertTriangle, Layers, DollarSign, Megaphone, Briefcase,
+  AlertTriangle, Layers, DollarSign, Megaphone, Briefcase, Star,
 } from 'lucide-react';
 
 // Types
@@ -641,6 +642,9 @@ export default function TeacherDashboard() {
             {t('Teacher Dashboard', 'Табло на учителя')}
           </h1>
           <div className="flex gap-2 print:hidden">
+            <Button variant="outline" size="sm" asChild>
+              <Link to="/admin/peer-reviews"><Star className="h-4 w-4 mr-1" /> {t('Peer Reviews', 'Рецензии')}</Link>
+            </Button>
             <Button variant="outline" size="sm" onClick={exportCSV}>
               <Download className="h-4 w-4 mr-1" /> CSV
             </Button>

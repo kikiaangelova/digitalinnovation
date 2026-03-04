@@ -508,39 +508,110 @@ export type Database = {
         }
         Relationships: []
       }
+      peer_review_assignments: {
+        Row: {
+          assigned_at: string
+          completed_at: string | null
+          id: string
+          reviewee_user_id: string
+          reviewer_user_id: string
+          status: string
+          submission_id: string | null
+          target_id: string
+          target_type: string
+        }
+        Insert: {
+          assigned_at?: string
+          completed_at?: string | null
+          id?: string
+          reviewee_user_id: string
+          reviewer_user_id: string
+          status?: string
+          submission_id?: string | null
+          target_id: string
+          target_type?: string
+        }
+        Update: {
+          assigned_at?: string
+          completed_at?: string | null
+          id?: string
+          reviewee_user_id?: string
+          reviewer_user_id?: string
+          status?: string
+          submission_id?: string | null
+          target_id?: string
+          target_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "peer_review_assignments_submission_id_fkey"
+            columns: ["submission_id"]
+            isOneToOne: false
+            referencedRelation: "submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       peer_reviews: {
         Row: {
+          average_score: number | null
+          clarity_score: number | null
           collaboration_score: number | null
           comments: string | null
           created_at: string
+          feasibility_score: number | null
           id: string
+          innovation_score: number | null
+          market_potential_score: number | null
           participation_score: number | null
+          problem_importance_score: number | null
           quality_score: number | null
           reviewee_user_id: string
           reviewer_user_id: string
           submission_id: string
+          target_id: string | null
+          target_type: string
+          teacher_override_score: number | null
         }
         Insert: {
+          average_score?: number | null
+          clarity_score?: number | null
           collaboration_score?: number | null
           comments?: string | null
           created_at?: string
+          feasibility_score?: number | null
           id?: string
+          innovation_score?: number | null
+          market_potential_score?: number | null
           participation_score?: number | null
+          problem_importance_score?: number | null
           quality_score?: number | null
           reviewee_user_id: string
           reviewer_user_id: string
           submission_id: string
+          target_id?: string | null
+          target_type?: string
+          teacher_override_score?: number | null
         }
         Update: {
+          average_score?: number | null
+          clarity_score?: number | null
           collaboration_score?: number | null
           comments?: string | null
           created_at?: string
+          feasibility_score?: number | null
           id?: string
+          innovation_score?: number | null
+          market_potential_score?: number | null
           participation_score?: number | null
+          problem_importance_score?: number | null
           quality_score?: number | null
           reviewee_user_id?: string
           reviewer_user_id?: string
           submission_id?: string
+          target_id?: string | null
+          target_type?: string
+          teacher_override_score?: number | null
         }
         Relationships: [
           {

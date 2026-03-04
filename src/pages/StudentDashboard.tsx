@@ -12,7 +12,7 @@ import CourseTimeline from '@/components/dashboard/CourseTimeline';
 import LearningOutcomes, { calcOutcomeScores } from '@/components/dashboard/LearningOutcomes';
 import Leaderboard from '@/components/dashboard/Leaderboard';
 import { Button } from '@/components/ui/button';
-import { Zap, BookOpen, Rocket, BarChart3, FileText } from 'lucide-react';
+import { Zap, BookOpen, Rocket, BarChart3, FileText, Users, Star } from 'lucide-react';
 
 interface CaseRow { id: string; title: string; difficulty: string; est_minutes: number | null; }
 interface SubRow { case_study_id: string; is_draft: boolean; }
@@ -28,22 +28,29 @@ export default function StudentDashboard() {
   const [startupProject, setStartupProject] = useState<any>(null);
   const [simProgress, setSimProgress] = useState<any>(null);
   const [usedAIMentor, setUsedAIMentor] = useState(false);
+  const [pendingReviews, setPendingReviews] = useState(0);
+  const [avgPeerScore, setAvgPeerScore] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (authLoading) return;
     if (!user) { navigate('/auth?redirect=/dashboard'); return; }
     const fetchData = async () => {
-      const [casesRes, subsRes, projRes, simRes] = await Promise.all([
+      const [casesRes, subsRes, projRes, simRes, prAssignRes, prReceivedRes] = await Promise.all([
         supabase.from('case_studies').select('id, title, difficulty, est_minutes').eq('published', true),
         supabase.from('submissions').select('case_study_id, is_draft').eq('user_id', user.id),
         supabase.from('startup_projects').select('problem, customer, value_proposition, digital_product, business_model, growth_strategy, final_pitch, is_submitted').eq('user_id', user.id).maybeSingle(),
         supabase.from('simulator_progress').select('current_week, is_complete').eq('user_id', user.id).maybeSingle(),
+        supabase.from('peer_review_assignments').select('id').eq('reviewer_user_id', user.id).eq('status', 'pending'),
+        supabase.from('peer_reviews').select('average_score').eq('reviewee_user_id', user.id),
       ]);
       setCases(casesRes.data || []);
       setSubmissions(subsRes.data || []);
       setStartupProject(projRes.data || null);
       setSimProgress(simRes.data || null);
+      setPendingReviews((prAssignRes.data || []).length);
+      const prScores = (prReceivedRes.data || []) as any[];
+      setAvgPeerScore(prScores.length > 0 ? prScores.reduce((a: number, r: any) => a + Number(r.average_score || 0), 0) / prScores.length : null);
       setLoading(false);
     };
     fetchData();
@@ -173,6 +180,31 @@ export default function StudentDashboard() {
           simulatorComplete={simComplete}
           usedAIMentor={usedAIMentor}
         />
+
+        {/* Peer Review */}
+        <div className="rounded-xl border border-border bg-card p-5">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+              <Users className="h-4 w-4 text-primary" />
+              {t('Peer Review', 'Партньорска рецензия')}
+            </h3>
+            <Button variant="outline" size="sm" onClick={() => navigate('/peer-review')}>
+              {t('Open', 'Отвори')}
+            </Button>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="rounded-lg bg-accent/50 p-3 text-center">
+              <p className="text-xl font-bold text-foreground">{pendingReviews}</p>
+              <p className="text-xs text-muted-foreground">{t('Pending Reviews', 'Чакащи рецензии')}</p>
+            </div>
+            <div className="rounded-lg bg-accent/50 p-3 text-center">
+              <p className="text-xl font-bold text-primary flex items-center justify-center gap-1">
+                {avgPeerScore !== null ? <><Star className="h-4 w-4" /> {avgPeerScore.toFixed(1)}/4</> : '—'}
+              </p>
+              <p className="text-xs text-muted-foreground">{t('Your Avg Score', 'Вашата средна оценка')}</p>
+            </div>
+          </div>
+        </div>
 
         {/* AI Mentor + Course Timeline */}
         <div className="grid gap-4 md:grid-cols-2">
