@@ -3,43 +3,17 @@ import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
 import { Button } from '@/components/ui/button';
 import AppHeader from '@/components/layout/AppHeader';
-import { GraduationCap, BookOpen, Play, ArrowRight, CheckCircle2 } from 'lucide-react';
+import SimulatorCard from '@/components/landing/SimulatorCard';
+import { GraduationCap, BookOpen, ArrowRight, CheckCircle2 } from 'lucide-react';
 
 const Index = () => {
   const { user } = useAuth();
   const { t } = useLang();
   const navigate = useNavigate();
 
-  const cards = [
-    {
-      icon: BookOpen,
-      title: t.caseStudies,
-      desc: t.caseStudiesDesc,
-      btn: t.browseCases,
-      path: '/cases',
-    },
-    {
-      icon: Play,
-      title: t.businessSimulator,
-      desc: t.businessSimulatorDesc,
-      btn: t.launchSimulator,
-      path: '/simulator',
-    },
-    {
-      icon: CheckCircle2,
-      title: t.instantFeedback,
-      desc: t.instantFeedbackDesc,
-      btn: t.viewDashboard,
-      path: '/dashboard',
-    },
-  ];
-
   const handleCardClick = (path: string) => {
-    if (user) {
-      navigate(path);
-    } else {
-      navigate(`/auth?redirect=${encodeURIComponent(path)}`);
-    }
+    if (user) navigate(path);
+    else navigate(`/auth?redirect=${encodeURIComponent(path)}`);
   };
 
   return (
@@ -82,25 +56,39 @@ const Index = () => {
       {/* Features */}
       <section className="py-16 px-4 border-t border-border">
         <div className="container mx-auto max-w-5xl">
-          <div className="grid gap-6 md:grid-cols-3">
-            {cards.map(card => (
-              <button
-                key={card.path}
-                onClick={() => handleCardClick(card.path)}
-                className="group rounded-lg border border-border bg-card p-6 text-center hover:border-primary/50 hover:shadow-md transition-all cursor-pointer text-left"
-              >
-                <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-accent mx-auto mb-4">
-                  <card.icon className="h-6 w-6 text-primary" />
-                </div>
-                <h3 className="font-display font-semibold text-foreground mb-2 text-center">{card.title}</h3>
-                <p className="text-sm text-muted-foreground mb-4 text-center">{card.desc}</p>
-                <div className="flex justify-center">
-                  <span className="inline-flex items-center text-sm font-medium text-primary group-hover:underline">
-                    {card.btn} <ArrowRight className="ml-1 h-3 w-3" />
-                  </span>
-                </div>
-              </button>
-            ))}
+          <div className="grid gap-6 md:grid-cols-3 items-start">
+            {/* Case Studies Card */}
+            <button
+              onClick={() => handleCardClick('/cases')}
+              className="group rounded-xl border border-border bg-card p-6 text-center hover:border-primary/50 hover:shadow-md transition-all cursor-pointer"
+            >
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-accent mx-auto mb-4">
+                <BookOpen className="h-6 w-6 text-primary" />
+              </div>
+              <h3 className="font-display font-bold text-lg text-foreground mb-2">{t.caseStudies}</h3>
+              <p className="text-sm text-muted-foreground mb-4">{t.caseStudiesDesc}</p>
+              <span className="inline-flex items-center text-sm font-medium text-primary group-hover:underline">
+                {t.browseCases} <ArrowRight className="ml-1 h-3 w-3" />
+              </span>
+            </button>
+
+            {/* Business Simulator — expanded card */}
+            <SimulatorCard />
+
+            {/* Instant Feedback Card */}
+            <button
+              onClick={() => handleCardClick('/dashboard')}
+              className="group rounded-xl border border-border bg-card p-6 text-center hover:border-primary/50 hover:shadow-md transition-all cursor-pointer"
+            >
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-accent mx-auto mb-4">
+                <CheckCircle2 className="h-6 w-6 text-primary" />
+              </div>
+              <h3 className="font-display font-bold text-lg text-foreground mb-2">{t.instantFeedback}</h3>
+              <p className="text-sm text-muted-foreground mb-4">{t.instantFeedbackDesc}</p>
+              <span className="inline-flex items-center text-sm font-medium text-primary group-hover:underline">
+                {t.viewDashboard} <ArrowRight className="ml-1 h-3 w-3" />
+              </span>
+            </button>
           </div>
         </div>
       </section>
