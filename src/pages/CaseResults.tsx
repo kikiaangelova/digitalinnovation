@@ -33,10 +33,10 @@ export default function CaseResults() {
   useEffect(() => {
     if (!id || !user) return;
     const fetchResults = async () => {
-      const caseRes = await supabase.from('case_studies').select('title, topic').eq('id', id).single();
+      const caseRes = await supabase.from('case_studies').select('title, topic').eq('id', id).maybeSingle();
       if (caseRes.data) { setCaseTitle(caseRes.data.title); setCaseTopic(caseRes.data.topic || ''); }
 
-      const subRes = await supabase.from('submissions').select('id, total_score, max_score').eq('case_study_id', id).eq('user_id', user.id).eq('is_draft', false).single();
+      const subRes = await supabase.from('submissions').select('id, total_score, max_score').eq('case_study_id', id).eq('user_id', user.id).eq('is_draft', false).maybeSingle();
       if (!subRes.data) { setLoading(false); return; }
       setTotalScore(subRes.data.total_score || 0);
       setMaxScore(subRes.data.max_score || 0);

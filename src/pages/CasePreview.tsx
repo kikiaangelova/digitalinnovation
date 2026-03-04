@@ -49,7 +49,7 @@ export default function CasePreview() {
     if (!id) return;
     const load = async () => {
       const [{ data: caseData }, { data: stepsData }] = await Promise.all([
-        supabase.from('case_studies').select('id, title, title_bg, description, description_bg, topic, topic_bg, difficulty, est_minutes, outcomes, outcomes_bg').eq('id', id).single(),
+        supabase.from('case_studies').select('id, title, title_bg, description, description_bg, topic, topic_bg, difficulty, est_minutes, outcomes, outcomes_bg').eq('id', id).maybeSingle(),
         supabase.from('case_steps').select('id, title, title_bg, step_order').eq('case_study_id', id).order('step_order'),
       ]);
       setCs(caseData as CaseStudy | null);

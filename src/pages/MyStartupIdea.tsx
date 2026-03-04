@@ -237,6 +237,13 @@ export default function MyStartupIdea() {
     saveTimerRef.current = setTimeout(() => saveProject(newData), 2000);
   }, [saveProject]);
 
+  // Cleanup autosave timer on unmount
+  useEffect(() => {
+    return () => {
+      if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+    };
+  }, []);
+
   const handleChange = (key: SectionKey, value: string) => {
     const newData = { ...data, [key]: value } as ProjectData;
     setData(newData);
@@ -249,14 +256,23 @@ export default function MyStartupIdea() {
     scheduleAutoSave(newData);
   };
 
+  const [submittingProject, setSubmittingProject] = useState(false);
+
   const handleSubmit = async () => {
-    if (!user) return;
-    await saveProject(data);
-    await supabase.from('startup_projects').update({
-      is_submitted: true, submitted_at: new Date().toISOString(),
-    }).eq('user_id', user.id);
-    setData(d => ({ ...d, is_submitted: true }));
-    toast.success(t('Project submitted!', 'Проектът е предаден!'));
+    if (!user || submittingProject) return;
+    setSubmittingProject(true);
+    try {
+      await saveProject(data);
+      await supabase.from('startup_projects').update({
+        is_submitted: true, submitted_at: new Date().toISOString(),
+      }).eq('user_id', user.id);
+      setData(d => ({ ...d, is_submitted: true }));
+      toast.success(t('Project submitted!', 'Проектът е предаден!'));
+    } catch {
+      toast.error(t('Failed to submit', 'Грешка при изпращане'));
+    } finally {
+      setSubmittingProject(false);
+    }
   };
 
   const filledCount = SECTIONS.filter(s => ((data as any)[s.key] || '').trim().length > 20).length;
@@ -484,10 +500,10 @@ export default function MyStartupIdea() {
                       size="sm"
                       className="bg-primary text-primary-foreground"
                       onClick={handleSubmit}
-                      disabled={progressPercent < 100}
+                      disabled={progressPercent < 100 || submittingProject}
                     >
                       <Presentation className="h-4 w-4 mr-1" />
-                      {t('Submit Project', 'Предай проект')}
+                      {submittingProject ? t('Submitting...', 'Изпращане...') : t('Submit Project', 'Предай проект')}
                     </Button>
                   ) : null}
                 </div>

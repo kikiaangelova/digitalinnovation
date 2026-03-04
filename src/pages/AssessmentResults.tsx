@@ -30,7 +30,7 @@ export default function AssessmentResults() {
   useEffect(() => {
     if (!id || !user) return;
     const fetch = async () => {
-      const { data: a } = await supabase.from('assessments').select('title').eq('id', id).single();
+      const { data: a } = await supabase.from('assessments').select('title').eq('id', id).maybeSingle();
       if (a) setTitle(a.title);
 
       const { data: sub } = await supabase.from('submissions').select('id, total_score, max_score').eq('assessment_id', id).eq('user_id', user.id).eq('is_draft', false).maybeSingle();
