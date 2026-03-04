@@ -394,6 +394,48 @@ export type Database = {
         }
         Relationships: []
       }
+      course_progress: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          id: string
+          metadata: Json | null
+          module: string
+          module_id: string | null
+          score: number | null
+          started_at: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          module: string
+          module_id?: string | null
+          score?: number | null
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          module?: string
+          module_id?: string | null
+          score?: number | null
+          started_at?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       peer_reviews: {
         Row: {
           collaboration_score: number | null
@@ -598,6 +640,98 @@ export type Database = {
             columns: ["submission_id"]
             isOneToOne: false
             referencedRelation: "submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      simulator_progress: {
+        Row: {
+          created_at: string
+          current_week: number
+          decisions: Json
+          grade: string | null
+          id: string
+          is_complete: boolean
+          kpis: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_week?: number
+          decisions?: Json
+          grade?: string | null
+          id?: string
+          is_complete?: boolean
+          kpis?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_week?: number
+          decisions?: Json
+          grade?: string | null
+          id?: string
+          is_complete?: boolean
+          kpis?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      startup_project_versions: {
+        Row: {
+          business_model: string
+          created_at: string
+          customer: string
+          digital_product: string
+          final_pitch: string
+          growth_strategy: string
+          id: string
+          industry: string
+          problem: string
+          project_id: string
+          user_id: string
+          value_proposition: string
+          version_number: number
+        }
+        Insert: {
+          business_model?: string
+          created_at?: string
+          customer?: string
+          digital_product?: string
+          final_pitch?: string
+          growth_strategy?: string
+          id?: string
+          industry?: string
+          problem?: string
+          project_id: string
+          user_id: string
+          value_proposition?: string
+          version_number?: number
+        }
+        Update: {
+          business_model?: string
+          created_at?: string
+          customer?: string
+          digital_product?: string
+          final_pitch?: string
+          growth_strategy?: string
+          id?: string
+          industry?: string
+          problem?: string
+          project_id?: string
+          user_id?: string
+          value_proposition?: string
+          version_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_project"
+            columns: ["project_id"]
+            isOneToOne: false
+            referencedRelation: "startup_projects"
             referencedColumns: ["id"]
           },
         ]
