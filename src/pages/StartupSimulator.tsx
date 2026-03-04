@@ -1,5 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -28,7 +28,8 @@ interface WeekRecord {
 }
 
 export default function StartupSimulator() {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
   const { lang } = useLang();
   const [phase, setPhase] = useState<Phase>('intro');
   const [currentWeek, setCurrentWeek] = useState(0);
@@ -37,6 +38,11 @@ export default function StartupSimulator() {
   const [history, setHistory] = useState<WeekRecord[]>([]);
   const [weekChoices, setWeekChoices] = useState<string[]>([]);
   const [simId, setSimId] = useState<string | null>(null);
+
+  // Redirect unauthenticated users
+  useEffect(() => {
+    if (!authLoading && !user) navigate('/auth?redirect=/simulator');
+  }, [user, authLoading, navigate]);
 
   // Load existing progress
   useEffect(() => {
