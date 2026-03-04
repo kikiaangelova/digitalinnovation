@@ -165,10 +165,10 @@ export default function CasePreview() {
           <div className="grid sm:grid-cols-2 gap-3">
             {[
               { icon: Building2, en: '1. Context — Company, industry & situation', bg: '1. Контекст — Компания, индустрия и ситуация' },
-              { icon: Target, en: '2. The Problem — Key decision or challenge', bg: '2. Проблемът — Ключово решение или предизвикателство' },
-              { icon: Brain, en: '3. Analysis — Guided strategic questions', bg: '3. Анализ — Стратегически въпроси' },
-              { icon: Lightbulb, en: '4. Key Insight — Strategic lesson revealed', bg: '4. Ключов урок — Стратегически извод' },
-              { icon: Rocket, en: '5. Apply to Your Startup — Connect to your project', bg: '5. Приложи към стартъпа — Свържи с проекта си' },
+              { icon: Target, en: '2. Strategic Problem — Key decision to make', bg: '2. Стратегически проблем — Ключово решение' },
+              { icon: Brain, en: '3. Analysis — Competitors, strengths, risks & opportunities', bg: '3. Анализ — Конкуренти, силни страни, рискове и възможности' },
+              { icon: PenTool, en: '4. Decision — Your strategic choice', bg: '4. Решение — Вашият стратегически избор' },
+              { icon: Lightbulb, en: '5. Case Insight — Key lesson & learning outcome', bg: '5. Извод — Ключов урок и учебен резултат' },
             ].map((item, i) => (
               <Card key={i} className="flex items-center gap-3 p-4 border-border hover:border-primary/30 transition-colors">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 shrink-0">

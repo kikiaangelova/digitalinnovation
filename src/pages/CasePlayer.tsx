@@ -38,41 +38,41 @@ interface Question {
   options: Json; points: number;
 }
 
-/* ── Section meta – now 5-part structure ── */
+/* ── Section meta – 5-part structure ── */
 const SECTION_ICONS: Record<number, React.ElementType> = {
   0: BookOpen, 1: Building2, 2: Target, 3: Brain,
-  4: Lightbulb, 5: Rocket, 6: PenTool, 7: Award,
+  4: PenTool, 5: Lightbulb, 6: Rocket, 7: Award,
 };
 const SECTION_LABELS_EN: Record<number, string> = {
-  0: 'Research & Reading', 1: 'Context', 2: 'The Problem',
-  3: 'Analysis Questions', 4: 'Key Insight', 5: 'Apply to Your Startup',
-  6: 'Final Recommendation', 7: 'Conclusion',
+  0: 'Research & Reading', 1: 'Context', 2: 'Strategic Problem',
+  3: 'Analysis Questions', 4: 'Decision', 5: 'Case Insight',
+  6: 'Apply to Your Startup', 7: 'Conclusion',
 };
 const SECTION_LABELS_BG: Record<number, string> = {
-  0: 'Проучване', 1: 'Контекст', 2: 'Проблемът',
-  3: 'Въпроси за анализ', 4: 'Ключов урок', 5: 'Приложи към стартъпа си',
-  6: 'Финална препоръка', 7: 'Заключение',
+  0: 'Проучване', 1: 'Контекст', 2: 'Стратегически проблем',
+  3: 'Въпроси за анализ', 4: 'Решение', 5: 'Извод от казуса',
+  6: 'Приложи към стартъпа си', 7: 'Заключение',
 };
 
 /* ── Section descriptions for students ── */
 const SECTION_HINTS_EN: Record<number, string> = {
   0: 'Read the required material and take research notes.',
   1: 'Understand the company background, industry context, and strategic situation.',
-  2: 'Identify the main decision or challenge the company faces.',
-  3: 'Analyze the situation using guided strategic questions.',
-  4: 'Discover the key strategic lesson from this case.',
-  5: 'Connect the case insights to your own startup project.',
-  6: 'Propose your innovation recommendation.',
+  2: 'Identify the key strategic decision the company must make.',
+  3: 'Analyze the situation: competitors, strengths, risks, and opportunities.',
+  4: 'Choose or explain the strategic decision you would make.',
+  5: 'Discover the key insight and the skill this case develops.',
+  6: 'Connect the case insights to your own startup project.',
   7: 'Summarize your conclusions and key takeaways.',
 };
 const SECTION_HINTS_BG: Record<number, string> = {
   0: 'Прочетете задължителния материал и направете бележки.',
   1: 'Разберете компанията, индустрията и стратегическата ситуация.',
-  2: 'Идентифицирайте основното решение или предизвикателство.',
-  3: 'Анализирайте ситуацията чрез стратегически въпроси.',
-  4: 'Открийте ключовия стратегически урок от казуса.',
-  5: 'Свържете прозренията от казуса с вашия стартъп проект.',
-  6: 'Предложете вашата иновационна препоръка.',
+  2: 'Идентифицирайте ключовото стратегическо решение на компанията.',
+  3: 'Анализирайте ситуацията: конкуренти, силни страни, рискове и възможности.',
+  4: 'Изберете или обяснете стратегическото решение, което бихте взели.',
+  5: 'Открийте ключовия извод и уменията, които казусът развива.',
+  6: 'Свържете прозренията от казуса с вашия стартъп проект.',
   7: 'Обобщете заключенията и ключовите изводи.',
 };
 
@@ -327,17 +327,22 @@ export default function CasePlayer() {
           </div>
         )}
 
-        {/* ── 2. THE PROBLEM / DATA ── */}
+        {/* ── 2. STRATEGIC PROBLEM / DATA ── */}
         {(currentStepData.exhibit_text || currentStepData.exhibit_text_bg) && (
           <div className="rounded-lg border-2 border-sim-warning/30 bg-sim-warning/5 p-6">
             <div className="flex items-center gap-2 mb-3">
               <Target className="h-4 w-4 text-sim-warning" />
               <h3 className="font-display font-semibold text-foreground">
                 {currentStep === 2
-                  ? tl('The Problem', 'Проблемът')
+                  ? tl('Strategic Problem', 'Стратегически проблем')
                   : tl('Data & Evidence', 'Данни и доказателства')}
               </h3>
             </div>
+            <p className="text-xs text-muted-foreground mb-2">
+              {currentStep === 2
+                ? tl('This is the key decision the company must make.', 'Това е ключовото решение, което компанията трябва да вземе.')
+                : tl('Review the data and evidence below.', 'Прегледайте данните и доказателствата по-долу.')}
+            </p>
             <div className="text-sm text-foreground/85 whitespace-pre-line leading-relaxed font-sans">
               {tx(currentStepData.exhibit_text, currentStepData.exhibit_text_bg)}
             </div>
@@ -374,7 +379,7 @@ export default function CasePlayer() {
           </div>
         )}
 
-        {/* ── 4. KEY INSIGHT (revealed after all questions answered) ── */}
+        {/* ── 5. CASE INSIGHT + LEARNING OUTCOME (revealed after all questions answered) ── */}
         {showInsightPanel && (
           <div className={`rounded-lg border p-6 transition-all ${
             allStepQuestionsAnswered
@@ -384,7 +389,7 @@ export default function CasePlayer() {
             <div className="flex items-center gap-2 mb-3">
               <Lightbulb className={`h-5 w-5 ${allStepQuestionsAnswered ? 'text-sim-success' : 'text-muted-foreground'}`} />
               <h3 className="font-display font-semibold text-foreground">
-                {tl('Key Insight', 'Ключов урок')}
+                {tl('Case Insight & Learning Outcome', 'Извод от казуса и учебен резултат')}
               </h3>
               {!allStepQuestionsAnswered && (
                 <Badge variant="outline" className="text-xs ml-auto">
@@ -395,19 +400,41 @@ export default function CasePlayer() {
             </div>
             {allStepQuestionsAnswered ? (
               showInsight[currentStep] ? (
-                <div className="text-sm text-foreground/85 leading-relaxed space-y-2">
-                  <p>
-                    {tl(
-                      'Great work! Think about what this analysis reveals about strategic decision-making. The most successful digital innovations combine deep customer understanding with technology that creates genuine value — not just automation.',
-                      'Чудесна работа! Помислете какво разкрива този анализ за стратегическото вземане на решения. Най-успешните дигитални иновации съчетават дълбоко разбиране на клиента с технология, която създава истинска стойност.'
-                    )}
-                  </p>
-                  <p className="text-xs text-muted-foreground italic">
-                    {tl(
-                      'Consider: How does this insight apply to your own startup idea?',
-                      'Помислете: Как се отнася този урок към вашата стартъп идея?'
-                    )}
-                  </p>
+                <div className="space-y-4">
+                  {/* Key Insight */}
+                  <div className="rounded-lg bg-sim-success/10 border border-sim-success/20 p-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Zap className="h-4 w-4 text-sim-success" />
+                      <span className="text-xs font-semibold text-sim-success uppercase tracking-wider">
+                        {tl('Key Insight', 'Ключов извод')}
+                      </span>
+                    </div>
+                    <p className="text-sm text-foreground leading-relaxed">
+                      {tl(
+                        'The most successful digital innovations combine deep customer understanding with technology that creates genuine value. Strategic decision-making requires analyzing competitors, assessing risks, and identifying unique opportunities before committing resources.',
+                        'Най-успешните дигитални иновации съчетават дълбоко разбиране на клиента с технология, която създава истинска стойност. Стратегическото вземане на решения изисква анализ на конкурентите, оценка на рисковете и идентифициране на уникални възможности.'
+                      )}
+                    </p>
+                  </div>
+                  {/* Learning Outcome */}
+                  <div className="rounded-lg bg-primary/5 border border-primary/20 p-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Award className="h-4 w-4 text-primary" />
+                      <span className="text-xs font-semibold text-primary uppercase tracking-wider">
+                        {tl('Learning Outcome', 'Учебен резултат')}
+                      </span>
+                    </div>
+                    <p className="text-sm text-foreground leading-relaxed">
+                      {currentStep <= 2
+                        ? tl('Understand digital disruption strategies and industry analysis.', 'Разбиране на стратегии за дигитална трансформация и индустриален анализ.')
+                        : currentStep <= 4
+                        ? tl('Develop analytical thinking and strategic decision-making skills.', 'Развиване на аналитично мислене и умения за стратегическо вземане на решения.')
+                        : tl('Apply innovation frameworks to real business challenges.', 'Прилагане на иновационни рамки към реални бизнес предизвикателства.')}
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-2 italic">
+                      {tl('Skill developed: analytical thinking & strategic decision-making', 'Развито умение: аналитично мислене и стратегическо вземане на решения')}
+                    </p>
+                  </div>
                 </div>
               ) : (
                 <Button
@@ -417,14 +444,14 @@ export default function CasePlayer() {
                   className="text-sim-success border-sim-success/30 hover:bg-sim-success/10"
                 >
                   <Zap className="h-3.5 w-3.5 mr-1" />
-                  {tl('Reveal Key Insight', 'Покажи ключовия урок')}
+                  {tl('Reveal Case Insight', 'Покажи извода от казуса')}
                 </Button>
               )
             ) : (
               <p className="text-sm text-muted-foreground">
                 {tl(
-                  'Complete all analysis questions above to unlock the strategic insight for this section.',
-                  'Завършете всички въпроси за анализ, за да отключите стратегическия урок.'
+                  'Complete all analysis questions above to unlock the case insight and learning outcome.',
+                  'Завършете всички въпроси за анализ, за да отключите извода и учебния резултат.'
                 )}
               </p>
             )}
