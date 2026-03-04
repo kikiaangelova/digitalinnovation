@@ -145,7 +145,7 @@ Structure your response with these sections:
     const remaining = DAILY_LIMIT - (count ?? 0) - 1;
 
     // Record rate limit entry
-    await supabase.from("ai_rate_limits").insert({ user_id: user.id, feedback_type: feedbackType });
+    await supabase.from("ai_rate_limits").insert({ user_id: userId, feedback_type: feedbackType });
 
     // Cache the response
     await supabase.from("ai_feedback_cache").upsert({
