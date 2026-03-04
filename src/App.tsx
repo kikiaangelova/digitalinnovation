@@ -38,6 +38,7 @@ import TeacherDashboard from "./pages/TeacherDashboard";
 import LearningReport from "./pages/LearningReport";
 import SystemStatus from "./pages/admin/SystemStatus";
 import LeaderboardPage from "./pages/LeaderboardPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 
 const queryClient = new QueryClient();
 
@@ -54,6 +55,7 @@ const App = () => (
                 <Routes>
                   <Route path="/" element={<Index />} />
                   <Route path="/auth" element={<AuthPage />} />
+                  <Route path="/reset-password" element={<ResetPasswordPage />} />
                   <Route path="/dashboard" element={<StudentDashboard />} />
                   <Route path="/profile" element={<ProfilePage />} />
                   <Route path="/cases" element={<CaseLibrary />} />
