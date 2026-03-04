@@ -11,7 +11,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import {
   ChevronRight, Play, RotateCcw, CheckCircle2,
   Lightbulb, TrendingUp, Layers, ShieldAlert, Rocket,
-  Factory, Target, Swords, Wrench, DollarSign, Megaphone
+  Factory, Target, Swords, Wrench, DollarSign, Megaphone,
+  BarChart3, HelpCircle
 } from 'lucide-react';
 import {
   RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
@@ -32,12 +33,12 @@ interface StepRecord {
 
 const STEP_ICONS = [Factory, Target, Swords, Wrench, DollarSign, Megaphone];
 
-const KPI_META: { key: keyof SimWeekKPIs; en: string; bg: string; icon: React.ElementType; color: string; invertedLabel?: boolean }[] = [
-  { key: 'innovation', en: 'Innovation', bg: 'Иновация', icon: Lightbulb, color: 'hsl(var(--chart-1))' },
-  { key: 'marketPotential', en: 'Market Potential', bg: 'Пазарен потенциал', icon: TrendingUp, color: 'hsl(var(--chart-2))' },
-  { key: 'scalability', en: 'Scalability', bg: 'Мащабируемост', icon: Layers, color: 'hsl(var(--chart-3))' },
-  { key: 'riskLevel', en: 'Risk Level', bg: 'Ниво на риск', icon: ShieldAlert, color: 'hsl(var(--sim-danger))', invertedLabel: true },
-  { key: 'growthPotential', en: 'Growth Potential', bg: 'Потенциал за растеж', icon: Rocket, color: 'hsl(var(--chart-4))' },
+const KPI_META: { key: keyof SimWeekKPIs; en: string; bg: string; icon: React.ElementType; color: string; hexColor: string; descEn: string; descBg: string; invertedLabel?: boolean }[] = [
+  { key: 'innovation', en: 'Innovation', bg: 'Иновация', icon: Lightbulb, color: 'hsl(var(--chart-1))', hexColor: '#8b5cf6', descEn: 'Measures originality and use of digital technology in your solution.', descBg: 'Измерва оригиналността и използването на дигитални технологии в решението ви.' },
+  { key: 'marketPotential', en: 'Market Potential', bg: 'Пазарен потенциал', icon: TrendingUp, color: 'hsl(var(--chart-2))', hexColor: '#3b82f6', descEn: 'Evaluates size and demand of the target market.', descBg: 'Оценява размера и търсенето на целевия пазар.' },
+  { key: 'scalability', en: 'Scalability', bg: 'Мащабируемост', icon: Layers, color: 'hsl(var(--chart-3))', hexColor: '#22c55e', descEn: 'How easily the solution can grow to serve more users and markets.', descBg: 'Колко лесно решението може да расте, за да обслужва повече потребители и пазари.' },
+  { key: 'riskLevel', en: 'Risk Level', bg: 'Ниво на риск', icon: ShieldAlert, color: 'hsl(var(--sim-danger))', hexColor: '#ef4444', descEn: 'Business and execution risk. Lower is better.', descBg: 'Бизнес и оперативен риск. По-ниското е по-добро.', invertedLabel: true },
+  { key: 'growthPotential', en: 'Growth Potential', bg: 'Потенциал за растеж', icon: Rocket, color: 'hsl(var(--chart-4))', hexColor: '#f97316', descEn: 'Long-term expansion potential and ability to capture market share.', descBg: 'Дългосрочен потенциал за разширяване и способност за завладяване на пазарен дял.' },
 ];
 
 export default function StartupSimulator() {
@@ -70,7 +71,14 @@ export default function StartupSimulator() {
       .then(({ data }) => {
         if (data) {
           setSimId(data.id);
-          const savedKpis = data.kpis as any as SimWeekKPIs;
+          const raw = data.kpis as any;
+          const savedKpis: SimWeekKPIs = {
+            innovation: Number(raw?.innovation) || 0,
+            marketPotential: Number(raw?.marketPotential) || 0,
+            scalability: Number(raw?.scalability) || 0,
+            riskLevel: Number(raw?.riskLevel) || 0,
+            growthPotential: Number(raw?.growthPotential) || 0,
+          };
           const savedDecisions = data.decisions as any as StepRecord[];
           if (savedKpis && savedDecisions) {
             setKpis(savedKpis);
@@ -239,40 +247,98 @@ export default function StartupSimulator() {
   if (phase === 'results') {
     const grade = getStartupGrade(kpis);
 
+    // Sanitize all values to prevent NaN
+    const safeKpis: SimWeekKPIs = {
+      innovation: Number(kpis.innovation) || 0,
+      marketPotential: Number(kpis.marketPotential) || 0,
+      scalability: Number(kpis.scalability) || 0,
+      riskLevel: Number(kpis.riskLevel) || 0,
+      growthPotential: Number(kpis.growthPotential) || 0,
+    };
+
+    const safeScore = Math.round(
+      safeKpis.innovation * 0.25 + safeKpis.marketPotential * 0.2 + safeKpis.scalability * 0.2 +
+      (100 - safeKpis.riskLevel) * 0.15 + safeKpis.growthPotential * 0.2
+    );
+
     const radarData = KPI_META.map(m => ({
       metric: lang === 'bg' ? m.bg : m.en,
-      value: m.key === 'riskLevel' ? 100 - kpis[m.key] : kpis[m.key],
+      value: m.key === 'riskLevel' ? 100 - safeKpis[m.key] : safeKpis[m.key],
       fullMark: 100,
+      fill: m.hexColor,
     }));
 
     const barData = KPI_META.map(m => ({
       name: lang === 'bg' ? m.bg : m.en,
-      value: kpis[m.key],
+      value: safeKpis[m.key],
       color: m.color,
       isRisk: m.key === 'riskLevel',
     }));
 
+    // Grade scale color
+    const gradeColor = safeScore >= 90 ? '#22c55e' : safeScore >= 75 ? '#3b82f6' : safeScore >= 60 ? '#eab308' : '#ef4444';
+    const gradeLabel = safeScore >= 90
+      ? t('Excellent', 'Отлично')
+      : safeScore >= 75
+      ? t('Strong', 'Силно')
+      : safeScore >= 60
+      ? t('Good — needs improvement', 'Добро — нуждае се от подобрение')
+      : t('Needs revision', 'Нуждае се от ревизия');
+
+    const CustomTooltip = ({ active, payload }: any) => {
+      if (active && payload && payload.length) {
+        const data = payload[0].payload;
+        return (
+          <div className="rounded-lg border border-border bg-card px-3 py-2 shadow-lg">
+            <p className="text-sm font-semibold text-foreground">{data.metric}</p>
+            <p className="text-xs text-muted-foreground">
+              {t('Score', 'Оценка')}: <span className="font-bold text-primary">{data.value}</span> / 100
+            </p>
+          </div>
+        );
+      }
+      return null;
+    };
+
     return (
       <div className="min-h-screen bg-background">
         <AppHeader />
-        <div className="container mx-auto max-w-4xl px-4 py-8">
+        <div className="container mx-auto max-w-4xl px-4 py-8 animate-fade-in">
           <nav className="flex items-center gap-1.5 text-sm text-muted-foreground mb-6">
             <Link to="/dashboard" className="hover:text-foreground transition-colors">{t('Dashboard', 'Табло')}</Link>
             <ChevronRight className="h-3.5 w-3.5" />
             <span className="text-foreground font-medium">{t('Simulation Results', 'Резултати от симулацията')}</span>
           </nav>
 
-          {/* Grade */}
-          <div className="text-center mb-8">
-            <div className="inline-flex h-24 w-24 items-center justify-center rounded-full border-4 mb-3" style={{ borderColor: grade.color }}>
-              <span className="text-4xl font-display font-bold" style={{ color: grade.color }}>{grade.grade}</span>
+          {/* Overall Score with Grade Scale */}
+          <div className="text-center mb-8 animate-scale-in">
+            <div className="inline-flex h-28 w-28 items-center justify-center rounded-full border-4 mb-3 transition-all duration-500" style={{ borderColor: gradeColor }}>
+              <div className="text-center">
+                <span className="text-4xl font-display font-bold block" style={{ color: gradeColor }}>{safeScore}</span>
+                <span className="text-xs text-muted-foreground">/100</span>
+              </div>
             </div>
             <h1 className="text-2xl font-display font-bold text-foreground">
               {lang === 'bg' ? grade.labelBg : grade.labelEn}
             </h1>
-            <p className="text-lg font-semibold text-primary mt-1">
-              {t('Performance Score', 'Оценка на представянето')}: {performanceScore}/100
-            </p>
+            <Badge className="mt-2 text-sm px-3 py-1" style={{ backgroundColor: gradeColor, color: '#fff' }}>
+              {gradeLabel}
+            </Badge>
+          </div>
+
+          {/* Grade Scale Legend */}
+          <div className="flex justify-center gap-2 mb-6 flex-wrap">
+            {[
+              { min: 90, max: 100, color: '#22c55e', en: 'Excellent', bg: 'Отлично' },
+              { min: 75, max: 89, color: '#3b82f6', en: 'Strong', bg: 'Силно' },
+              { min: 60, max: 74, color: '#eab308', en: 'Good', bg: 'Добро' },
+              { min: 0, max: 59, color: '#ef4444', en: 'Needs Work', bg: 'За подобрение' },
+            ].map(s => (
+              <div key={s.min} className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                <div className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: s.color }} />
+                <span>{s.min}–{s.max}: {lang === 'bg' ? s.bg : s.en}</span>
+              </div>
+            ))}
           </div>
 
           {/* Feedback */}
@@ -288,51 +354,119 @@ export default function StartupSimulator() {
 
           {/* KPI Cards */}
           <div className="grid grid-cols-2 sm:grid-cols-5 gap-3 mb-8">
-            {KPI_META.map(m => (
-              <div key={m.key} className="rounded-xl border border-border bg-card p-4 text-center">
-                <m.icon className="h-5 w-5 mx-auto mb-1" style={{ color: m.color }} />
-                <div className="text-xl font-bold text-foreground">{kpis[m.key]}</div>
-                <div className="text-xs text-muted-foreground">{lang === 'bg' ? m.bg : m.en}</div>
-              </div>
-            ))}
+            {KPI_META.map(m => {
+              const val = safeKpis[m.key];
+              const cardColor = m.invertedLabel
+                ? (val <= 30 ? '#22c55e' : val <= 60 ? '#eab308' : '#ef4444')
+                : (val >= 70 ? '#22c55e' : val >= 40 ? '#eab308' : '#ef4444');
+              return (
+                <div key={m.key} className="rounded-xl border border-border bg-card p-4 text-center transition-transform hover:scale-105 duration-200">
+                  <m.icon className="h-5 w-5 mx-auto mb-1" style={{ color: m.hexColor }} />
+                  <div className="text-2xl font-bold" style={{ color: cardColor }}>{val}</div>
+                  <div className="text-xs text-muted-foreground font-medium">{lang === 'bg' ? m.bg : m.en}</div>
+                </div>
+              );
+            })}
           </div>
 
           {/* Charts */}
           <div className="grid gap-6 md:grid-cols-2 mb-8">
-            <div className="rounded-xl border border-border bg-card p-4">
-              <h3 className="text-sm font-semibold text-foreground mb-3">
+            {/* Radar Chart */}
+            <div className="rounded-xl border border-border bg-card p-5">
+              <h3 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-2">
+                <Target className="h-4 w-4 text-primary" />
                 {t('Strategy Radar', 'Стратегически радар')}
               </h3>
-              <div className="h-64">
+              <div className="h-72">
                 <ResponsiveContainer width="100%" height="100%">
-                  <RadarChart data={radarData}>
-                    <PolarGrid stroke="hsl(var(--border))" />
-                    <PolarAngleAxis dataKey="metric" tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }} />
-                    <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: 10 }} />
-                    <Radar name="Score" dataKey="value" stroke="hsl(var(--primary))" fill="hsl(var(--primary))" fillOpacity={0.3} strokeWidth={2} />
+                  <RadarChart data={radarData} cx="50%" cy="50%" outerRadius="70%">
+                    <PolarGrid stroke="hsl(var(--border))" strokeDasharray="3 3" />
+                    <PolarAngleAxis
+                      dataKey="metric"
+                      tick={{ fontSize: 11, fill: 'hsl(var(--foreground))', fontWeight: 600 }}
+                    />
+                    <PolarRadiusAxis
+                      angle={90}
+                      domain={[0, 100]}
+                      tick={{ fontSize: 9, fill: 'hsl(var(--muted-foreground))' }}
+                      tickCount={5}
+                    />
+                    <Radar
+                      name="Score"
+                      dataKey="value"
+                      stroke="#8b5cf6"
+                      fill="url(#radarGradient)"
+                      fillOpacity={0.5}
+                      strokeWidth={2.5}
+                      dot={{ r: 4, fill: '#8b5cf6', stroke: '#fff', strokeWidth: 2 }}
+                      animationBegin={200}
+                      animationDuration={1200}
+                      animationEasing="ease-out"
+                    />
+                    <Tooltip content={<CustomTooltip />} />
+                    <defs>
+                      <linearGradient id="radarGradient" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0%" stopColor="#8b5cf6" stopOpacity={0.6} />
+                        <stop offset="50%" stopColor="#3b82f6" stopOpacity={0.4} />
+                        <stop offset="100%" stopColor="#22c55e" stopOpacity={0.3} />
+                      </linearGradient>
+                    </defs>
                   </RadarChart>
                 </ResponsiveContainer>
               </div>
             </div>
-            <div className="rounded-xl border border-border bg-card p-4">
-              <h3 className="text-sm font-semibold text-foreground mb-3">
+
+            {/* Bar Chart */}
+            <div className="rounded-xl border border-border bg-card p-5">
+              <h3 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-2">
+                <BarChart3 className="h-4 w-4 text-primary" />
                 {t('Performance Metrics', 'Метрики на представянето')}
               </h3>
-              <div className="h-64">
+              <div className="h-72">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={barData} layout="vertical">
                     <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
                     <XAxis type="number" domain={[0, 100]} tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" />
                     <YAxis type="category" dataKey="name" tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" width={100} />
-                    <Tooltip />
-                    <Bar dataKey="value" radius={[0, 4, 4, 0]}>
+                    <Tooltip
+                      formatter={(value: number, name: string) => [`${value}/100`, t('Score', 'Оценка')]}
+                      contentStyle={{ borderRadius: '8px', border: '1px solid hsl(var(--border))', background: 'hsl(var(--card))' }}
+                    />
+                    <Bar dataKey="value" radius={[0, 6, 6, 0]} animationDuration={1000}>
                       {barData.map((entry, i) => (
-                        <Cell key={i} fill={entry.color} />
+                        <Cell key={i} fill={KPI_META[i].hexColor} />
                       ))}
                     </Bar>
                   </BarChart>
                 </ResponsiveContainer>
               </div>
+            </div>
+          </div>
+
+          {/* Metric Explanations */}
+          <div className="rounded-xl border border-border bg-card p-5 mb-8">
+            <h3 className="text-base font-display font-semibold text-foreground mb-4 flex items-center gap-2">
+              <HelpCircle className="h-4 w-4 text-primary" />
+              {t('Understanding Your Metrics', 'Разбиране на метриките')}
+            </h3>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {KPI_META.map(m => {
+                const val = safeKpis[m.key];
+                return (
+                  <div key={m.key} className="rounded-lg border border-border/50 bg-accent/30 p-3">
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <div className="flex h-7 w-7 items-center justify-center rounded-full" style={{ backgroundColor: m.hexColor + '20' }}>
+                        <m.icon className="h-3.5 w-3.5" style={{ color: m.hexColor }} />
+                      </div>
+                      <span className="text-sm font-semibold text-foreground">{lang === 'bg' ? m.bg : m.en}</span>
+                      <span className="ml-auto text-sm font-bold" style={{ color: m.hexColor }}>{val}</span>
+                    </div>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      {lang === 'bg' ? m.descBg : m.descEn}
+                    </p>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
