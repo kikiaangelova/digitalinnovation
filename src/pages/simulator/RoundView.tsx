@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useCallback, useMemo } from 'react';
+import { useLang } from '@/context/LangContext';
 import { useSimulator } from '@/context/SimulatorContext';
 import KPIDashboard from '@/components/simulator/KPIDashboard';
 import NarrativeBriefing from '@/components/simulator/NarrativeBriefing';
@@ -12,6 +13,8 @@ import { toast } from 'sonner';
 export default function RoundView() {
   const { id, n } = useParams<{ id: string; n: string }>();
   const navigate = useNavigate();
+  const { lang } = useLang();
+  const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
   const {
     seasons, getTeamForSeason, getLatestCompanyState, getCompanyState,
     getSubmission, getOutcomeReport, saveDraft, submitDecisions,
@@ -26,14 +29,12 @@ export default function RoundView() {
   const previousState = useMemo(() => {
     if (!team) return null;
     const history = getCompanyStateHistory(team.id);
-    // Get state from previous round or initial state
     const prevWeek = history.filter(s => s.week_number < weekNumber);
     return prevWeek.length > 0 ? prevWeek[prevWeek.length - 1] : null;
   }, [team, weekNumber, getCompanyStateHistory]);
 
   const currentState = useMemo(() => {
     if (!team || !round) return null;
-    // After submission, get the state for this round
     const state = getCompanyState(team.id, round.id);
     return state || previousState;
   }, [team, round, getCompanyState, previousState]);
@@ -53,12 +54,12 @@ export default function RoundView() {
     if (!round || !team) return;
     const report = submitDecisions(round.id, team.id);
     if (report) {
-      toast.success('Decisions submitted! View your outcome report below.');
+      toast.success(t('Decisions submitted! View your outcome report below.', 'Решенията са изпратени! Вижте доклада по-долу.'));
     }
-  }, [round, team, submitDecisions]);
+  }, [round, team, submitDecisions, lang]);
 
   if (!season || !round) {
-    return <div className="p-8 text-center text-muted-foreground">Round not found</div>;
+    return <div className="p-8 text-center text-muted-foreground">{t('Round not found', 'Рундът не е намерен')}</div>;
   }
 
   const hasPrev = weekNumber > 1;
@@ -73,7 +74,7 @@ export default function RoundView() {
               <ArrowLeft className="h-4 w-4" />
             </Button>
             <div>
-              <h1 className="text-base font-bold text-foreground">Week {weekNumber} of {season.weeks}</h1>
+              <h1 className="text-base font-bold text-foreground">{t('Week', 'Седмица')} {weekNumber} {t('of', 'от')} {season.weeks}</h1>
               <p className="text-xs text-muted-foreground">{season.theme}</p>
             </div>
           </div>
@@ -81,12 +82,12 @@ export default function RoundView() {
             {hasPrev && (
               <Button variant="outline" size="sm" onClick={() => navigate(`/simulator/season/${id}/round/${weekNumber - 1}`)}>
                 <ChevronLeft className="h-4 w-4" />
-                Prev
+                {t('Prev', 'Назад')}
               </Button>
             )}
             {hasNext && isSubmitted && (
               <Button variant="outline" size="sm" onClick={() => navigate(`/simulator/season/${id}/round/${weekNumber + 1}`)}>
-                Next
+                {t('Next', 'Напред')}
                 <ChevronRight className="h-4 w-4" />
               </Button>
             )}
@@ -106,7 +107,7 @@ export default function RoundView() {
         {currentState && (
           <div>
             <h2 className="text-lg font-semibold text-foreground mb-3">
-              {isSubmitted ? 'Updated Metrics' : 'Current Metrics'}
+              {isSubmitted ? t('Updated Metrics', 'Актуализирани показатели') : t('Current Metrics', 'Текущи показатели')}
             </h2>
             <KPIDashboard
               kpis={isSubmitted && outcomeReport ? (getCompanyState(team!.id, round.id)?.kpis || currentState.kpis) : currentState.kpis}
@@ -123,7 +124,7 @@ export default function RoundView() {
         {/* Decision Form */}
         <div>
           <h2 className="text-lg font-semibold text-foreground mb-3">
-            {isSubmitted ? 'Your Decisions (Submitted)' : 'Make Your Decisions'}
+            {isSubmitted ? t('Your Decisions (Submitted)', 'Вашите решения (Изпратени)') : t('Make Your Decisions', 'Вземете решения')}
           </h2>
           <DecisionForm
             decisions={round.decisions}
