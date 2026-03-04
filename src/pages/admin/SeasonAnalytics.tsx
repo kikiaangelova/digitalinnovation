@@ -1,13 +1,15 @@
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { useState } from 'react';
+import { useAuth } from '@/context/AuthContext';
 import { useSimulator } from '@/context/SimulatorContext';
 import KPIDashboard from '@/components/simulator/KPIDashboard';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { ArrowLeft, MessageSquare, Download } from 'lucide-react';
+import { ArrowLeft, MessageSquare, Download, ShieldAlert } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function SeasonAnalytics() {
+  const { isAdmin, loading } = useAuth();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const {
@@ -22,6 +24,8 @@ export default function SeasonAnalytics() {
   const [comment, setComment] = useState('');
   const [commentRound, setCommentRound] = useState('');
 
+  if (loading) return null;
+  if (!isAdmin) return <Navigate to="/dashboard" replace />;
   if (!season) return <div className="p-8 text-center text-muted-foreground">Season not found</div>;
 
   const team = seasonTeams.find(t => t.id === selectedTeam);
