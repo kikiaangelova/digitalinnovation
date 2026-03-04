@@ -10,10 +10,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
 import { toast } from 'sonner';
-import LearningOutcomes, { calcOutcomeScores, LEARNING_OUTCOMES } from '@/components/dashboard/LearningOutcomes';
+import { calcOutcomeScores, LEARNING_OUTCOMES } from '@/components/dashboard/LearningOutcomes';
 import Leaderboard from '@/components/dashboard/Leaderboard';
 import {
-  BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
+  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, Cell, PieChart, Pie, RadarChart, PolarGrid,
   PolarAngleAxis, PolarRadiusAxis, Radar,
 } from 'recharts';
@@ -21,6 +21,7 @@ import {
   Users, BookOpen, Rocket, Activity, Search, ChevronDown, ChevronRight,
   MessageSquare, Sparkles, Download, TrendingUp, Target, BarChart3, User,
   Check, Clock, Send, ArrowLeft, Trophy, GraduationCap, Printer, FileText,
+  AlertTriangle, Layers, DollarSign, Megaphone, Briefcase,
 } from 'lucide-react';
 
 // Types
@@ -31,6 +32,8 @@ interface ProfileData {
   skills_tags: string[] | null;
   interests: string[] | null;
   cohort_id: string | null;
+  links_json: any;
+  updated_at: string;
 }
 
 interface StartupProject {
@@ -56,6 +59,7 @@ interface SimProgress {
   decisions: any;
   grade: string | null;
   is_complete: boolean;
+  updated_at: string;
 }
 
 interface Submission {
@@ -98,6 +102,47 @@ const SECTION_LABELS: Record<string, { en: string; bg: string }> = {
 
 const COLORS = ['hsl(226 70% 55%)', 'hsl(173 58% 39%)', 'hsl(38 92% 50%)', 'hsl(280 60% 55%)', 'hsl(0 72% 51%)'];
 
+// Helper: extract strategy from simulator decisions
+function extractSimStrategy(decisions: any[]) {
+  if (!decisions || !Array.isArray(decisions)) return null;
+  const allChoices = decisions.flatMap((d: any) => d.choices || []);
+  if (allChoices.length === 0) return null;
+
+  const productMap: Record<string, string> = {
+    'w3-mobile': 'Mobile App', 'w3-web': 'Web Platform', 'w3-ai': 'AI Tool',
+    'w3-data': 'Data Platform', 'w3-marketplace': 'Marketplace',
+  };
+  const revenueMap: Record<string, string> = {
+    'w4-subscription': 'Subscription', 'w4-freemium': 'Freemium', 'w4-payperuse': 'Pay-per-use',
+    'w4-iap': 'In-app purchases', 'w4-commission': 'Commission', 'w4-ads': 'Advertising',
+    'w4-enterprise': 'Enterprise licensing', 'w4-onetime': 'One-time purchase',
+  };
+  const marketMap: Record<string, string> = {
+    'w4-mass': 'Mass Market', 'w4-nichemarket': 'Niche', 'w4-b2b-target': 'B2B',
+    'w4-b2c-target': 'B2C', 'w4-enterprise-target': 'Enterprise',
+  };
+  const marketingMap: Record<string, string> = {
+    'w5-social': 'Social Media', 'w5-influencer': 'Influencer', 'w5-seo': 'SEO/Content',
+    'w5-paid': 'Paid Ads', 'w5-community': 'Community', 'w5-partnerships': 'Partnerships',
+    'w5-plg': 'Product-Led Growth', 'w5-referral': 'Referral', 'w5-email': 'Email', 'w5-events': 'Events',
+  };
+
+  return {
+    product: allChoices.filter((c: string) => productMap[c]).map((c: string) => productMap[c]),
+    revenue: allChoices.filter((c: string) => revenueMap[c]).map((c: string) => revenueMap[c]),
+    market: allChoices.filter((c: string) => marketMap[c]).map((c: string) => marketMap[c]),
+    marketing: allChoices.filter((c: string) => marketingMap[c]).map((c: string) => marketingMap[c]),
+  };
+}
+
+// Helper: get startup stage
+function getStartupStage(proj: StartupProject): { en: string; bg: string; color: string } {
+  const filled = SECTION_KEYS.filter(k => ((proj as any)[k] || '').trim().length > 10).length;
+  if (proj.is_submitted || filled >= 6) return { en: 'Pitch', bg: 'Представяне', color: 'text-[hsl(var(--sim-success))]' };
+  if (filled >= 4) return { en: 'MVP', bg: 'MVP', color: 'text-primary' };
+  return { en: 'Idea', bg: 'Идея', color: 'text-muted-foreground' };
+}
+
 export default function TeacherDashboard() {
   const { isAdmin, user } = useAuth();
   const { lang } = useLang();
@@ -124,7 +169,7 @@ export default function TeacherDashboard() {
     if (!isAdmin) return;
     const load = async () => {
       const [profRes, projRes, simRes, subRes, caseRes, fbRes] = await Promise.all([
-        supabase.from('profiles').select('user_id, full_name, bio, skills_tags, interests, cohort_id'),
+        supabase.from('profiles').select('user_id, full_name, bio, skills_tags, interests, cohort_id, links_json, updated_at'),
         supabase.from('startup_projects').select('*').order('created_at', { ascending: false }),
         supabase.from('simulator_progress').select('*'),
         supabase.from('submissions').select('id, user_id, case_study_id, total_score, max_score, submitted_at, is_draft').eq('is_draft', false),
@@ -144,6 +189,14 @@ export default function TeacherDashboard() {
 
   const profileMap = Object.fromEntries(profiles.map(p => [p.user_id, p]));
   const getName = (uid: string) => profileMap[uid]?.full_name || t('Unknown', 'Неизвестен');
+  const getMetadata = (uid: string) => {
+    const lj = profileMap[uid]?.links_json;
+    return {
+      school: lj?.school || '',
+      classGrade: lj?.class_grade || '',
+      country: lj?.country || '',
+    };
+  };
   const caseMap = Object.fromEntries(cases.map(c => [c.id, c]));
 
   // Stats
@@ -158,7 +211,11 @@ export default function TeacherDashboard() {
   // Filtered students
   const filteredProfiles = profiles.filter(p => {
     if (!search) return true;
-    return (p.full_name || '').toLowerCase().includes(search.toLowerCase());
+    const meta = getMetadata(p.user_id);
+    const searchLower = search.toLowerCase();
+    return (p.full_name || '').toLowerCase().includes(searchLower)
+      || meta.school.toLowerCase().includes(searchLower)
+      || meta.country.toLowerCase().includes(searchLower);
   });
 
   const getStudentProject = (uid: string) => projects.find(p => p.user_id === uid);
@@ -167,6 +224,44 @@ export default function TeacherDashboard() {
   const getProjectProgress = (p: StartupProject) => {
     const filled = SECTION_KEYS.filter(k => ((p as any)[k] || '').trim().length > 10).length;
     return Math.round((filled / SECTION_KEYS.length) * 100);
+  };
+
+  const getOverallProgress = (uid: string) => {
+    const subs = getStudentSubs(uid);
+    const sim = getStudentSim(uid);
+    const proj = getStudentProject(uid);
+    const caseProgress = cases.length > 0 ? (subs.length / cases.length) * 100 : 0;
+    const simProg = sim ? (sim.current_week / 6) * 100 : 0;
+    const projProg = proj ? getProjectProgress(proj) : 0;
+    return Math.round((caseProgress + simProg + projProg) / 3);
+  };
+
+  // Students needing support
+  const getStudentsNeedingSupport = () => {
+    const now = Date.now();
+    const sevenDays = 7 * 24 * 60 * 60 * 1000;
+
+    return profiles.map(p => {
+      const reasons: string[] = [];
+      const progress = getOverallProgress(p.user_id);
+      const subs = getStudentSubs(p.user_id);
+      const sim = getStudentSim(p.user_id);
+      const proj = getStudentProject(p.user_id);
+
+      if (progress < 20) reasons.push(t('Low overall progress', 'Нисък общ напредък'));
+      if (subs.length === 0 && cases.length > 0) reasons.push(t('No completed cases', 'Няма завършени казуси'));
+      if (!sim || sim.current_week <= 1) reasons.push(t('Simulator not started', 'Симулаторът не е стартиран'));
+
+      // Check inactivity based on profile updated_at
+      const lastActive = new Date(p.updated_at).getTime();
+      const simLastActive = sim ? new Date((sim as any).updated_at || 0).getTime() : 0;
+      const latest = Math.max(lastActive, simLastActive);
+      if (latest > 0 && (now - latest) > sevenDays) {
+        reasons.push(t('Inactive for 7+ days', 'Неактивен 7+ дни'));
+      }
+
+      return { ...p, reasons, progress };
+    }).filter(s => s.reasons.length > 0).sort((a, b) => a.progress - b.progress);
   };
 
   const submitFeedback = async () => {
@@ -211,27 +306,68 @@ export default function TeacherDashboard() {
   };
 
   const exportCSV = () => {
-    const headers = ['Student', 'Cases Completed', 'Avg Score', 'Simulator Week', 'Sim Grade', 'Project Progress'];
+    const headers = [
+      t('Student', 'Ученик'), t('School', 'Училище'), t('Class', 'Клас'), t('Country', 'Държава'),
+      t('Cases Completed', 'Казуси'), t('Avg Score', 'Ср. резултат'),
+      t('Simulator Week', 'Седмица'), t('Sim Grade', 'Оценка'),
+      t('Startup Stage', 'Етап'), t('Overall Progress', 'Общ прогрес'),
+    ];
     const rows = profiles.map(p => {
+      const meta = getMetadata(p.user_id);
       const subs = getStudentSubs(p.user_id);
       const sim = getStudentSim(p.user_id);
       const proj = getStudentProject(p.user_id);
       const avgScore = subs.length > 0
         ? Math.round(subs.reduce((a, s) => a + ((s.total_score || 0) / Math.max(s.max_score || 1, 1)) * 100, 0) / subs.length)
         : 0;
+      const stage = proj ? getStartupStage(proj) : null;
       return [
-        getName(p.user_id), subs.length, `${avgScore}%`,
+        `"${getName(p.user_id)}"`, `"${meta.school}"`, `"${meta.classGrade}"`, `"${meta.country}"`,
+        subs.length, `${avgScore}%`,
         sim ? `${sim.current_week}/6` : '0/6', sim?.grade || '-',
-        proj ? `${getProjectProgress(proj)}%` : '0%',
+        stage ? (lang === 'bg' ? stage.bg : stage.en) : '-', `${getOverallProgress(p.user_id)}%`,
       ].join(',');
     });
-    const csv = [headers.join(','), ...rows].join('\n');
-    const blob = new Blob([csv], { type: 'text/csv' });
+    const csv = '\uFEFF' + [headers.join(','), ...rows].join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = 'student_progress.csv';
     a.click();
-    toast.success(t('Exported', 'Експортирано'));
+    toast.success(t('Exported as CSV', 'Експортирано като CSV'));
+  };
+
+  const exportExcel = () => {
+    // TSV format that Excel opens correctly
+    const headers = [
+      t('Student', 'Ученик'), t('School', 'Училище'), t('Class', 'Клас'), t('Country', 'Държава'),
+      t('Cases Completed', 'Казуси'), t('Avg Score %', 'Ср. резултат %'),
+      t('Simulator Week', 'Седмица'), t('Sim Grade', 'Оценка'),
+      t('Startup Stage', 'Етап'), t('Overall Progress %', 'Общ прогрес %'),
+    ];
+    const rows = profiles.map(p => {
+      const meta = getMetadata(p.user_id);
+      const subs = getStudentSubs(p.user_id);
+      const sim = getStudentSim(p.user_id);
+      const proj = getStudentProject(p.user_id);
+      const avgScore = subs.length > 0
+        ? Math.round(subs.reduce((a, s) => a + ((s.total_score || 0) / Math.max(s.max_score || 1, 1)) * 100, 0) / subs.length)
+        : 0;
+      const stage = proj ? getStartupStage(proj) : null;
+      return [
+        getName(p.user_id), meta.school, meta.classGrade, meta.country,
+        subs.length, avgScore,
+        sim ? `${sim.current_week}/6` : '0/6', sim?.grade || '-',
+        stage ? (lang === 'bg' ? stage.bg : stage.en) : '-', getOverallProgress(p.user_id),
+      ].join('\t');
+    });
+    const tsv = '\uFEFF' + [headers.join('\t'), ...rows].join('\n');
+    const blob = new Blob([tsv], { type: 'application/vnd.ms-excel;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'student_progress.xls';
+    a.click();
+    toast.success(t('Exported as Excel', 'Експортирано като Excel'));
   };
 
   if (!isAdmin) {
@@ -256,19 +392,20 @@ export default function TeacherDashboard() {
     })(),
   }));
 
-  // Simulator grade distribution
   const gradeDistribution = ['A', 'B', 'C', 'D'].map(g => ({
     name: g,
     value: simProgress.filter(s => s.grade === g).length,
   })).filter(g => g.value > 0);
 
-  // Student detail view
+  // ── Student Detail View ──
   if (selectedStudent) {
     const prof = profileMap[selectedStudent];
     const proj = getStudentProject(selectedStudent);
     const sim = getStudentSim(selectedStudent);
     const subs = getStudentSubs(selectedStudent);
     const studentFeedbacks = feedbacks.filter(f => f.student_id === selectedStudent);
+    const meta = getMetadata(selectedStudent);
+    const strategy = sim ? extractSimStrategy(sim.decisions) : null;
 
     return (
       <div className="min-h-screen bg-background">
@@ -289,6 +426,13 @@ export default function TeacherDashboard() {
                 <p className="text-sm text-muted-foreground">{prof?.bio || t('No bio', 'Няма биография')}</p>
               </div>
             </div>
+            {(meta.school || meta.classGrade || meta.country) && (
+              <div className="flex flex-wrap gap-2 mb-3">
+                {meta.school && <Badge variant="outline" className="text-xs">🏫 {meta.school}</Badge>}
+                {meta.classGrade && <Badge variant="outline" className="text-xs">📚 {meta.classGrade}</Badge>}
+                {meta.country && <Badge variant="outline" className="text-xs">🌍 {meta.country}</Badge>}
+              </div>
+            )}
             {prof?.skills_tags && prof.skills_tags.length > 0 && (
               <div className="flex flex-wrap gap-1.5 mt-2">
                 {prof.skills_tags.map(s => <Badge key={s} variant="outline" className="text-xs">{s}</Badge>)}
@@ -309,6 +453,42 @@ export default function TeacherDashboard() {
               </div>
             </div>
           </div>
+
+          {/* Simulator Strategy Summary */}
+          {strategy && (strategy.product.length > 0 || strategy.revenue.length > 0) && (
+            <div className="rounded-xl border-2 border-primary/30 bg-primary/5 p-5">
+              <h2 className="text-base font-semibold text-foreground mb-3 flex items-center gap-2">
+                <Layers className="h-4 w-4 text-primary" />
+                {t('Simulator Strategy', 'Стратегия от симулатора')}
+              </h2>
+              <div className="grid gap-3 sm:grid-cols-2">
+                {strategy.product.length > 0 && (
+                  <div>
+                    <p className="text-xs font-semibold text-muted-foreground flex items-center gap-1 mb-1"><Briefcase className="h-3 w-3" /> {t('Product', 'Продукт')}</p>
+                    <div className="flex flex-wrap gap-1">{strategy.product.map((p, i) => <Badge key={i} variant="secondary" className="text-xs">{p}</Badge>)}</div>
+                  </div>
+                )}
+                {strategy.revenue.length > 0 && (
+                  <div>
+                    <p className="text-xs font-semibold text-muted-foreground flex items-center gap-1 mb-1"><DollarSign className="h-3 w-3" /> {t('Revenue Model', 'Приходен модел')}</p>
+                    <div className="flex flex-wrap gap-1">{strategy.revenue.map((r, i) => <Badge key={i} variant="secondary" className="text-xs">{r}</Badge>)}</div>
+                  </div>
+                )}
+                {strategy.market.length > 0 && (
+                  <div>
+                    <p className="text-xs font-semibold text-muted-foreground flex items-center gap-1 mb-1"><Target className="h-3 w-3" /> {t('Market', 'Пазар')}</p>
+                    <div className="flex flex-wrap gap-1">{strategy.market.map((m, i) => <Badge key={i} variant="secondary" className="text-xs">{m}</Badge>)}</div>
+                  </div>
+                )}
+                {strategy.marketing.length > 0 && (
+                  <div>
+                    <p className="text-xs font-semibold text-muted-foreground flex items-center gap-1 mb-1"><Megaphone className="h-3 w-3" /> {t('Marketing', 'Маркетинг')}</p>
+                    <div className="flex flex-wrap gap-1">{strategy.marketing.map((m, i) => <Badge key={i} variant="secondary" className="text-xs">{m}</Badge>)}</div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Startup Project */}
           {proj && (
@@ -369,12 +549,8 @@ export default function TeacherDashboard() {
                         <p className="text-xs text-muted-foreground">{s.submitted_at ? new Date(s.submitted_at).toLocaleDateString() : ''}</p>
                       </div>
                       <div className="flex items-center gap-3">
-                        <div className="w-24">
-                          <Progress value={pct} className="h-2" />
-                        </div>
-                        <Badge variant={pct >= 70 ? 'default' : 'outline'} className="text-xs min-w-[3rem] text-center">
-                          {pct}%
-                        </Badge>
+                        <div className="w-24"><Progress value={pct} className="h-2" /></div>
+                        <Badge variant={pct >= 70 ? 'default' : 'outline'} className="text-xs min-w-[3rem] text-center">{pct}%</Badge>
                         <Button size="sm" variant="ghost" onClick={() => setFeedbackTarget({ type: 'case_submission', id: s.id, studentId: selectedStudent })}>
                           <MessageSquare className="h-3.5 w-3.5" />
                         </Button>
@@ -413,9 +589,7 @@ export default function TeacherDashboard() {
                   </div>
                 ))}
               </div>
-              {sim.grade && (
-                <Badge className="text-sm">{t('Grade', 'Оценка')}: {sim.grade}</Badge>
-              )}
+              {sim.grade && <Badge className="text-sm">{t('Grade', 'Оценка')}: {sim.grade}</Badge>}
             </div>
           )}
 
@@ -423,19 +597,12 @@ export default function TeacherDashboard() {
           {feedbackTarget && (
             <div className="rounded-xl border border-primary/30 bg-card p-5 space-y-3">
               <h3 className="text-sm font-semibold text-foreground">{t('Leave Feedback', 'Оставете коментар')}</h3>
-              <Textarea
-                value={feedbackText}
-                onChange={e => setFeedbackText(e.target.value)}
-                placeholder={t('Write your feedback here...', 'Напишете коментара си тук...')}
-                rows={3}
-              />
+              <Textarea value={feedbackText} onChange={e => setFeedbackText(e.target.value)} placeholder={t('Write your feedback here...', 'Напишете коментара си тук...')} rows={3} />
               <div className="flex gap-2">
                 <Button size="sm" onClick={submitFeedback} disabled={!feedbackText.trim()}>
                   <Send className="h-4 w-4 mr-1" /> {t('Send', 'Изпрати')}
                 </Button>
-                <Button size="sm" variant="outline" onClick={() => setFeedbackTarget(null)}>
-                  {t('Cancel', 'Отказ')}
-                </Button>
+                <Button size="sm" variant="outline" onClick={() => setFeedbackTarget(null)}>{t('Cancel', 'Отказ')}</Button>
               </div>
             </div>
           )}
@@ -462,7 +629,9 @@ export default function TeacherDashboard() {
     );
   }
 
-  // Main dashboard
+  // ── Main Dashboard ──
+  const studentsNeedingSupport = getStudentsNeedingSupport();
+
   return (
     <div className="min-h-screen bg-background">
       <AppHeader />
@@ -475,8 +644,11 @@ export default function TeacherDashboard() {
             <Button variant="outline" size="sm" onClick={exportCSV}>
               <Download className="h-4 w-4 mr-1" /> CSV
             </Button>
+            <Button variant="outline" size="sm" onClick={exportExcel}>
+              <FileText className="h-4 w-4 mr-1" /> Excel
+            </Button>
             <Button variant="outline" size="sm" onClick={() => window.print()}>
-              <Printer className="h-4 w-4 mr-1" /> {t('Print Report', 'Печат доклад')}
+              <Printer className="h-4 w-4 mr-1" /> {t('Print / PDF', 'Печат / PDF')}
             </Button>
           </div>
         </div>
@@ -508,207 +680,183 @@ export default function TeacherDashboard() {
           <TabsList className="bg-muted/50 flex-wrap h-auto">
             <TabsTrigger value="students">{t('Students', 'Ученици')}</TabsTrigger>
             <TabsTrigger value="startups">{t('Startups', 'Стартъпи')}</TabsTrigger>
-            <TabsTrigger value="cases">{t('Cases', 'Казуси')}</TabsTrigger>
-            <TabsTrigger value="simulator">{t('Simulator', 'Симулатор')}</TabsTrigger>
-            <TabsTrigger value="outcomes">{t('Learning Outcomes', 'Учебни резултати')}</TabsTrigger>
-            <TabsTrigger value="leaderboard">{t('Leaderboard', 'Класация')}</TabsTrigger>
+            <TabsTrigger value="support" className="relative">
+              {t('Needs Support', 'Нуждае се от помощ')}
+              {studentsNeedingSupport.length > 0 && (
+                <span className="ml-1.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold">
+                  {studentsNeedingSupport.length}
+                </span>
+              )}
+            </TabsTrigger>
+            <TabsTrigger value="outcomes">{t('Learning Analytics', 'Учебни резултати')}</TabsTrigger>
             <TabsTrigger value="analytics">{t('Analytics', 'Анализи')}</TabsTrigger>
+            <TabsTrigger value="leaderboard">{t('Leaderboard', 'Класация')}</TabsTrigger>
           </TabsList>
 
-          {/* STUDENTS TAB */}
+          {/* STUDENTS TAB - Full Table */}
           <TabsContent value="students" className="space-y-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder={t('Search students...', 'Търсене на ученици...')}
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                className="pl-9"
-              />
+              <Input placeholder={t('Search by name, school, or country...', 'Търсене по име, училище или държава...')} value={search} onChange={e => setSearch(e.target.value)} className="pl-9" />
             </div>
-            <div className="space-y-2">
-              {loading ? (
-                <p className="text-center py-8 text-muted-foreground">{t('Loading...', 'Зареждане...')}</p>
-              ) : filteredProfiles.length === 0 ? (
-                <p className="text-center py-8 text-muted-foreground">{t('No students found', 'Няма намерени ученици')}</p>
-              ) : (
-                filteredProfiles.map(p => {
-                  const subs = getStudentSubs(p.user_id);
-                  const sim = getStudentSim(p.user_id);
-                  const proj = getStudentProject(p.user_id);
-                  return (
-                    <button
-                      key={p.user_id}
-                      onClick={() => setSelectedStudent(p.user_id)}
-                      className="w-full rounded-xl border border-border bg-card p-4 flex items-center gap-4 hover:bg-accent/30 transition-colors text-left"
-                    >
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent shrink-0">
-                        <User className="h-5 w-5 text-primary" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-foreground truncate">{p.full_name || 'Unknown'}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {t('Cases', 'Казуси')}: {subs.length} · {t('Sim', 'Сим')}: {sim ? `${sim.current_week}/6` : '—'} · {t('Project', 'Проект')}: {proj ? `${getProjectProgress(proj)}%` : '—'}
-                        </p>
-                      </div>
-                      <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
-                    </button>
-                  );
-                })
-              )}
-            </div>
-          </TabsContent>
-
-          {/* STARTUPS TAB */}
-          <TabsContent value="startups" className="space-y-3">
-            {projects.length === 0 ? (
-              <p className="text-center py-8 text-muted-foreground">{t('No projects yet', 'Няма проекти')}</p>
-            ) : (
-              projects.map(p => {
-                const progress = getProjectProgress(p);
-                const isOpen = expandedProject === p.id;
-                return (
-                  <div key={p.id} className="rounded-xl border border-border bg-card overflow-hidden">
-                    <button
-                      onClick={() => setExpandedProject(isOpen ? null : p.id)}
-                      className="w-full flex items-center gap-3 px-5 py-4 text-left hover:bg-accent/30 transition-colors"
-                    >
-                      <User className="h-4 w-4 text-muted-foreground shrink-0" />
-                      <span className="font-medium text-foreground flex-1">{getName(p.user_id)}</span>
-                      {p.industry && <Badge variant="outline" className="text-xs mr-2">{p.industry}</Badge>}
-                      <span className="text-xs font-medium text-primary mr-2">{progress}%</span>
-                      {p.is_submitted ? (
-                        <Badge className="bg-[hsl(var(--sim-success))]/10 text-[hsl(var(--sim-success))] border-0 text-xs">
-                          <Check className="h-3 w-3 mr-1" /> {t('Submitted', 'Предаден')}
-                        </Badge>
-                      ) : (
-                        <Badge variant="outline" className="text-xs">
-                          <Clock className="h-3 w-3 mr-1" /> {t('In progress', 'В процес')}
-                        </Badge>
-                      )}
-                      <ChevronDown className={`h-4 w-4 text-muted-foreground transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-                    </button>
-                    {isOpen && (
-                      <div className="border-t border-border px-5 py-4 space-y-3">
-                        {SECTION_KEYS.map(key => {
-                          const val = (p as any)[key] as string || '';
-                          return (
-                            <div key={key}>
-                              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-                                {SECTION_LABELS[key][lang === 'bg' ? 'bg' : 'en']}
-                              </p>
-                              {val.trim() ? (
-                                <p className="text-sm text-foreground mt-0.5 whitespace-pre-wrap">{val}</p>
-                              ) : (
-                                <p className="text-sm text-muted-foreground italic">{t('Not filled', 'Не е попълнено')}</p>
-                              )}
-                            </div>
-                          );
-                        })}
-                        <div className="flex gap-2 pt-2">
-                          <Button size="sm" variant="outline" onClick={() => requestAiFeedback('startup_project', p)} disabled={aiLoading}>
-                            <Sparkles className="h-4 w-4 mr-1" /> {t('AI Feedback', 'AI Оценка')}
-                          </Button>
-                          <Button size="sm" variant="outline" onClick={() => { setSelectedStudent(p.user_id); setFeedbackTarget({ type: 'startup_project', id: p.id, studentId: p.user_id }); }}>
-                            <MessageSquare className="h-4 w-4 mr-1" /> {t('Comment', 'Коментар')}
-                          </Button>
-                        </div>
-                        {aiFeedback && expandedProject === p.id && (
-                          <div className="rounded-lg border border-primary/30 bg-primary/5 p-4 mt-2">
-                            <div className="flex items-center gap-2 mb-1">
-                              <Sparkles className="h-3.5 w-3.5 text-primary" />
-                              <span className="text-xs font-semibold text-primary">{t('AI Mentor', 'AI Ментор')}</span>
-                            </div>
-                            <p className="text-sm text-foreground whitespace-pre-wrap">{aiFeedback}</p>
-                          </div>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                );
-              })
-            )}
-          </TabsContent>
-
-          {/* CASES TAB */}
-          <TabsContent value="cases" className="space-y-4">
-            <div className="rounded-xl border border-border overflow-hidden">
-              <table className="w-full">
+            <div className="rounded-xl border border-border overflow-x-auto">
+              <table className="w-full min-w-[800px]">
                 <thead className="bg-muted/50">
                   <tr>
-                    <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">{t('Student', 'Ученик')}</th>
-                    <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">{t('Case', 'Казус')}</th>
-                    <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">{t('Score', 'Резултат')}</th>
-                    <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">{t('Date', 'Дата')}</th>
-                    <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground"></th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground">{t('Student', 'Ученик')}</th>
+                    <th className="px-3 py-3 text-left text-xs font-medium text-muted-foreground">{t('Class', 'Клас')}</th>
+                    <th className="px-3 py-3 text-left text-xs font-medium text-muted-foreground">{t('School', 'Училище')}</th>
+                    <th className="px-3 py-3 text-left text-xs font-medium text-muted-foreground">{t('Country', 'Държава')}</th>
+                    <th className="px-3 py-3 text-center text-xs font-medium text-muted-foreground">{t('Cases', 'Казуси')}</th>
+                    <th className="px-3 py-3 text-center text-xs font-medium text-muted-foreground">{t('Sim Week', 'Сим. седм.')}</th>
+                    <th className="px-3 py-3 text-center text-xs font-medium text-muted-foreground">{t('Startup', 'Стартъп')}</th>
+                    <th className="px-3 py-3 text-center text-xs font-medium text-muted-foreground">{t('Progress', 'Прогрес')}</th>
+                    <th className="px-3 py-3"></th>
                   </tr>
                 </thead>
                 <tbody>
-                  {submissions.slice(0, 50).map(s => {
-                    const cs = caseMap[s.case_study_id];
-                    const pct = s.max_score ? Math.round(((s.total_score || 0) / s.max_score) * 100) : 0;
-                    return (
-                      <tr key={s.id} className="border-t border-border">
-                        <td className="px-4 py-3 text-sm font-medium text-foreground">{getName(s.user_id)}</td>
-                        <td className="px-4 py-3 text-sm text-muted-foreground">{cs?.title || '—'}</td>
-                        <td className="px-4 py-3">
-                          <div className="flex items-center gap-2">
-                            <Progress value={pct} className="h-2 w-16" />
-                            <span className="text-xs font-medium text-foreground">{pct}%</span>
-                          </div>
-                        </td>
-                        <td className="px-4 py-3 text-xs text-muted-foreground">{s.submitted_at ? new Date(s.submitted_at).toLocaleDateString() : ''}</td>
-                        <td className="px-4 py-3">
-                          <Button size="sm" variant="ghost" onClick={() => setSelectedStudent(s.user_id)}>
-                            <ChevronRight className="h-4 w-4" />
-                          </Button>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                  {submissions.length === 0 && (
-                    <tr><td colSpan={5} className="px-4 py-8 text-center text-sm text-muted-foreground">{t('No submissions', 'Няма предадени')}</td></tr>
+                  {loading ? (
+                    <tr><td colSpan={9} className="px-4 py-8 text-center text-sm text-muted-foreground">{t('Loading...', 'Зареждане...')}</td></tr>
+                  ) : filteredProfiles.length === 0 ? (
+                    <tr><td colSpan={9} className="px-4 py-8 text-center text-sm text-muted-foreground">{t('No students found', 'Няма намерени ученици')}</td></tr>
+                  ) : (
+                    filteredProfiles.map(p => {
+                      const meta = getMetadata(p.user_id);
+                      const subs = getStudentSubs(p.user_id);
+                      const sim = getStudentSim(p.user_id);
+                      const proj = getStudentProject(p.user_id);
+                      const progress = getOverallProgress(p.user_id);
+                      const stage = proj ? getStartupStage(proj) : null;
+                      return (
+                        <tr key={p.user_id} className="border-t border-border hover:bg-accent/30 cursor-pointer transition-colors" onClick={() => setSelectedStudent(p.user_id)}>
+                          <td className="px-4 py-3">
+                            <div className="flex items-center gap-2">
+                              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-accent shrink-0">
+                                <User className="h-4 w-4 text-primary" />
+                              </div>
+                              <span className="text-sm font-medium text-foreground">{p.full_name || 'Unknown'}</span>
+                            </div>
+                          </td>
+                          <td className="px-3 py-3 text-sm text-muted-foreground">{meta.classGrade || '—'}</td>
+                          <td className="px-3 py-3 text-sm text-muted-foreground max-w-[120px] truncate">{meta.school || '—'}</td>
+                          <td className="px-3 py-3 text-sm text-muted-foreground">{meta.country || '—'}</td>
+                          <td className="px-3 py-3 text-center text-sm font-medium text-foreground">{subs.length}</td>
+                          <td className="px-3 py-3 text-center text-sm text-foreground">{sim ? `${sim.current_week}/6` : '—'}</td>
+                          <td className="px-3 py-3 text-center">
+                            {stage ? (
+                              <Badge variant="outline" className={`text-xs ${stage.color}`}>{lang === 'bg' ? stage.bg : stage.en}</Badge>
+                            ) : <span className="text-sm text-muted-foreground">—</span>}
+                          </td>
+                          <td className="px-3 py-3">
+                            <div className="flex items-center gap-2">
+                              <Progress value={progress} className="h-2 w-16" />
+                              <span className="text-xs font-medium text-foreground">{progress}%</span>
+                            </div>
+                          </td>
+                          <td className="px-3 py-3"><ChevronRight className="h-4 w-4 text-muted-foreground" /></td>
+                        </tr>
+                      );
+                    })
                   )}
                 </tbody>
               </table>
             </div>
           </TabsContent>
 
-          {/* SIMULATOR TAB */}
-          <TabsContent value="simulator" className="space-y-3">
-            {simProgress.length === 0 ? (
-              <p className="text-center py-8 text-muted-foreground">{t('No simulator data', 'Няма данни')}</p>
-            ) : (
-              simProgress.map(s => (
-                <button
-                  key={s.id}
-                  onClick={() => setSelectedStudent(s.user_id)}
-                  className="w-full rounded-xl border border-border bg-card p-4 flex items-center gap-4 hover:bg-accent/30 transition-colors text-left"
-                >
-                  <User className="h-4 w-4 text-muted-foreground shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-foreground">{getName(s.user_id)}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {t('Week', 'Седмица')} {s.current_week}/6 · {t('Users', 'Потр.')}: {s.kpis?.users ?? 0} · ${t('Rev', 'Прих.')}: ${s.kpis?.revenue ?? 0}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    {s.grade && <Badge className="text-xs">{s.grade}</Badge>}
-                    {s.is_complete ? (
-                      <Badge className="bg-[hsl(var(--sim-success))]/10 text-[hsl(var(--sim-success))] border-0 text-xs">
-                        <Check className="h-3 w-3 mr-1" /> {t('Done', 'Завършено')}
-                      </Badge>
-                    ) : (
-                      <Badge variant="outline" className="text-xs">{t('In Progress', 'В процес')}</Badge>
-                    )}
-                  </div>
-                  <ChevronRight className="h-4 w-4 text-muted-foreground" />
-                </button>
-              ))
-            )}
+          {/* STARTUPS TAB */}
+          <TabsContent value="startups" className="space-y-3">
+            <div className="rounded-xl border border-border overflow-x-auto">
+              <table className="w-full min-w-[600px]">
+                <thead className="bg-muted/50">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground">{t('Student', 'Ученик')}</th>
+                    <th className="px-3 py-3 text-left text-xs font-medium text-muted-foreground">{t('Startup Idea', 'Стартъп идея')}</th>
+                    <th className="px-3 py-3 text-left text-xs font-medium text-muted-foreground">{t('Industry', 'Индустрия')}</th>
+                    <th className="px-3 py-3 text-center text-xs font-medium text-muted-foreground">{t('Stage', 'Етап')}</th>
+                    <th className="px-3 py-3 text-center text-xs font-medium text-muted-foreground">{t('Progress', 'Прогрес')}</th>
+                    <th className="px-3 py-3"></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {projects.length === 0 ? (
+                    <tr><td colSpan={6} className="px-4 py-8 text-center text-sm text-muted-foreground">{t('No projects yet', 'Няма проекти')}</td></tr>
+                  ) : (
+                    projects.map(p => {
+                      const stage = getStartupStage(p);
+                      const progress = getProjectProgress(p);
+                      const idea = (p.problem || '').substring(0, 60) || t('Not filled', 'Не е попълнено');
+                      return (
+                        <tr key={p.id} className="border-t border-border hover:bg-accent/30 cursor-pointer transition-colors" onClick={() => setSelectedStudent(p.user_id)}>
+                          <td className="px-4 py-3 text-sm font-medium text-foreground">{getName(p.user_id)}</td>
+                          <td className="px-3 py-3 text-sm text-muted-foreground max-w-[200px] truncate">{idea}</td>
+                          <td className="px-3 py-3">{p.industry ? <Badge variant="outline" className="text-xs">{p.industry}</Badge> : <span className="text-sm text-muted-foreground">—</span>}</td>
+                          <td className="px-3 py-3 text-center"><Badge variant="outline" className={`text-xs ${stage.color}`}>{lang === 'bg' ? stage.bg : stage.en}</Badge></td>
+                          <td className="px-3 py-3">
+                            <div className="flex items-center justify-center gap-2">
+                              <Progress value={progress} className="h-2 w-16" />
+                              <span className="text-xs font-medium text-foreground">{progress}%</span>
+                            </div>
+                          </td>
+                          <td className="px-3 py-3"><ChevronRight className="h-4 w-4 text-muted-foreground" /></td>
+                        </tr>
+                      );
+                    })
+                  )}
+                </tbody>
+              </table>
+            </div>
           </TabsContent>
 
-          {/* LEARNING OUTCOMES TAB */}
+          {/* NEEDS SUPPORT TAB */}
+          <TabsContent value="support" className="space-y-4">
+            <div className="rounded-xl border border-border bg-card p-5">
+              <div className="flex items-center gap-2 mb-4">
+                <AlertTriangle className="h-5 w-5 text-destructive" />
+                <h2 className="text-lg font-semibold text-foreground">{t('Students Needing Support', 'Ученици, нуждаещи се от помощ')}</h2>
+              </div>
+              <p className="text-sm text-muted-foreground mb-4">
+                {t(
+                  'Students flagged automatically based on: low progress, unfinished cases, simulator not started, or inactive for 7+ days.',
+                  'Ученици, маркирани автоматично поради: нисък прогрес, незавършени казуси, нестартиран симулатор или неактивност 7+ дни.'
+                )}
+              </p>
+              {studentsNeedingSupport.length === 0 ? (
+                <div className="text-center py-8">
+                  <Check className="h-8 w-8 text-[hsl(var(--sim-success))] mx-auto mb-2" />
+                  <p className="text-sm text-muted-foreground">{t('All students are making good progress!', 'Всички ученици напредват добре!')}</p>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {studentsNeedingSupport.map(s => (
+                    <button
+                      key={s.user_id}
+                      onClick={() => setSelectedStudent(s.user_id)}
+                      className="w-full flex items-center gap-4 rounded-lg p-4 bg-destructive/5 border border-destructive/20 hover:bg-destructive/10 transition-colors text-left"
+                    >
+                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-destructive/10 shrink-0">
+                        <User className="h-4 w-4 text-destructive" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-foreground">{s.full_name || 'Unknown'}</p>
+                        <div className="flex flex-wrap gap-1.5 mt-1">
+                          {s.reasons.map((r, i) => (
+                            <Badge key={i} variant="outline" className="text-[10px] border-destructive/30 text-destructive">{r}</Badge>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="text-right shrink-0">
+                        <span className="text-lg font-bold text-destructive">{s.progress}%</span>
+                        <p className="text-[10px] text-muted-foreground">{t('progress', 'прогрес')}</p>
+                      </div>
+                      <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          </TabsContent>
+
+          {/* LEARNING ANALYTICS TAB */}
           <TabsContent value="outcomes" className="space-y-6">
             <div className="rounded-xl border border-border bg-card p-6">
               <div className="flex items-center gap-2 mb-4">
@@ -720,37 +868,21 @@ export default function TeacherDashboard() {
               </p>
               {(() => {
                 const STARTUP_SECTIONS = ['problem', 'customer', 'value_proposition', 'digital_product', 'business_model', 'growth_strategy', 'final_pitch'];
-                // Calculate average outcome scores across all students
                 const allScores: Record<string, number[]> = {};
                 LEARNING_OUTCOMES.forEach(lo => { allScores[lo.id] = []; });
-
                 profiles.forEach(p => {
                   const subs = getStudentSubs(p.user_id);
                   const sim = getStudentSim(p.user_id);
                   const proj = getStudentProject(p.user_id);
                   const sectionMap: Record<string, boolean> = {};
-                  STARTUP_SECTIONS.forEach(s => {
-                    sectionMap[s] = proj ? ((proj as any)[s] || '').trim().length > 10 : false;
-                  });
-                  const scores = calcOutcomeScores({
-                    casesCompleted: subs.length,
-                    casesTotal: cases.length,
-                    startupSections: sectionMap,
-                    simWeek: sim?.current_week || 1,
-                    simComplete: sim?.is_complete || false,
-                  });
-                  LEARNING_OUTCOMES.forEach(lo => {
-                    allScores[lo.id].push(scores[lo.id] || 0);
-                  });
+                  STARTUP_SECTIONS.forEach(s => { sectionMap[s] = proj ? ((proj as any)[s] || '').trim().length > 10 : false; });
+                  const scores = calcOutcomeScores({ casesCompleted: subs.length, casesTotal: cases.length, startupSections: sectionMap, simWeek: sim?.current_week || 1, simComplete: sim?.is_complete || false });
+                  LEARNING_OUTCOMES.forEach(lo => { allScores[lo.id].push(scores[lo.id] || 0); });
                 });
-
                 const avgScores = LEARNING_OUTCOMES.map(lo => ({
                   name: lang === 'bg' ? lo.bg : lo.en,
-                  score: allScores[lo.id].length > 0
-                    ? Math.round(allScores[lo.id].reduce((a, b) => a + b, 0) / allScores[lo.id].length)
-                    : 0,
+                  score: allScores[lo.id].length > 0 ? Math.round(allScores[lo.id].reduce((a, b) => a + b, 0) / allScores[lo.id].length) : 0,
                 }));
-
                 return (
                   <div className="grid gap-6 md:grid-cols-2">
                     <div className="space-y-3">
@@ -763,9 +895,7 @@ export default function TeacherDashboard() {
                                 <Icon className="h-3.5 w-3.5 text-muted-foreground" />
                                 <span className="text-xs font-medium text-foreground">{s.name}</span>
                               </div>
-                              <span className={`text-xs font-bold ${s.score >= 70 ? 'text-sim-success' : s.score >= 40 ? 'text-sim-warning' : 'text-muted-foreground'}`}>
-                                {s.score}%
-                              </span>
+                              <span className={`text-xs font-bold ${s.score >= 70 ? 'text-[hsl(var(--sim-success))]' : s.score >= 40 ? 'text-[hsl(var(--sim-warning))]' : 'text-muted-foreground'}`}>{s.score}%</span>
                             </div>
                             <Progress value={s.score} className="h-2" />
                           </div>
@@ -784,66 +914,10 @@ export default function TeacherDashboard() {
                 );
               })()}
             </div>
-
-            {/* Students needing help */}
-            <div className="rounded-xl border border-border bg-card p-6">
-              <h2 className="text-lg font-semibold text-foreground mb-3">{t('Students Needing Attention', 'Ученици, нуждаещи се от внимание')}</h2>
-              <div className="space-y-2">
-                {(() => {
-                  const STARTUP_SECTIONS = ['problem', 'customer', 'value_proposition', 'digital_product', 'business_model', 'growth_strategy', 'final_pitch'];
-                  const studentsWithScores = profiles.map(p => {
-                    const subs = getStudentSubs(p.user_id);
-                    const sim = getStudentSim(p.user_id);
-                    const proj = getStudentProject(p.user_id);
-                    const sectionMap: Record<string, boolean> = {};
-                    STARTUP_SECTIONS.forEach(s => {
-                      sectionMap[s] = proj ? ((proj as any)[s] || '').trim().length > 10 : false;
-                    });
-                    const scores = calcOutcomeScores({
-                      casesCompleted: subs.length,
-                      casesTotal: cases.length,
-                      startupSections: sectionMap,
-                      simWeek: sim?.current_week || 1,
-                      simComplete: sim?.is_complete || false,
-                    });
-                    const avg = Math.round(LEARNING_OUTCOMES.reduce((sum, lo) => sum + (scores[lo.id] || 0), 0) / LEARNING_OUTCOMES.length);
-                    return { ...p, avgScore: avg };
-                  }).filter(s => s.avgScore < 30).sort((a, b) => a.avgScore - b.avgScore).slice(0, 5);
-
-                  return studentsWithScores.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">{t('All students are making good progress!', 'Всички ученици напредват добре!')}</p>
-                  ) : (
-                    studentsWithScores.map(s => (
-                      <button
-                        key={s.user_id}
-                        onClick={() => setSelectedStudent(s.user_id)}
-                        className="w-full flex items-center gap-3 rounded-lg p-3 bg-destructive/5 border border-destructive/20 hover:bg-destructive/10 transition-colors text-left"
-                      >
-                        <User className="h-4 w-4 text-destructive shrink-0" />
-                        <span className="text-sm font-medium text-foreground flex-1">{s.full_name || 'Unknown'}</span>
-                        <span className="text-xs font-bold text-destructive">{s.avgScore}%</span>
-                      </button>
-                    ))
-                  );
-                })()}
-              </div>
-            </div>
-          </TabsContent>
-
-          {/* LEADERBOARD TAB */}
-          <TabsContent value="leaderboard" className="space-y-4">
-            <div className="rounded-xl border border-border bg-card p-6">
-              <div className="flex items-center gap-2 mb-4">
-                <Trophy className="h-5 w-5 text-sim-warning" />
-                <h2 className="text-lg font-semibold text-foreground">{t('Student Leaderboard', 'Класация на ученици')}</h2>
-              </div>
-              <Leaderboard lang={lang} limit={20} showTitle={false} />
-            </div>
           </TabsContent>
 
           {/* ANALYTICS TAB */}
           <TabsContent value="analytics" className="space-y-6">
-            {/* Case Completion Chart */}
             <div className="rounded-xl border border-border bg-card p-6">
               <h2 className="text-lg font-semibold text-foreground mb-4">{t('Case Completion & Scores', 'Казуси — завършване и резултати')}</h2>
               {caseCompletionData.length > 0 ? (
@@ -862,7 +936,6 @@ export default function TeacherDashboard() {
               )}
             </div>
 
-            {/* Simulator Grades */}
             {gradeDistribution.length > 0 && (
               <div className="rounded-xl border border-border bg-card p-6">
                 <h2 className="text-lg font-semibold text-foreground mb-4">{t('Simulator Grade Distribution', 'Разпределение на оценки')}</h2>
@@ -879,7 +952,6 @@ export default function TeacherDashboard() {
               </div>
             )}
 
-            {/* Progress overview */}
             <div className="rounded-xl border border-border bg-card p-6">
               <h2 className="text-lg font-semibold text-foreground mb-4">{t('Student Progress Summary', 'Обобщение на прогреса')}</h2>
               <div className="grid grid-cols-3 gap-4 text-center">
@@ -896,6 +968,17 @@ export default function TeacherDashboard() {
                   <p className="text-xs text-muted-foreground">{t('Simulators Complete', 'Завършени симулации')}</p>
                 </div>
               </div>
+            </div>
+          </TabsContent>
+
+          {/* LEADERBOARD TAB */}
+          <TabsContent value="leaderboard" className="space-y-4">
+            <div className="rounded-xl border border-border bg-card p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <Trophy className="h-5 w-5 text-[hsl(var(--sim-warning))]" />
+                <h2 className="text-lg font-semibold text-foreground">{t('Student Leaderboard', 'Класация на ученици')}</h2>
+              </div>
+              <Leaderboard lang={lang} limit={20} showTitle={false} />
             </div>
           </TabsContent>
         </Tabs>
