@@ -10,7 +10,8 @@ import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import {
   BookOpen, Clock, Target, Users, FileText, CheckSquare,
-  ArrowRight, ChevronRight, Lightbulb, ListChecks, BarChart3
+  ArrowRight, ChevronRight, Lightbulb, ListChecks, BarChart3,
+  Building2, Brain, TrendingUp, Rocket, PenTool, Award,
 } from 'lucide-react';
 
 interface CaseStudy {
@@ -29,14 +30,27 @@ interface CaseStep {
   step_order: number;
 }
 
+const SECTION_ICONS: Record<number, React.ElementType> = {
+  0: BookOpen,
+  1: Building2,
+  2: TrendingUp,
+  3: BarChart3,
+  4: Brain,
+  5: PenTool,
+  6: Rocket,
+  7: Award,
+};
+
 export default function CasePreview() {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
-  const { t } = useLang();
+  const { lang, t } = useLang();
   const navigate = useNavigate();
   const [cs, setCs] = useState<CaseStudy | null>(null);
   const [steps, setSteps] = useState<CaseStep[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const tx = (en: string, bg: string) => lang === 'bg' ? bg : en;
 
   useEffect(() => {
     if (!id) return;
@@ -96,34 +110,42 @@ export default function CasePreview() {
           <span className="text-foreground font-medium truncate max-w-[200px]">{cs.title}</span>
         </nav>
 
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-accent">
-              <BookOpen className="h-5 w-5 text-primary" />
-            </div>
-            <Badge variant="outline" className="text-xs">{t.prevTypeCaseStudy}</Badge>
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-display font-bold text-foreground mb-3">{cs.title}</h1>
-          {cs.description && <p className="text-base text-muted-foreground leading-relaxed">{cs.description}</p>}
-        </div>
-
-        {/* Info badges */}
-        <div className="flex flex-wrap gap-3 mb-8">
-          <Badge variant="outline" className={`text-sm px-3 py-1 ${diffColor(cs.difficulty)}`}>
-            <BarChart3 className="h-3.5 w-3.5 mr-1.5" /> {diffLabel(cs.difficulty)}
-          </Badge>
-          {cs.est_minutes && (
-            <Badge variant="outline" className="text-sm px-3 py-1">
-              <Clock className="h-3.5 w-3.5 mr-1.5" /> {cs.est_minutes} {t.min}
+        {/* Hero header — MIT/HBS style */}
+        <div className="rounded-xl border border-border bg-card overflow-hidden mb-8">
+          <div className="sim-gradient px-6 py-8 sm:px-8 sm:py-10">
+            <Badge className="mb-3 bg-white/20 text-primary-foreground border-white/30 text-xs font-sans uppercase tracking-wider">
+              {tx('Case Study', 'Бизнес казус')}
             </Badge>
-          )}
-          <Badge variant="outline" className="text-sm px-3 py-1">
-            <Users className="h-3.5 w-3.5 mr-1.5" /> {t.prevWorkType}
-          </Badge>
-        </div>
+            <h1 className="text-2xl sm:text-3xl font-display font-bold text-primary-foreground mb-3">{cs.title}</h1>
+            {cs.description && (
+              <p className="text-sm text-primary-foreground/80 leading-relaxed max-w-xl">{cs.description}</p>
+            )}
+          </div>
 
-        <Separator className="mb-8" />
+          {/* Meta bar */}
+          <div className="flex flex-wrap items-center gap-4 px-6 py-4 sm:px-8 border-t border-border bg-muted/30">
+            <div className="flex items-center gap-2 text-sm">
+              <BarChart3 className="h-4 w-4 text-muted-foreground" />
+              <Badge variant="outline" className={diffColor(cs.difficulty)}>{diffLabel(cs.difficulty)}</Badge>
+            </div>
+            {cs.topic && (
+              <div className="flex items-center gap-2 text-sm">
+                <Building2 className="h-4 w-4 text-muted-foreground" />
+                <span className="text-foreground font-medium">{cs.topic}</span>
+              </div>
+            )}
+            {cs.est_minutes && (
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Clock className="h-4 w-4" />
+                <span>{cs.est_minutes} {t.min}</span>
+              </div>
+            )}
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Users className="h-4 w-4" />
+              <span>{t.prevWorkType}</span>
+            </div>
+          </div>
+        </div>
 
         {/* Learning Objectives */}
         {cs.outcomes && cs.outcomes.length > 0 && (
@@ -146,25 +168,32 @@ export default function CasePreview() {
           </section>
         )}
 
-        {/* What you will do */}
+        {/* Case methodology */}
         <section className="mb-8">
           <div className="flex items-center gap-2 mb-3">
             <Lightbulb className="h-5 w-5 text-primary" />
-            <h2 className="text-lg font-display font-semibold text-foreground">{t.prevWhatYouDo}</h2>
+            <h2 className="text-lg font-display font-semibold text-foreground">
+              {tx('Case Methodology', 'Методология на казуса')}
+            </h2>
           </div>
-          <Card className="p-5 border-border">
-            <ul className="space-y-2">
-              {[t.prevDo1, t.prevDo2, t.prevDo3, t.prevDo4, t.prevDo5].map((item, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
-                  <span className="text-primary font-bold">•</span>
-                  <span>{item}</span>
-                </li>
-              ))}
-            </ul>
-          </Card>
+          <div className="grid sm:grid-cols-2 gap-3">
+            {[
+              { icon: BookOpen, en: 'Read & research the business context', bg: 'Прочетете и проучете бизнес контекста' },
+              { icon: BarChart3, en: 'Analyze industry data & exhibits', bg: 'Анализирайте данни и експонати' },
+              { icon: Brain, en: 'Answer strategic analysis questions', bg: 'Отговорете на стратегически въпроси' },
+              { icon: Rocket, en: 'Propose your innovation solution', bg: 'Предложете иновативно решение' },
+            ].map((item, i) => (
+              <Card key={i} className="flex items-center gap-3 p-4 border-border hover:border-primary/30 transition-colors">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 shrink-0">
+                  <item.icon className="h-5 w-5 text-primary" />
+                </div>
+                <span className="text-sm text-foreground">{tx(item.en, item.bg)}</span>
+              </Card>
+            ))}
+          </div>
         </section>
 
-        {/* Case Structure */}
+        {/* Case Structure — timeline style */}
         {steps.length > 0 && (
           <section className="mb-8">
             <div className="flex items-center gap-2 mb-3">
@@ -172,19 +201,54 @@ export default function CasePreview() {
               <h2 className="text-lg font-display font-semibold text-foreground">{t.prevStructure}</h2>
             </div>
             <Card className="p-5 border-border">
-              <div className="space-y-2.5">
-                {steps.map((step, i) => (
-                  <div key={step.id} className="flex items-center gap-3 text-sm">
-                    <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary/10 shrink-0 text-xs font-bold text-primary">
-                      {i + 1}
+              <div className="space-y-0">
+                {steps.map((step, i) => {
+                  const Icon = SECTION_ICONS[i] || FileText;
+                  const isLast = i === steps.length - 1;
+                  return (
+                    <div key={step.id} className="flex gap-4">
+                      {/* Timeline line */}
+                      <div className="flex flex-col items-center">
+                        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10 border-2 border-primary/30 shrink-0">
+                          <Icon className="h-4 w-4 text-primary" />
+                        </div>
+                        {!isLast && <div className="w-px flex-1 bg-border my-1" />}
+                      </div>
+                      <div className={`pb-5 ${isLast ? '' : ''}`}>
+                        <p className="text-xs text-muted-foreground font-sans uppercase tracking-wider mb-0.5">
+                          {tx('Section', 'Секция')} {i + 1}
+                        </p>
+                        <p className="text-sm font-medium text-foreground">{step.title}</p>
+                      </div>
                     </div>
-                    <span className="text-muted-foreground">{step.title}</span>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </Card>
           </section>
         )}
+
+        {/* Startup connection callout */}
+        <section className="mb-8">
+          <Card className="p-5 border-primary/20 bg-accent">
+            <div className="flex items-start gap-4">
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg sim-gradient shrink-0">
+                <Rocket className="h-6 w-6 text-primary-foreground" />
+              </div>
+              <div>
+                <h3 className="font-display font-semibold text-foreground mb-1">
+                  {tx('Connect to Your Startup', 'Свържете с вашия стартъп')}
+                </h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {tx(
+                    'After completing this case, you\'ll apply your analysis to improve your own startup project — refining your problem definition, value proposition, and business model.',
+                    'След приключване на казуса ще приложите анализа си, за да подобрите собствения си стартъп проект — дефиниция на проблема, стойностно предложение и бизнес модел.'
+                  )}
+                </p>
+              </div>
+            </div>
+          </Card>
+        </section>
 
         {/* Deliverables */}
         <section className="mb-10">
@@ -202,6 +266,30 @@ export default function CasePreview() {
                 </li>
               ))}
             </ul>
+          </Card>
+        </section>
+
+        {/* Scoring info */}
+        <section className="mb-10">
+          <Card className="p-5 border-border">
+            <div className="flex items-center gap-2 mb-3">
+              <Award className="h-5 w-5 text-primary" />
+              <h3 className="font-display font-semibold text-foreground">
+                {tx('Scoring & XP', 'Оценяване и XP')}
+              </h3>
+            </div>
+            <div className="grid sm:grid-cols-3 gap-4">
+              {[
+                { label: tx('Analysis Quality', 'Качество на анализа'), desc: tx('Depth of strategic thinking', 'Дълбочина на стратегическото мислене') },
+                { label: tx('Innovation Idea', 'Иновативна идея'), desc: tx('Creativity of digital solution', 'Креативност на дигиталното решение') },
+                { label: tx('XP Reward', 'XP Награда'), desc: tx('+50 XP on completion', '+50 XP при завършване') },
+              ].map((item, i) => (
+                <div key={i} className="text-center p-3 rounded-lg bg-muted/50">
+                  <p className="text-sm font-semibold text-foreground">{item.label}</p>
+                  <p className="text-xs text-muted-foreground mt-1">{item.desc}</p>
+                </div>
+              ))}
+            </div>
           </Card>
         </section>
 
