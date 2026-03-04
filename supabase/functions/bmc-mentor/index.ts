@@ -55,7 +55,7 @@ serve(async (req) => {
     const { data: cached } = await supabase
       .from("ai_feedback_cache")
       .select("response")
-      .eq("user_id", user.id)
+      .eq("user_id", userId)
       .eq("feedback_type", feedbackType)
       .eq("input_hash", inputHash)
       .eq("lang", lang || "en")
