@@ -57,7 +57,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       .from('profiles')
       .select('full_name, avatar_url')
       .eq('user_id', userId)
-      .single();
+      .maybeSingle();
     if (data) setProfile(data);
   };
 

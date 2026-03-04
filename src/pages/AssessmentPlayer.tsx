@@ -248,7 +248,7 @@ export default function AssessmentPlayer() {
             {saving && <span className="text-xs text-muted-foreground animate-pulse">{t('Saving...', 'Запазване...')}</span>}
           </div>
           {currentQ === questions.length - 1 ? (
-            <Button onClick={handleSubmit} className="sim-gradient border-0"><Lock className="h-4 w-4 mr-1" /> {t('Submit', 'Изпрати')}</Button>
+            <Button onClick={handleSubmit} disabled={saving} className="sim-gradient border-0"><Lock className="h-4 w-4 mr-1" /> {saving ? t('Submitting...', 'Изпращане...') : t('Submit', 'Изпрати')}</Button>
           ) : (
             <Button onClick={() => setCurrentQ(p => p + 1)}>{t('Next', 'Напред')} <ArrowRight className="h-4 w-4 ml-1" /></Button>
           )}

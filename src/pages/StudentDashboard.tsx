@@ -36,22 +36,27 @@ export default function StudentDashboard() {
     if (authLoading) return;
     if (!user) { navigate('/auth?redirect=/dashboard'); return; }
     const fetchData = async () => {
-      const [casesRes, subsRes, projRes, simRes, prAssignRes, prReceivedRes] = await Promise.all([
-        supabase.from('case_studies').select('id, title, difficulty, est_minutes').eq('published', true),
-        supabase.from('submissions').select('case_study_id, is_draft').eq('user_id', user.id),
-        supabase.from('startup_projects').select('problem, customer, value_proposition, digital_product, business_model, growth_strategy, final_pitch, is_submitted').eq('user_id', user.id).maybeSingle(),
-        supabase.from('simulator_progress').select('current_week, is_complete').eq('user_id', user.id).maybeSingle(),
-        supabase.from('peer_review_assignments').select('id').eq('reviewer_user_id', user.id).eq('status', 'pending'),
-        supabase.from('peer_reviews').select('average_score').eq('reviewee_user_id', user.id),
-      ]);
-      setCases(casesRes.data || []);
-      setSubmissions(subsRes.data || []);
-      setStartupProject(projRes.data || null);
-      setSimProgress(simRes.data || null);
-      setPendingReviews((prAssignRes.data || []).length);
-      const prScores = (prReceivedRes.data || []) as any[];
-      setAvgPeerScore(prScores.length > 0 ? prScores.reduce((a: number, r: any) => a + Number(r.average_score || 0), 0) / prScores.length : null);
-      setLoading(false);
+      try {
+        const [casesRes, subsRes, projRes, simRes, prAssignRes, prReceivedRes] = await Promise.all([
+          supabase.from('case_studies').select('id, title, difficulty, est_minutes').eq('published', true),
+          supabase.from('submissions').select('case_study_id, is_draft').eq('user_id', user.id),
+          supabase.from('startup_projects').select('problem, customer, value_proposition, digital_product, business_model, growth_strategy, final_pitch, is_submitted').eq('user_id', user.id).maybeSingle(),
+          supabase.from('simulator_progress').select('current_week, is_complete').eq('user_id', user.id).maybeSingle(),
+          supabase.from('peer_review_assignments').select('id').eq('reviewer_user_id', user.id).eq('status', 'pending'),
+          supabase.from('peer_reviews').select('average_score').eq('reviewee_user_id', user.id),
+        ]);
+        setCases(casesRes.data || []);
+        setSubmissions(subsRes.data || []);
+        setStartupProject(projRes.data || null);
+        setSimProgress(simRes.data || null);
+        setPendingReviews((prAssignRes.data || []).length);
+        const prScores = (prReceivedRes.data || []) as { average_score: number | null }[];
+        setAvgPeerScore(prScores.length > 0 ? prScores.reduce((a, r) => a + Number(r.average_score || 0), 0) / prScores.length : null);
+      } catch (err) {
+        console.error('Dashboard fetch error:', err);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchData();
   }, [user, authLoading, navigate]);
