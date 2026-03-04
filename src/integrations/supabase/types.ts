@@ -236,28 +236,37 @@ export type Database = {
           case_study_id: string
           created_at: string
           exhibit_text: string | null
+          exhibit_text_bg: string | null
           id: string
           narrative: string | null
+          narrative_bg: string | null
           step_order: number
           title: string
+          title_bg: string | null
         }
         Insert: {
           case_study_id: string
           created_at?: string
           exhibit_text?: string | null
+          exhibit_text_bg?: string | null
           id?: string
           narrative?: string | null
+          narrative_bg?: string | null
           step_order: number
           title: string
+          title_bg?: string | null
         }
         Update: {
           case_study_id?: string
           created_at?: string
           exhibit_text?: string | null
+          exhibit_text_bg?: string | null
           id?: string
           narrative?: string | null
+          narrative_bg?: string | null
           step_order?: number
           title?: string
+          title_bg?: string | null
         }
         Relationships: [
           {
@@ -274,48 +283,60 @@ export type Database = {
           created_at: string
           created_by: string | null
           description: string | null
+          description_bg: string | null
           difficulty: Database["public"]["Enums"]["case_difficulty"]
           est_minutes: number | null
           id: string
           outcomes: string[] | null
+          outcomes_bg: string[] | null
           published: boolean
           reading_button_label: string | null
           reading_title: string | null
           reading_url: string | null
           title: string
+          title_bg: string | null
           topic: string | null
+          topic_bg: string | null
           updated_at: string
         }
         Insert: {
           created_at?: string
           created_by?: string | null
           description?: string | null
+          description_bg?: string | null
           difficulty?: Database["public"]["Enums"]["case_difficulty"]
           est_minutes?: number | null
           id?: string
           outcomes?: string[] | null
+          outcomes_bg?: string[] | null
           published?: boolean
           reading_button_label?: string | null
           reading_title?: string | null
           reading_url?: string | null
           title: string
+          title_bg?: string | null
           topic?: string | null
+          topic_bg?: string | null
           updated_at?: string
         }
         Update: {
           created_at?: string
           created_by?: string | null
           description?: string | null
+          description_bg?: string | null
           difficulty?: Database["public"]["Enums"]["case_difficulty"]
           est_minutes?: number | null
           id?: string
           outcomes?: string[] | null
+          outcomes_bg?: string[] | null
           published?: boolean
           reading_button_label?: string | null
           reading_title?: string | null
           reading_url?: string | null
           title?: string
+          title_bg?: string | null
           topic?: string | null
+          topic_bg?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -544,6 +565,7 @@ export type Database = {
           options: Json | null
           points: number
           prompt: string
+          prompt_bg: string | null
           question_order: number
           rubric: string | null
           type: Database["public"]["Enums"]["question_type"]
@@ -558,6 +580,7 @@ export type Database = {
           options?: Json | null
           points?: number
           prompt: string
+          prompt_bg?: string | null
           question_order: number
           rubric?: string | null
           type: Database["public"]["Enums"]["question_type"]
@@ -572,6 +595,7 @@ export type Database = {
           options?: Json | null
           points?: number
           prompt?: string
+          prompt_bg?: string | null
           question_order?: number
           rubric?: string | null
           type?: Database["public"]["Enums"]["question_type"]

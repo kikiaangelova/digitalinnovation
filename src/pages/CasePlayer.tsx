@@ -19,15 +19,22 @@ import { Textarea } from '@/components/ui/textarea';
 
 /* ── Types ── */
 interface CaseStudy {
-  id: string; title: string; description: string | null; topic: string | null;
-  difficulty: string; reading_url: string | null; reading_button_label: string | null; reading_title: string | null;
+  id: string; title: string; title_bg: string | null;
+  description: string | null; description_bg: string | null;
+  topic: string | null; topic_bg: string | null;
+  difficulty: string; reading_url: string | null;
+  reading_button_label: string | null; reading_title: string | null;
 }
 interface CaseStep {
-  id: string; step_order: number; title: string; narrative: string | null; exhibit_text: string | null;
+  id: string; step_order: number;
+  title: string; title_bg: string | null;
+  narrative: string | null; narrative_bg: string | null;
+  exhibit_text: string | null; exhibit_text_bg: string | null;
 }
 interface Question {
   id: string; case_step_id: string; question_order: number; type: string;
-  prompt: string; options: Json; points: number; correct_answer: string | null;
+  prompt: string; prompt_bg: string | null;
+  options: Json; points: number; correct_answer: string | null;
 }
 
 const SECTION_ICONS: Record<number, React.ElementType> = {
@@ -55,7 +62,8 @@ export default function CasePlayer() {
   const { user } = useAuth();
   const { lang } = useLang();
   const navigate = useNavigate();
-  const tx = (en: string, bg: string) => lang === 'bg' ? bg : en;
+  const tx = (en: string | null | undefined, bg: string | null | undefined) => lang === 'bg' ? (bg || en || '') : (en || '');
+  const tl = (en: string, bg: string) => lang === 'bg' ? bg : en;
 
   const [caseStudy, setCaseStudy] = useState<CaseStudy | null>(null);
   const [steps, setSteps] = useState<CaseStep[]>([]);
@@ -73,15 +81,15 @@ export default function CasePlayer() {
     if (!user) { navigate(`/auth?redirect=${encodeURIComponent(`/case/${id}`)}`); return; }
     const fetchCase = async () => {
       const [caseRes, stepsRes] = await Promise.all([
-        supabase.from('case_studies').select('id, title, description, topic, difficulty, reading_url, reading_button_label, reading_title').eq('id', id).single(),
-        supabase.from('case_steps').select('id, step_order, title, narrative, exhibit_text').eq('case_study_id', id).order('step_order'),
+        supabase.from('case_studies').select('id, title, title_bg, description, description_bg, topic, topic_bg, difficulty, reading_url, reading_button_label, reading_title').eq('id', id).single(),
+        supabase.from('case_steps').select('id, step_order, title, title_bg, narrative, narrative_bg, exhibit_text, exhibit_text_bg').eq('case_study_id', id).order('step_order'),
       ]);
-      if (caseRes.data) setCaseStudy(caseRes.data);
+      if (caseRes.data) setCaseStudy(caseRes.data as CaseStudy);
       if (stepsRes.data) {
-        setSteps(stepsRes.data);
-        const stepIds = stepsRes.data.map(s => s.id);
-        const qRes = await supabase.from('questions').select('id, case_step_id, question_order, type, prompt, options, points, correct_answer').in('case_step_id', stepIds).order('question_order');
-        if (qRes.data) setQuestions(qRes.data);
+        setSteps(stepsRes.data as CaseStep[]);
+        const stepIds = (stepsRes.data as CaseStep[]).map(s => s.id);
+        const qRes = await supabase.from('questions').select('id, case_step_id, question_order, type, prompt, prompt_bg, options, points, correct_answer').in('case_step_id', stepIds).order('question_order');
+        if (qRes.data) setQuestions(qRes.data as Question[]);
       }
       const subRes = await supabase.from('submissions').select('id, is_draft').eq('case_study_id', id).eq('user_id', user.id).maybeSingle();
       if (subRes.data) {
@@ -138,14 +146,14 @@ export default function CasePlayer() {
         const userAnswer = answers[q.id];
         if (userAnswer === q.correct_answer) {
           totalScore += q.points;
-          await supabase.from('responses').update({ score: q.points, feedback: 'Correct!', auto_graded: true }).eq('submission_id', submissionId).eq('question_id', q.id);
+          await supabase.from('responses').update({ score: q.points, feedback: tl('Correct!', 'Правилно!'), auto_graded: true }).eq('submission_id', submissionId).eq('question_id', q.id);
         } else {
-          await supabase.from('responses').update({ score: 0, feedback: `Incorrect. The correct answer is: ${q.correct_answer}`, auto_graded: true }).eq('submission_id', submissionId).eq('question_id', q.id);
+          await supabase.from('responses').update({ score: 0, feedback: `${tl('Incorrect. The correct answer is:', 'Неправилно. Верният отговор е:')} ${q.correct_answer}`, auto_graded: true }).eq('submission_id', submissionId).eq('question_id', q.id);
         }
       }
     }
     await supabase.from('submissions').update({ is_draft: false, submitted_at: new Date().toISOString(), total_score: totalScore, max_score: maxScore }).eq('id', submissionId);
-    toast.success(tx('Case submitted successfully!', 'Казусът е изпратен успешно!'));
+    toast.success(tl('Case submitted successfully!', 'Казусът е изпратен успешно!'));
     navigate(`/case/${id}/results`);
   };
 
@@ -154,28 +162,24 @@ export default function CasePlayer() {
     setAnswers(prev => ({ ...prev, [questionId]: value }));
   };
 
-  // Reading gate
   const isStep0 = currentStepData?.step_order === 0;
   const step0Questions = isStep0 ? stepQuestions : [];
   const step0NotesQuestion = step0Questions.find(q => q.type === 'long_answer' || q.type === 'short_answer');
   const step0WordCount = step0NotesQuestion ? wordCount(String(answers[step0NotesQuestion.id] || '')) : 0;
   const step0Gate = isStep0 && step0NotesQuestion ? step0WordCount >= 100 : true;
 
-  // Progress
   const totalQuestions = questions.length;
   const answeredQuestions = questions.filter(q => answers[q.id] && String(answers[q.id]).trim().length > 0).length;
   const progressPercent = totalQuestions > 0 ? Math.round((answeredQuestions / totalQuestions) * 100) : 0;
 
   if (loading) return (
-    <div className="min-h-screen bg-background">
-      <AppHeader />
-      <div className="flex items-center justify-center py-20 text-muted-foreground">{tx('Loading case...', 'Зареждане...')}</div>
+    <div className="min-h-screen bg-background"><AppHeader />
+      <div className="flex items-center justify-center py-20 text-muted-foreground">{tl('Loading case...', 'Зареждане...')}</div>
     </div>
   );
   if (!caseStudy || steps.length === 0) return (
-    <div className="min-h-screen bg-background">
-      <AppHeader />
-      <div className="flex items-center justify-center py-20 text-muted-foreground">{tx('Case not found', 'Казусът не е намерен')}</div>
+    <div className="min-h-screen bg-background"><AppHeader />
+      <div className="flex items-center justify-center py-20 text-muted-foreground">{tl('Case not found', 'Казусът не е намерен')}</div>
     </div>
   );
 
@@ -194,9 +198,9 @@ export default function CasePlayer() {
       <div className="border-b border-border bg-card">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between mb-2">
-            <h2 className="text-base font-display font-semibold text-foreground truncate">{caseStudy.title}</h2>
+            <h2 className="text-base font-display font-semibold text-foreground truncate">{tx(caseStudy.title, caseStudy.title_bg)}</h2>
             <span className="text-xs text-muted-foreground shrink-0 ml-2 font-sans">
-              {tx('Section', 'Секция')} {currentStep + 1} / {steps.length} · {progressPercent}%
+              {tl('Section', 'Секция')} {currentStep + 1} / {steps.length} · {progressPercent}%
             </span>
           </div>
           <Progress value={((currentStep + 1) / steps.length) * 100} className="h-2" />
@@ -204,18 +208,12 @@ export default function CasePlayer() {
             {steps.map((s, i) => {
               const StepIcon = SECTION_ICONS[i] || FileText;
               return (
-                <button
-                  key={i}
-                  onClick={() => setCurrentStep(i)}
+                <button key={i} onClick={() => setCurrentStep(i)}
                   title={lang === 'bg' ? SECTION_LABELS_BG[i] : SECTION_LABELS_EN[i]}
                   className={`flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-md transition-colors whitespace-nowrap ${
-                    i === currentStep
-                      ? 'bg-primary text-primary-foreground font-medium'
-                      : i < currentStep
-                      ? 'bg-accent text-accent-foreground'
-                      : 'bg-muted text-muted-foreground'
-                  }`}
-                >
+                    i === currentStep ? 'bg-primary text-primary-foreground font-medium'
+                      : i < currentStep ? 'bg-accent text-accent-foreground' : 'bg-muted text-muted-foreground'
+                  }`}>
                   <StepIcon className="h-3 w-3" />
                   <span className="hidden sm:inline">{(lang === 'bg' ? SECTION_LABELS_BG[i] : SECTION_LABELS_EN[i]) || `${i + 1}`}</span>
                   <span className="sm:hidden">{i + 1}</span>
@@ -227,84 +225,71 @@ export default function CasePlayer() {
       </div>
 
       <main className="container mx-auto px-4 py-8 max-w-3xl space-y-6">
-        {/* Section header */}
         <div className="flex items-center gap-4">
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 shrink-0">
             <SectionIcon className="h-6 w-6 text-primary" />
           </div>
           <div>
             <p className="text-xs text-muted-foreground font-sans uppercase tracking-wider">{sectionLabel}</p>
-            <h2 className="text-2xl font-display font-bold text-foreground">{currentStepData.title}</h2>
+            <h2 className="text-2xl font-display font-bold text-foreground">{tx(currentStepData.title, currentStepData.title_bg)}</h2>
           </div>
         </div>
 
-        {/* Reading button for step 0 */}
         {isStep0 && caseStudy.reading_url && (
-          <a
-            href={caseStudy.reading_url} target="_blank" rel="noopener noreferrer"
-            className="flex items-center gap-4 rounded-lg border-2 border-primary/30 bg-accent p-5 hover:border-primary/60 transition-all group"
-          >
+          <a href={caseStudy.reading_url} target="_blank" rel="noopener noreferrer"
+            className="flex items-center gap-4 rounded-lg border-2 border-primary/30 bg-accent p-5 hover:border-primary/60 transition-all group">
             <div className="flex h-14 w-14 items-center justify-center rounded-lg sim-gradient shrink-0">
               <ExternalLink className="h-7 w-7 text-primary-foreground" />
             </div>
             <div className="flex-1">
               <p className="font-display font-semibold text-foreground text-lg">
-                {caseStudy.reading_button_label || tx('Open Required Reading', 'Отворете задължителното четиво')}
+                {caseStudy.reading_button_label || tl('Open Required Reading', 'Отворете задължителното четиво')}
               </p>
-              <p className="text-sm text-muted-foreground">{tx('Opens in a new tab — read before answering', 'Отваря се в нов таб — прочетете преди да отговаряте')}</p>
+              <p className="text-sm text-muted-foreground">{tl('Opens in a new tab — read before answering', 'Отваря се в нов таб — прочетете преди да отговаряте')}</p>
             </div>
             <ArrowRight className="h-5 w-5 text-primary group-hover:translate-x-1 transition-transform" />
           </a>
         )}
 
-        {/* Narrative */}
-        {currentStepData.narrative && (
+        {(currentStepData.narrative || currentStepData.narrative_bg) && (
           <div className="rounded-lg border border-border bg-card p-6">
             <div className="flex items-center gap-2 mb-3">
               <BookOpen className="h-4 w-4 text-primary" />
-              <h3 className="font-display font-semibold text-foreground">{tx('Context', 'Контекст')}</h3>
+              <h3 className="font-display font-semibold text-foreground">{tl('Context', 'Контекст')}</h3>
             </div>
-            <div className="text-sm text-foreground/85 whitespace-pre-line leading-relaxed">{currentStepData.narrative}</div>
+            <div className="text-sm text-foreground/85 whitespace-pre-line leading-relaxed">
+              {tx(currentStepData.narrative, currentStepData.narrative_bg)}
+            </div>
           </div>
         )}
 
-        {/* Exhibit */}
-        {currentStepData.exhibit_text && (
+        {(currentStepData.exhibit_text || currentStepData.exhibit_text_bg) && (
           <div className="rounded-lg border border-primary/20 bg-accent p-6">
             <div className="flex items-center gap-2 mb-3">
               <BarChart3 className="h-4 w-4 text-accent-foreground" />
-              <h3 className="font-display font-semibold text-foreground">{tx('Data & Exhibit', 'Данни и експонат')}</h3>
+              <h3 className="font-display font-semibold text-foreground">{tl('Data & Exhibit', 'Данни и експонат')}</h3>
             </div>
-            <div className="text-sm text-foreground/85 whitespace-pre-line leading-relaxed font-sans">{currentStepData.exhibit_text}</div>
+            <div className="text-sm text-foreground/85 whitespace-pre-line leading-relaxed font-sans">
+              {tx(currentStepData.exhibit_text, currentStepData.exhibit_text_bg)}
+            </div>
           </div>
         )}
 
-        {/* Questions */}
         {stepQuestions.length > 0 && (
           <div className="space-y-6">
             {stepQuestions.map((q, idx) => (
-              <QuestionCard
-                key={q.id}
-                question={q}
-                index={idx}
-                answer={answers[q.id]}
-                isSubmitted={isSubmitted}
-                isStep0={isStep0}
-                step0NotesId={step0NotesQuestion?.id}
-                step0WordCount={step0WordCount}
-                onAnswer={updateAnswer}
-                tx={tx}
-              />
+              <QuestionCard key={q.id} question={q} index={idx} answer={answers[q.id]}
+                isSubmitted={isSubmitted} isStep0={isStep0} step0NotesId={step0NotesQuestion?.id}
+                step0WordCount={step0WordCount} onAnswer={updateAnswer} tx={tx} tl={tl} lang={lang} />
             ))}
           </div>
         )}
 
-        {/* Reading gate warning */}
         {isStep0 && !step0Gate && (
           <div className="flex items-center gap-2 rounded-lg border border-sim-warning/30 bg-sim-warning/5 p-4">
             <AlertTriangle className="h-5 w-5 text-sim-warning shrink-0" />
             <p className="text-sm text-foreground">
-              {tx(
+              {tl(
                 `Please write at least 100 words in your research notes before proceeding. (${step0WordCount}/100)`,
                 `Моля, напишете поне 100 думи в бележките си. (${step0WordCount}/100)`
               )}
@@ -312,24 +297,23 @@ export default function CasePlayer() {
           </div>
         )}
 
-        {/* Navigation */}
         <div className="flex items-center justify-between pt-4 pb-10 border-t border-border">
           <Button variant="outline" onClick={() => setCurrentStep(prev => prev - 1)} disabled={isFirstStep}>
-            <ArrowLeft className="h-4 w-4 mr-1" /> {tx('Previous', 'Назад')}
+            <ArrowLeft className="h-4 w-4 mr-1" /> {tl('Previous', 'Назад')}
           </Button>
           <div className="flex items-center gap-2">
-            {saving && <span className="text-xs text-muted-foreground animate-pulse font-sans">{tx('Saving...', 'Запазване...')}</span>}
+            {saving && <span className="text-xs text-muted-foreground animate-pulse font-sans">{tl('Saving...', 'Запазване...')}</span>}
             <Button variant="outline" size="sm" onClick={saveDraft} disabled={saving}>
-              <Save className="h-4 w-4 mr-1" /> {tx('Save', 'Запази')}
+              <Save className="h-4 w-4 mr-1" /> {tl('Save', 'Запази')}
             </Button>
           </div>
           {isLastStep ? (
             <Button onClick={handleSubmit} className="sim-gradient border-0">
-              <Lock className="h-4 w-4 mr-1" /> {tx('Submit Case', 'Изпрати казуса')}
+              <Lock className="h-4 w-4 mr-1" /> {tl('Submit Case', 'Изпрати казуса')}
             </Button>
           ) : (
             <Button onClick={() => setCurrentStep(prev => prev + 1)} disabled={isStep0 && !step0Gate}>
-              {tx('Next', 'Напред')} <ArrowRight className="h-4 w-4 ml-1" />
+              {tl('Next', 'Напред')} <ArrowRight className="h-4 w-4 ml-1" />
             </Button>
           )}
         </div>
@@ -338,13 +322,16 @@ export default function CasePlayer() {
   );
 }
 
-/* ── Question Card (extracted component) ── */
-function QuestionCard({ question: q, index: idx, answer, isSubmitted, isStep0, step0NotesId, step0WordCount, onAnswer, tx }: {
+/* ── Question Card ── */
+function QuestionCard({ question: q, index: idx, answer, isSubmitted, isStep0, step0NotesId, step0WordCount, onAnswer, tx, tl, lang }: {
   question: Question; index: number; answer: any; isSubmitted: boolean;
   isStep0: boolean; step0NotesId?: string; step0WordCount: number;
   onAnswer: (id: string, val: any) => void;
-  tx: (en: string, bg: string) => string;
+  tx: (en: string | null | undefined, bg: string | null | undefined) => string;
+  tl: (en: string, bg: string) => string;
+  lang: string;
 }) {
+  const promptText = tx(q.prompt, q.prompt_bg);
   return (
     <div className="rounded-lg border border-border bg-card p-6">
       <div className="flex items-start justify-between mb-4">
@@ -352,26 +339,20 @@ function QuestionCard({ question: q, index: idx, answer, isSubmitted, isStep0, s
           <span className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary font-sans">
             Q{idx + 1}
           </span>
-          <Badge variant="outline" className="text-xs font-sans">{q.points} pts</Badge>
+          <Badge variant="outline" className="text-xs font-sans">{q.points} {tl('pts', 'т.')}</Badge>
           <Badge variant="outline" className="text-xs capitalize font-sans">{q.type.replace(/_/g, ' ')}</Badge>
         </div>
         {answer && String(answer).trim().length > 0 && <CheckCircle2 className="h-5 w-5 text-sim-success" />}
       </div>
-      <p className="text-sm font-medium text-foreground mb-4 leading-relaxed">{q.prompt}</p>
+      <p className="text-sm font-medium text-foreground mb-4 leading-relaxed">{promptText}</p>
 
       {q.type === 'multiple_choice' && q.options && (
         <div className="grid gap-2">
           {(q.options as string[]).map((opt: string, optIdx: number) => (
-            <button
-              key={optIdx}
-              onClick={() => onAnswer(q.id, opt)}
-              disabled={isSubmitted}
+            <button key={optIdx} onClick={() => onAnswer(q.id, opt)} disabled={isSubmitted}
               className={`rounded-lg border p-3 text-left text-sm transition-all ${
-                answer === opt
-                  ? 'border-primary bg-accent ring-2 ring-primary/20 font-medium'
-                  : 'border-border hover:border-primary/40 hover:bg-accent/50'
-              }`}
-            >
+                answer === opt ? 'border-primary bg-accent ring-2 ring-primary/20 font-medium' : 'border-border hover:border-primary/40 hover:bg-accent/50'
+              }`}>
               {opt}
             </button>
           ))}
@@ -380,35 +361,33 @@ function QuestionCard({ question: q, index: idx, answer, isSubmitted, isStep0, s
 
       {(q.type === 'short_answer' || q.type === 'long_answer') && (
         <div>
-          <Textarea
-            value={answer || ''}
-            onChange={e => onAnswer(q.id, e.target.value)}
-            placeholder={tx('Write your answer...', 'Напишете отговора си...')}
+          <Textarea value={answer || ''} onChange={e => onAnswer(q.id, e.target.value)}
+            placeholder={tl('Write your answer...', 'Напишете отговора си...')}
             disabled={isSubmitted}
-            className={q.type === 'long_answer' ? 'min-h-[180px]' : 'min-h-[100px]'}
-          />
+            className={q.type === 'long_answer' ? 'min-h-[180px]' : 'min-h-[100px]'} />
           {isStep0 && step0NotesId === q.id && (
             <p className={`text-xs mt-2 font-sans ${step0WordCount >= 100 ? 'text-sim-success' : 'text-muted-foreground'}`}>
-              {step0WordCount}/100 {tx('words minimum', 'думи минимум')}
+              {step0WordCount}/100 {tl('words minimum', 'думи минимум')}
             </p>
           )}
         </div>
       )}
 
       {q.type === 'ranking' && q.options && (
-        <RankingInput options={q.options as string[]} value={answer} onChange={val => onAnswer(q.id, val)} disabled={isSubmitted} />
+        <RankingInput options={q.options as string[]} value={answer} onChange={val => onAnswer(q.id, val)} disabled={isSubmitted} tl={tl} />
       )}
 
       {q.type === 'numeric_allocation' && q.options && (
-        <NumericAllocationInput categories={q.options as string[]} value={answer} onChange={val => onAnswer(q.id, val)} disabled={isSubmitted} tx={tx} />
+        <NumericAllocationInput categories={q.options as string[]} value={answer} onChange={val => onAnswer(q.id, val)} disabled={isSubmitted} tl={tl} />
       )}
     </div>
   );
 }
 
 /* ── Ranking Input ── */
-function RankingInput({ options, value, onChange, disabled }: {
+function RankingInput({ options, value, onChange, disabled, tl }: {
   options: string[]; value: any; onChange: (val: any) => void; disabled: boolean;
+  tl: (en: string, bg: string) => string;
 }) {
   const ranked: string[] = Array.isArray(value) ? value : [...options];
   const moveItem = (index: number, direction: -1 | 1) => {
@@ -421,7 +400,7 @@ function RankingInput({ options, value, onChange, disabled }: {
   };
   return (
     <div className="space-y-2">
-      <p className="text-xs text-muted-foreground font-sans mb-2">Use arrows to reorder (highest priority first)</p>
+      <p className="text-xs text-muted-foreground font-sans mb-2">{tl('Use arrows to reorder (highest priority first)', 'Използвайте стрелките за пренареждане (най-висок приоритет отгоре)')}</p>
       {ranked.map((item, i) => (
         <div key={item} className="flex items-center gap-3 rounded-lg border border-border bg-background p-3 text-sm">
           <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-xs font-bold text-primary font-sans shrink-0">{i + 1}</span>
@@ -441,9 +420,9 @@ function RankingInput({ options, value, onChange, disabled }: {
 }
 
 /* ── Numeric Allocation Input ── */
-function NumericAllocationInput({ categories, value, onChange, disabled, tx }: {
+function NumericAllocationInput({ categories, value, onChange, disabled, tl }: {
   categories: string[]; value: any; onChange: (val: any) => void; disabled: boolean;
-  tx: (en: string, bg: string) => string;
+  tl: (en: string, bg: string) => string;
 }) {
   const allocation: Record<string, number> = typeof value === 'object' && value !== null && !Array.isArray(value)
     ? value : Object.fromEntries(categories.map(c => [c, 0]));
@@ -455,7 +434,7 @@ function NumericAllocationInput({ categories, value, onChange, disabled, tx }: {
   };
   return (
     <div className="space-y-3">
-      <p className="text-xs text-muted-foreground font-sans">{tx('Allocate exactly 100 points across categories', 'Разпределете точно 100 точки между категориите')}</p>
+      <p className="text-xs text-muted-foreground font-sans">{tl('Allocate exactly 100 points across categories', 'Разпределете точно 100 точки между категориите')}</p>
       {categories.map(cat => (
         <div key={cat} className="flex items-center gap-3">
           <span className="text-sm text-foreground w-40 shrink-0">{cat}</span>
@@ -468,8 +447,8 @@ function NumericAllocationInput({ categories, value, onChange, disabled, tx }: {
         </div>
       ))}
       <div className={`flex items-center justify-between text-sm font-sans font-medium pt-2 border-t border-border ${isValid ? 'text-sim-success' : 'text-sim-danger'}`}>
-        <span>Total</span>
-        <span>{total}/100 {isValid ? '✓' : tx('— must equal 100', '— трябва да е 100')}</span>
+        <span>{tl('Total', 'Общо')}</span>
+        <span>{total}/100 {isValid ? '✓' : tl('— must equal 100', '— трябва да е 100')}</span>
       </div>
     </div>
   );
