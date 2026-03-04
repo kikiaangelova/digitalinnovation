@@ -11,15 +11,19 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 interface CaseStudy {
   id: string;
   title: string;
+  title_bg: string | null;
   description: string | null;
+  description_bg: string | null;
   topic: string | null;
+  topic_bg: string | null;
   difficulty: string;
   est_minutes: number | null;
   published: boolean;
 }
 
 export default function CaseLibrary() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
+  const tx = (en: string | null | undefined, bg: string | null | undefined) => lang === 'bg' ? (bg || en || '') : (en || '');
   const [cases, setCases] = useState<CaseStudy[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
@@ -30,21 +34,23 @@ export default function CaseLibrary() {
     const fetchCases = async () => {
       const { data } = await supabase
         .from('case_studies')
-        .select('id, title, description, topic, difficulty, est_minutes, published')
+        .select('id, title, title_bg, description, description_bg, topic, topic_bg, difficulty, est_minutes, published')
         .eq('published', true)
         .order('created_at', { ascending: false });
-      setCases(data || []);
+      setCases((data as CaseStudy[]) || []);
       setLoading(false);
     };
     fetchCases();
   }, []);
 
-  const topics = [...new Set(cases.map(c => c.topic).filter(Boolean))];
+  const topics = [...new Set(cases.map(c => tx(c.topic, c.topic_bg)).filter(Boolean))];
 
   const filtered = cases.filter(c => {
-    if (search && !c.title.toLowerCase().includes(search.toLowerCase()) && !c.description?.toLowerCase().includes(search.toLowerCase())) return false;
+    const title = tx(c.title, c.title_bg);
+    const desc = tx(c.description, c.description_bg);
+    if (search && !title.toLowerCase().includes(search.toLowerCase()) && !desc.toLowerCase().includes(search.toLowerCase())) return false;
     if (diffFilter !== 'all' && c.difficulty !== diffFilter) return false;
-    if (topicFilter !== 'all' && c.topic !== topicFilter) return false;
+    if (topicFilter !== 'all' && tx(c.topic, c.topic_bg) !== topicFilter) return false;
     return true;
   });
 
@@ -114,13 +120,17 @@ export default function CaseLibrary() {
             {filtered.map(cs => (
               <Link key={cs.id} to={`/case/${cs.id}/preview`} className="group block rounded-lg border border-border bg-card p-5 hover:border-primary/50 hover:shadow-md transition-all">
                 <div className="flex items-start justify-between mb-3">
-                  <h3 className="font-display font-semibold text-foreground group-hover:text-primary transition-colors">{cs.title}</h3>
+                  <h3 className="font-display font-semibold text-foreground group-hover:text-primary transition-colors">
+                    {tx(cs.title, cs.title_bg)}
+                  </h3>
                   <Badge variant="outline" className={diffColor(cs.difficulty)}>{diffLabel(cs.difficulty)}</Badge>
                 </div>
-                {cs.description && <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{cs.description}</p>}
+                {(cs.description || cs.description_bg) && (
+                  <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{tx(cs.description, cs.description_bg)}</p>
+                )}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                    {cs.topic && <span className="bg-accent px-2 py-0.5 rounded">{cs.topic}</span>}
+                    {(cs.topic || cs.topic_bg) && <span className="bg-accent px-2 py-0.5 rounded">{tx(cs.topic, cs.topic_bg)}</span>}
                     {cs.est_minutes && <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{cs.est_minutes} {t.min}</span>}
                   </div>
                   <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
