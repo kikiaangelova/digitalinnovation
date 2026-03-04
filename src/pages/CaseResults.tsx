@@ -47,7 +47,7 @@ export default function CaseResults() {
       const stepMap: Record<string, string> = {};
       stepsRes.data?.forEach(s => { stepMap[s.id] = s.title; });
       const stepIds = Object.keys(stepMap);
-      const qRes = await supabase.from('questions').select('id, case_step_id, prompt, type, points, correct_answer, model_answer, rubric').in('case_step_id', stepIds).order('question_order');
+      const qRes = await supabase.rpc('get_case_results_questions', { _case_study_id: id });
 
       setResults((qRes.data || []).map(q => {
         const resp = responses.find(r => r.question_id === q.id);

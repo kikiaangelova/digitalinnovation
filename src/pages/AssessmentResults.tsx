@@ -39,7 +39,7 @@ export default function AssessmentResults() {
       setMaxScore(sub.max_score || 0);
 
       const { data: resps } = await supabase.from('responses').select('question_id, answer, score, feedback').eq('submission_id', sub.id);
-      const { data: qs } = await supabase.from('assessment_questions').select('id, prompt, type, points, correct_answer, model_answer, competency_id').eq('assessment_id', id).order('question_order');
+      const { data: qs } = await supabase.rpc('get_assessment_results_questions', { _assessment_id: id });
       const { data: comps } = await supabase.from('competencies').select('id, name');
 
       const compMap: Record<string, string> = {};
