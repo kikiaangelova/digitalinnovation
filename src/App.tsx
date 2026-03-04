@@ -16,6 +16,8 @@ import CaseResults from "./pages/CaseResults";
 import CaseLibrary from "./pages/CaseLibrary";
 import Dictionary from "./pages/Dictionary";
 import AboutDigitalInnovation from "./pages/AboutDigitalInnovation";
+import CasePreview from "./pages/CasePreview";
+import SimulatorPreview from "./pages/SimulatorPreview";
 import AdminDashboard from "./pages/AdminDashboard";
 import ProfilePage from "./pages/ProfilePage";
 import TeamWorkspace from "./pages/TeamWorkspace";
@@ -49,8 +51,10 @@ const App = () => (
                   <Route path="/cases" element={<CaseLibrary />} />
                   <Route path="/dictionary" element={<Dictionary />} />
                   <Route path="/about" element={<AboutDigitalInnovation />} />
+                  <Route path="/case/:id/preview" element={<CasePreview />} />
                   <Route path="/case/:id" element={<CasePlayer />} />
                   <Route path="/case/:id/results" element={<CaseResults />} />
+                  <Route path="/simulator/preview" element={<SimulatorPreview />} />
                   <Route path="/team/:teamId" element={<TeamWorkspace />} />
                   <Route path="/assessment/:id" element={<AssessmentPlayer />} />
                   <Route path="/assessment/:id/results" element={<AssessmentResults />} />
