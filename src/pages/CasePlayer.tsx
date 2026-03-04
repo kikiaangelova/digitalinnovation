@@ -34,7 +34,7 @@ interface CaseStep {
 interface Question {
   id: string; case_step_id: string; question_order: number; type: string;
   prompt: string; prompt_bg: string | null;
-  options: Json; points: number; correct_answer: string | null;
+  options: Json; points: number;
 }
 
 const SECTION_ICONS: Record<number, React.ElementType> = {
@@ -88,7 +88,7 @@ export default function CasePlayer() {
       if (stepsRes.data) {
         setSteps(stepsRes.data as CaseStep[]);
         const stepIds = (stepsRes.data as CaseStep[]).map(s => s.id);
-        const qRes = await supabase.from('questions').select('id, case_step_id, question_order, type, prompt, prompt_bg, options, points, correct_answer').in('case_step_id', stepIds).order('question_order');
+        const qRes = await supabase.from('questions').select('id, case_step_id, question_order, type, prompt, prompt_bg, options, points').in('case_step_id', stepIds).order('question_order');
         if (qRes.data) setQuestions(qRes.data as Question[]);
       }
       const subRes = await supabase.from('submissions').select('id, is_draft').eq('case_study_id', id).eq('user_id', user.id).maybeSingle();
@@ -139,22 +139,20 @@ export default function CasePlayer() {
   const handleSubmit = async () => {
     await saveDraft();
     if (!submissionId) return;
-    let totalScore = 0, maxScore = 0;
-    for (const q of questions) {
-      maxScore += q.points;
-      if (q.type === 'multiple_choice' && q.correct_answer) {
-        const userAnswer = answers[q.id];
-        if (userAnswer === q.correct_answer) {
-          totalScore += q.points;
-          await supabase.from('responses').update({ score: q.points, feedback: tl('Correct!', 'Правилно!'), auto_graded: true }).eq('submission_id', submissionId).eq('question_id', q.id);
-        } else {
-          await supabase.from('responses').update({ score: 0, feedback: `${tl('Incorrect. The correct answer is:', 'Неправилно. Верният отговор е:')} ${q.correct_answer}`, auto_graded: true }).eq('submission_id', submissionId).eq('question_id', q.id);
-        }
-      }
+    setSaving(true);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('grade-submission', {
+        body: { submission_id: submissionId, source: 'case', lang },
+      });
+      if (error) throw error;
+      toast.success(tl('Case submitted successfully!', 'Казусът е изпратен успешно!'));
+      navigate(`/case/${id}/results`);
+    } catch (err) {
+      toast.error(tl('Failed to submit', 'Грешка при изпращане'));
+    } finally {
+      setSaving(false);
     }
-    await supabase.from('submissions').update({ is_draft: false, submitted_at: new Date().toISOString(), total_score: totalScore, max_score: maxScore }).eq('id', submissionId);
-    toast.success(tl('Case submitted successfully!', 'Казусът е изпратен успешно!'));
-    navigate(`/case/${id}/results`);
   };
 
   const updateAnswer = (questionId: string, value: any) => {

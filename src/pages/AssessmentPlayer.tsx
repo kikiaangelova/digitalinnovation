@@ -18,7 +18,6 @@ interface AssessmentQ {
   prompt: string;
   options: Json;
   points: number;
-  correct_answer: string | null;
   question_order: number;
   competency_id: string | null;
 }
@@ -45,7 +44,7 @@ export default function AssessmentPlayer() {
     const fetch = async () => {
       const { data: a } = await supabase.from('assessments').select('*').eq('id', id).single();
       if (a) setAssessment(a);
-      const { data: qs } = await supabase.from('assessment_questions').select('id, type, prompt, options, points, correct_answer, question_order, competency_id').eq('assessment_id', id).order('question_order');
+      const { data: qs } = await supabase.from('assessment_questions').select('id, type, prompt, options, points, question_order, competency_id').eq('assessment_id', id).order('question_order');
       if (qs) setQuestions(qs);
 
       const { data: sub } = await supabase.from('submissions').select('id, is_draft, started_at').eq('assessment_id', id).eq('user_id', user.id).maybeSingle();
@@ -127,31 +126,20 @@ export default function AssessmentPlayer() {
   const handleSubmit = async () => {
     await saveDraft();
     if (!submissionId) return;
+    setSaving(true);
 
-    let totalScore = 0;
-    let maxScore = 0;
-    for (const q of questions) {
-      maxScore += q.points;
-      if (q.type === 'multiple_choice' && q.correct_answer) {
-        const userAns = answers[q.id];
-        const score = userAns === q.correct_answer ? q.points : 0;
-        totalScore += score;
-        await supabase.from('responses').update({
-          score,
-          feedback: score > 0 ? t('Correct!', 'Правилно!') : `${t('Incorrect. Answer:', 'Грешно. Отговор:')} ${q.correct_answer}`,
-          auto_graded: true,
-        }).eq('submission_id', submissionId).eq('question_id', q.id);
-      }
+    try {
+      const { data, error } = await supabase.functions.invoke('grade-submission', {
+        body: { submission_id: submissionId, source: 'assessment', lang },
+      });
+      if (error) throw error;
+      toast.success(t('Assessment submitted!', 'Оценката е изпратена!'));
+      navigate(`/assessment/${id}/results`);
+    } catch (err) {
+      toast.error(t('Failed to submit', 'Грешка при изпращане'));
+    } finally {
+      setSaving(false);
     }
-    await supabase.from('submissions').update({
-      is_draft: false,
-      submitted_at: new Date().toISOString(),
-      total_score: totalScore,
-      max_score: maxScore,
-    }).eq('id', submissionId);
-
-    toast.success(t('Assessment submitted!', 'Оценката е изпратена!'));
-    navigate(`/assessment/${id}/results`);
   };
 
   const updateAnswer = (qId: string, val: any) => {

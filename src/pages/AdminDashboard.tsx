@@ -52,6 +52,7 @@ export default function AdminDashboard() {
   const [newReadingLabel, setNewReadingLabel] = useState('');
 
   useEffect(() => {
+    if (!isAdmin) return;
     const fetchData = async () => {
       const [casesRes, subsRes, profsRes] = await Promise.all([
         supabase.from('case_studies').select('id, title, topic, difficulty, published, created_at').order('created_at', { ascending: false }),
@@ -66,7 +67,7 @@ export default function AdminDashboard() {
       setLoading(false);
     };
     fetchData();
-  }, []);
+  }, [isAdmin]);
 
   const togglePublish = async (caseId: string, published: boolean) => {
     await supabase.from('case_studies').update({ published: !published }).eq('id', caseId);

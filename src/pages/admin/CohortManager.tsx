@@ -38,6 +38,7 @@ export default function CohortManager() {
   const [assignDue, setAssignDue] = useState('');
 
   useEffect(() => {
+    if (!isAdmin) return;
     const fetch = async () => {
       const [co, te, me, ca, as_, ag, pr] = await Promise.all([
         supabase.from('cohorts').select('*').order('created_at', { ascending: false }),
@@ -58,7 +59,7 @@ export default function CohortManager() {
       setLoading(false);
     };
     fetch();
-  }, []);
+  }, [isAdmin]);
 
   const createCohort = async () => {
     if (!newCohortName.trim()) return;
