@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Brain, Send, Loader2, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import ReactMarkdown from 'react-markdown';
@@ -14,6 +15,8 @@ interface AIMentorWidgetProps {
 export default function AIMentorWidget({ lang, startupData, onFeedbackReceived }: AIMentorWidgetProps) {
   const [feedback, setFeedback] = useState('');
   const [loading, setLoading] = useState(false);
+  const [remaining, setRemaining] = useState<number | null>(null);
+  const [cached, setCached] = useState(false);
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
 
   const requestFeedback = async () => {
@@ -27,11 +30,17 @@ export default function AIMentorWidget({ lang, startupData, onFeedbackReceived }
         },
       });
       if (error) throw error;
+      if (data?.rateLimited) {
+        toast.error(data.error);
+        return;
+      }
       setFeedback(data?.feedback || t('No feedback available.', 'Няма налична обратна връзка.'));
+      if (data?.remaining !== undefined) setRemaining(data.remaining);
+      setCached(!!data?.cached);
       onFeedbackReceived?.();
     } catch (e: any) {
       if (e?.status === 429) {
-        toast.error(t('Rate limit reached. Try again later.', 'Достигнат лимит. Опитайте по-късно.'));
+        toast.error(t('Daily limit reached. Try again tomorrow.', 'Дневният лимит е достигнат. Опитайте утре.'));
       } else if (e?.status === 402) {
         toast.error(t('Credits exhausted.', 'Кредитите са изчерпани.'));
       } else {
@@ -52,11 +61,21 @@ export default function AIMentorWidget({ lang, startupData, onFeedbackReceived }
           <h2 className="text-lg font-display font-semibold text-foreground">{t('AI Mentor', 'AI Ментор')}</h2>
           <p className="text-xs text-muted-foreground">{t('Get personalized feedback on your startup', 'Получи персонална обратна връзка за твоя стартъп')}</p>
         </div>
+        {remaining !== null && (
+          <Badge variant="outline" className="text-xs">
+            {remaining} {t('left today', 'остават днес')}
+          </Badge>
+        )}
       </div>
 
       {feedback ? (
         <div className="rounded-lg bg-accent/50 p-4 mb-3 text-sm text-foreground leading-relaxed prose prose-sm max-w-none dark:prose-invert">
           <ReactMarkdown>{feedback}</ReactMarkdown>
+          {cached && (
+            <p className="text-xs text-muted-foreground mt-2 italic">
+              {t('📋 Cached response (no AI credits used)', '📋 Кеширан отговор (без използване на AI кредити)')}
+            </p>
+          )}
         </div>
       ) : (
         <div className="rounded-lg bg-muted/50 p-4 mb-3 text-sm text-muted-foreground italic">
@@ -76,6 +95,9 @@ export default function AIMentorWidget({ lang, startupData, onFeedbackReceived }
           }
         </Button>
       </div>
+      <p className="text-xs text-muted-foreground mt-2">
+        {t('Limited to 3 requests per day. Identical inputs use cached responses.', 'Лимит: 3 заявки на ден. Идентичните входове използват кеширани отговори.')}
+      </p>
     </div>
   );
 }

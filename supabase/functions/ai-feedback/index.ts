@@ -1,19 +1,84 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+const DAILY_LIMIT = 3;
+
+async function hashInput(str: string): Promise<string> {
+  const data = new TextEncoder().encode(str);
+  const buf = await crypto.subtle.digest("SHA-256", data);
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
+    const authHeader = req.headers.get("Authorization") || "";
     const { type, data, lang } = await req.json();
+
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
+    const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
+    // Get user from auth
+    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+    const anonClient = createClient(SUPABASE_URL, Deno.env.get("SUPABASE_ANON_KEY")!, {
+      global: { headers: { Authorization: authHeader } },
+    });
+    const { data: { user } } = await anonClient.auth.getUser();
+    if (!user) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const langLabel = lang === "bg" ? "Bulgarian" : "English";
+    const feedbackType = type || "startup_project";
+
+    // Build input string for hashing
+    const inputStr = JSON.stringify({ type: feedbackType, data });
+    const inputHash = await hashInput(inputStr);
+
+    // Check cache first
+    const { data: cached } = await supabase
+      .from("ai_feedback_cache")
+      .select("response")
+      .eq("user_id", user.id)
+      .eq("feedback_type", feedbackType)
+      .eq("input_hash", inputHash)
+      .eq("lang", lang || "en")
+      .maybeSingle();
+
+    if (cached) {
+      return new Response(JSON.stringify({ ...cached.response, cached: true }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // Check rate limit (3 per day)
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+    const { count } = await supabase
+      .from("ai_rate_limits")
+      .select("id", { count: "exact", head: true })
+      .eq("user_id", user.id)
+      .gte("requested_at", todayStart.toISOString());
+
+    if ((count ?? 0) >= DAILY_LIMIT) {
+      const errMsg = lang === "bg"
+        ? `Достигнахте дневния лимит от ${DAILY_LIMIT} AI заявки. Опитайте утре.`
+        : `Daily limit of ${DAILY_LIMIT} AI requests reached. Try again tomorrow.`;
+      return new Response(JSON.stringify({ error: errMsg, rateLimited: true, remaining: 0 }), {
+        status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
 
     const systemPrompt = `You are an AI mentor for a digital innovation course designed for 11th grade business students.
 
@@ -22,8 +87,7 @@ CRITICAL: Respond ENTIRELY in ${langLabel}. Do not mix languages.
 Guidelines:
 - Keep explanations simple and suitable for high school students
 - Be constructive, encouraging, and specific
-- Ask critical thinking questions
-- Keep responses under 250 words
+- Keep responses UNDER 200 words total
 
 Structure your response with these sections:
 - **${lang === "bg" ? "Обобщение" : "Summary"}**: 1-2 sentence overview
@@ -33,11 +97,11 @@ Structure your response with these sections:
 
     let userPrompt = "";
 
-    if (type === "startup_project") {
+    if (feedbackType === "startup_project") {
       userPrompt = `Review this student's startup project:\n\nProblem: ${data.problem || "(empty)"}\nCustomer: ${data.customer || "(empty)"}\nValue Proposition: ${data.value_proposition || "(empty)"}\nBusiness Model: ${data.business_model || "(empty)"}\nGrowth Strategy: ${data.growth_strategy || "(empty)"}\nFinal Pitch: ${data.final_pitch || "(empty)"}`;
-    } else if (type === "simulator") {
+    } else if (feedbackType === "simulator") {
       userPrompt = `Review this student's simulator performance:\n\nWeek reached: ${data.current_week}/6\nUsers: ${data.kpis?.users}\nRevenue: $${data.kpis?.revenue}\nSatisfaction: ${data.kpis?.satisfaction}%\nGrowth Rate: ${data.kpis?.growthRate}%\nGrade: ${data.grade || "In progress"}\n\nDecisions made: ${JSON.stringify(data.decisions || [])}`;
-    } else if (type === "case_submission") {
+    } else if (feedbackType === "case_submission") {
       userPrompt = `Review this student's case study submission:\n\nCase: ${data.case_title}\nScore: ${data.total_score}/${data.max_score}\n\nProvide feedback on how they can improve.`;
     } else {
       throw new Error("Invalid feedback type");
@@ -50,7 +114,8 @@ Structure your response with these sections:
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
+        model: "google/gemini-2.5-flash-lite",
+        max_tokens: 400,
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: userPrompt },
@@ -75,8 +140,21 @@ Structure your response with these sections:
 
     const result = await response.json();
     const feedback = result.choices?.[0]?.message?.content || (lang === "bg" ? "Не може да се генерира обратна връзка." : "Unable to generate feedback.");
+    const remaining = DAILY_LIMIT - (count ?? 0) - 1;
 
-    return new Response(JSON.stringify({ feedback }), {
+    // Record rate limit entry
+    await supabase.from("ai_rate_limits").insert({ user_id: user.id, feedback_type: feedbackType });
+
+    // Cache the response
+    await supabase.from("ai_feedback_cache").upsert({
+      user_id: user.id,
+      feedback_type: feedbackType,
+      input_hash: inputHash,
+      lang: lang || "en",
+      response: { feedback },
+    }, { onConflict: "user_id,feedback_type,input_hash,lang" });
+
+    return new Response(JSON.stringify({ feedback, remaining, cached: false }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e) {
