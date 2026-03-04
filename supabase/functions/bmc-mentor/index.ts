@@ -198,7 +198,7 @@ Cost Structure: ${bmc.bmc_cost_structure || "(empty)"}`;
     const remaining = DAILY_LIMIT - (count ?? 0) - 1;
 
     // Record rate limit
-    await supabase.from("ai_rate_limits").insert({ user_id: user.id, feedback_type: feedbackType });
+    await supabase.from("ai_rate_limits").insert({ user_id: userId, feedback_type: feedbackType });
 
     // Cache
     await supabase.from("ai_feedback_cache").upsert({
