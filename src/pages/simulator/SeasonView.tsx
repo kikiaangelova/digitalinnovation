@@ -3,7 +3,7 @@ import { useLang } from '@/context/LangContext';
 import { useSimulator } from '@/context/SimulatorContext';
 import KPIDashboard from '@/components/simulator/KPIDashboard';
 import { Button } from '@/components/ui/button';
-import { ArrowLeft, Check, Lock, Clock, Users, Copy } from 'lucide-react';
+import { ArrowLeft, Check, Lock, Clock, Users, Copy, Home } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function SeasonView() {
@@ -11,13 +11,14 @@ export default function SeasonView() {
   const navigate = useNavigate();
   const { lang } = useLang();
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
-  const { seasons, getTeamForSeason, getLatestCompanyState, getSubmission } = useSimulator();
+  const { seasons, getParticipantId, getLatestCompanyState, getSubmission, getTeamForSeason, simulatorMode } = useSimulator();
 
   const season = seasons.find(s => s.id === id);
   if (!season) return <div className="p-8 text-center text-muted-foreground">{t('Season not found', 'Сезонът не е намерен')}</div>;
 
-  const team = getTeamForSeason(season.id);
-  const latestState = team ? getLatestCompanyState(team.id) : null;
+  const participantId = getParticipantId(season.id);
+  const latestState = participantId ? getLatestCompanyState(participantId) : null;
+  const team = simulatorMode === 'team' ? getTeamForSeason(season.id) : null;
 
   const copyCode = () => {
     if (team) {
@@ -39,12 +40,18 @@ export default function SeasonView() {
               {season.weeks} {t('weeks', 'седмици')} · {season.difficulty === 'easy' ? t('Easy', 'Лесно') : season.difficulty === 'medium' ? t('Medium', 'Средно') : t('Hard', 'Трудно')}
             </p>
           </div>
+          <Button variant="ghost" size="sm" asChild>
+            <Link to="/">
+              <Home className="h-4 w-4 mr-1" />
+              {t('Home', 'Начало')}
+            </Link>
+          </Button>
         </div>
       </header>
 
       <main className="container mx-auto px-4 py-8 space-y-8">
-        {/* Team Info */}
-        {team && (
+        {/* Team Info (only in team mode) */}
+        {simulatorMode === 'team' && team && (
           <div className="rounded-xl border border-border bg-card p-5">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
@@ -75,19 +82,19 @@ export default function SeasonView() {
           <h2 className="text-lg font-semibold text-foreground mb-4">{t('Weekly Rounds', 'Седмични рундове')}</h2>
           <div className="space-y-3">
             {season.rounds.map((round, idx) => {
-              const isSubmitted = team ? !!getSubmission(team.id, round.id) : false;
-              const prevSubmitted = idx === 0 || (team ? !!getSubmission(team.id, season.rounds[idx - 1].id) : false);
+              const isSubmitted = participantId ? !!getSubmission(participantId, round.id) : false;
+              const prevSubmitted = idx === 0 || (participantId ? !!getSubmission(participantId, season.rounds[idx - 1].id) : false);
               const isUnlocked = idx === 0 || prevSubmitted;
 
               return (
-              <div
+                <div
                   key={round.id}
                   className={`rounded-xl border p-4 transition-all ${
                     isUnlocked
                       ? 'border-border bg-card hover:shadow-md hover:border-primary/40 cursor-pointer'
                       : 'border-border/50 bg-muted/50 opacity-60 cursor-not-allowed'
                   }`}
-                  onClick={() => isUnlocked && team && navigate(`/simulator/season/${season.id}/round/${round.week_number}`)}
+                  onClick={() => isUnlocked && participantId && navigate(`/simulator/season/${season.id}/round/${round.week_number}`)}
                 >
                   <div className="flex items-center gap-4">
                     <div className={`flex h-10 w-10 items-center justify-center rounded-lg ${

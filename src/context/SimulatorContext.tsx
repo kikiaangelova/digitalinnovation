@@ -6,6 +6,8 @@ import {
 import { SEED_SEASON, INITIAL_KPIS } from '@/data/seed-season';
 import { processRound } from '@/engine/simulation-engine';
 
+export type SimulatorMode = 'individual' | 'team';
+
 interface SimulatorState {
   seasons: SimulationSeason[];
   teams: Team[];
@@ -16,22 +18,29 @@ interface SimulatorState {
   draftAnswers: Record<string, DecisionAnswer[]>;
   draftRationales: Record<string, string>;
   draftReflections: Record<string, string>;
+  simulatorMode: SimulatorMode;
+  /** Individual runs keyed by seasonId */
+  individualRuns: Record<string, { startedAt: string }>;
 }
 
 interface SimulatorActions {
   createTeam: (seasonId: string, name: string) => Team;
   joinTeam: (code: string, userName: string) => Team | null;
-  saveDraft: (roundId: string, teamId: string, answers: DecisionAnswer[], rationale: string, reflection: string) => void;
-  submitDecisions: (roundId: string, teamId: string) => OutcomeReport | null;
+  saveDraft: (roundId: string, participantId: string, answers: DecisionAnswer[], rationale: string, reflection: string) => void;
+  submitDecisions: (roundId: string, participantId: string) => OutcomeReport | null;
   getTeamForSeason: (seasonId: string) => Team | null;
-  getCompanyState: (teamId: string, roundId: string) => CompanyState | null;
-  getLatestCompanyState: (teamId: string) => CompanyState | null;
-  getSubmission: (teamId: string, roundId: string) => DecisionSubmission | null;
-  getOutcomeReport: (teamId: string, roundId: string) => OutcomeReport | null;
-  getCompanyStateHistory: (teamId: string) => CompanyState[];
+  getCompanyState: (participantId: string, roundId: string) => CompanyState | null;
+  getLatestCompanyState: (participantId: string) => CompanyState | null;
+  getSubmission: (participantId: string, roundId: string) => DecisionSubmission | null;
+  getOutcomeReport: (participantId: string, roundId: string) => OutcomeReport | null;
+  getCompanyStateHistory: (participantId: string) => CompanyState[];
   switchRole: (role: 'student' | 'admin') => void;
-  addInstructorComment: (teamId: string, roundId: string, comment: string) => void;
+  addInstructorComment: (participantId: string, roundId: string, comment: string) => void;
   getScoreboard: (seasonId: string) => SeasonScoreboard[];
+  setSimulatorMode: (mode: SimulatorMode) => void;
+  startIndividualRun: (seasonId: string) => void;
+  hasIndividualRun: (seasonId: string) => boolean;
+  getParticipantId: (seasonId: string) => string | null;
 }
 
 const SimulatorContext = createContext<(SimulatorState & SimulatorActions) | null>(null);
@@ -46,52 +55,70 @@ function generateJoinCode() {
 
 export function SimulatorProvider({ children }: { children: ReactNode }) {
   const [seasons] = useState<SimulationSeason[]>([SEED_SEASON]);
-  const [teams, setTeams] = useState<Team[]>([
-    {
-      id: 'demo-team',
-      season_id: 'season-startup-lab',
-      name: 'Team Alpha',
-      join_code: 'ALPHA1',
-      members: [
-        { id: 'm1', team_id: 'demo-team', user_name: 'You', role: 'lead' },
-        { id: 'm2', team_id: 'demo-team', user_name: 'Alex Chen', role: 'member' },
-        { id: 'm3', team_id: 'demo-team', user_name: 'Maria Santos', role: 'member' },
-      ],
-    },
-  ]);
-  const [companyStates, setCompanyStates] = useState<CompanyState[]>([
-    { id: 'cs-0', team_id: 'demo-team', round_id: 'round-1', week_number: 0, kpis: INITIAL_KPIS },
-  ]);
+  const [teams, setTeams] = useState<Team[]>([]);
+  const [companyStates, setCompanyStates] = useState<CompanyState[]>([]);
   const [submissions, setSubmissions] = useState<DecisionSubmission[]>([]);
   const [outcomeReports, setOutcomeReports] = useState<OutcomeReport[]>([]);
   const [currentUser, setCurrentUser] = useState<{ id: string; name: string; role: 'student' | 'admin' }>({ id: 'user-1', name: 'You', role: 'student' });
   const [draftAnswers, setDraftAnswers] = useState<Record<string, DecisionAnswer[]>>({});
   const [draftRationales, setDraftRationales] = useState<Record<string, string>>({});
   const [draftReflections, setDraftReflections] = useState<Record<string, string>>({});
+  const [simulatorMode, setSimulatorMode] = useState<SimulatorMode>('individual');
+  const [individualRuns, setIndividualRuns] = useState<Record<string, { startedAt: string }>>({});
+
+  const hasIndividualRun = useCallback((seasonId: string) => {
+    return !!individualRuns[seasonId];
+  }, [individualRuns]);
+
+  const startIndividualRun = useCallback((seasonId: string) => {
+    if (individualRuns[seasonId]) return;
+    const participantId = `individual-${currentUser.id}`;
+    setIndividualRuns(prev => ({ ...prev, [seasonId]: { startedAt: new Date().toISOString() } }));
+    const season = seasons.find(s => s.id === seasonId);
+    setCompanyStates(prev => [...prev, {
+      id: `cs-${generateId()}`,
+      team_id: participantId,
+      round_id: season?.rounds[0]?.id || '',
+      week_number: 0,
+      kpis: INITIAL_KPIS,
+    }]);
+  }, [individualRuns, currentUser.id, seasons]);
+
+  /** Returns the participantId (team.id or individual id) for a season */
+  const getParticipantId = useCallback((seasonId: string): string | null => {
+    if (simulatorMode === 'team') {
+      const team = teams.find(t => t.season_id === seasonId);
+      return team?.id || null;
+    }
+    if (individualRuns[seasonId]) {
+      return `individual-${currentUser.id}`;
+    }
+    return null;
+  }, [simulatorMode, teams, individualRuns, currentUser.id]);
 
   const getTeamForSeason = useCallback((seasonId: string) => {
     return teams.find(t => t.season_id === seasonId) || null;
   }, [teams]);
 
-  const getCompanyState = useCallback((teamId: string, roundId: string) => {
-    return companyStates.find(cs => cs.team_id === teamId && cs.round_id === roundId) || null;
+  const getCompanyState = useCallback((participantId: string, roundId: string) => {
+    return companyStates.find(cs => cs.team_id === participantId && cs.round_id === roundId) || null;
   }, [companyStates]);
 
-  const getLatestCompanyState = useCallback((teamId: string) => {
-    const states = companyStates.filter(cs => cs.team_id === teamId);
+  const getLatestCompanyState = useCallback((participantId: string) => {
+    const states = companyStates.filter(cs => cs.team_id === participantId);
     return states.sort((a, b) => b.week_number - a.week_number)[0] || null;
   }, [companyStates]);
 
-  const getSubmission = useCallback((teamId: string, roundId: string) => {
-    return submissions.find(s => s.team_id === teamId && s.round_id === roundId && !s.is_draft) || null;
+  const getSubmission = useCallback((participantId: string, roundId: string) => {
+    return submissions.find(s => s.team_id === participantId && s.round_id === roundId && !s.is_draft) || null;
   }, [submissions]);
 
-  const getOutcomeReport = useCallback((teamId: string, roundId: string) => {
-    return outcomeReports.find(r => r.team_id === teamId && r.round_id === roundId) || null;
+  const getOutcomeReport = useCallback((participantId: string, roundId: string) => {
+    return outcomeReports.find(r => r.team_id === participantId && r.round_id === roundId) || null;
   }, [outcomeReports]);
 
-  const getCompanyStateHistory = useCallback((teamId: string) => {
-    return companyStates.filter(cs => cs.team_id === teamId).sort((a, b) => a.week_number - b.week_number);
+  const getCompanyStateHistory = useCallback((participantId: string) => {
+    return companyStates.filter(cs => cs.team_id === participantId).sort((a, b) => a.week_number - b.week_number);
   }, [companyStates]);
 
   const createTeam = useCallback((seasonId: string, name: string) => {
@@ -122,15 +149,15 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
     return team;
   }, [teams]);
 
-  const saveDraft = useCallback((roundId: string, teamId: string, answers: DecisionAnswer[], rationale: string, reflection: string) => {
-    const key = `${teamId}-${roundId}`;
+  const saveDraft = useCallback((roundId: string, participantId: string, answers: DecisionAnswer[], rationale: string, reflection: string) => {
+    const key = `${participantId}-${roundId}`;
     setDraftAnswers(prev => ({ ...prev, [key]: answers }));
     setDraftRationales(prev => ({ ...prev, [key]: rationale }));
     setDraftReflections(prev => ({ ...prev, [key]: reflection }));
   }, []);
 
-  const submitDecisions = useCallback((roundId: string, teamId: string) => {
-    const key = `${teamId}-${roundId}`;
+  const submitDecisions = useCallback((roundId: string, participantId: string) => {
+    const key = `${participantId}-${roundId}`;
     const answers = draftAnswers[key];
     if (!answers || answers.length === 0) return null;
 
@@ -139,7 +166,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
     const round = season.rounds.find(r => r.id === roundId);
     if (!round) return null;
 
-    const latestState = getLatestCompanyState(teamId);
+    const latestState = getLatestCompanyState(participantId);
     if (!latestState) return null;
 
     const { newKPIs, report } = processRound(
@@ -152,7 +179,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
 
     const submission: DecisionSubmission = {
       id: `sub-${generateId()}`,
-      team_id: teamId,
+      team_id: participantId,
       round_id: roundId,
       submitted_by: currentUser.id,
       submitted_at: new Date().toISOString(),
@@ -164,7 +191,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
 
     const outcomeReport: OutcomeReport = {
       id: `or-${generateId()}`,
-      team_id: teamId,
+      team_id: participantId,
       round_id: roundId,
       week_number: round.week_number,
       ...report,
@@ -172,7 +199,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
 
     const newState: CompanyState = {
       id: `cs-${generateId()}`,
-      team_id: teamId,
+      team_id: participantId,
       round_id: roundId,
       week_number: round.week_number,
       kpis: newKPIs,
@@ -182,7 +209,6 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
     setOutcomeReports(prev => [...prev, outcomeReport]);
     setCompanyStates(prev => [...prev, newState]);
 
-    // Clear draft
     setDraftAnswers(prev => { const n = { ...prev }; delete n[key]; return n; });
     setDraftRationales(prev => { const n = { ...prev }; delete n[key]; return n; });
     setDraftReflections(prev => { const n = { ...prev }; delete n[key]; return n; });
@@ -194,9 +220,9 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
     setCurrentUser(prev => ({ ...prev, role }));
   }, []);
 
-  const addInstructorComment = useCallback((teamId: string, roundId: string, comment: string) => {
+  const addInstructorComment = useCallback((participantId: string, roundId: string, comment: string) => {
     setOutcomeReports(prev => prev.map(r =>
-      r.team_id === teamId && r.round_id === roundId
+      r.team_id === participantId && r.round_id === roundId
         ? { ...r, instructor_comment: comment }
         : r
     ));
@@ -223,11 +249,12 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
   return (
     <SimulatorContext.Provider value={{
       seasons, teams, companyStates, submissions, outcomeReports, currentUser,
-      draftAnswers, draftRationales, draftReflections,
+      draftAnswers, draftRationales, draftReflections, simulatorMode, individualRuns,
       createTeam, joinTeam, saveDraft, submitDecisions,
       getTeamForSeason, getCompanyState, getLatestCompanyState,
       getSubmission, getOutcomeReport, getCompanyStateHistory,
       switchRole, addInstructorComment, getScoreboard,
+      setSimulatorMode, startIndividualRun, hasIndividualRun, getParticipantId,
     }}>
       {children}
     </SimulatorContext.Provider>

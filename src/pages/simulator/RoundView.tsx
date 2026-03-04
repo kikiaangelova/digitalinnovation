@@ -16,7 +16,7 @@ export default function RoundView() {
   const { lang } = useLang();
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
   const {
-    seasons, getTeamForSeason, getLatestCompanyState, getCompanyState,
+    seasons, getParticipantId, getLatestCompanyState, getCompanyState,
     getSubmission, getOutcomeReport, saveDraft, submitDecisions,
     draftAnswers, draftRationales, draftReflections, getCompanyStateHistory,
   } = useSimulator();
@@ -24,39 +24,39 @@ export default function RoundView() {
   const weekNumber = parseInt(n || '1');
   const season = seasons.find(s => s.id === id);
   const round = season?.rounds.find(r => r.week_number === weekNumber);
-  const team = season ? getTeamForSeason(season.id) : null;
+  const participantId = season ? getParticipantId(season.id) : null;
 
   const previousState = useMemo(() => {
-    if (!team) return null;
-    const history = getCompanyStateHistory(team.id);
+    if (!participantId) return null;
+    const history = getCompanyStateHistory(participantId);
     const prevWeek = history.filter(s => s.week_number < weekNumber);
     return prevWeek.length > 0 ? prevWeek[prevWeek.length - 1] : null;
-  }, [team, weekNumber, getCompanyStateHistory]);
+  }, [participantId, weekNumber, getCompanyStateHistory]);
 
   const currentState = useMemo(() => {
-    if (!team || !round) return null;
-    const state = getCompanyState(team.id, round.id);
+    if (!participantId || !round) return null;
+    const state = getCompanyState(participantId, round.id);
     return state || previousState;
-  }, [team, round, getCompanyState, previousState]);
+  }, [participantId, round, getCompanyState, previousState]);
 
-  const submission = team && round ? getSubmission(team.id, round.id) : null;
-  const outcomeReport = team && round ? getOutcomeReport(team.id, round.id) : null;
+  const submission = participantId && round ? getSubmission(participantId, round.id) : null;
+  const outcomeReport = participantId && round ? getOutcomeReport(participantId, round.id) : null;
   const isSubmitted = !!submission;
 
-  const draftKey = team && round ? `${team.id}-${round.id}` : '';
+  const draftKey = participantId && round ? `${participantId}-${round.id}` : '';
 
   const handleSaveDraft = useCallback((answers: any[], rationale: string, reflection: string) => {
-    if (!round || !team) return;
-    saveDraft(round.id, team.id, answers, rationale, reflection);
-  }, [round, team, saveDraft]);
+    if (!round || !participantId) return;
+    saveDraft(round.id, participantId, answers, rationale, reflection);
+  }, [round, participantId, saveDraft]);
 
   const handleSubmit = useCallback(() => {
-    if (!round || !team) return;
-    const report = submitDecisions(round.id, team.id);
+    if (!round || !participantId) return;
+    const report = submitDecisions(round.id, participantId);
     if (report) {
       toast.success(t('Decisions submitted! View your outcome report below.', 'Решенията са изпратени! Вижте доклада по-долу.'));
     }
-  }, [round, team, submitDecisions, lang]);
+  }, [round, participantId, submitDecisions, t]);
 
   if (!season || !round) {
     return <div className="p-8 text-center text-muted-foreground">{t('Round not found', 'Рундът не е намерен')}</div>;
@@ -96,32 +96,28 @@ export default function RoundView() {
       </header>
 
       <main className="container mx-auto px-4 py-6 max-w-4xl space-y-8">
-        {/* Narrative */}
         <NarrativeBriefing
           narrative={round.narrative}
           weekNumber={round.week_number}
           shockEvent={round.shock_event}
         />
 
-        {/* KPI Dashboard */}
         {currentState && (
           <div>
             <h2 className="text-lg font-semibold text-foreground mb-3">
               {isSubmitted ? t('Updated Metrics', 'Актуализирани показатели') : t('Current Metrics', 'Текущи показатели')}
             </h2>
             <KPIDashboard
-              kpis={isSubmitted && outcomeReport ? (getCompanyState(team!.id, round.id)?.kpis || currentState.kpis) : currentState.kpis}
+              kpis={isSubmitted && outcomeReport ? (getCompanyState(participantId!, round.id)?.kpis || currentState.kpis) : currentState.kpis}
               previousKpis={previousState?.kpis}
             />
           </div>
         )}
 
-        {/* Outcome Report (if submitted) */}
         {isSubmitted && outcomeReport && (
           <OutcomeReportView report={outcomeReport} />
         )}
 
-        {/* Decision Form */}
         <div>
           <h2 className="text-lg font-semibold text-foreground mb-3">
             {isSubmitted ? t('Your Decisions (Submitted)', 'Вашите решения (Изпратени)') : t('Make Your Decisions', 'Вземете решения')}
