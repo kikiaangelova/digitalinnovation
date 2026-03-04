@@ -143,7 +143,7 @@ export default function TeacherDashboard() {
   }, [isAdmin]);
 
   const profileMap = Object.fromEntries(profiles.map(p => [p.user_id, p]));
-  const getName = (uid: string) => profileMap[uid]?.full_name || 'Unknown';
+  const getName = (uid: string) => profileMap[uid]?.full_name || t('Unknown', 'Неизвестен');
   const caseMap = Object.fromEntries(cases.map(c => [c.id, c]));
 
   // Stats

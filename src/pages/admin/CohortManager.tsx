@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { useLang } from '@/context/LangContext';
 import { supabase } from '@/integrations/supabase/client';
 import AppHeader from '@/components/layout/AppHeader';
 import { Button } from '@/components/ui/button';
@@ -17,6 +18,8 @@ import {
 
 export default function CohortManager() {
   const { isAdmin, user } = useAuth();
+  const { lang } = useLang();
+  const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
   const [cohorts, setCohorts] = useState<any[]>([]);
   const [teams, setTeams] = useState<any[]>([]);
   const [members, setMembers] = useState<any[]>([]);
@@ -64,23 +67,23 @@ export default function CohortManager() {
   const createCohort = async () => {
     if (!newCohortName.trim()) return;
     const { data, error } = await supabase.from('cohorts').insert({ name: newCohortName.trim(), created_by: user?.id }).select().single();
-    if (error) { toast.error('Failed'); return; }
+    if (error) { toast.error(t('Failed', 'Грешка')); return; }
     setCohorts(prev => [data, ...prev]);
     setNewCohortName('');
-    toast.success('Cohort created');
+    toast.success(t('Cohort created', 'Кохортата е създадена'));
   };
 
   const createTeam = async () => {
     if (!newTeamName.trim() || !newTeamCohort) return;
     const { data, error } = await supabase.from('teams').insert({ name: newTeamName.trim(), cohort_id: newTeamCohort, created_by: user?.id }).select().single();
-    if (error) { toast.error('Failed'); return; }
+    if (error) { toast.error(t('Failed', 'Грешка')); return; }
     setTeams(prev => [data, ...prev]);
     setNewTeamName('');
-    toast.success('Team created');
+    toast.success(t('Team created', 'Екипът е създаден'));
   };
 
   const createAssignment = async () => {
-    if (!assignCohort || (!assignCase && !assignAssessment)) { toast.error('Select cohort and case/assessment'); return; }
+    if (!assignCohort || (!assignCase && !assignAssessment)) { toast.error(t('Select cohort and case/assessment', 'Изберете кохорта и казус/оценка')); return; }
     const { error } = await supabase.from('assignments').insert({
       cohort_id: assignCohort,
       case_study_id: assignCase || null,
@@ -89,67 +92,72 @@ export default function CohortManager() {
       due_at: assignDue || null,
       created_by: user?.id,
     });
-    if (error) { toast.error('Failed to assign'); return; }
-    toast.success('Assignment created');
+    if (error) { toast.error(t('Failed to assign', 'Грешка при задаване')); return; }
+    toast.success(t('Assignment created', 'Задачата е създадена'));
     setShowAssignDialog(false);
-    // Refresh
     const { data } = await supabase.from('assignments').select('*').order('created_at', { ascending: false });
     setAssignments(data || []);
   };
 
-  const getName = (uid: string) => profiles.find(p => p.user_id === uid)?.full_name || 'Unknown';
+  const getName = (uid: string) => profiles.find(p => p.user_id === uid)?.full_name || t('Unknown', 'Неизвестен');
 
-  if (!isAdmin) return <div className="min-h-screen bg-background"><AppHeader /><div className="flex items-center justify-center py-20 text-muted-foreground">Admin access required.</div></div>;
+  if (!isAdmin) return (
+    <div className="min-h-screen bg-background"><AppHeader />
+      <div className="flex items-center justify-center py-20 text-muted-foreground">
+        {t('Admin access required.', 'Необходим е администраторски достъп.')}
+      </div>
+    </div>
+  );
 
   return (
     <div className="min-h-screen bg-background">
       <AppHeader />
       <main className="container mx-auto px-4 py-8 space-y-8">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-display font-bold text-foreground">Cohorts & Teams</h1>
+          <h1 className="text-2xl font-display font-bold text-foreground">{t('Cohorts & Teams', 'Кохорти и екипи')}</h1>
           <Dialog open={showAssignDialog} onOpenChange={setShowAssignDialog}>
             <DialogTrigger asChild>
-              <Button size="sm" className="sim-gradient border-0"><Plus className="h-4 w-4 mr-1" /> Assign Work</Button>
+              <Button size="sm" className="sim-gradient border-0"><Plus className="h-4 w-4 mr-1" /> {t('Assign Work', 'Задай работа')}</Button>
             </DialogTrigger>
             <DialogContent>
-              <DialogHeader><DialogTitle className="font-display">Create Assignment</DialogTitle></DialogHeader>
+              <DialogHeader><DialogTitle className="font-display">{t('Create Assignment', 'Създай задача')}</DialogTitle></DialogHeader>
               <div className="space-y-4">
                 <div>
-                  <Label>Cohort</Label>
+                  <Label>{t('Cohort', 'Кохорта')}</Label>
                   <Select value={assignCohort} onValueChange={setAssignCohort}>
-                    <SelectTrigger><SelectValue placeholder="Select cohort" /></SelectTrigger>
+                    <SelectTrigger><SelectValue placeholder={t('Select cohort', 'Изберете кохорта')} /></SelectTrigger>
                     <SelectContent>{cohorts.map(c => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}</SelectContent>
                   </Select>
                 </div>
                 <div>
-                  <Label>Case Study (optional)</Label>
+                  <Label>{t('Case Study (optional)', 'Казус (незадължително)')}</Label>
                   <Select value={assignCase} onValueChange={v => { setAssignCase(v); setAssignAssessment(''); }}>
-                    <SelectTrigger><SelectValue placeholder="Select case" /></SelectTrigger>
+                    <SelectTrigger><SelectValue placeholder={t('Select case', 'Изберете казус')} /></SelectTrigger>
                     <SelectContent>{cases.filter(c => c.published).map(c => <SelectItem key={c.id} value={c.id}>{c.title}</SelectItem>)}</SelectContent>
                   </Select>
                 </div>
                 <div>
-                  <Label>Assessment (optional)</Label>
+                  <Label>{t('Assessment (optional)', 'Оценка (незадължително)')}</Label>
                   <Select value={assignAssessment} onValueChange={v => { setAssignAssessment(v); setAssignCase(''); }}>
-                    <SelectTrigger><SelectValue placeholder="Select assessment" /></SelectTrigger>
+                    <SelectTrigger><SelectValue placeholder={t('Select assessment', 'Изберете оценка')} /></SelectTrigger>
                     <SelectContent>{assessments.filter(a => a.published).map(a => <SelectItem key={a.id} value={a.id}>{a.title}</SelectItem>)}</SelectContent>
                   </Select>
                 </div>
                 <div>
-                  <Label>Type</Label>
+                  <Label>{t('Type', 'Тип')}</Label>
                   <Select value={assignType} onValueChange={setAssignType}>
                     <SelectTrigger><SelectValue /></SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="individual">Individual</SelectItem>
-                      <SelectItem value="team">Team</SelectItem>
+                      <SelectItem value="individual">{t('Individual', 'Индивидуална')}</SelectItem>
+                      <SelectItem value="team">{t('Team', 'Екипна')}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div>
-                  <Label>Due Date (optional)</Label>
+                  <Label>{t('Due Date (optional)', 'Краен срок (незадължително)')}</Label>
                   <Input type="datetime-local" value={assignDue} onChange={e => setAssignDue(e.target.value)} />
                 </div>
-                <Button onClick={createAssignment} className="w-full sim-gradient border-0">Create Assignment</Button>
+                <Button onClick={createAssignment} className="w-full sim-gradient border-0">{t('Create Assignment', 'Създай задача')}</Button>
               </div>
             </DialogContent>
           </Dialog>
@@ -157,27 +165,27 @@ export default function CohortManager() {
 
         {/* Create Cohort */}
         <div className="rounded-lg border border-border bg-card p-5">
-          <h2 className="font-display font-semibold text-foreground mb-3">Create Cohort</h2>
+          <h2 className="font-display font-semibold text-foreground mb-3">{t('Create Cohort', 'Създай кохорта')}</h2>
           <div className="flex gap-2">
-            <Input value={newCohortName} onChange={e => setNewCohortName(e.target.value)} placeholder="Cohort name (e.g., Fall 2026)" />
-            <Button onClick={createCohort} className="sim-gradient border-0 shrink-0">Create</Button>
+            <Input value={newCohortName} onChange={e => setNewCohortName(e.target.value)} placeholder={t('Cohort name (e.g., Fall 2026)', 'Име на кохорта (напр. Есен 2026)')} />
+            <Button onClick={createCohort} className="sim-gradient border-0 shrink-0">{t('Create', 'Създай')}</Button>
           </div>
         </div>
 
         {/* Cohorts List */}
         <div>
-          <h2 className="text-lg font-display font-semibold text-foreground mb-4">Cohorts</h2>
+          <h2 className="text-lg font-display font-semibold text-foreground mb-4">{t('Cohorts', 'Кохорти')}</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             {cohorts.map(c => {
               const mCount = members.filter(m => m.cohort_id === c.id).length;
-              const tCount = teams.filter(t => t.cohort_id === c.id).length;
+              const tCount = teams.filter(tm => tm.cohort_id === c.id).length;
               return (
                 <div key={c.id} className="rounded-lg border border-border bg-card p-5">
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="font-semibold text-foreground">{c.name}</h3>
-                    <Badge variant="outline" className="text-xs">{mCount} students</Badge>
+                    <Badge variant="outline" className="text-xs">{mCount} {t('students', 'ученици')}</Badge>
                   </div>
-                  <p className="text-xs text-muted-foreground">{tCount} teams · Created {new Date(c.created_at).toLocaleDateString()}</p>
+                  <p className="text-xs text-muted-foreground">{tCount} {t('teams', 'екипа')} · {t('Created', 'Създадена')} {new Date(c.created_at).toLocaleDateString()}</p>
                 </div>
               );
             })}
@@ -186,31 +194,31 @@ export default function CohortManager() {
 
         {/* Create Team */}
         <div className="rounded-lg border border-border bg-card p-5">
-          <h2 className="font-display font-semibold text-foreground mb-3">Create Team</h2>
+          <h2 className="font-display font-semibold text-foreground mb-3">{t('Create Team', 'Създай екип')}</h2>
           <div className="flex gap-2 flex-wrap">
-            <Input value={newTeamName} onChange={e => setNewTeamName(e.target.value)} placeholder="Team name" className="w-48" />
+            <Input value={newTeamName} onChange={e => setNewTeamName(e.target.value)} placeholder={t('Team name', 'Име на екип')} className="w-48" />
             <Select value={newTeamCohort} onValueChange={setNewTeamCohort}>
-              <SelectTrigger className="w-48"><SelectValue placeholder="Select cohort" /></SelectTrigger>
+              <SelectTrigger className="w-48"><SelectValue placeholder={t('Select cohort', 'Изберете кохорта')} /></SelectTrigger>
               <SelectContent>{cohorts.map(c => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}</SelectContent>
             </Select>
-            <Button onClick={createTeam} className="sim-gradient border-0">Create Team</Button>
+            <Button onClick={createTeam} className="sim-gradient border-0">{t('Create Team', 'Създай екип')}</Button>
           </div>
         </div>
 
         {/* Teams List */}
         <div>
-          <h2 className="text-lg font-display font-semibold text-foreground mb-4">Teams</h2>
+          <h2 className="text-lg font-display font-semibold text-foreground mb-4">{t('Teams', 'Екипи')}</h2>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {teams.map(t => {
-              const cohortName = cohorts.find(c => c.id === t.cohort_id)?.name || 'No cohort';
+            {teams.map(tm => {
+              const cohortName = cohorts.find(c => c.id === tm.cohort_id)?.name || t('No cohort', 'Без кохорта');
               return (
-                <div key={t.id} className="rounded-lg border border-border bg-card p-4">
+                <div key={tm.id} className="rounded-lg border border-border bg-card p-4">
                   <div className="flex items-center gap-2 mb-1">
                     <Users className="h-4 w-4 text-primary" />
-                    <span className="font-medium text-foreground text-sm">{t.name}</span>
+                    <span className="font-medium text-foreground text-sm">{tm.name}</span>
                   </div>
                   <p className="text-xs text-muted-foreground">{cohortName}</p>
-                  <p className="text-xs text-muted-foreground mt-1">Join code: <code className="bg-muted px-1.5 py-0.5 rounded">{t.join_code}</code></p>
+                  <p className="text-xs text-muted-foreground mt-1">{t('Join code:', 'Код за присъединяване:')} <code className="bg-muted px-1.5 py-0.5 rounded">{tm.join_code}</code></p>
                 </div>
               );
             })}
@@ -219,35 +227,35 @@ export default function CohortManager() {
 
         {/* Recent Assignments */}
         <div>
-          <h2 className="text-lg font-display font-semibold text-foreground mb-4">Assignments</h2>
+          <h2 className="text-lg font-display font-semibold text-foreground mb-4">{t('Assignments', 'Задачи')}</h2>
           <div className="rounded-lg border border-border overflow-hidden">
             <table className="w-full">
               <thead className="bg-muted/50">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground">Cohort</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground">Content</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground">Type</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground">Due</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground">{t('Cohort', 'Кохорта')}</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground">{t('Content', 'Съдържание')}</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground">{t('Type', 'Тип')}</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground">{t('Due', 'Краен срок')}</th>
                 </tr>
               </thead>
               <tbody>
                 {assignments.slice(0, 20).map(a => {
                   const cohortName = cohorts.find(c => c.id === a.cohort_id)?.name || '—';
                   const content = a.case_study_id
-                    ? cases.find(c => c.id === a.case_study_id)?.title || 'Case'
-                    : assessments.find(as_ => as_.id === a.assessment_id)?.title || 'Assessment';
+                    ? cases.find(c => c.id === a.case_study_id)?.title || t('Case', 'Казус')
+                    : assessments.find(as_ => as_.id === a.assessment_id)?.title || t('Assessment', 'Оценка');
                   return (
                     <tr key={a.id} className="border-t border-border">
                       <td className="px-4 py-3 text-sm text-foreground">{cohortName}</td>
                       <td className="px-4 py-3 text-sm text-foreground">{content}</td>
-                      <td className="px-4 py-3"><Badge variant="outline" className="text-xs capitalize">{a.assignment_type}</Badge></td>
+                      <td className="px-4 py-3"><Badge variant="outline" className="text-xs">{a.assignment_type === 'individual' ? t('Individual', 'Индивидуална') : t('Team', 'Екипна')}</Badge></td>
                       <td className="px-4 py-3 text-sm text-muted-foreground">{a.due_at ? new Date(a.due_at).toLocaleDateString() : '—'}</td>
                     </tr>
                   );
                 })}
               </tbody>
             </table>
-            {assignments.length === 0 && <p className="text-center py-8 text-sm text-muted-foreground">No assignments yet</p>}
+            {assignments.length === 0 && <p className="text-center py-8 text-sm text-muted-foreground">{t('No assignments yet', 'Все още няма задачи')}</p>}
           </div>
         </div>
       </main>
