@@ -611,6 +611,7 @@ export type Database = {
           final_pitch: string
           growth_strategy: string
           id: string
+          industry: string
           is_submitted: boolean
           problem: string
           submitted_at: string | null
@@ -626,6 +627,7 @@ export type Database = {
           final_pitch?: string
           growth_strategy?: string
           id?: string
+          industry?: string
           is_submitted?: boolean
           problem?: string
           submitted_at?: string | null
@@ -641,6 +643,7 @@ export type Database = {
           final_pitch?: string
           growth_strategy?: string
           id?: string
+          industry?: string
           is_submitted?: boolean
           problem?: string
           submitted_at?: string | null
