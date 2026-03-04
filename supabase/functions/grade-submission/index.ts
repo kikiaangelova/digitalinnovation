@@ -36,6 +36,7 @@ serve(async (req) => {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+    const userId = claimsData.claims.sub as string;
 
     // Use service role to access correct_answer
     const adminClient = createClient(supabaseUrl, serviceRoleKey);

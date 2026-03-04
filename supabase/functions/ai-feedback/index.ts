@@ -39,6 +39,7 @@ serve(async (req) => {
         status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+    const userId = claimsData.claims.sub as string;
 
     const langLabel = lang === "bg" ? "Bulgarian" : "English";
     const feedbackType = type || "startup_project";
