@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { INDUSTRIES } from '@/data/industry-map-data';
 import BusinessModelCanvas, { BMC_KEYS, type BMCData } from '@/components/startup/BusinessModelCanvas';
+import AIMentorPanel from '@/components/startup/AIMentorPanel';
 
 interface SectionConfig {
   key: string;
@@ -429,12 +430,15 @@ export default function MyStartupIdea() {
 
           {/* BMC tab */}
           <TabsContent value="bmc">
-            <BusinessModelCanvas
-              data={data}
-              lang={lang as 'en' | 'bg'}
-              disabled={data.is_submitted}
-              onChange={handleBMCChange}
-            />
+            <div className="grid gap-6 lg:grid-cols-[1fr_340px]">
+              <BusinessModelCanvas
+                data={data}
+                lang={lang as 'en' | 'bg'}
+                disabled={data.is_submitted}
+                onChange={handleBMCChange}
+              />
+              <AIMentorPanel data={data} lang={lang as 'en' | 'bg'} />
+            </div>
           </TabsContent>
         </Tabs>
       </div>
