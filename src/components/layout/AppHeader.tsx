@@ -47,6 +47,7 @@ export default function AppHeader() {
   const adminLinks = isAdmin
     ? [
         { to: '/admin', icon: Shield, label: t.admin },
+        { to: '/admin/teacher', icon: GraduationCap, label: lang === 'bg' ? 'Учител' : 'Teacher' },
         { to: '/admin/cohorts', icon: Users, label: t.cohorts },
         { to: '/admin/analytics', icon: BarChart3, label: t.analytics },
       ]
