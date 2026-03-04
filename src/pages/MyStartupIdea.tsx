@@ -45,6 +45,34 @@ const SECTIONS: SectionConfig[] = [
     ],
   },
   {
+    key: 'industry_analysis',
+    icon: Globe,
+    labelEn: 'Industry Analysis',
+    labelBg: 'Анализ на индустрията',
+    descEn: 'Analyze the industry your startup operates in.',
+    descBg: 'Анализирайте индустрията, в която работи вашият стартъп.',
+    prompts: [
+      { en: '🏭 Which industry does your startup belong to?', bg: '🏭 Към коя индустрия принадлежи вашият стартъп?' },
+      { en: '📈 What are the key trends in this industry?', bg: '📈 Какви са ключовите тенденции в тази индустрия?' },
+      { en: '📊 How large is the market? (estimated size, growth rate)', bg: '📊 Колко голям е пазарът? (очакван размер, темп на растеж)' },
+      { en: '⚖️ What regulations or barriers to entry exist?', bg: '⚖️ Какви регулации или бариери за навлизане съществуват?' },
+    ],
+  },
+  {
+    key: 'competitor_analysis',
+    icon: Search,
+    labelEn: 'Competitor Analysis',
+    labelBg: 'Анализ на конкуренцията',
+    descEn: 'Identify your main competitors and explain how you differ.',
+    descBg: 'Идентифицирайте основните си конкуренти и обяснете как се различавате.',
+    prompts: [
+      { en: '🔍 Identify at least 3 competitors (direct or indirect).', bg: '🔍 Идентифицирайте поне 3 конкуренти (преки или косвени).' },
+      { en: '💪 What are their strengths?', bg: '💪 Какви са техните силни страни?' },
+      { en: '⚠️ What are their weaknesses?', bg: '⚠️ Какви са техните слаби страни?' },
+      { en: '🎯 How is your solution different and better?', bg: '🎯 Как вашето решение е различно и по-добро?' },
+    ],
+  },
+  {
     key: 'customer',
     icon: Users,
     labelEn: 'Customer Segments',
@@ -72,13 +100,13 @@ const SECTIONS: SectionConfig[] = [
   {
     key: 'digital_product',
     icon: Monitor,
-    labelEn: 'Digital Product',
-    labelBg: 'Дигитален продукт',
-    descEn: 'Describe your digital product — app, platform, AI tool, or marketplace.',
-    descBg: 'Опишете вашия дигитален продукт — приложение, платформа, AI инструмент или marketplace.',
+    labelEn: 'Product (MVP)',
+    labelBg: 'Продукт (MVP)',
+    descEn: 'Describe your minimum viable product — app, platform, AI tool, or marketplace.',
+    descBg: 'Опишете вашия минимален жизнеспособен продукт — приложение, платформа, AI инструмент или marketplace.',
     prompts: [
       { en: '📱 What is your product? (app, platform, AI tool, marketplace…)', bg: '📱 Какъв е вашият продукт? (приложение, платформа, AI инструмент, marketplace…)' },
-      { en: '✨ What are the key features?', bg: '✨ Какви са основните функции?' },
+      { en: '✨ What are the key features of your MVP?', bg: '✨ Какви са основните функции на вашия MVP?' },
       { en: '🔧 What technology will you use?', bg: '🔧 Каква технология ще използвате?' },
     ],
   },
@@ -128,6 +156,8 @@ type SectionKey = string;
 
 interface ProjectData {
   problem: string;
+  industry_analysis: string;
+  competitor_analysis: string;
   customer: string;
   value_proposition: string;
   digital_product: string;
@@ -148,7 +178,8 @@ interface ProjectData {
 }
 
 const EMPTY_PROJECT: ProjectData = {
-  problem: '', customer: '', value_proposition: '', digital_product: '',
+  problem: '', industry_analysis: '', competitor_analysis: '',
+  customer: '', value_proposition: '', digital_product: '',
   business_model: '', growth_strategy: '', final_pitch: '', is_submitted: false, industry: '',
   bmc_customer_segments: '', bmc_value_proposition: '', bmc_channels: '',
   bmc_customer_relationships: '', bmc_revenue_streams: '', bmc_key_resources: '',
@@ -172,7 +203,7 @@ export default function MyStartupIdea() {
     const load = async () => {
       const { data: proj } = await supabase
         .from('startup_projects')
-        .select('problem, customer, value_proposition, digital_product, business_model, growth_strategy, final_pitch, is_submitted, industry, bmc_customer_segments, bmc_value_proposition, bmc_channels, bmc_customer_relationships, bmc_revenue_streams, bmc_key_resources, bmc_key_activities, bmc_key_partners, bmc_cost_structure')
+        .select('problem, industry_analysis, competitor_analysis, customer, value_proposition, digital_product, business_model, growth_strategy, final_pitch, is_submitted, industry, bmc_customer_segments, bmc_value_proposition, bmc_channels, bmc_customer_relationships, bmc_revenue_streams, bmc_key_resources, bmc_key_activities, bmc_key_partners, bmc_cost_structure')
         .eq('user_id', user.id)
         .maybeSingle();
       if (proj) { setData(proj as ProjectData); setHasRecord(true); }

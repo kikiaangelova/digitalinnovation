@@ -832,6 +832,7 @@ export type Database = {
       startup_project_versions: {
         Row: {
           business_model: string
+          competitor_analysis: string
           created_at: string
           customer: string
           digital_product: string
@@ -839,6 +840,7 @@ export type Database = {
           growth_strategy: string
           id: string
           industry: string
+          industry_analysis: string
           problem: string
           project_id: string
           user_id: string
@@ -847,6 +849,7 @@ export type Database = {
         }
         Insert: {
           business_model?: string
+          competitor_analysis?: string
           created_at?: string
           customer?: string
           digital_product?: string
@@ -854,6 +857,7 @@ export type Database = {
           growth_strategy?: string
           id?: string
           industry?: string
+          industry_analysis?: string
           problem?: string
           project_id: string
           user_id: string
@@ -862,6 +866,7 @@ export type Database = {
         }
         Update: {
           business_model?: string
+          competitor_analysis?: string
           created_at?: string
           customer?: string
           digital_product?: string
@@ -869,6 +874,7 @@ export type Database = {
           growth_strategy?: string
           id?: string
           industry?: string
+          industry_analysis?: string
           problem?: string
           project_id?: string
           user_id?: string
@@ -897,6 +903,7 @@ export type Database = {
           bmc_revenue_streams: string
           bmc_value_proposition: string
           business_model: string
+          competitor_analysis: string
           created_at: string
           customer: string
           digital_product: string
@@ -904,6 +911,7 @@ export type Database = {
           growth_strategy: string
           id: string
           industry: string
+          industry_analysis: string
           is_submitted: boolean
           problem: string
           submitted_at: string | null
@@ -922,6 +930,7 @@ export type Database = {
           bmc_revenue_streams?: string
           bmc_value_proposition?: string
           business_model?: string
+          competitor_analysis?: string
           created_at?: string
           customer?: string
           digital_product?: string
@@ -929,6 +938,7 @@ export type Database = {
           growth_strategy?: string
           id?: string
           industry?: string
+          industry_analysis?: string
           is_submitted?: boolean
           problem?: string
           submitted_at?: string | null
@@ -947,6 +957,7 @@ export type Database = {
           bmc_revenue_streams?: string
           bmc_value_proposition?: string
           business_model?: string
+          competitor_analysis?: string
           created_at?: string
           customer?: string
           digital_product?: string
@@ -954,6 +965,7 @@ export type Database = {
           growth_strategy?: string
           id?: string
           industry?: string
+          industry_analysis?: string
           is_submitted?: boolean
           problem?: string
           submitted_at?: string | null
