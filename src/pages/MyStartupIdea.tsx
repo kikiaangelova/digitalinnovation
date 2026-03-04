@@ -237,6 +237,13 @@ export default function MyStartupIdea() {
     saveTimerRef.current = setTimeout(() => saveProject(newData), 2000);
   }, [saveProject]);
 
+  // Cleanup autosave timer on unmount
+  useEffect(() => {
+    return () => {
+      if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+    };
+  }, []);
+
   const handleChange = (key: SectionKey, value: string) => {
     const newData = { ...data, [key]: value } as ProjectData;
     setData(newData);
