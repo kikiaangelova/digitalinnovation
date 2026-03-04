@@ -36,6 +36,7 @@ import IndustryInnovationMap from "./pages/IndustryInnovationMap";
 import StartupSimulator from "./pages/StartupSimulator";
 import TeacherDashboard from "./pages/TeacherDashboard";
 import LearningReport from "./pages/LearningReport";
+import SystemStatus from "./pages/admin/SystemStatus";
 
 const queryClient = new QueryClient();
 
@@ -78,6 +79,7 @@ const App = () => (
                   <Route path="/admin/startup-projects" element={<StartupProjectsAdmin />} />
                   <Route path="/admin/teacher" element={<TeacherDashboard />} />
                   <Route path="/my-report" element={<LearningReport />} />
+                  <Route path="/admin/system-status" element={<SystemStatus />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </ProfileGate>
