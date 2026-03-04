@@ -36,7 +36,7 @@ export function checkPassword(password: string, nameOrEmail?: string): PasswordC
   }
 
   return {
-    minLength: password.length >= 12,
+    minLength: password.length >= 8,
     hasUpper,
     hasLower,
     hasNumber,
@@ -84,7 +84,7 @@ export default function PasswordStrengthMeter({ password, nameOrEmail, lang }: P
   if (!password) return null;
 
   const requirements: { key: keyof PasswordCheck; en: string; bg: string }[] = [
-    { key: 'minLength', en: 'At least 12 characters', bg: 'Поне 12 символа' },
+    { key: 'minLength', en: 'At least 8 characters', bg: 'Поне 8 символа' },
     { key: 'complexityMet', en: '3 of 4: uppercase, lowercase, number, symbol', bg: '3 от 4: главна, малка, цифра, символ' },
     { key: 'notCommon', en: 'Not a common password', bg: 'Не е често срещана парола' },
     { key: 'notContainsName', en: 'Does not contain your name/email', bg: 'Не съдържа вашето име/имейл' },

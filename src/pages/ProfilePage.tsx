@@ -14,6 +14,8 @@ import { User, Save, Award, BookOpen, Users, BarChart3 } from 'lucide-react';
 
 const SKILL_OPTIONS = ['UX', 'Data', 'Strategy', 'PM', 'Marketing', 'AI', 'Engineering', 'Design', 'Finance', 'Operations'];
 
+const COUNTRY_OPTIONS = ['Bulgaria', 'Romania', 'Greece', 'Serbia', 'Turkey', 'Germany', 'UK', 'USA', 'Other'];
+
 export default function ProfilePage() {
   const { user, profile: authProfile } = useAuth();
   const { t, lang } = useLang();
@@ -25,6 +27,9 @@ export default function ProfilePage() {
   const [interestInput, setInterestInput] = useState('');
   const [linkedIn, setLinkedIn] = useState('');
   const [portfolio, setPortfolio] = useState('');
+  const [school, setSchool] = useState('');
+  const [classGrade, setClassGrade] = useState('');
+  const [country, setCountry] = useState('');
   const [profileVisible, setProfileVisible] = useState(true);
   const [leaderboardVisible, setLeaderboardVisible] = useState(false);
   const [submissions, setSubmissions] = useState<any[]>([]);
@@ -45,6 +50,9 @@ export default function ProfilePage() {
         const links = (p as any).links_json || {};
         setLinkedIn(links.linkedin || '');
         setPortfolio(links.portfolio || '');
+        setSchool(links.school || '');
+        setClassGrade(links.class_grade || '');
+        setCountry(links.country || '');
         setProfileVisible((p as any).profile_visible ?? true);
         setLeaderboardVisible((p as any).leaderboard_visible ?? false);
       }
@@ -67,7 +75,7 @@ export default function ProfilePage() {
       bio,
       skills_tags: skillsTags,
       interests,
-      links_json: { linkedin: linkedIn, portfolio },
+      links_json: { linkedin: linkedIn, portfolio, school, class_grade: classGrade, country },
       profile_visible: profileVisible,
       leaderboard_visible: leaderboardVisible,
     } as any).eq('user_id', user.id);
@@ -156,6 +164,27 @@ export default function ProfilePage() {
         {/* Edit form */}
         <div className="rounded-lg border border-border bg-card p-6 space-y-5">
           <h3 className="font-display font-semibold text-foreground">{t.editProfile}</h3>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <Label>{t.fullName}</Label>
+              <Input value={fullName} onChange={e => setFullName(e.target.value)} />
+            </div>
+            <div>
+              <Label>{lang === 'bg' ? 'Училище / Университет' : 'School / University'} <span className="text-xs text-muted-foreground">({lang === 'bg' ? 'по избор' : 'optional'})</span></Label>
+              <Input value={school} onChange={e => setSchool(e.target.value)} placeholder={lang === 'bg' ? 'напр. СУ Св. Климент Охридски' : 'e.g. Sofia University'} />
+            </div>
+            <div>
+              <Label>{lang === 'bg' ? 'Клас / Курс' : 'Class / Grade'} <span className="text-xs text-muted-foreground">({lang === 'bg' ? 'по избор' : 'optional'})</span></Label>
+              <Input value={classGrade} onChange={e => setClassGrade(e.target.value)} placeholder={lang === 'bg' ? 'напр. 11 клас' : 'e.g. 11th grade'} />
+            </div>
+            <div>
+              <Label>{lang === 'bg' ? 'Държава' : 'Country'} <span className="text-xs text-muted-foreground">({lang === 'bg' ? 'по избор' : 'optional'})</span></Label>
+              <select value={country} onChange={e => setCountry(e.target.value)} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+                <option value="">{lang === 'bg' ? '— Избери —' : '— Select —'}</option>
+                {COUNTRY_OPTIONS.map(c => <option key={c} value={c}>{c}</option>)}
+              </select>
+            </div>
+          </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <Label>{t.fullName}</Label>
