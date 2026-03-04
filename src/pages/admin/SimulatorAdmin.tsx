@@ -1,10 +1,12 @@
 import { useSimulator } from '@/context/SimulatorContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 import { ArrowLeft, Users, BarChart3, CheckCircle2, Clock } from 'lucide-react';
 
 export default function SimulatorAdmin() {
-  const { seasons, teams, submissions, currentUser, switchRole } = useSimulator();
+  const { seasons, teams, submissions, currentUser, switchRole, simulatorMode, setSimulatorMode } = useSimulator();
   const navigate = useNavigate();
 
   if (currentUser.role !== 'admin') {
@@ -33,6 +35,29 @@ export default function SimulatorAdmin() {
       </header>
 
       <main className="container mx-auto px-4 py-8 space-y-8">
+        {/* Mode Toggle */}
+        <div className="rounded-xl border border-border bg-card p-5">
+          <h2 className="text-base font-semibold text-foreground mb-3">Simulator Mode</h2>
+          <div className="flex items-center gap-3">
+            <Label htmlFor="mode-toggle" className="text-sm text-muted-foreground">
+              Individual
+            </Label>
+            <Switch
+              id="mode-toggle"
+              checked={simulatorMode === 'team'}
+              onCheckedChange={(checked) => setSimulatorMode(checked ? 'team' : 'individual')}
+            />
+            <Label htmlFor="mode-toggle" className="text-sm text-muted-foreground">
+              Team
+            </Label>
+          </div>
+          <p className="text-xs text-muted-foreground mt-2">
+            {simulatorMode === 'individual'
+              ? 'Students run the simulator individually. No team creation required.'
+              : 'Students must create or join a team before starting the simulator.'}
+          </p>
+        </div>
+
         {/* Seasons */}
         <div>
           <h2 className="text-xl font-semibold text-foreground mb-4">Simulation Seasons</h2>
@@ -79,37 +104,39 @@ export default function SimulatorAdmin() {
         </div>
 
         {/* Teams Overview */}
-        <div>
-          <h2 className="text-xl font-semibold text-foreground mb-4">All Teams</h2>
-          <div className="rounded-xl border border-border overflow-hidden">
-            <table className="w-full">
-              <thead className="bg-muted/50">
-                <tr>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">Team</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">Season</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">Members</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">Rounds Done</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">Join Code</th>
-                </tr>
-              </thead>
-              <tbody>
-                {teams.map(team => {
-                  const season = seasons.find(s => s.id === team.season_id);
-                  const roundsDone = submissions.filter(s => s.team_id === team.id && !s.is_draft).length;
-                  return (
-                    <tr key={team.id} className="border-t border-border">
-                      <td className="px-4 py-3 text-sm font-medium text-foreground">{team.name}</td>
-                      <td className="px-4 py-3 text-sm text-muted-foreground">{season?.theme || '—'}</td>
-                      <td className="px-4 py-3 text-sm text-muted-foreground">{team.members.length}</td>
-                      <td className="px-4 py-3 text-sm text-muted-foreground">{roundsDone}/{season?.weeks || 0}</td>
-                      <td className="px-4 py-3 text-sm font-mono text-muted-foreground">{team.join_code}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+        {teams.length > 0 && (
+          <div>
+            <h2 className="text-xl font-semibold text-foreground mb-4">All Teams</h2>
+            <div className="rounded-xl border border-border overflow-hidden">
+              <table className="w-full">
+                <thead className="bg-muted/50">
+                  <tr>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">Team</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">Season</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">Members</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">Rounds Done</th>
+                    <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">Join Code</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {teams.map(team => {
+                    const season = seasons.find(s => s.id === team.season_id);
+                    const roundsDone = submissions.filter(s => s.team_id === team.id && !s.is_draft).length;
+                    return (
+                      <tr key={team.id} className="border-t border-border">
+                        <td className="px-4 py-3 text-sm font-medium text-foreground">{team.name}</td>
+                        <td className="px-4 py-3 text-sm text-muted-foreground">{season?.theme || '—'}</td>
+                        <td className="px-4 py-3 text-sm text-muted-foreground">{team.members.length}</td>
+                        <td className="px-4 py-3 text-sm text-muted-foreground">{roundsDone}/{season?.weeks || 0}</td>
+                        <td className="px-4 py-3 text-sm font-mono text-muted-foreground">{team.join_code}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
+        )}
       </main>
     </div>
   );
