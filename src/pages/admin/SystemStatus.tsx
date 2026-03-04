@@ -121,6 +121,7 @@ const statusBadge = (s: Status, lang: 'en' | 'bg') => {
 
 export default function SystemStatus() {
   const { lang } = useLang();
+  const { isAdmin } = useAuth();
   const navigate = useNavigate();
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
 
@@ -141,6 +142,17 @@ export default function SystemStatus() {
     }
     setRunning(false);
   }, []);
+
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen bg-background">
+        <AppHeader />
+        <div className="flex items-center justify-center py-20 text-muted-foreground">
+          {t('Admin access required', 'Необходим е администраторски достъп')}
+        </div>
+      </div>
+    );
+  }
 
   const allOk = MODULES.every(k => results[k].status === 'ok');
   const hasErrors = MODULES.some(k => results[k].status === 'error');

@@ -1,11 +1,14 @@
 import { useSimulator } from '@/context/SimulatorContext';
 import { useLang } from '@/context/LangContext';
+import { useAuth } from '@/context/AuthContext';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Play, BarChart3, ArrowRight, Home, Rocket, Target, TrendingUp, Lightbulb } from 'lucide-react';
+import AppHeader from '@/components/layout/AppHeader';
+import { Play, BarChart3, ArrowRight, Rocket, Target, TrendingUp, Lightbulb } from 'lucide-react';
 
 export default function StudentLanding() {
   const { seasons, hasIndividualRun, startIndividualRun, currentUser, switchRole, simulatorMode } = useSimulator();
+  const { isAdmin } = useAuth();
   const { lang } = useLang();
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
   const navigate = useNavigate();
@@ -23,38 +26,7 @@ export default function StudentLanding() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border bg-card">
-        <div className="container mx-auto flex items-center justify-between px-4 py-4">
-          <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg sim-gradient">
-              <Play className="h-4 w-4 text-primary-foreground" />
-            </div>
-            <div>
-              <h1 className="text-lg font-bold text-foreground">DigiInnov {t('Simulator', 'Симулатор')}</h1>
-              <p className="text-xs text-muted-foreground">Digital Innovation Case Lab</p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <Button variant="ghost" size="sm" asChild>
-              <Link to="/">
-                <Home className="h-4 w-4 mr-1" />
-                {t('Home', 'Начало')}
-              </Link>
-            </Button>
-            <span className="text-sm text-muted-foreground">
-              {currentUser.name} · <span className="capitalize">{currentUser.role === 'student' ? t('Student', 'Ученик') : t('Admin', 'Админ')}</span>
-            </span>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => switchRole(currentUser.role === 'student' ? 'admin' : 'student')}
-            >
-              {t('Switch to', 'Превключи към')} {currentUser.role === 'student' ? t('Admin', 'Админ') : t('Student', 'Ученик')}
-            </Button>
-          </div>
-        </div>
-      </header>
+      <AppHeader />
 
       <main className="container mx-auto px-4 py-8">
         <div className="mb-8">
