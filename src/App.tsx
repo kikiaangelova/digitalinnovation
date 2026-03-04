@@ -70,7 +70,7 @@ const App = () => (
                   <Route path="/my-startup" element={<MyStartupIdea />} />
                   <Route path="/industries" element={<IndustryInnovationMap />} />
                   <Route path="/startup-simulator" element={<StartupSimulator />} />
-                  <Route path="/simulator" element={<StudentLanding />} />
+                  <Route path="/simulator" element={<StartupSimulator />} />
                   <Route path="/simulator/season/:id" element={<SeasonView />} />
                   <Route path="/simulator/season/:id/round/:n" element={<RoundView />} />
                   <Route path="/admin/simulator" element={<SimulatorAdmin />} />

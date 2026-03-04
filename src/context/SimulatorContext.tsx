@@ -49,7 +49,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
   const [teams, setTeams] = useState<Team[]>([
     {
       id: 'demo-team',
-      season_id: 'season-circular-commerce',
+      season_id: 'season-startup-lab',
       name: 'Team Alpha',
       join_code: 'ALPHA1',
       members: [
