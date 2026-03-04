@@ -80,12 +80,12 @@ export default function SeasonView() {
               const isUnlocked = idx === 0 || prevSubmitted;
 
               return (
-                <div
+              <div
                   key={round.id}
                   className={`rounded-xl border p-4 transition-all ${
                     isUnlocked
-                      ? 'border-border bg-card hover:shadow-md cursor-pointer'
-                      : 'border-border/50 bg-muted/50 opacity-60'
+                      ? 'border-border bg-card hover:shadow-md hover:border-primary/40 cursor-pointer'
+                      : 'border-border/50 bg-muted/50 opacity-60 cursor-not-allowed'
                   }`}
                   onClick={() => isUnlocked && team && navigate(`/simulator/season/${season.id}/round/${round.week_number}`)}
                 >
@@ -110,8 +110,12 @@ export default function SeasonView() {
                     </div>
                     <div className="text-right text-sm">
                       {isSubmitted && <span className="text-sim-success font-medium">{t('Completed', 'Завършен')}</span>}
-                      {!isSubmitted && isUnlocked && <span className="text-primary font-medium">{t('Ready', 'Готов')}</span>}
-                      {!isUnlocked && <span className="text-muted-foreground">{t('Locked', 'Заключен')}</span>}
+                      {!isSubmitted && isUnlocked && (
+                        <Button size="sm" className="sim-gradient border-0">
+                          {t(`Start Week ${round.week_number}`, `Започни седмица ${round.week_number}`)}
+                        </Button>
+                      )}
+                      {!isUnlocked && <span className="text-muted-foreground">{t('Locked', 'Заключено')}</span>}
                     </div>
                   </div>
                 </div>
