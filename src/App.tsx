@@ -31,6 +31,7 @@ import SeasonAnalytics from "./pages/admin/SeasonAnalytics";
 import AnalyticsDashboard from "./pages/admin/AnalyticsDashboard";
 import CohortManager from "./pages/admin/CohortManager";
 import MyStartupIdea from "./pages/MyStartupIdea";
+import StartupProjectsAdmin from "./pages/admin/StartupProjectsAdmin";
 
 const queryClient = new QueryClient();
 
@@ -68,6 +69,7 @@ const App = () => (
                   <Route path="/simulator/season/:id/round/:n" element={<RoundView />} />
                   <Route path="/admin/simulator" element={<SimulatorAdmin />} />
                   <Route path="/admin/simulator/season/:id" element={<SeasonAnalytics />} />
+                  <Route path="/admin/startup-projects" element={<StartupProjectsAdmin />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </ProfileGate>
