@@ -12,12 +12,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import {
   Lightbulb, Users, Zap, Monitor, DollarSign, TrendingUp,
-  Presentation, ChevronRight, Check, Save, Rocket, HelpCircle, Globe, LayoutGrid, ClipboardCheck
+  Presentation, ChevronRight, Check, Save, Rocket, HelpCircle, Globe, LayoutGrid, ClipboardCheck, Search
 } from 'lucide-react';
 import { INDUSTRIES } from '@/data/industry-map-data';
 import BusinessModelCanvas, { BMC_KEYS, type BMCData } from '@/components/startup/BusinessModelCanvas';
 import AIMentorPanel from '@/components/startup/AIMentorPanel';
 import IdeaEvaluation from '@/components/startup/IdeaEvaluation';
+import IndustryProblemGenerator from '@/components/startup/IndustryProblemGenerator';
 
 interface SectionConfig {
   key: string;
@@ -325,8 +326,12 @@ export default function MyStartupIdea() {
         </div>
 
         {/* Tabs: Sections | Business Model Canvas */}
-        <Tabs defaultValue="sections" className="space-y-6">
-          <TabsList className="grid w-full max-w-lg grid-cols-3">
+        <Tabs defaultValue="problems" className="space-y-6">
+          <TabsList className="grid w-full max-w-2xl grid-cols-4">
+            <TabsTrigger value="problems" className="gap-1.5">
+              <Search className="h-4 w-4" />
+              {t('Problems', 'Проблеми')}
+            </TabsTrigger>
             <TabsTrigger value="sections" className="gap-1.5">
               <Lightbulb className="h-4 w-4" />
               {t('Sections', 'Секции')}
@@ -340,6 +345,32 @@ export default function MyStartupIdea() {
               BMC
             </TabsTrigger>
           </TabsList>
+
+          {/* Problems tab */}
+          <TabsContent value="problems">
+            <IndustryProblemGenerator
+              lang={lang as 'en' | 'bg'}
+              onProblemSelected={(problem, industry) => {
+                const problemText = lang === 'bg' ? problem.descBg : problem.descEn;
+                const customerText = lang === 'bg' ? problem.affectedBg : problem.affectedEn;
+                const vpText = lang === 'bg' ? problem.opportunityBg : problem.opportunityEn;
+                const newData = {
+                  ...data,
+                  problem: data.problem || problemText,
+                  customer: data.customer || customerText,
+                  value_proposition: data.value_proposition || vpText,
+                  industry: data.industry || industry.id,
+                };
+                setData(newData);
+                scheduleAutoSave(newData);
+                setActiveSection(0);
+                // Switch to sections tab
+                const sectionsTab = document.querySelector('[data-state][value="sections"]') as HTMLElement;
+                sectionsTab?.click();
+                toast.success(t('Problem loaded! Start building your solution.', 'Проблемът е зареден! Започнете да изграждате решение.'));
+              }}
+            />
+          </TabsContent>
 
           {/* Sections tab */}
           <TabsContent value="sections">
