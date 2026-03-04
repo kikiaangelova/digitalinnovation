@@ -1206,6 +1206,31 @@ export type Database = {
           type: string
         }[]
       }
+      get_player_assessment_questions: {
+        Args: { _assessment_id: string }
+        Returns: {
+          competency_id: string
+          id: string
+          options: Json
+          points: number
+          prompt: string
+          question_order: number
+          type: string
+        }[]
+      }
+      get_player_questions: {
+        Args: { _case_study_id: string }
+        Returns: {
+          case_step_id: string
+          id: string
+          options: Json
+          points: number
+          prompt: string
+          prompt_bg: string
+          question_order: number
+          type: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
