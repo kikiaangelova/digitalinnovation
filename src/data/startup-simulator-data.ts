@@ -14,6 +14,15 @@ export interface SimDecisionOption {
   effects: Partial<SimWeekKPIs>;
 }
 
+export interface SimDecision {
+  questionEn: string;
+  questionBg: string;
+  multiSelect?: boolean;
+  multiSelectHintEn?: string;
+  multiSelectHintBg?: string;
+  options: SimDecisionOption[];
+}
+
 export interface SimWeek {
   week: number;
   titleEn: string;
@@ -21,11 +30,7 @@ export interface SimWeek {
   descEn: string;
   descBg: string;
   icon: string;
-  decisions: {
-    questionEn: string;
-    questionBg: string;
-    options: SimDecisionOption[];
-  }[];
+  decisions: SimDecision[];
 }
 
 export const INITIAL_KPIS: SimWeekKPIs = {
@@ -94,75 +99,100 @@ export const SIM_WEEKS: SimWeek[] = [
   },
   {
     week: 3,
-    titleEn: 'Business Model',
-    titleBg: 'Бизнес модел',
-    descEn: 'Design how your startup will generate revenue and sustain itself financially.',
-    descBg: 'Проектирайте как вашият стартъп ще генерира приходи и ще се поддържа финансово.',
-    icon: '💰',
-    decisions: [
-      {
-        questionEn: 'How will you charge customers?',
-        questionBg: 'Как ще таксувате клиентите?',
-        options: [
-          { id: 'w3-subscription', labelEn: 'Subscription model', labelBg: 'Абонаментен модел', descEn: 'Monthly recurring revenue. Predictable but slower to build.', descBg: 'Месечни повтарящи се приходи. Предсказуем, но по-бавен за изграждане.', effects: { revenue: 1500, satisfaction: 5, growthRate: 8 } },
-          { id: 'w3-commission', labelEn: 'Commission per transaction', labelBg: 'Комисиона на транзакция', descEn: 'Take a cut of each transaction. Revenue scales with volume.', descBg: 'Вземете процент от всяка транзакция. Приходите нарастват с обема.', effects: { revenue: 800, users: 50, growthRate: 12 } },
-          { id: 'w3-freemium', labelEn: 'Freemium model', labelBg: 'Freemium модел', descEn: 'Free basic version, paid premium. Fast user growth, slow monetization.', descBg: 'Безплатна базова версия, платена премиум. Бърз растеж, бавна монетизация.', effects: { users: 200, revenue: 300, satisfaction: 10, growthRate: 15 } },
-        ],
-      },
-      {
-        questionEn: 'What is your pricing strategy?',
-        questionBg: 'Каква е ценовата ви стратегия?',
-        options: [
-          { id: 'w3-low', labelEn: 'Low price, high volume', labelBg: 'Ниска цена, голям обем', descEn: 'Affordable for everyone. Aim for mass adoption.', descBg: 'Достъпна за всички. Цел — масово приемане.', effects: { users: 100, revenue: 400, growthRate: 5 } },
-          { id: 'w3-mid', labelEn: 'Mid-range pricing', labelBg: 'Средна ценова категория', descEn: 'Balanced price and value. Sustainable approach.', descBg: 'Балансирана цена и стойност. Устойчив подход.', effects: { users: 40, revenue: 900, satisfaction: 5 } },
-          { id: 'w3-premium', labelEn: 'Premium pricing', labelBg: 'Премиум цена', descEn: 'High price for a premium product. Few users, high revenue.', descBg: 'Висока цена за премиум продукт. Малко потребители, високи приходи.', effects: { users: -20, revenue: 1800, satisfaction: 10 } },
-        ],
-      },
-    ],
-  },
-  {
-    week: 4,
-    titleEn: 'Product Design (MVP)',
-    titleBg: 'Дизайн на продукт (MVP)',
-    descEn: 'Build your Minimum Viable Product — the simplest version of your product that solves the core problem.',
-    descBg: 'Изградете вашия Минимално Жизнеспособен Продукт — най-простата версия, която решава основния проблем.',
+    titleEn: 'Product Architecture',
+    titleBg: 'Архитектура на продукта',
+    descEn: 'Design your digital product architecture. Real startups often combine multiple technologies to create powerful solutions.',
+    descBg: 'Проектирайте архитектурата на вашия дигитален продукт. Реалните стартъпи често комбинират множество технологии.',
     icon: '🛠️',
     decisions: [
       {
-        questionEn: 'What type of digital product will you build?',
-        questionBg: 'Какъв тип дигитален продукт ще изградите?',
+        questionEn: 'What components will your digital product include? (Select all that apply)',
+        questionBg: 'Кои компоненти ще включва вашият дигитален продукт? (можете да изберете повече от един)',
+        multiSelect: true,
+        multiSelectHintEn: 'Hybrid product architecture detected — many successful startups combine multiple technologies.',
+        multiSelectHintBg: 'Засечена хибридна архитектура — много успешни стартъпи комбинират множество технологии.',
         options: [
-          { id: 'w4-app', labelEn: 'Mobile app', labelBg: 'Мобилно приложение', descEn: 'A native mobile app. Great for engagement, costly to build.', descBg: 'Нативно мобилно приложение. Чудесно за ангажираност, скъпо за изграждане.', effects: { users: 80, satisfaction: 15, revenue: -500 } },
-          { id: 'w4-web', labelEn: 'Web platform', labelBg: 'Уеб платформа', descEn: 'Browser-based platform. Easier to build, accessible to everyone.', descBg: 'Платформа, базирана на браузър. По-лесна за изграждане, достъпна за всички.', effects: { users: 120, satisfaction: 8, revenue: -200 } },
-          { id: 'w4-ai', labelEn: 'AI-powered tool', labelBg: 'AI инструмент', descEn: 'An AI tool solving a specific problem. Innovative but complex.', descBg: 'AI инструмент, решаващ специфичен проблем. Иновативен, но сложен.', effects: { users: 60, satisfaction: 12, revenue: -800, growthRate: 10 } },
+          { id: 'w3-mobile', labelEn: 'Mobile App', labelBg: 'Мобилно приложение', descEn: 'Native mobile experience. Great for engagement and push notifications.', descBg: 'Нативно мобилно изживяване. Чудесно за ангажираност и push нотификации.', effects: { users: 80, satisfaction: 12, revenue: -400 } },
+          { id: 'w3-web', labelEn: 'Web Platform', labelBg: 'Уеб платформа', descEn: 'Browser-based platform accessible to everyone, everywhere.', descBg: 'Платформа, достъпна за всички навсякъде чрез браузър.', effects: { users: 120, satisfaction: 8, revenue: -200 } },
+          { id: 'w3-ai', labelEn: 'AI-Powered Tool', labelBg: 'AI инструмент', descEn: 'Leverage artificial intelligence for automation and insights.', descBg: 'Използвайте изкуствен интелект за автоматизация и анализи.', effects: { users: 40, satisfaction: 10, revenue: -600, growthRate: 8 } },
+          { id: 'w3-data', labelEn: 'Data Platform', labelBg: 'Платформа за данни', descEn: 'Collect, analyze and monetize data insights.', descBg: 'Събирайте, анализирайте и монетизирайте данни.', effects: { users: 20, satisfaction: 5, revenue: 300, growthRate: 5 } },
+          { id: 'w3-marketplace', labelEn: 'Marketplace Platform', labelBg: 'Маркетплейс платформа', descEn: 'Connect buyers and sellers. Network effects drive growth.', descBg: 'Свържете купувачи и продавачи. Мрежови ефекти движат растежа.', effects: { users: 100, satisfaction: 6, revenue: 200, growthRate: 10 } },
         ],
       },
       {
         questionEn: 'How will you test your MVP?',
         questionBg: 'Как ще тествате вашия MVP?',
         options: [
-          { id: 'w4-beta', labelEn: 'Private beta with 50 users', labelBg: 'Частна бета с 50 потребители', descEn: 'Small test group. High feedback quality, slow launch.', descBg: 'Малка тестова група. Високо качество на обратна връзка, бавно стартиране.', effects: { satisfaction: 15, growthRate: -3 } },
-          { id: 'w4-public', labelEn: 'Public launch', labelBg: 'Публично стартиране', descEn: 'Launch to everyone immediately. Fast growth, more bugs.', descBg: 'Стартирайте за всички веднага. Бърз растеж, повече бъгове.', effects: { users: 150, satisfaction: -10, growthRate: 15 } },
-          { id: 'w4-landing', labelEn: 'Landing page + waitlist', labelBg: 'Landing page + списък за чакане', descEn: 'Test demand before building. Smart but slow.', descBg: 'Тествайте търсенето преди да строите. Умно, но бавно.', effects: { users: 30, satisfaction: 8, growthRate: 5 } },
+          { id: 'w3-beta', labelEn: 'Private beta with 50 users', labelBg: 'Частна бета с 50 потребители', descEn: 'Small test group. High feedback quality, slow launch.', descBg: 'Малка тестова група. Високо качество на обратна връзка, бавно стартиране.', effects: { satisfaction: 15, growthRate: -3 } },
+          { id: 'w3-public', labelEn: 'Public launch', labelBg: 'Публично стартиране', descEn: 'Launch to everyone immediately. Fast growth, more bugs.', descBg: 'Стартирайте за всички веднага. Бърз растеж, повече бъгове.', effects: { users: 150, satisfaction: -10, growthRate: 15 } },
+          { id: 'w3-landing', labelEn: 'Landing page + waitlist', labelBg: 'Landing page + списък за чакане', descEn: 'Test demand before building. Smart but slow.', descBg: 'Тествайте търсенето преди да строите. Умно, но бавно.', effects: { users: 30, satisfaction: 8, growthRate: 5 } },
+        ],
+      },
+    ],
+  },
+  {
+    week: 4,
+    titleEn: 'Business Model & Revenue',
+    titleBg: 'Бизнес модел и приходи',
+    descEn: 'Design how your startup will generate revenue. Successful startups often combine multiple revenue streams.',
+    descBg: 'Проектирайте как вашият стартъп ще генерира приходи. Успешните стартъпи често комбинират множество източници на приходи.',
+    icon: '💰',
+    decisions: [
+      {
+        questionEn: 'How will your product generate revenue? (Select all that apply)',
+        questionBg: 'Как вашият продукт ще генерира приходи? (можете да изберете повече от един)',
+        multiSelect: true,
+        multiSelectHintEn: 'Multi-revenue strategy detected — diversifying revenue streams reduces risk.',
+        multiSelectHintBg: 'Засечена мулти-приходна стратегия — диверсификацията на приходите намалява риска.',
+        options: [
+          { id: 'w4-subscription', labelEn: 'Subscription (monthly/yearly)', labelBg: 'Абонамент (месечен/годишен)', descEn: 'Predictable recurring revenue. Industry standard for SaaS.', descBg: 'Предвидими повтарящи се приходи. Индустриален стандарт за SaaS.', effects: { revenue: 1500, satisfaction: 5, growthRate: 6 } },
+          { id: 'w4-freemium', labelEn: 'Freemium', labelBg: 'Freemium', descEn: 'Free basic version, paid premium features. Fast user acquisition.', descBg: 'Безплатна базова версия, платени премиум функции. Бързо привличане на потребители.', effects: { users: 200, revenue: 300, satisfaction: 10, growthRate: 12 } },
+          { id: 'w4-payperuse', labelEn: 'Pay-per-use', labelBg: 'Плащане при ползване', descEn: 'Users pay only for what they use. Fair and transparent.', descBg: 'Потребителите плащат само за това, което използват. Справедливо и прозрачно.', effects: { revenue: 800, satisfaction: 8, growthRate: 5 } },
+          { id: 'w4-iap', labelEn: 'In-app purchases', labelBg: 'Покупки в приложението', descEn: 'Sell digital goods or upgrades inside your app.', descBg: 'Продавайте дигитални стоки или ъпгрейди в приложението.', effects: { revenue: 600, users: 50, satisfaction: 3 } },
+          { id: 'w4-commission', labelEn: 'Marketplace commission', labelBg: 'Комисиона от маркетплейс', descEn: 'Take a percentage of each transaction. Scales with volume.', descBg: 'Вземете процент от всяка транзакция. Мащабира с обема.', effects: { revenue: 700, users: 40, growthRate: 8 } },
+          { id: 'w4-ads', labelEn: 'Advertising', labelBg: 'Реклами', descEn: 'Monetize through ads. Requires large user base.', descBg: 'Монетизирайте чрез реклами. Изисква голяма потребителска база.', effects: { revenue: 400, users: 100, satisfaction: -5, growthRate: 3 } },
+          { id: 'w4-enterprise', labelEn: 'Enterprise licensing', labelBg: 'Корпоративен лиценз', descEn: 'Sell licenses to large organizations. High value contracts.', descBg: 'Продавайте лицензи на големи организации. Договори с висока стойност.', effects: { revenue: 2500, users: 10, satisfaction: 8 } },
+          { id: 'w4-onetime', labelEn: 'One-time purchase', labelBg: 'Еднократна покупка', descEn: 'Single payment for lifetime access. Simple but no recurring revenue.', descBg: 'Еднократно плащане за пожизнен достъп. Просто, но без повтарящи се приходи.', effects: { revenue: 1000, satisfaction: 12, growthRate: -2 } },
+        ],
+      },
+      {
+        questionEn: 'Who is your primary target market?',
+        questionBg: 'Кой е основният пазар за вашия продукт?',
+        options: [
+          { id: 'w4-mass', labelEn: 'Mass Market', labelBg: 'Масов пазар', descEn: 'Target the broadest possible audience. High volume, intense competition.', descBg: 'Таргетирайте най-широката аудитория. Голям обем, интензивна конкуренция.', effects: { users: 200, revenue: 500, satisfaction: -3, growthRate: 10 } },
+          { id: 'w4-nichemarket', labelEn: 'Niche Market', labelBg: 'Нишов пазар', descEn: 'Focus on a specific segment. Less competition, higher loyalty.', descBg: 'Фокусирайте се върху специфичен сегмент. По-малка конкуренция, по-висока лоялност.', effects: { users: 40, revenue: 800, satisfaction: 15, growthRate: 3 } },
+          { id: 'w4-b2b-target', labelEn: 'B2B', labelBg: 'B2B', descEn: 'Sell to other businesses. Higher contract values, longer sales cycles.', descBg: 'Продавайте на други бизнеси. По-високи стойности на договорите, по-дълги цикли на продажба.', effects: { users: 20, revenue: 2000, satisfaction: 10, growthRate: 5 } },
+          { id: 'w4-b2c-target', labelEn: 'B2C', labelBg: 'B2C', descEn: 'Sell directly to consumers. Large audience, lower prices.', descBg: 'Продавайте директно на потребители. Голяма аудитория, по-ниски цени.', effects: { users: 180, revenue: 400, satisfaction: 5, growthRate: 8 } },
+          { id: 'w4-enterprise-target', labelEn: 'Enterprise', labelBg: 'Корпоративен', descEn: 'Target large enterprises. Complex sales but very high revenue.', descBg: 'Таргетирайте големи предприятия. Сложни продажби, но много високи приходи.', effects: { users: 10, revenue: 3000, satisfaction: 8, growthRate: 2 } },
         ],
       },
     ],
   },
   {
     week: 5,
-    titleEn: 'Growth Strategy',
-    titleBg: 'Стратегия за растеж',
-    descEn: 'Choose how you will acquire users and grow your startup rapidly.',
-    descBg: 'Изберете как ще привлечете потребители и ще развиете стартъпа си бързо.',
+    titleEn: 'Marketing & Growth Strategy',
+    titleBg: 'Маркетинг и стратегия за растеж',
+    descEn: 'Choose how you will acquire users and grow your startup. The best startups use multiple channels strategically.',
+    descBg: 'Изберете как ще привлечете потребители и ще развиете стартъпа. Най-добрите стартъпи използват множество канали стратегически.',
     icon: '🚀',
     decisions: [
       {
-        questionEn: 'Choose your marketing strategy:',
-        questionBg: 'Изберете вашата маркетингова стратегия:',
+        questionEn: 'Which marketing channels will you use to grow your startup? (Select all that apply)',
+        questionBg: 'Кои маркетингови канали ще използвате за растеж? (можете да изберете повече от един)',
+        multiSelect: true,
+        multiSelectHintEn: 'Multi-channel strategy detected — using diverse channels accelerates growth.',
+        multiSelectHintBg: 'Засечена мулти-канална стратегия — разнообразните канали ускоряват растежа.',
         options: [
-          { id: 'w5-social', labelEn: 'Social media marketing', labelBg: 'Маркетинг в социалните медии', descEn: 'Organic content on Instagram, TikTok, etc. Low cost, slow build.', descBg: 'Органично съдържание в Instagram, TikTok и др. Ниска цена, бавно изграждане.', effects: { users: 200, revenue: -100, satisfaction: 5, growthRate: 10 } },
-          { id: 'w5-influencer', labelEn: 'Influencer marketing', labelBg: 'Инфлуенсър маркетинг', descEn: 'Partner with influencers. Medium cost, fast awareness.', descBg: 'Партнирайте с инфлуенсъри. Средна цена, бързо разпознаване.', effects: { users: 350, revenue: -600, satisfaction: 3, growthRate: 18 } },
-          { id: 'w5-paid', labelEn: 'Paid advertising', labelBg: 'Платена реклама', descEn: 'Google/Facebook ads. Expensive but measurable results.', descBg: 'Реклами в Google/Facebook. Скъпо, но измерими резултати.', effects: { users: 500, revenue: -1200, satisfaction: -2, growthRate: 25 } },
+          { id: 'w5-social', labelEn: 'Social Media Marketing', labelBg: 'Маркетинг в социалните медии', descEn: 'Organic content on Instagram, TikTok, LinkedIn. Low cost, slow build.', descBg: 'Органично съдържание в Instagram, TikTok, LinkedIn. Ниска цена, бавно изграждане.', effects: { users: 150, revenue: -100, satisfaction: 5, growthRate: 8 } },
+          { id: 'w5-influencer', labelEn: 'Influencer Marketing', labelBg: 'Инфлуенсър маркетинг', descEn: 'Partner with influencers for fast brand awareness.', descBg: 'Партнирайте с инфлуенсъри за бързо разпознаване.', effects: { users: 250, revenue: -400, satisfaction: 3, growthRate: 12 } },
+          { id: 'w5-seo', labelEn: 'SEO / Content Marketing', labelBg: 'SEO / Съдържателен маркетинг', descEn: 'Create valuable content to rank in search engines. Long-term play.', descBg: 'Създавайте ценно съдържание за класиране в търсачки. Дългосрочна стратегия.', effects: { users: 100, satisfaction: 8, growthRate: 6 } },
+          { id: 'w5-paid', labelEn: 'Paid Ads (Google / Meta)', labelBg: 'Платени реклами (Google / Meta)', descEn: 'Pay for immediate visibility. Expensive but measurable.', descBg: 'Платете за незабавна видимост. Скъпо, но измеримо.', effects: { users: 300, revenue: -800, satisfaction: -2, growthRate: 18 } },
+          { id: 'w5-community', labelEn: 'Community Building', labelBg: 'Изграждане на общност', descEn: 'Build a loyal community around your brand. Strong retention.', descBg: 'Изградете лоялна общност около бранда. Силно задържане.', effects: { satisfaction: 18, users: 50, growthRate: 5 } },
+          { id: 'w5-partnerships', labelEn: 'Partnerships', labelBg: 'Партньорства', descEn: 'Strategic partnerships for distribution and credibility.', descBg: 'Стратегически партньорства за дистрибуция и доверие.', effects: { users: 80, revenue: 200, satisfaction: 5, growthRate: 7 } },
+          { id: 'w5-plg', labelEn: 'Product-Led Growth', labelBg: 'Растеж чрез продукта', descEn: 'Let the product sell itself through great user experience.', descBg: 'Нека продуктът се продава сам чрез страхотно потребителско изживяване.', effects: { users: 120, satisfaction: 15, growthRate: 10 } },
+          { id: 'w5-referral', labelEn: 'Referral Programs', labelBg: 'Реферални програми', descEn: 'Incentivize users to invite friends. Viral growth potential.', descBg: 'Стимулирайте потребителите да канят приятели. Потенциал за вирусен растеж.', effects: { users: 180, revenue: -200, satisfaction: 5, growthRate: 14 } },
+          { id: 'w5-email', labelEn: 'Email Marketing', labelBg: 'Имейл маркетинг', descEn: 'Direct communication with your audience. High ROI channel.', descBg: 'Директна комуникация с аудиторията. Канал с висок ROI.', effects: { users: 60, revenue: 100, satisfaction: 3, growthRate: 4 } },
+          { id: 'w5-events', labelEn: 'Events / Webinars', labelBg: 'Събития / Уебинари', descEn: 'Build authority through live events and presentations.', descBg: 'Изградете авторитет чрез живи събития и презентации.', effects: { users: 40, satisfaction: 10, revenue: -150, growthRate: 3 } },
         ],
       },
       {
@@ -170,7 +200,7 @@ export const SIM_WEEKS: SimWeek[] = [
         questionBg: 'Как ще задържите потребителите?',
         options: [
           { id: 'w5-loyalty', labelEn: 'Loyalty & rewards program', labelBg: 'Програма за лоялност', descEn: 'Reward repeat users. Increases retention at moderate cost.', descBg: 'Възнаградете редовните потребители. Увеличава задържането при умерена цена.', effects: { satisfaction: 15, revenue: -300, growthRate: 3 } },
-          { id: 'w5-community', labelEn: 'Community building', labelBg: 'Изграждане на общност', descEn: 'Build a community around your brand. Strong but slow.', descBg: 'Изградете общност около бранда. Силно, но бавно.', effects: { satisfaction: 20, users: 50, growthRate: 5 } },
+          { id: 'w5-comm-build', labelEn: 'Community building', labelBg: 'Изграждане на общност', descEn: 'Build a community around your brand. Strong but slow.', descBg: 'Изградете общност около бранда. Силно, но бавно.', effects: { satisfaction: 20, users: 50, growthRate: 5 } },
           { id: 'w5-features', labelEn: 'Continuous feature updates', labelBg: 'Непрекъснати актуализации', descEn: 'Keep shipping new features. Expensive but keeps users engaged.', descBg: 'Продължавайте да пускате нови функции. Скъпо, но държи потребителите ангажирани.', effects: { satisfaction: 10, revenue: -500, users: 30, growthRate: 8 } },
         ],
       },
@@ -216,6 +246,16 @@ export function applyDecisionEffects(
     satisfaction: Math.min(100, Math.max(0, currentKPIs.satisfaction + (effects.satisfaction || 0))),
     growthRate: Math.max(-50, Math.min(100, currentKPIs.growthRate + (effects.growthRate || 0))),
   };
+}
+
+export function combineEffects(effectsList: Partial<SimWeekKPIs>[]): Partial<SimWeekKPIs> {
+  const combined: Partial<SimWeekKPIs> = {};
+  for (const effects of effectsList) {
+    for (const [key, val] of Object.entries(effects) as [keyof SimWeekKPIs, number][]) {
+      combined[key] = (combined[key] || 0) + val;
+    }
+  }
+  return combined;
 }
 
 export function getStartupGrade(kpis: SimWeekKPIs): { grade: string; labelEn: string; labelBg: string; color: string } {
