@@ -10,14 +10,17 @@ import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
 import { toast } from 'sonner';
+import LearningOutcomes, { calcOutcomeScores, LEARNING_OUTCOMES } from '@/components/dashboard/LearningOutcomes';
+import Leaderboard from '@/components/dashboard/Leaderboard';
 import {
   BarChart, Bar, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip,
-  ResponsiveContainer, Cell, PieChart, Pie,
+  ResponsiveContainer, Cell, PieChart, Pie, RadarChart, PolarGrid,
+  PolarAngleAxis, PolarRadiusAxis, Radar,
 } from 'recharts';
 import {
   Users, BookOpen, Rocket, Activity, Search, ChevronDown, ChevronRight,
   MessageSquare, Sparkles, Download, TrendingUp, Target, BarChart3, User,
-  Check, Clock, Send, ArrowLeft,
+  Check, Clock, Send, ArrowLeft, Trophy, GraduationCap,
 } from 'lucide-react';
 
 // Types
@@ -497,11 +500,13 @@ export default function TeacherDashboard() {
         </div>
 
         <Tabs defaultValue="students" className="space-y-4">
-          <TabsList className="bg-muted/50">
+          <TabsList className="bg-muted/50 flex-wrap h-auto">
             <TabsTrigger value="students">{t('Students', 'Ученици')}</TabsTrigger>
             <TabsTrigger value="startups">{t('Startups', 'Стартъпи')}</TabsTrigger>
             <TabsTrigger value="cases">{t('Cases', 'Казуси')}</TabsTrigger>
             <TabsTrigger value="simulator">{t('Simulator', 'Симулатор')}</TabsTrigger>
+            <TabsTrigger value="outcomes">{t('Learning Outcomes', 'Учебни резултати')}</TabsTrigger>
+            <TabsTrigger value="leaderboard">{t('Leaderboard', 'Класация')}</TabsTrigger>
             <TabsTrigger value="analytics">{t('Analytics', 'Анализи')}</TabsTrigger>
           </TabsList>
 
@@ -696,6 +701,139 @@ export default function TeacherDashboard() {
                 </button>
               ))
             )}
+          </TabsContent>
+
+          {/* LEARNING OUTCOMES TAB */}
+          <TabsContent value="outcomes" className="space-y-6">
+            <div className="rounded-xl border border-border bg-card p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <GraduationCap className="h-5 w-5 text-primary" />
+                <h2 className="text-lg font-semibold text-foreground">{t('Class Learning Outcomes', 'Учебни резултати на класа')}</h2>
+              </div>
+              <p className="text-sm text-muted-foreground mb-4">
+                {t('Average learning outcome scores across all students.', 'Средни резултати за учебни постижения на всички ученици.')}
+              </p>
+              {(() => {
+                const STARTUP_SECTIONS = ['problem', 'customer', 'value_proposition', 'digital_product', 'business_model', 'growth_strategy', 'final_pitch'];
+                // Calculate average outcome scores across all students
+                const allScores: Record<string, number[]> = {};
+                LEARNING_OUTCOMES.forEach(lo => { allScores[lo.id] = []; });
+
+                profiles.forEach(p => {
+                  const subs = getStudentSubs(p.user_id);
+                  const sim = getStudentSim(p.user_id);
+                  const proj = getStudentProject(p.user_id);
+                  const sectionMap: Record<string, boolean> = {};
+                  STARTUP_SECTIONS.forEach(s => {
+                    sectionMap[s] = proj ? ((proj as any)[s] || '').trim().length > 10 : false;
+                  });
+                  const scores = calcOutcomeScores({
+                    casesCompleted: subs.length,
+                    casesTotal: cases.length,
+                    startupSections: sectionMap,
+                    simWeek: sim?.current_week || 1,
+                    simComplete: sim?.is_complete || false,
+                  });
+                  LEARNING_OUTCOMES.forEach(lo => {
+                    allScores[lo.id].push(scores[lo.id] || 0);
+                  });
+                });
+
+                const avgScores = LEARNING_OUTCOMES.map(lo => ({
+                  name: lang === 'bg' ? lo.bg : lo.en,
+                  score: allScores[lo.id].length > 0
+                    ? Math.round(allScores[lo.id].reduce((a, b) => a + b, 0) / allScores[lo.id].length)
+                    : 0,
+                }));
+
+                return (
+                  <div className="grid gap-6 md:grid-cols-2">
+                    <div className="space-y-3">
+                      {avgScores.map((s, i) => {
+                        const Icon = LEARNING_OUTCOMES[i].icon;
+                        return (
+                          <div key={i}>
+                            <div className="flex items-center justify-between mb-1">
+                              <div className="flex items-center gap-2">
+                                <Icon className="h-3.5 w-3.5 text-muted-foreground" />
+                                <span className="text-xs font-medium text-foreground">{s.name}</span>
+                              </div>
+                              <span className={`text-xs font-bold ${s.score >= 70 ? 'text-sim-success' : s.score >= 40 ? 'text-sim-warning' : 'text-muted-foreground'}`}>
+                                {s.score}%
+                              </span>
+                            </div>
+                            <Progress value={s.score} className="h-2" />
+                          </div>
+                        );
+                      })}
+                    </div>
+                    <ResponsiveContainer width="100%" height={280}>
+                      <RadarChart data={avgScores}>
+                        <PolarGrid stroke="hsl(var(--border))" />
+                        <PolarAngleAxis dataKey="name" tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }} />
+                        <PolarRadiusAxis angle={90} domain={[0, 100]} tick={{ fontSize: 9, fill: 'hsl(var(--muted-foreground))' }} />
+                        <Radar dataKey="score" stroke="hsl(226 70% 55%)" fill="hsl(226 70% 55%)" fillOpacity={0.2} />
+                      </RadarChart>
+                    </ResponsiveContainer>
+                  </div>
+                );
+              })()}
+            </div>
+
+            {/* Students needing help */}
+            <div className="rounded-xl border border-border bg-card p-6">
+              <h2 className="text-lg font-semibold text-foreground mb-3">{t('Students Needing Attention', 'Ученици, нуждаещи се от внимание')}</h2>
+              <div className="space-y-2">
+                {(() => {
+                  const STARTUP_SECTIONS = ['problem', 'customer', 'value_proposition', 'digital_product', 'business_model', 'growth_strategy', 'final_pitch'];
+                  const studentsWithScores = profiles.map(p => {
+                    const subs = getStudentSubs(p.user_id);
+                    const sim = getStudentSim(p.user_id);
+                    const proj = getStudentProject(p.user_id);
+                    const sectionMap: Record<string, boolean> = {};
+                    STARTUP_SECTIONS.forEach(s => {
+                      sectionMap[s] = proj ? ((proj as any)[s] || '').trim().length > 10 : false;
+                    });
+                    const scores = calcOutcomeScores({
+                      casesCompleted: subs.length,
+                      casesTotal: cases.length,
+                      startupSections: sectionMap,
+                      simWeek: sim?.current_week || 1,
+                      simComplete: sim?.is_complete || false,
+                    });
+                    const avg = Math.round(LEARNING_OUTCOMES.reduce((sum, lo) => sum + (scores[lo.id] || 0), 0) / LEARNING_OUTCOMES.length);
+                    return { ...p, avgScore: avg };
+                  }).filter(s => s.avgScore < 30).sort((a, b) => a.avgScore - b.avgScore).slice(0, 5);
+
+                  return studentsWithScores.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">{t('All students are making good progress!', 'Всички ученици напредват добре!')}</p>
+                  ) : (
+                    studentsWithScores.map(s => (
+                      <button
+                        key={s.user_id}
+                        onClick={() => setSelectedStudent(s.user_id)}
+                        className="w-full flex items-center gap-3 rounded-lg p-3 bg-destructive/5 border border-destructive/20 hover:bg-destructive/10 transition-colors text-left"
+                      >
+                        <User className="h-4 w-4 text-destructive shrink-0" />
+                        <span className="text-sm font-medium text-foreground flex-1">{s.full_name || 'Unknown'}</span>
+                        <span className="text-xs font-bold text-destructive">{s.avgScore}%</span>
+                      </button>
+                    ))
+                  );
+                })()}
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* LEADERBOARD TAB */}
+          <TabsContent value="leaderboard" className="space-y-4">
+            <div className="rounded-xl border border-border bg-card p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <Trophy className="h-5 w-5 text-sim-warning" />
+                <h2 className="text-lg font-semibold text-foreground">{t('Student Leaderboard', 'Класация на ученици')}</h2>
+              </div>
+              <Leaderboard lang={lang} limit={20} showTitle={false} />
+            </div>
           </TabsContent>
 
           {/* ANALYTICS TAB */}
