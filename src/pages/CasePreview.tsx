@@ -156,12 +156,19 @@ export default function CasePreview() {
             <Lightbulb className="h-5 w-5 text-primary" />
             <h2 className="text-lg font-display font-semibold text-foreground">{tl('Case Methodology', 'Методология на казуса')}</h2>
           </div>
+          <p className="text-sm text-muted-foreground mb-4">
+            {tl(
+              'Each case follows a 5-part structure designed for real business learning:',
+              'Всеки казус следва 5-етапна структура за реално бизнес обучение:'
+            )}
+          </p>
           <div className="grid sm:grid-cols-2 gap-3">
             {[
-              { icon: BookOpen, en: 'Read & research the business context', bg: 'Прочетете и проучете бизнес контекста' },
-              { icon: BarChart3, en: 'Analyze industry data & exhibits', bg: 'Анализирайте данни и експонати' },
-              { icon: Brain, en: 'Answer strategic analysis questions', bg: 'Отговорете на стратегически въпроси' },
-              { icon: Rocket, en: 'Propose your innovation solution', bg: 'Предложете иновативно решение' },
+              { icon: Building2, en: '1. Context — Company, industry & situation', bg: '1. Контекст — Компания, индустрия и ситуация' },
+              { icon: Target, en: '2. The Problem — Key decision or challenge', bg: '2. Проблемът — Ключово решение или предизвикателство' },
+              { icon: Brain, en: '3. Analysis — Guided strategic questions', bg: '3. Анализ — Стратегически въпроси' },
+              { icon: Lightbulb, en: '4. Key Insight — Strategic lesson revealed', bg: '4. Ключов урок — Стратегически извод' },
+              { icon: Rocket, en: '5. Apply to Your Startup — Connect to your project', bg: '5. Приложи към стартъпа — Свържи с проекта си' },
             ].map((item, i) => (
               <Card key={i} className="flex items-center gap-3 p-4 border-border hover:border-primary/30 transition-colors">
                 <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 shrink-0">
