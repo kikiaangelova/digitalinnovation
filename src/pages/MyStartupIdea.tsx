@@ -493,10 +493,10 @@ export default function MyStartupIdea() {
                       size="sm"
                       className="bg-primary text-primary-foreground"
                       onClick={handleSubmit}
-                      disabled={progressPercent < 100}
+                      disabled={progressPercent < 100 || submittingProject}
                     >
                       <Presentation className="h-4 w-4 mr-1" />
-                      {t('Submit Project', 'Предай проект')}
+                      {submittingProject ? t('Submitting...', 'Изпращане...') : t('Submit Project', 'Предай проект')}
                     </Button>
                   ) : null}
                 </div>
