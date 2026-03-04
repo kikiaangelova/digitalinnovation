@@ -8,12 +8,14 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import {
   Lightbulb, Users, Zap, Monitor, DollarSign, TrendingUp,
-  Presentation, ChevronRight, Check, Save, Rocket, HelpCircle, Globe
+  Presentation, ChevronRight, Check, Save, Rocket, HelpCircle, Globe, LayoutGrid
 } from 'lucide-react';
 import { INDUSTRIES } from '@/data/industry-map-data';
+import BusinessModelCanvas, { BMC_KEYS, type BMCData } from '@/components/startup/BusinessModelCanvas';
 
 interface SectionConfig {
   key: string;
@@ -131,16 +133,29 @@ interface ProjectData {
   final_pitch: string;
   is_submitted: boolean;
   industry: string;
+  bmc_customer_segments: string;
+  bmc_value_proposition: string;
+  bmc_channels: string;
+  bmc_customer_relationships: string;
+  bmc_revenue_streams: string;
+  bmc_key_resources: string;
+  bmc_key_activities: string;
+  bmc_key_partners: string;
+  bmc_cost_structure: string;
 }
 
 const EMPTY_PROJECT: ProjectData = {
   problem: '', customer: '', value_proposition: '', digital_product: '',
   business_model: '', growth_strategy: '', final_pitch: '', is_submitted: false, industry: '',
+  bmc_customer_segments: '', bmc_value_proposition: '', bmc_channels: '',
+  bmc_customer_relationships: '', bmc_revenue_streams: '', bmc_key_resources: '',
+  bmc_key_activities: '', bmc_key_partners: '', bmc_cost_structure: '',
 };
 
 export default function MyStartupIdea() {
   const { user } = useAuth();
   const { lang } = useLang();
+  const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
   const [data, setData] = useState<ProjectData>(EMPTY_PROJECT);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -154,7 +169,7 @@ export default function MyStartupIdea() {
     const load = async () => {
       const { data: proj } = await supabase
         .from('startup_projects')
-        .select('problem, customer, value_proposition, digital_product, business_model, growth_strategy, final_pitch, is_submitted, industry')
+        .select('problem, customer, value_proposition, digital_product, business_model, growth_strategy, final_pitch, is_submitted, industry, bmc_customer_segments, bmc_value_proposition, bmc_channels, bmc_customer_relationships, bmc_revenue_streams, bmc_key_resources, bmc_key_activities, bmc_key_partners, bmc_cost_structure')
         .eq('user_id', user.id)
         .maybeSingle();
       if (proj) { setData(proj as ProjectData); setHasRecord(true); }
@@ -167,12 +182,8 @@ export default function MyStartupIdea() {
     if (!user) return;
     setSaving(true);
     try {
-      const payload = {
-        problem: newData.problem, customer: newData.customer,
-        value_proposition: newData.value_proposition, digital_product: newData.digital_product,
-        business_model: newData.business_model, growth_strategy: newData.growth_strategy,
-        final_pitch: newData.final_pitch,
-      };
+      const { is_submitted, industry, ...rest } = newData;
+      const payload = { ...rest };
       if (hasRecord) {
         await supabase.from('startup_projects').update(payload).eq('user_id', user.id);
       } else {
@@ -187,11 +198,21 @@ export default function MyStartupIdea() {
     }
   }, [user, hasRecord]);
 
+  const scheduleAutoSave = useCallback((newData: ProjectData) => {
+    if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+    saveTimerRef.current = setTimeout(() => saveProject(newData), 2000);
+  }, [saveProject]);
+
   const handleChange = (key: SectionKey, value: string) => {
     const newData = { ...data, [key]: value } as ProjectData;
     setData(newData);
-    if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
-    saveTimerRef.current = setTimeout(() => saveProject(newData), 2000);
+    scheduleAutoSave(newData);
+  };
+
+  const handleBMCChange = (key: keyof BMCData, value: string) => {
+    const newData = { ...data, [key]: value };
+    setData(newData);
+    scheduleAutoSave(newData);
   };
 
   const handleSubmit = async () => {
@@ -201,7 +222,7 @@ export default function MyStartupIdea() {
       is_submitted: true, submitted_at: new Date().toISOString(),
     }).eq('user_id', user.id);
     setData(d => ({ ...d, is_submitted: true }));
-    toast.success(lang === 'bg' ? 'Проектът е предаден!' : 'Project submitted!');
+    toast.success(t('Project submitted!', 'Проектът е предаден!'));
   };
 
   const filledCount = SECTIONS.filter(s => ((data as any)[s.key] || '').trim().length > 20).length;
@@ -212,7 +233,7 @@ export default function MyStartupIdea() {
       <div className="min-h-screen bg-background">
         <AppHeader />
         <div className="flex items-center justify-center py-20 text-muted-foreground">
-          {lang === 'bg' ? 'Зареждане...' : 'Loading...'}
+          {t('Loading...', 'Зареждане...')}
         </div>
       </div>
     );
@@ -224,30 +245,30 @@ export default function MyStartupIdea() {
   return (
     <div className="min-h-screen bg-background">
       <AppHeader />
-      <div className="container mx-auto max-w-5xl px-4 py-8">
+      <div className="container mx-auto max-w-6xl px-4 py-8">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-1.5 text-sm text-muted-foreground mb-6">
           <Link to="/dashboard" className="hover:text-foreground transition-colors">
-            {lang === 'bg' ? 'Табло' : 'Dashboard'}
+            {t('Dashboard', 'Табло')}
           </Link>
           <ChevronRight className="h-3.5 w-3.5" />
           <span className="text-foreground font-medium">
-            {lang === 'bg' ? 'Моят стартъп проект' : 'My Startup Project'}
+            {t('My Startup Project', 'Моят стартъп проект')}
           </span>
         </nav>
 
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-6">
           <div className="flex items-center gap-3 mb-3">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground">
               <Rocket className="h-6 w-6" />
             </div>
             <div>
               <h1 className="text-2xl font-display font-bold text-foreground">
-                {lang === 'bg' ? 'Моят стартъп проект' : 'My Startup Project'}
+                {t('My Startup Project', 'Моят стартъп проект')}
               </h1>
               <p className="text-sm text-muted-foreground">
-                {lang === 'bg' ? 'Изградете стартъп идеята си стъпка по стъпка' : 'Build your startup idea step by step'}
+                {t('Build your startup idea step by step', 'Изградете стартъп идеята си стъпка по стъпка')}
               </p>
             </div>
           </div>
@@ -263,7 +284,7 @@ export default function MyStartupIdea() {
                 </span>
                 <Badge variant="secondary" className="text-xs ml-auto">
                   <Globe className="h-3 w-3 mr-1" />
-                  {lang === 'bg' ? 'Избрана индустрия' : 'Chosen Industry'}
+                  {t('Chosen Industry', 'Избрана индустрия')}
                 </Badge>
               </div>
             ) : null;
@@ -272,121 +293,150 @@ export default function MyStartupIdea() {
             <Link to="/industries" className="mt-3 flex items-center gap-2 rounded-lg border border-dashed border-primary/30 bg-primary/5 px-3 py-2 hover:bg-primary/10 transition-colors">
               <Globe className="h-4 w-4 text-primary" />
               <span className="text-sm text-primary font-medium">
-                {lang === 'bg' ? 'Изберете индустрия от картата на иновациите →' : 'Choose an industry from the Innovation Map →'}
+                {t('Choose an industry from the Innovation Map →', 'Изберете индустрия от картата на иновациите →')}
               </span>
             </Link>
           )}
+
+          {/* Progress + save status */}
           <div className="mt-4 rounded-lg border border-border bg-card p-4">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium text-foreground">
-                {lang === 'bg' ? 'Прогрес на проекта' : 'Project Progress'}
+                {t('Project Progress', 'Прогрес на проекта')}
               </span>
               <span className="text-sm font-bold text-primary">{progressPercent}%</span>
             </div>
             <Progress value={progressPercent} className="h-2.5" />
             <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
               {saving ? (
-                <span className="flex items-center gap-1"><Save className="h-3 w-3 animate-pulse" /> {lang === 'bg' ? 'Запазване...' : 'Saving...'}</span>
+                <span className="flex items-center gap-1"><Save className="h-3 w-3 animate-pulse" /> {t('Saving...', 'Запазване...')}</span>
               ) : lastSaved ? (
-                <span className="flex items-center gap-1 text-[hsl(var(--sim-success))]"><Check className="h-3 w-3" /> {lang === 'bg' ? 'Прогресът е запазен' : 'Progress saved'}</span>
+                <span className="flex items-center gap-1 text-[hsl(var(--sim-success))]"><Check className="h-3 w-3" /> {t('Progress saved', 'Прогресът е запазен')}</span>
               ) : null}
               {data.is_submitted && (
                 <Badge className="bg-[hsl(var(--sim-success))]/10 text-[hsl(var(--sim-success))] border-0 text-xs ml-auto">
-                  <Check className="h-3 w-3 mr-1" /> {lang === 'bg' ? 'Предаден' : 'Submitted'}
+                  <Check className="h-3 w-3 mr-1" /> {t('Submitted', 'Предаден')}
                 </Badge>
               )}
             </div>
           </div>
         </div>
 
-        <div className="grid gap-6 lg:grid-cols-[240px_1fr]">
-          {/* Section nav */}
-          <div className="space-y-1">
-            {SECTIONS.map((s, i) => {
-              const Icon = s.icon;
-              const filled = ((data as any)[s.key] || '').trim().length > 20;
-              return (
-                <button
-                  key={s.key}
-                  onClick={() => setActiveSection(i)}
-                  className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm transition-colors text-left ${
-                    i === activeSection
-                      ? 'bg-primary/10 text-primary font-medium'
-                      : 'text-muted-foreground hover:bg-accent hover:text-foreground'
-                  }`}
-                >
-                  <Icon className="h-4 w-4 shrink-0" />
-                  <span className="flex-1 truncate">{lang === 'bg' ? s.labelBg : s.labelEn}</span>
-                  {filled && <Check className="h-3.5 w-3.5 text-[hsl(var(--sim-success))] shrink-0" />}
-                </button>
-              );
-            })}
-          </div>
+        {/* Tabs: Sections | Business Model Canvas */}
+        <Tabs defaultValue="sections" className="space-y-6">
+          <TabsList className="grid w-full max-w-md grid-cols-2">
+            <TabsTrigger value="sections" className="gap-1.5">
+              <Lightbulb className="h-4 w-4" />
+              {t('Startup Sections', 'Секции на стартъпа')}
+            </TabsTrigger>
+            <TabsTrigger value="bmc" className="gap-1.5">
+              <LayoutGrid className="h-4 w-4" />
+              Business Model Canvas
+            </TabsTrigger>
+          </TabsList>
 
-          {/* Active section */}
-          <div className="rounded-xl border border-border bg-card p-6">
-            <div className="flex items-center gap-2 mb-1">
-              <SectionIcon className="h-5 w-5 text-primary" />
-              <h2 className="text-lg font-display font-semibold text-foreground">
-                {lang === 'bg' ? section.labelBg : section.labelEn}
-              </h2>
-              <Badge variant="outline" className="text-xs ml-auto">
-                {activeSection + 1} / {SECTIONS.length}
-              </Badge>
-            </div>
-            <p className="text-sm text-muted-foreground mb-5">
-              {lang === 'bg' ? section.descBg : section.descEn}
-            </p>
-
-            {/* Guided prompts */}
-            <div className="mb-4 rounded-lg bg-accent/50 border border-border p-4 space-y-1.5">
-              <div className="flex items-center gap-1.5 text-xs font-medium text-accent-foreground mb-1">
-                <HelpCircle className="h-3.5 w-3.5" />
-                {lang === 'bg' ? 'Помислете над тези въпроси:' : 'Think about these questions:'}
+          {/* Sections tab */}
+          <TabsContent value="sections">
+            <div className="grid gap-6 lg:grid-cols-[240px_1fr]">
+              {/* Section nav */}
+              <div className="space-y-1">
+                {SECTIONS.map((s, i) => {
+                  const Icon = s.icon;
+                  const filled = ((data as any)[s.key] || '').trim().length > 20;
+                  return (
+                    <button
+                      key={s.key}
+                      onClick={() => setActiveSection(i)}
+                      className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm transition-colors text-left ${
+                        i === activeSection
+                          ? 'bg-primary/10 text-primary font-medium'
+                          : 'text-muted-foreground hover:bg-accent hover:text-foreground'
+                      }`}
+                    >
+                      <Icon className="h-4 w-4 shrink-0" />
+                      <span className="flex-1 truncate">{lang === 'bg' ? s.labelBg : s.labelEn}</span>
+                      {filled && <Check className="h-3.5 w-3.5 text-[hsl(var(--sim-success))] shrink-0" />}
+                    </button>
+                  );
+                })}
               </div>
-              {section.prompts.map((p, i) => (
-                <p key={i} className="text-sm text-foreground/80">
-                  {lang === 'bg' ? p.bg : p.en}
+
+              {/* Active section */}
+              <div className="rounded-xl border border-border bg-card p-6">
+                <div className="flex items-center gap-2 mb-1">
+                  <SectionIcon className="h-5 w-5 text-primary" />
+                  <h2 className="text-lg font-display font-semibold text-foreground">
+                    {lang === 'bg' ? section.labelBg : section.labelEn}
+                  </h2>
+                  <Badge variant="outline" className="text-xs ml-auto">
+                    {activeSection + 1} / {SECTIONS.length}
+                  </Badge>
+                </div>
+                <p className="text-sm text-muted-foreground mb-5">
+                  {lang === 'bg' ? section.descBg : section.descEn}
                 </p>
-              ))}
-            </div>
 
-            <Textarea
-              value={(data as any)[section.key] || ''}
-              onChange={e => handleChange(section.key, e.target.value)}
-              placeholder={lang === 'bg' ? 'Напишете вашия отговор тук...' : 'Write your answer here...'}
-              className="min-h-[220px] text-base leading-relaxed resize-y"
+                {/* Guided prompts */}
+                <div className="mb-4 rounded-lg bg-accent/50 border border-border p-4 space-y-1.5">
+                  <div className="flex items-center gap-1.5 text-xs font-medium text-accent-foreground mb-1">
+                    <HelpCircle className="h-3.5 w-3.5" />
+                    {t('Think about these questions:', 'Помислете над тези въпроси:')}
+                  </div>
+                  {section.prompts.map((p, i) => (
+                    <p key={i} className="text-sm text-foreground/80">
+                      {lang === 'bg' ? p.bg : p.en}
+                    </p>
+                  ))}
+                </div>
+
+                <Textarea
+                  value={(data as any)[section.key] || ''}
+                  onChange={e => handleChange(section.key, e.target.value)}
+                  placeholder={t('Write your answer here...', 'Напишете вашия отговор тук...')}
+                  className="min-h-[220px] text-base leading-relaxed resize-y"
+                  disabled={data.is_submitted}
+                />
+
+                {/* Navigation */}
+                <div className="flex items-center justify-between mt-5">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={activeSection === 0}
+                    onClick={() => setActiveSection(i => i - 1)}
+                  >
+                    ← {t('Back', 'Назад')}
+                  </Button>
+                  {activeSection < SECTIONS.length - 1 ? (
+                    <Button size="sm" onClick={() => setActiveSection(i => i + 1)}>
+                      {t('Next', 'Напред')} →
+                    </Button>
+                  ) : !data.is_submitted ? (
+                    <Button
+                      size="sm"
+                      className="bg-primary text-primary-foreground"
+                      onClick={handleSubmit}
+                      disabled={progressPercent < 100}
+                    >
+                      <Presentation className="h-4 w-4 mr-1" />
+                      {t('Submit Project', 'Предай проект')}
+                    </Button>
+                  ) : null}
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* BMC tab */}
+          <TabsContent value="bmc">
+            <BusinessModelCanvas
+              data={data}
+              lang={lang as 'en' | 'bg'}
               disabled={data.is_submitted}
+              onChange={handleBMCChange}
             />
-
-            {/* Navigation */}
-            <div className="flex items-center justify-between mt-5">
-              <Button
-                variant="outline"
-                size="sm"
-                disabled={activeSection === 0}
-                onClick={() => setActiveSection(i => i - 1)}
-              >
-                ← {lang === 'bg' ? 'Назад' : 'Back'}
-              </Button>
-              {activeSection < SECTIONS.length - 1 ? (
-                <Button size="sm" onClick={() => setActiveSection(i => i + 1)}>
-                  {lang === 'bg' ? 'Напред' : 'Next'} →
-                </Button>
-              ) : !data.is_submitted ? (
-                <Button
-                  size="sm"
-                  className="bg-primary text-primary-foreground"
-                  onClick={handleSubmit}
-                  disabled={progressPercent < 100}
-                >
-                  <Presentation className="h-4 w-4 mr-1" />
-                  {lang === 'bg' ? 'Предай проект' : 'Submit Project'}
-                </Button>
-              ) : null}
-            </div>
-          </div>
-        </div>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );

@@ -738,6 +738,15 @@ export type Database = {
       }
       startup_projects: {
         Row: {
+          bmc_channels: string
+          bmc_cost_structure: string
+          bmc_customer_relationships: string
+          bmc_customer_segments: string
+          bmc_key_activities: string
+          bmc_key_partners: string
+          bmc_key_resources: string
+          bmc_revenue_streams: string
+          bmc_value_proposition: string
           business_model: string
           created_at: string
           customer: string
@@ -754,6 +763,15 @@ export type Database = {
           value_proposition: string
         }
         Insert: {
+          bmc_channels?: string
+          bmc_cost_structure?: string
+          bmc_customer_relationships?: string
+          bmc_customer_segments?: string
+          bmc_key_activities?: string
+          bmc_key_partners?: string
+          bmc_key_resources?: string
+          bmc_revenue_streams?: string
+          bmc_value_proposition?: string
           business_model?: string
           created_at?: string
           customer?: string
@@ -770,6 +788,15 @@ export type Database = {
           value_proposition?: string
         }
         Update: {
+          bmc_channels?: string
+          bmc_cost_structure?: string
+          bmc_customer_relationships?: string
+          bmc_customer_segments?: string
+          bmc_key_activities?: string
+          bmc_key_partners?: string
+          bmc_key_resources?: string
+          bmc_revenue_streams?: string
+          bmc_value_proposition?: string
           business_model?: string
           created_at?: string
           customer?: string
