@@ -35,7 +35,7 @@ const Index = () => {
             ) : (
               <>
                 <Button asChild size="lg" className="sim-gradient border-0 text-base px-8">
-                  <Link to="/auth">Get Started <ArrowRight className="ml-2 h-5 w-5" /></Link>
+                  <Link to="/auth?mode=signup">Get Started <ArrowRight className="ml-2 h-5 w-5" /></Link>
                 </Button>
                 <Button asChild variant="outline" size="lg" className="text-base px-8">
                   <Link to="/auth">Sign In</Link>
@@ -50,33 +50,42 @@ const Index = () => {
       <section className="py-16 px-4 border-t border-border">
         <div className="container mx-auto max-w-5xl">
           <div className="grid gap-6 md:grid-cols-3">
-            <div className="rounded-lg border border-border bg-card p-6 text-center">
+            <Link to={user ? '/cases' : '/auth?redirect=/cases'} className="group rounded-lg border border-border bg-card p-6 text-center hover:border-primary/50 hover:shadow-md transition-all cursor-pointer">
               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-accent mx-auto mb-4">
                 <BookOpen className="h-6 w-6 text-primary" />
               </div>
               <h3 className="font-display font-semibold text-foreground mb-2">Case Studies</h3>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-muted-foreground mb-4">
                 Work through multi-step business cases with real-world scenarios, exhibits, and rubric-graded questions.
               </p>
-            </div>
-            <div className="rounded-lg border border-border bg-card p-6 text-center">
+              <Button size="sm" variant="outline" className="group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                Browse Cases <ArrowRight className="ml-1 h-3 w-3" />
+              </Button>
+            </Link>
+            <Link to={user ? '/simulator' : '/auth?redirect=/simulator'} className="group rounded-lg border border-border bg-card p-6 text-center hover:border-primary/50 hover:shadow-md transition-all cursor-pointer">
               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-accent mx-auto mb-4">
                 <Play className="h-6 w-6 text-primary" />
               </div>
               <h3 className="font-display font-semibold text-foreground mb-2">Business Simulator</h3>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-muted-foreground mb-4">
                 Run a virtual startup over 8 weeks. Make strategic decisions that affect KPIs in real-time.
               </p>
-            </div>
-            <div className="rounded-lg border border-border bg-card p-6 text-center">
+              <Button size="sm" variant="outline" className="group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                Launch Simulator <ArrowRight className="ml-1 h-3 w-3" />
+              </Button>
+            </Link>
+            <Link to={user ? '/dashboard' : '/auth?redirect=/dashboard'} className="group rounded-lg border border-border bg-card p-6 text-center hover:border-primary/50 hover:shadow-md transition-all cursor-pointer">
               <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-accent mx-auto mb-4">
-                <CheckCircle2 className="h-6 w-6 text-sim-success" />
+                <CheckCircle2 className="h-6 w-6 text-primary" />
               </div>
               <h3 className="font-display font-semibold text-foreground mb-2">Instant Feedback</h3>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-muted-foreground mb-4">
                 Get auto-graded results, model answers, and instructor feedback to accelerate your learning.
               </p>
-            </div>
+              <Button size="sm" variant="outline" className="group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                View Dashboard <ArrowRight className="ml-1 h-3 w-3" />
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

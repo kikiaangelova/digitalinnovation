@@ -12,6 +12,8 @@ import AuthPage from "./pages/AuthPage";
 import StudentDashboard from "./pages/StudentDashboard";
 import CasePlayer from "./pages/CasePlayer";
 import CaseResults from "./pages/CaseResults";
+import CaseLibrary from "./pages/CaseLibrary";
+import Dictionary from "./pages/Dictionary";
 import AdminDashboard from "./pages/AdminDashboard";
 import ProfilePage from "./pages/ProfilePage";
 import TeamWorkspace from "./pages/TeamWorkspace";
@@ -41,6 +43,8 @@ const App = () => (
                 <Route path="/auth" element={<AuthPage />} />
                 <Route path="/dashboard" element={<StudentDashboard />} />
                 <Route path="/profile" element={<ProfilePage />} />
+                <Route path="/cases" element={<CaseLibrary />} />
+                <Route path="/dictionary" element={<Dictionary />} />
                 <Route path="/case/:id" element={<CasePlayer />} />
                 <Route path="/case/:id/results" element={<CaseResults />} />
                 <Route path="/team/:teamId" element={<TeamWorkspace />} />
