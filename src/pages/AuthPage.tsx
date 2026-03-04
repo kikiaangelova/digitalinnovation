@@ -2,11 +2,12 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
+import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
-import { GraduationCap, LogIn, UserPlus, Eye, EyeOff } from 'lucide-react';
+import { GraduationCap, LogIn, UserPlus, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 import PasswordStrengthMeter, { checkPassword, getStrength } from '@/components/auth/PasswordStrengthMeter';
 
 const MAX_ATTEMPTS = 5;
@@ -27,6 +28,9 @@ function setLoginAttempts(data: { count: number; lockedUntil: number }) {
 export default function AuthPage() {
   const [searchParams] = useSearchParams();
   const [isLogin, setIsLogin] = useState(searchParams.get('mode') !== 'signup');
+  const [showForgot, setShowForgot] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState('');
+  const [forgotLoading, setForgotLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -243,7 +247,63 @@ export default function AuthPage() {
                 {tx('We collect only minimal information to create your account.', 'Събираме само минимална информация за създаване на акаунта ви.')}
               </p>
             )}
+
+            {isLogin && (
+              <button
+                type="button"
+                onClick={() => setShowForgot(true)}
+                className="block w-full text-center text-xs text-primary hover:underline mt-2"
+              >
+                {tx('Forgot password?', 'Забравена парола?')}
+              </button>
+            )}
           </form>
+
+          {/* Forgot password inline form */}
+          {showForgot && (
+            <div className="mt-4 rounded-lg border border-border bg-muted/30 p-4 space-y-3">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-semibold text-foreground">{tx('Reset Password', 'Смяна на парола')}</h3>
+                <button onClick={() => setShowForgot(false)} className="text-xs text-muted-foreground hover:text-foreground">
+                  <ArrowLeft className="h-3 w-3 inline mr-1" />{tx('Back', 'Назад')}
+                </button>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                {tx('Enter your email and we\'ll send you a reset link.', 'Въведете имейла си и ще ви изпратим линк за смяна.')}
+              </p>
+              <Input
+                type="email"
+                value={forgotEmail}
+                onChange={e => setForgotEmail(e.target.value)}
+                placeholder={tx('Your email', 'Вашият имейл')}
+              />
+              <Button
+                className="w-full"
+                variant="outline"
+                disabled={forgotLoading}
+                onClick={async () => {
+                  const trimmed = forgotEmail.trim();
+                  if (!trimmed || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+                    toast.error(t.invalidEmail);
+                    return;
+                  }
+                  setForgotLoading(true);
+                  await supabase.auth.resetPasswordForEmail(trimmed, {
+                    redirectTo: `${window.location.origin}/reset-password`,
+                  });
+                  setForgotLoading(false);
+                  toast.success(tx(
+                    'If this email exists, a password reset link has been sent.',
+                    'Ако този имейл съществува, линк за смяна на парола е изпратен.'
+                  ));
+                  setShowForgot(false);
+                  setForgotEmail('');
+                }}
+              >
+                {forgotLoading ? tx('Sending...', 'Изпращане...') : tx('Send Reset Link', 'Изпрати линк')}
+              </Button>
+            </div>
+          )}
 
           <p className="mt-6 text-center text-sm text-muted-foreground">
             {isLogin ? t.noAccount : t.haveAccount}{' '}
