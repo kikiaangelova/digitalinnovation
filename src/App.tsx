@@ -39,6 +39,8 @@ import LearningReport from "./pages/LearningReport";
 import SystemStatus from "./pages/admin/SystemStatus";
 import LeaderboardPage from "./pages/LeaderboardPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
+import PeerReview from "./pages/PeerReview";
+import PeerReviewAdmin from "./pages/admin/PeerReviewAdmin";
 
 const queryClient = new QueryClient();
 
@@ -81,6 +83,8 @@ const App = () => (
                   <Route path="/admin/simulator/season/:id" element={<SeasonAnalytics />} />
                   <Route path="/admin/startup-projects" element={<StartupProjectsAdmin />} />
                   <Route path="/admin/teacher" element={<TeacherDashboard />} />
+                  <Route path="/admin/peer-reviews" element={<PeerReviewAdmin />} />
+                  <Route path="/peer-review" element={<PeerReview />} />
                   <Route path="/my-report" element={<LearningReport />} />
                   <Route path="/admin/system-status" element={<SystemStatus />} />
                   <Route path="/leaderboard" element={<LeaderboardPage />} />
