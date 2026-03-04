@@ -124,7 +124,7 @@ export default function AnalyticsDashboard() {
       studentMap[s.user_id].sims++;
     });
     profiles.forEach(p => {
-      if (studentMap[p.user_id]) studentMap[p.user_id].name = p.full_name || 'Unknown';
+      if (studentMap[p.user_id]) studentMap[p.user_id].name = p.full_name || t('Unknown', 'Неизвестен');
     });
     return Object.entries(studentMap)
       .map(([id, d]) => ({ id, ...d, xp: d.score + d.cases * 10 + d.sims * 15 }))
@@ -334,7 +334,7 @@ export default function AnalyticsDashboard() {
                             <span className="text-sm text-muted-foreground">{i + 1}</span>
                           )}
                         </td>
-                        <td className="px-3 py-2.5 text-sm font-medium text-foreground">{s.name || 'Unknown'}</td>
+                        <td className="px-3 py-2.5 text-sm font-medium text-foreground">{s.name || t('Unknown', 'Неизвестен')}</td>
                         <td className="px-3 py-2.5 text-center">
                           <Badge variant="default" className="text-xs">{s.xp} XP</Badge>
                         </td>

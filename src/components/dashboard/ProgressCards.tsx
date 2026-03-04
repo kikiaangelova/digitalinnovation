@@ -45,8 +45,8 @@ export default function ProgressCards({
             <p className="text-xs text-muted-foreground mb-1">{t('Next case', 'Следващ казус')}</p>
             <p className="text-sm font-medium text-foreground truncate mb-2">{nextCaseTitle}</p>
             <div className="flex items-center gap-2 text-xs text-muted-foreground mb-3">
-              {nextCaseDifficulty && <Badge variant="outline" className="text-xs capitalize">{nextCaseDifficulty}</Badge>}
-              {nextCaseMinutes && <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{nextCaseMinutes} min</span>}
+              {nextCaseDifficulty && <Badge variant="outline" className="text-xs">{nextCaseDifficulty === 'beginner' ? t('Beginner', 'Начинаещ') : nextCaseDifficulty === 'advanced' ? t('Advanced', 'Напреднал') : t('Intermediate', 'Средно ниво')}</Badge>}
+              {nextCaseMinutes && <span className="flex items-center gap-1"><Clock className="h-3 w-3" />{nextCaseMinutes} {t('min', 'мин')}</span>}
             </div>
             <Button asChild size="sm" variant="outline" className="w-full">
               <Link to={`/case/${nextCaseId}`}>{t('Start Case Study', 'Започни казус')} <ArrowRight className="h-3 w-3" /></Link>

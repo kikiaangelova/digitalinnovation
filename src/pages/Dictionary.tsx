@@ -22,6 +22,21 @@ const CATEGORY_COLORS: Record<string, string> = {
   Growth: 'bg-lime-500/10 text-lime-600 border-lime-500/20',
 };
 
+const CATEGORY_TRANSLATIONS: Record<string, string> = {
+  Innovation: 'Иновации',
+  Startup: 'Стартъп',
+  Product: 'Продукт',
+  Data: 'Данни',
+  Technology: 'Технологии',
+  Strategy: 'Стратегия',
+  Platform: 'Платформа',
+  Metrics: 'Метрики',
+  Experimentation: 'Експериментиране',
+  AI: 'AI',
+  'Business Model': 'Бизнес модел',
+  Growth: 'Растеж',
+};
+
 // Deterministic "Term of the Week" based on week number
 function getTermOfTheWeek(): DictionaryTerm {
   const now = new Date();
@@ -245,7 +260,7 @@ export default function Dictionary() {
               onClick={() => setCatFilter(c === catFilter ? 'all' : c)}
               className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${catFilter === c ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:text-foreground'}`}
             >
-              {c}
+              {lang === 'bg' ? (CATEGORY_TRANSLATIONS[c] || c) : c}
             </button>
           ))}
         </div>
@@ -267,7 +282,7 @@ export default function Dictionary() {
         ) : (
           <div className="space-y-3">
             {filtered.map(t => (
-              <TermCard key={t.term} term={t} catColor={catColor} />
+              <TermCard key={t.term} term={t} catColor={catColor} lang={lang} />
             ))}
           </div>
         )}
@@ -276,7 +291,7 @@ export default function Dictionary() {
   );
 }
 
-function TermCard({ term: t, catColor }: { term: DictionaryTerm; catColor: (c: string) => string }) {
+function TermCard({ term: t, catColor, lang }: { term: DictionaryTerm; catColor: (c: string) => string; lang: string }) {
   const [expanded, setExpanded] = useState(false);
 
   return (
@@ -290,7 +305,7 @@ function TermCard({ term: t, catColor }: { term: DictionaryTerm; catColor: (c: s
           <p className="text-sm text-primary/70 font-medium mt-0.5">{t.termBg}</p>
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          <Badge variant="outline" className={`text-xs ${catColor(t.category)}`}>{t.category}</Badge>
+          <Badge variant="outline" className={`text-xs ${catColor(t.category)}`}>{lang === 'bg' ? (CATEGORY_TRANSLATIONS[t.category] || t.category) : t.category}</Badge>
           {expanded ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
         </div>
       </div>
