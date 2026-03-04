@@ -145,7 +145,7 @@ export default function CaseResults() {
             </p>
           </div>
           <Button variant="outline" size="sm" asChild className="shrink-0 self-center">
-            <Link to="/startup">{tx('Go to Startup', 'Към стартъпа')}</Link>
+            <Link to="/my-startup">{tx('Go to Startup', 'Към стартъпа')}</Link>
           </Button>
         </div>
 

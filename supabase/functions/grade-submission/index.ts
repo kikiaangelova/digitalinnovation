@@ -135,6 +135,37 @@ serve(async (req) => {
       max_score: maxScore,
     }).eq("id", submission_id);
 
+    // Track course_progress for the completed case/assessment
+    const moduleType = source === "assessment" ? "assessment" : "case_study";
+    const moduleId = source === "assessment" ? sub.assessment_id : sub.case_study_id;
+    if (moduleId) {
+      const { data: existing } = await adminClient
+        .from("course_progress")
+        .select("id")
+        .eq("user_id", userId)
+        .eq("module", moduleType)
+        .eq("module_id", moduleId)
+        .maybeSingle();
+
+      if (existing) {
+        await adminClient.from("course_progress").update({
+          status: "completed",
+          completed_at: new Date().toISOString(),
+          score: maxScore > 0 ? Math.round((totalScore / maxScore) * 100) : null,
+        }).eq("id", existing.id);
+      } else {
+        await adminClient.from("course_progress").insert({
+          user_id: userId,
+          module: moduleType,
+          module_id: moduleId,
+          status: "completed",
+          started_at: new Date().toISOString(),
+          completed_at: new Date().toISOString(),
+          score: maxScore > 0 ? Math.round((totalScore / maxScore) * 100) : null,
+        });
+      }
+    }
+
     return new Response(
       JSON.stringify({ total_score: totalScore, max_score: maxScore }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
