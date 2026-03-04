@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Brain, Send, Loader2 } from 'lucide-react';
+import { Brain, Send, Loader2, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import ReactMarkdown from 'react-markdown';
 
 interface AIMentorWidgetProps {
   lang: 'en' | 'bg';
@@ -22,6 +23,7 @@ export default function AIMentorWidget({ lang, startupData, onFeedbackReceived }
         body: {
           type: 'startup_project',
           data: startupData || {},
+          lang,
         },
       });
       if (error) throw error;
@@ -46,15 +48,15 @@ export default function AIMentorWidget({ lang, startupData, onFeedbackReceived }
         <div className="flex h-10 w-10 items-center justify-center rounded-lg gradient-founder">
           <Brain className="h-5 w-5 text-primary-foreground" />
         </div>
-        <div>
+        <div className="flex-1">
           <h2 className="text-lg font-display font-semibold text-foreground">{t('AI Mentor', 'AI Ментор')}</h2>
-          <p className="text-xs text-muted-foreground">{t('Get personalized feedback on your startup', 'Получи персонална обратна връзка')}</p>
+          <p className="text-xs text-muted-foreground">{t('Get personalized feedback on your startup', 'Получи персонална обратна връзка за твоя стартъп')}</p>
         </div>
       </div>
 
       {feedback ? (
-        <div className="rounded-lg bg-accent/50 p-4 mb-3 text-sm text-foreground leading-relaxed whitespace-pre-wrap">
-          {feedback}
+        <div className="rounded-lg bg-accent/50 p-4 mb-3 text-sm text-foreground leading-relaxed prose prose-sm max-w-none dark:prose-invert">
+          <ReactMarkdown>{feedback}</ReactMarkdown>
         </div>
       ) : (
         <div className="rounded-lg bg-muted/50 p-4 mb-3 text-sm text-muted-foreground italic">
@@ -65,10 +67,15 @@ export default function AIMentorWidget({ lang, startupData, onFeedbackReceived }
         </div>
       )}
 
-      <Button onClick={requestFeedback} disabled={loading} size="sm" className="sim-gradient border-0 w-full sm:w-auto">
-        {loading ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <Send className="h-4 w-4 mr-1" />}
-        {t('Get AI Feedback', 'Получи AI обратна връзка')}
-      </Button>
+      <div className="flex gap-2">
+        <Button onClick={requestFeedback} disabled={loading} size="sm" className="sim-gradient border-0">
+          {loading ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <Send className="h-4 w-4 mr-1" />}
+          {feedback
+            ? t('Refresh Feedback', 'Обнови обратната връзка')
+            : t('Get AI Feedback', 'Получи AI обратна връзка')
+          }
+        </Button>
+      </div>
     </div>
   );
 }
