@@ -602,6 +602,54 @@ export type Database = {
           },
         ]
       }
+      startup_projects: {
+        Row: {
+          business_model: string
+          created_at: string
+          customer: string
+          digital_product: string
+          final_pitch: string
+          growth_strategy: string
+          id: string
+          is_submitted: boolean
+          problem: string
+          submitted_at: string | null
+          updated_at: string
+          user_id: string
+          value_proposition: string
+        }
+        Insert: {
+          business_model?: string
+          created_at?: string
+          customer?: string
+          digital_product?: string
+          final_pitch?: string
+          growth_strategy?: string
+          id?: string
+          is_submitted?: boolean
+          problem?: string
+          submitted_at?: string | null
+          updated_at?: string
+          user_id: string
+          value_proposition?: string
+        }
+        Update: {
+          business_model?: string
+          created_at?: string
+          customer?: string
+          digital_product?: string
+          final_pitch?: string
+          growth_strategy?: string
+          id?: string
+          is_submitted?: boolean
+          problem?: string
+          submitted_at?: string | null
+          updated_at?: string
+          user_id?: string
+          value_proposition?: string
+        }
+        Relationships: []
+      }
       submissions: {
         Row: {
           assessment_id: string | null
