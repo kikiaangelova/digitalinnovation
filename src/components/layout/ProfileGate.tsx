@@ -10,7 +10,7 @@ export default function ProfileGate({ children }: { children: React.ReactNode })
   const location = useLocation();
   const [checked, setChecked] = useState(false);
 
-  const EXEMPT = ['/profile', '/auth', '/', '/dictionary'];
+  const EXEMPT = ['/profile', '/auth', '/', '/dictionary', '/about'];
 
   useEffect(() => {
     if (loading || !user) { setChecked(true); return; }
