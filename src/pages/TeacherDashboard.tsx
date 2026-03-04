@@ -103,7 +103,7 @@ const SECTION_LABELS: Record<string, { en: string; bg: string }> = {
 
 const COLORS = ['hsl(226 70% 55%)', 'hsl(173 58% 39%)', 'hsl(38 92% 50%)', 'hsl(280 60% 55%)', 'hsl(0 72% 51%)'];
 
-// Helper: extract strategy from simulator decisions
+// Helper: extract strategy from simulator decisions (supports both old w- and new s- IDs)
 function extractSimStrategy(decisions: any[]) {
   if (!decisions || !Array.isArray(decisions)) return null;
   const allChoices = decisions.flatMap((d: any) => d.choices || []);
@@ -112,11 +112,15 @@ function extractSimStrategy(decisions: any[]) {
   const productMap: Record<string, string> = {
     'w3-mobile': 'Mobile App', 'w3-web': 'Web Platform', 'w3-ai': 'AI Tool',
     'w3-data': 'Data Platform', 'w3-marketplace': 'Marketplace',
+    's4-mobile': 'Mobile App', 's4-saas': 'SaaS Platform', 's4-ai': 'AI Tool',
+    's4-marketplace': 'Marketplace',
   };
   const revenueMap: Record<string, string> = {
     'w4-subscription': 'Subscription', 'w4-freemium': 'Freemium', 'w4-payperuse': 'Pay-per-use',
     'w4-iap': 'In-app purchases', 'w4-commission': 'Commission', 'w4-ads': 'Advertising',
     'w4-enterprise': 'Enterprise licensing', 'w4-onetime': 'One-time purchase',
+    's5-subscription': 'Subscription', 's5-freemium': 'Freemium', 's5-payperuse': 'Pay-per-use',
+    's5-commission': 'Commission', 's5-ads': 'Advertising',
   };
   const marketMap: Record<string, string> = {
     'w4-mass': 'Mass Market', 'w4-nichemarket': 'Niche', 'w4-b2b-target': 'B2B',
@@ -126,6 +130,8 @@ function extractSimStrategy(decisions: any[]) {
     'w5-social': 'Social Media', 'w5-influencer': 'Influencer', 'w5-seo': 'SEO/Content',
     'w5-paid': 'Paid Ads', 'w5-community': 'Community', 'w5-partnerships': 'Partnerships',
     'w5-plg': 'Product-Led Growth', 'w5-referral': 'Referral', 'w5-email': 'Email', 'w5-events': 'Events',
+    's6-social': 'Social Media', 's6-influencers': 'Influencers', 's6-seo': 'SEO',
+    's6-partnerships': 'Partnerships', 's6-paidads': 'Paid Ads',
   };
 
   return {
