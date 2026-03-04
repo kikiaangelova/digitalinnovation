@@ -29,44 +29,48 @@ export default function Leaderboard({ lang, currentUserId, limit = 10, showTitle
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
-      // Fetch all profiles, submissions, simulator progress, and startup projects
-      const [profRes, subsRes, simRes, projRes] = await Promise.all([
-        supabase.from('profiles').select('user_id, full_name'),
-        supabase.from('submissions').select('user_id, is_draft'),
-        supabase.from('simulator_progress').select('user_id, current_week, is_complete'),
-        supabase.from('startup_projects').select('user_id, problem, customer, value_proposition, digital_product, business_model, growth_strategy, final_pitch, is_submitted'),
-      ]);
+      try {
+        const [profRes, subsRes, simRes, projRes] = await Promise.all([
+          supabase.from('profiles').select('user_id, full_name, leaderboard_visible'),
+          supabase.from('submissions').select('user_id, is_draft'),
+          supabase.from('simulator_progress').select('user_id, current_week, is_complete'),
+          supabase.from('startup_projects').select('user_id, problem, customer, value_proposition, digital_product, business_model, growth_strategy, final_pitch, is_submitted'),
+        ]);
 
-      const profiles = profRes.data || [];
-      const subs = subsRes.data || [];
-      const sims = simRes.data || [];
-      const projs = projRes.data || [];
+        const profiles = (profRes.data || []).filter((p: any) => p.leaderboard_visible === true);
+        const subs = subsRes.data || [];
+        const sims = simRes.data || [];
+        const projs = projRes.data || [];
 
-      const startupSections = ['problem', 'customer', 'value_proposition', 'digital_product', 'business_model', 'growth_strategy', 'final_pitch'];
+        const startupSections = ['problem', 'customer', 'value_proposition', 'digital_product', 'business_model', 'growth_strategy', 'final_pitch'];
 
-      const board: LeaderboardEntry[] = profiles.map(p => {
-        const casesCompleted = subs.filter(s => s.user_id === p.user_id && !s.is_draft).length;
-        const sim = sims.find(s => s.user_id === p.user_id);
-        const proj = projs.find(pr => pr.user_id === p.user_id);
+        const board: LeaderboardEntry[] = profiles.map((p: any) => {
+          const casesCompleted = subs.filter((s: any) => s.user_id === p.user_id && !s.is_draft).length;
+          const sim = sims.find((s: any) => s.user_id === p.user_id);
+          const proj = projs.find((pr: any) => pr.user_id === p.user_id);
 
-        const startupFilled = proj
-          ? startupSections.filter(s => ((proj as any)[s] || '').trim().length > 20).length
-          : 0;
+          const startupFilled = proj
+            ? startupSections.filter(s => ((proj as any)[s] || '').trim().length > 20).length
+            : 0;
 
-        const xp =
-          casesCompleted * 50 +
-          ((sim?.current_week || 1) - 1) * 100 + (sim?.is_complete ? 100 : 0) +
-          startupFilled * 75 +
-          (proj?.is_submitted ? 200 : 0);
+          const xp =
+            casesCompleted * 50 +
+            ((sim?.current_week || 1) - 1) * 100 + (sim?.is_complete ? 100 : 0) +
+            startupFilled * 75 +
+            (proj?.is_submitted ? 200 : 0);
 
-        return { user_id: p.user_id, full_name: p.full_name || 'Student', xp, rank: 0 };
-      });
+          return { user_id: p.user_id, full_name: p.full_name || 'Student', xp, rank: 0 };
+        });
 
-      board.sort((a, b) => b.xp - a.xp);
-      board.forEach((e, i) => { e.rank = i + 1; });
+        board.sort((a, b) => b.xp - a.xp);
+        board.forEach((e, i) => { e.rank = i + 1; });
 
-      setEntries(board.slice(0, limit));
-      setLoading(false);
+        setEntries(board.slice(0, limit));
+      } catch (err) {
+        console.error('Leaderboard fetch error:', err);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchLeaderboard();

@@ -36,45 +36,50 @@ export default function LeaderboardPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetch = async () => {
-      const [profRes, subsRes, simRes, projRes] = await Promise.all([
-        supabase.from('profiles').select('user_id, full_name, leaderboard_visible'),
-        supabase.from('submissions').select('user_id, is_draft'),
-        supabase.from('simulator_progress').select('user_id, current_week, is_complete'),
-        supabase.from('startup_projects').select('user_id, problem, customer, value_proposition, digital_product, business_model, growth_strategy, final_pitch, is_submitted'),
-      ]);
+    const fetchData = async () => {
+      try {
+        const [profRes, subsRes, simRes, projRes] = await Promise.all([
+          supabase.from('profiles').select('user_id, full_name, leaderboard_visible'),
+          supabase.from('submissions').select('user_id, is_draft'),
+          supabase.from('simulator_progress').select('user_id, current_week, is_complete'),
+          supabase.from('startup_projects').select('user_id, problem, customer, value_proposition, digital_product, business_model, growth_strategy, final_pitch, is_submitted'),
+        ]);
 
-      const profiles = (profRes.data || []).filter((p: any) => p.leaderboard_visible === true);
-      const subs = subsRes.data || [];
-      const sims = simRes.data || [];
-      const projs = projRes.data || [];
-      const sections = ['problem', 'customer', 'value_proposition', 'digital_product', 'business_model', 'growth_strategy', 'final_pitch'];
+        const profiles = (profRes.data || []).filter((p: any) => p.leaderboard_visible === true);
+        const subs = subsRes.data || [];
+        const sims = simRes.data || [];
+        const projs = projRes.data || [];
+        const sections = ['problem', 'customer', 'value_proposition', 'digital_product', 'business_model', 'growth_strategy', 'final_pitch'];
 
-      const board: Entry[] = profiles.map((p: any) => {
-        const casesCompleted = subs.filter(s => s.user_id === p.user_id && !s.is_draft).length;
-        const sim = sims.find(s => s.user_id === p.user_id);
-        const proj = projs.find(pr => pr.user_id === p.user_id);
-        const startupFilled = proj ? sections.filter(s => ((proj as any)[s] || '').trim().length > 20).length : 0;
-        const xp = casesCompleted * 50 + ((sim?.current_week || 1) - 1) * 100 + (sim?.is_complete ? 100 : 0) + startupFilled * 75 + (proj?.is_submitted ? 200 : 0);
+        const board: Entry[] = profiles.map((p: any) => {
+          const casesCompleted = subs.filter(s => s.user_id === p.user_id && !s.is_draft).length;
+          const sim = sims.find(s => s.user_id === p.user_id);
+          const proj = projs.find(pr => pr.user_id === p.user_id);
+          const startupFilled = proj ? sections.filter(s => ((proj as any)[s] || '').trim().length > 20).length : 0;
+          const xp = casesCompleted * 50 + ((sim?.current_week || 1) - 1) * 100 + (sim?.is_complete ? 100 : 0) + startupFilled * 75 + (proj?.is_submitted ? 200 : 0);
 
-        return {
-          user_id: p.user_id,
-          full_name: formatName(p.full_name),
-          xp,
-          cases_completed: casesCompleted,
-          sim_week: sim?.current_week || 0,
-          sim_complete: sim?.is_complete || false,
-          level: getCurrentLevel(xp),
-          rank: 0,
-        };
-      });
+          return {
+            user_id: p.user_id,
+            full_name: formatName(p.full_name),
+            xp,
+            cases_completed: casesCompleted,
+            sim_week: sim?.current_week || 0,
+            sim_complete: sim?.is_complete || false,
+            level: getCurrentLevel(xp),
+            rank: 0,
+          };
+        });
 
-      board.sort((a, b) => b.xp - a.xp);
-      board.forEach((e, i) => { e.rank = i + 1; });
-      setEntries(board);
-      setLoading(false);
+        board.sort((a, b) => b.xp - a.xp);
+        board.forEach((e, i) => { e.rank = i + 1; });
+        setEntries(board);
+      } catch (err) {
+        console.error('Leaderboard fetch error:', err);
+      } finally {
+        setLoading(false);
+      }
     };
-    fetch();
+    fetchData();
   }, []);
 
   return (
