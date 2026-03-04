@@ -44,8 +44,8 @@ export default function AssessmentPlayer() {
     const fetch = async () => {
       const { data: a } = await supabase.from('assessments').select('*').eq('id', id).single();
       if (a) setAssessment(a);
-      const { data: qs } = await supabase.from('assessment_questions').select('id, type, prompt, options, points, question_order, competency_id').eq('assessment_id', id).order('question_order');
-      if (qs) setQuestions(qs);
+      const { data: qs } = await supabase.rpc('get_player_assessment_questions', { _assessment_id: id });
+      if (qs) setQuestions(qs as AssessmentQ[]);
 
       const { data: sub } = await supabase.from('submissions').select('id, is_draft, started_at').eq('assessment_id', id).eq('user_id', user.id).maybeSingle();
       if (sub) {

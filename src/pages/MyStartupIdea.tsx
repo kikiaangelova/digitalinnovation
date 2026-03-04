@@ -185,7 +185,7 @@ export default function MyStartupIdea() {
     if (!user) return;
     setSaving(true);
     try {
-      const { is_submitted, industry, ...rest } = newData;
+      const { is_submitted, ...rest } = newData;
       const payload = { ...rest };
       if (hasRecord) {
         await supabase.from('startup_projects').update(payload).eq('user_id', user.id);
