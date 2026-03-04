@@ -18,7 +18,7 @@ interface CaseRow { id: string; title: string; difficulty: string; est_minutes: 
 interface SubRow { case_study_id: string; is_draft: boolean; }
 
 export default function StudentDashboard() {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const { lang } = useLang();
   const navigate = useNavigate();
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
@@ -31,7 +31,8 @@ export default function StudentDashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!user) return;
+    if (authLoading) return;
+    if (!user) { navigate('/auth?redirect=/dashboard'); return; }
     const fetchData = async () => {
       const [casesRes, subsRes, projRes, simRes] = await Promise.all([
         supabase.from('case_studies').select('id, title, difficulty, est_minutes').eq('published', true),
@@ -46,7 +47,7 @@ export default function StudentDashboard() {
       setLoading(false);
     };
     fetchData();
-  }, [user]);
+  }, [user, authLoading, navigate]);
 
   const casesCompleted = submissions.filter(s => !s.is_draft).length;
   const simWeek = simProgress?.current_week || 1;
