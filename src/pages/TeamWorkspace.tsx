@@ -26,7 +26,7 @@ export default function TeamWorkspace() {
   useEffect(() => {
     if (!teamId) return;
     const fetch = async () => {
-      const { data: td } = await supabase.from('teams').select('*').eq('id', teamId).single();
+      const { data: td } = await supabase.from('teams').select('*').eq('id', teamId).maybeSingle();
       if (td) { setTeam(td); setJoinCode(td.join_code || ''); }
       const { data: m } = await supabase.from('team_members').select('id, user_id, role, profiles(full_name, avatar_url)').eq('team_id', teamId);
       setMembers(m || []);

@@ -145,7 +145,7 @@ export default function CasePlayer() {
     if (!user) { navigate(`/auth?redirect=${encodeURIComponent(`/case/${id}`)}`); return; }
     const fetchCase = async () => {
       const [caseRes, stepsRes] = await Promise.all([
-        supabase.from('case_studies').select('id, title, title_bg, description, description_bg, topic, topic_bg, difficulty, reading_url, reading_button_label, reading_title').eq('id', id).single(),
+        supabase.from('case_studies').select('id, title, title_bg, description, description_bg, topic, topic_bg, difficulty, reading_url, reading_button_label, reading_title').eq('id', id).maybeSingle(),
         supabase.from('case_steps').select('id, step_order, title, title_bg, narrative, narrative_bg, exhibit_text, exhibit_text_bg').eq('case_study_id', id).order('step_order'),
       ]);
       if (caseRes.data) setCaseStudy(caseRes.data as CaseStudy);
