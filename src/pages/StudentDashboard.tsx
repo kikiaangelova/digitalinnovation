@@ -8,6 +8,8 @@ import ProgressCards from '@/components/dashboard/ProgressCards';
 import AchievementBadges from '@/components/dashboard/AchievementBadges';
 import AIMentorWidget from '@/components/dashboard/AIMentorWidget';
 import CourseTimeline from '@/components/dashboard/CourseTimeline';
+import LearningOutcomes, { calcOutcomeScores } from '@/components/dashboard/LearningOutcomes';
+import Leaderboard from '@/components/dashboard/Leaderboard';
 import { Zap, BookOpen, Rocket, BarChart3 } from 'lucide-react';
 
 interface CaseRow { id: string; title: string; difficulty: string; est_minutes: number | null; }
@@ -27,7 +29,7 @@ export default function StudentDashboard() {
 
   useEffect(() => {
     if (!user) return;
-    const fetch = async () => {
+    const fetchData = async () => {
       const [casesRes, subsRes, projRes, simRes] = await Promise.all([
         supabase.from('case_studies').select('id, title, difficulty, est_minutes').eq('published', true),
         supabase.from('submissions').select('case_study_id, is_draft').eq('user_id', user.id),
@@ -40,12 +42,10 @@ export default function StudentDashboard() {
       setSimProgress(simRes.data || null);
       setLoading(false);
     };
-    fetch();
+    fetchData();
   }, [user]);
 
-  // XP calculation
   const casesCompleted = submissions.filter(s => !s.is_draft).length;
-  const casesInProgress = submissions.filter(s => s.is_draft).length;
   const simWeek = simProgress?.current_week || 1;
   const simComplete = simProgress?.is_complete || false;
 
@@ -55,21 +55,30 @@ export default function StudentDashboard() {
     : 0;
   const startupPct = Math.round((startupFilled / startupSections.length) * 100);
 
-  // XP: 50 per case, 100 per sim week, 75 per startup section, 200 bonus for submission
   const xp =
     casesCompleted * 50 +
     (simWeek - 1) * 100 + (simComplete ? 100 : 0) +
     startupFilled * 75 +
     (startupProject?.is_submitted ? 200 : 0);
 
-  // Next incomplete case
   const completedIds = new Set(submissions.filter(s => !s.is_draft).map(s => s.case_study_id));
   const nextCase = cases.find(c => !completedIds.has(c.id));
 
-  // Current course week estimate (simplified)
   const courseWeek = Math.min(6, Math.max(1, Math.ceil((casesCompleted + startupFilled * 0.5 + (simWeek - 1) * 0.5) / 1.5) + 1));
 
-  // XP actions list
+  // Learning outcomes
+  const startupSectionMap: Record<string, boolean> = {};
+  startupSections.forEach(s => {
+    startupSectionMap[s] = startupProject ? ((startupProject as any)[s] || '').trim().length > 20 : false;
+  });
+  const outcomeScores = calcOutcomeScores({
+    casesCompleted,
+    casesTotal: cases.length,
+    startupSections: startupSectionMap,
+    simWeek,
+    simComplete,
+  });
+
   const xpActions = [
     { action: t('Complete case study', 'Завърши казус'), xp: '+50 XP', icon: BookOpen },
     { action: t('Finish simulator week', 'Завърши седмица от симулатора'), xp: '+100 XP', icon: BarChart3 },
@@ -140,6 +149,12 @@ export default function StudentDashboard() {
           nextCaseMinutes={nextCase?.est_minutes || undefined}
           nextCaseId={nextCase?.id}
         />
+
+        {/* Learning Outcomes + Leaderboard */}
+        <div className="grid gap-4 md:grid-cols-2">
+          <LearningOutcomes lang={lang} scores={outcomeScores} />
+          <Leaderboard lang={lang} currentUserId={user?.id} limit={5} />
+        </div>
 
         {/* Badges */}
         <AchievementBadges
