@@ -6,18 +6,38 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { toast } from 'sonner';
-import { GraduationCap, LogIn, UserPlus } from 'lucide-react';
+import { GraduationCap, LogIn, UserPlus, Eye, EyeOff } from 'lucide-react';
+import PasswordStrengthMeter, { checkPassword, getStrength } from '@/components/auth/PasswordStrengthMeter';
+
+const MAX_ATTEMPTS = 5;
+const LOCKOUT_MS = 10 * 60 * 1000; // 10 min
+
+function getLoginAttempts(): { count: number; lockedUntil: number } {
+  try {
+    const raw = sessionStorage.getItem('auth_attempts');
+    if (raw) return JSON.parse(raw);
+  } catch {}
+  return { count: 0, lockedUntil: 0 };
+}
+
+function setLoginAttempts(data: { count: number; lockedUntil: number }) {
+  sessionStorage.setItem('auth_attempts', JSON.stringify(data));
+}
 
 export default function AuthPage() {
   const [searchParams] = useSearchParams();
   const [isLogin, setIsLogin] = useState(searchParams.get('mode') !== 'signup');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const { signIn, signUp, user } = useAuth();
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const navigate = useNavigate();
+  const tx = (en: string, bg: string) => lang === 'bg' ? bg : en;
 
   const redirectTo = searchParams.get('redirect') || '/dashboard';
 
@@ -32,18 +52,53 @@ export default function AuthPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Brute-force check
+    const attempts = getLoginAttempts();
+    if (attempts.lockedUntil > Date.now()) {
+      const mins = Math.ceil((attempts.lockedUntil - Date.now()) / 60000);
+      toast.error(tx(`Account locked. Try again in ${mins} minutes.`, `Акаунтът е заключен. Опитайте отново след ${mins} минути.`));
+      return;
+    }
+
     const trimmedEmail = email.trim();
     if (!trimmedEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
       toast.error(t.invalidEmail);
       return;
     }
-    if (password.length < 8) {
-      toast.error(t.passwordTooShort);
-      return;
-    }
-    if (password.length > 128) {
-      toast.error(t.passwordTooLong);
-      return;
+
+    if (isLogin) {
+      if (password.length < 1) {
+        toast.error(tx('Please enter your password', 'Моля, въведете паролата'));
+        return;
+      }
+    } else {
+      // Registration password validation
+      const checks = checkPassword(password, fullName || trimmedEmail);
+      const strength = getStrength(checks);
+      if (!checks.minLength) {
+        toast.error(tx('Password must be at least 12 characters', 'Паролата трябва да бъде поне 12 символа'));
+        return;
+      }
+      if (!checks.complexityMet) {
+        toast.error(tx('Password must include 3 of 4: uppercase, lowercase, number, symbol', 'Паролата трябва да включва 3 от 4: главна, малка, цифра, символ'));
+        return;
+      }
+      if (!checks.notCommon) {
+        toast.error(tx('This password is too common. Choose a stronger one.', 'Тази парола е прекалено често срещана. Изберете по-силна.'));
+        return;
+      }
+      if (!checks.notContainsName) {
+        toast.error(tx('Password must not contain your name or email.', 'Паролата не трябва да съдържа вашето име или имейл.'));
+        return;
+      }
+      if (password !== confirmPassword) {
+        toast.error(tx('Passwords do not match', 'Паролите не съвпадат'));
+        return;
+      }
+      if (password.length > 128) {
+        toast.error(t.passwordTooLong);
+        return;
+      }
     }
 
     setLoading(true);
@@ -51,8 +106,16 @@ export default function AuthPage() {
     if (isLogin) {
       const { error } = await signIn(trimmedEmail, password);
       if (error) {
-        toast.error(error.message);
+        const newCount = attempts.count + 1;
+        if (newCount >= MAX_ATTEMPTS) {
+          setLoginAttempts({ count: newCount, lockedUntil: Date.now() + LOCKOUT_MS });
+          toast.error(tx(`Too many attempts. Locked for 10 minutes.`, `Твърде много опити. Заключен за 10 минути.`));
+        } else {
+          setLoginAttempts({ count: newCount, lockedUntil: 0 });
+          toast.error(error.message);
+        }
       } else {
+        setLoginAttempts({ count: 0, lockedUntil: 0 });
         toast.success(t.welcomeBack + '!');
         navigate(redirectTo);
       }
@@ -117,8 +180,56 @@ export default function AuthPage() {
             </div>
             <div>
               <Label htmlFor="password">{t.password}</Label>
-              <Input id="password" type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="••••••••" required minLength={6} />
+              <div className="relative">
+                <Input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  placeholder="••••••••••••"
+                  required
+                  className="pr-10"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
+              {!isLogin && (
+                <PasswordStrengthMeter password={password} nameOrEmail={fullName || email} lang={lang} />
+              )}
             </div>
+            {!isLogin && (
+              <div>
+                <Label htmlFor="confirmPassword">{tx('Confirm Password', 'Потвърдете паролата')}</Label>
+                <div className="relative">
+                  <Input
+                    id="confirmPassword"
+                    type={showConfirm ? 'text' : 'password'}
+                    value={confirmPassword}
+                    onChange={e => setConfirmPassword(e.target.value)}
+                    placeholder="••••••••••••"
+                    required
+                    className="pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirm(!showConfirm)}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                    tabIndex={-1}
+                  >
+                    {showConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  </button>
+                </div>
+                {confirmPassword && password !== confirmPassword && (
+                  <p className="text-[11px] text-destructive mt-1">{tx('Passwords do not match', 'Паролите не съвпадат')}</p>
+                )}
+              </div>
+            )}
             <Button type="submit" className="w-full sim-gradient border-0" disabled={loading}>
               {loading ? t.pleaseWait : isLogin ? (
                 <><LogIn className="h-4 w-4 mr-2" /> {t.signIn}</>

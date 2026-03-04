@@ -20,7 +20,7 @@ import {
 import {
   Users, BookOpen, Rocket, Activity, Search, ChevronDown, ChevronRight,
   MessageSquare, Sparkles, Download, TrendingUp, Target, BarChart3, User,
-  Check, Clock, Send, ArrowLeft, Trophy, GraduationCap,
+  Check, Clock, Send, ArrowLeft, Trophy, GraduationCap, Printer, FileText,
 } from 'lucide-react';
 
 // Types
@@ -467,13 +467,18 @@ export default function TeacherDashboard() {
     <div className="min-h-screen bg-background">
       <AppHeader />
       <main className="container mx-auto max-w-6xl px-4 py-8 space-y-6">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between flex-wrap gap-3">
           <h1 className="text-2xl font-display font-bold text-foreground">
             {t('Teacher Dashboard', 'Табло на учителя')}
           </h1>
-          <Button variant="outline" size="sm" onClick={exportCSV}>
-            <Download className="h-4 w-4 mr-1" /> {t('Export CSV', 'Експорт CSV')}
-          </Button>
+          <div className="flex gap-2 print:hidden">
+            <Button variant="outline" size="sm" onClick={exportCSV}>
+              <Download className="h-4 w-4 mr-1" /> CSV
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => window.print()}>
+              <Printer className="h-4 w-4 mr-1" /> {t('Print Report', 'Печат доклад')}
+            </Button>
+          </div>
         </div>
 
         {/* Overview Stats */}

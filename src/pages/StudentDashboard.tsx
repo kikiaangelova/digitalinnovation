@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
 import { supabase } from '@/integrations/supabase/client';
+import { useNavigate } from 'react-router-dom';
 import AppHeader from '@/components/layout/AppHeader';
 import LevelCard from '@/components/dashboard/LevelCard';
 import ProgressCards from '@/components/dashboard/ProgressCards';
@@ -10,7 +11,8 @@ import AIMentorWidget from '@/components/dashboard/AIMentorWidget';
 import CourseTimeline from '@/components/dashboard/CourseTimeline';
 import LearningOutcomes, { calcOutcomeScores } from '@/components/dashboard/LearningOutcomes';
 import Leaderboard from '@/components/dashboard/Leaderboard';
-import { Zap, BookOpen, Rocket, BarChart3 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Zap, BookOpen, Rocket, BarChart3, FileText } from 'lucide-react';
 
 interface CaseRow { id: string; title: string; difficulty: string; est_minutes: number | null; }
 interface SubRow { case_study_id: string; is_draft: boolean; }
@@ -18,6 +20,7 @@ interface SubRow { case_study_id: string; is_draft: boolean; }
 export default function StudentDashboard() {
   const { user } = useAuth();
   const { lang } = useLang();
+  const navigate = useNavigate();
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
 
   const [cases, setCases] = useState<CaseRow[]>([]);
@@ -102,13 +105,18 @@ export default function StudentDashboard() {
       <AppHeader />
       <main className="container mx-auto px-4 py-8 space-y-6 max-w-6xl">
         {/* Header */}
-        <div>
-          <h1 className="text-2xl md:text-3xl font-display font-bold text-foreground">
-            {t('Your Innovation Dashboard', 'Твоето иновационно табло')}
-          </h1>
-          <p className="text-muted-foreground text-sm mt-1">
-            {t('Track your progress, earn XP, and build your startup', 'Проследи напредъка си, спечели XP и изгради своя стартъп')}
-          </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl md:text-3xl font-display font-bold text-foreground">
+              {t('Your Innovation Dashboard', 'Твоето иновационно табло')}
+            </h1>
+            <p className="text-muted-foreground text-sm mt-1">
+              {t('Track your progress, earn XP, and build your startup', 'Проследи напредъка си, спечели XP и изгради своя стартъп')}
+            </p>
+          </div>
+          <Button variant="outline" size="sm" className="print:hidden" onClick={() => navigate('/my-report')}>
+            <FileText className="h-4 w-4 mr-1" /> {t('My Report', 'Моят доклад')}
+          </Button>
         </div>
 
         {/* Level + XP Actions */}
