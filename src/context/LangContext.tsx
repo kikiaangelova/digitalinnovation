@@ -18,6 +18,9 @@ const translations = {
     signUp: 'Sign Up',
     signOut: 'Sign Out',
     menu: 'Menu',
+    teacher: 'Teacher',
+    industries: 'Industries',
+    startup: 'My Startup',
 
     // Landing
     heroTitle: 'DigiInnov Case Lab',
@@ -94,6 +97,12 @@ const translations = {
     noAccount: "Don't have an account?",
     haveAccount: 'Already have an account?',
     backToHome: '← Back to home',
+    invalidEmail: 'Please enter a valid email address',
+    passwordTooShort: 'Password must be at least 8 characters',
+    passwordTooLong: 'Password is too long',
+    nameTooShort: 'Please enter your full name (at least 2 characters)',
+    nameTooLong: 'Name is too long',
+    accountCreated: 'Account created! Check your email to confirm.',
 
     // Case Library
     caseLibrary: 'Case Library',
@@ -174,8 +183,40 @@ const translations = {
     simPrevDeliv2: 'Explain their reasoning',
     simPrevDeliv3: 'Present a final startup pitch',
 
+    // Profile
+    myProfile: 'My Profile',
+    casesDone: 'Cases Done',
+    avgScore: 'Avg Score',
+    editProfile: 'Edit Profile',
+    linkedInUrl: 'LinkedIn URL',
+    bio: 'Bio',
+    bioPlaceholder: 'Tell us about yourself...',
+    portfolioUrl: 'Portfolio URL',
+    skills: 'Skills',
+    interests: 'Interests',
+    addInterest: 'Add interest...',
+    add: 'Add',
+    visibleToClassmates: 'Visible to classmates in my cohort',
+    saveProfile: 'Save Profile',
+    saving: 'Saving...',
+    profileSaved: 'Profile saved',
+    profileSaveFailed: 'Failed to save profile',
+    teams: 'Teams',
+    loading: 'Loading...',
+
     // General
     min: 'min',
+    backToDashboard: 'Back to Dashboard',
+    next: 'Next',
+    previous: 'Previous',
+    save: 'Save',
+    submit: 'Submit',
+    cancel: 'Cancel',
+    close: 'Close',
+    search: 'Search',
+    filter: 'Filter',
+    noData: 'No data available',
+    topInnovators: 'Top Innovators',
   },
   bg: {
     // Header
@@ -192,6 +233,9 @@ const translations = {
     signUp: 'Регистрация',
     signOut: 'Изход',
     menu: 'Меню',
+    teacher: 'Учител',
+    industries: 'Индустрии',
+    startup: 'Моят стартъп',
 
     // Landing
     heroTitle: 'DigiInnov Case Lab',
@@ -268,6 +312,12 @@ const translations = {
     noAccount: 'Нямате акаунт?',
     haveAccount: 'Вече имате акаунт?',
     backToHome: '← Към началото',
+    invalidEmail: 'Моля, въведете валиден имейл адрес',
+    passwordTooShort: 'Паролата трябва да бъде поне 8 символа',
+    passwordTooLong: 'Паролата е прекалено дълга',
+    nameTooShort: 'Моля, въведете пълното си име (поне 2 символа)',
+    nameTooLong: 'Името е прекалено дълго',
+    accountCreated: 'Акаунтът е създаден! Проверете имейла си за потвърждение.',
 
     // Case Library
     caseLibrary: 'Библиотека с казуси',
@@ -348,8 +398,40 @@ const translations = {
     simPrevDeliv2: 'Обяснят своите разсъждения',
     simPrevDeliv3: 'Представят финално стартъп представяне',
 
+    // Profile
+    myProfile: 'Моят профил',
+    casesDone: 'Завършени казуси',
+    avgScore: 'Среден резултат',
+    editProfile: 'Редактирай профил',
+    linkedInUrl: 'LinkedIn URL',
+    bio: 'Биография',
+    bioPlaceholder: 'Разкажете ни за себе си...',
+    portfolioUrl: 'Портфолио URL',
+    skills: 'Умения',
+    interests: 'Интереси',
+    addInterest: 'Добави интерес...',
+    add: 'Добави',
+    visibleToClassmates: 'Видим за съученици в моята кохорта',
+    saveProfile: 'Запази профил',
+    saving: 'Запазване...',
+    profileSaved: 'Профилът е запазен',
+    profileSaveFailed: 'Грешка при запазване на профила',
+    teams: 'Екипи',
+    loading: 'Зареждане...',
+
     // General
     min: 'мин',
+    backToDashboard: 'Към таблото',
+    next: 'Напред',
+    previous: 'Назад',
+    save: 'Запази',
+    submit: 'Изпрати',
+    cancel: 'Отказ',
+    close: 'Затвори',
+    search: 'Търсене',
+    filter: 'Филтър',
+    noData: 'Няма налични данни',
+    topInnovators: 'Топ иноватори',
   },
 } as const;
 

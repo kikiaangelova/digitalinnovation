@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
+import { useLang } from '@/context/LangContext';
 import { supabase } from '@/integrations/supabase/client';
 import AppHeader from '@/components/layout/AppHeader';
 import { Button } from '@/components/ui/button';
@@ -15,6 +16,7 @@ const SKILL_OPTIONS = ['UX', 'Data', 'Strategy', 'PM', 'Marketing', 'AI', 'Engin
 
 export default function ProfilePage() {
   const { user, profile: authProfile } = useAuth();
+  const { t } = useLang();
   const navigate = useNavigate();
   const [fullName, setFullName] = useState('');
   const [bio, setBio] = useState('');
@@ -66,8 +68,8 @@ export default function ProfilePage() {
       links_json: { linkedin: linkedIn, portfolio },
       profile_visible: profileVisible,
     } as any).eq('user_id', user.id);
-    if (error) toast.error('Failed to save profile');
-    else toast.success('Profile saved');
+    if (error) toast.error(t.profileSaveFailed);
+    else toast.success(t.profileSaved);
     setSaving(false);
   };
 
@@ -88,42 +90,42 @@ export default function ProfilePage() {
     : 0;
 
   if (loading) {
-    return <div className="min-h-screen bg-background"><AppHeader /><div className="flex items-center justify-center py-20 text-muted-foreground">Loading...</div></div>;
+    return <div className="min-h-screen bg-background"><AppHeader /><div className="flex items-center justify-center py-20 text-muted-foreground">{t.loading}</div></div>;
   }
 
   return (
     <div className="min-h-screen bg-background">
       <AppHeader />
       <main className="container mx-auto px-4 py-8 max-w-3xl space-y-8">
-        <h1 className="text-2xl font-display font-bold text-foreground">My Profile</h1>
+        <h1 className="text-2xl font-display font-bold text-foreground">{t.myProfile}</h1>
 
         {/* Stats row */}
         <div className="grid grid-cols-3 gap-4">
           <div className="rounded-lg border border-border bg-card p-4 text-center">
             <BookOpen className="h-5 w-5 text-primary mx-auto mb-1" />
             <p className="text-2xl font-bold text-foreground">{completedCount}</p>
-            <p className="text-xs text-muted-foreground">Cases Done</p>
+            <p className="text-xs text-muted-foreground">{t.casesDone}</p>
           </div>
           <div className="rounded-lg border border-border bg-card p-4 text-center">
             <BarChart3 className="h-5 w-5 text-sim-info mx-auto mb-1" />
             <p className="text-2xl font-bold text-foreground">{avgScore}%</p>
-            <p className="text-xs text-muted-foreground">Avg Score</p>
+            <p className="text-xs text-muted-foreground">{t.avgScore}</p>
           </div>
           <div className="rounded-lg border border-border bg-card p-4 text-center">
             <Award className="h-5 w-5 text-sim-warning mx-auto mb-1" />
             <p className="text-2xl font-bold text-foreground">{badges.length}</p>
-            <p className="text-xs text-muted-foreground">Badges</p>
+            <p className="text-xs text-muted-foreground">{t.badges}</p>
           </div>
         </div>
 
         {/* Badges */}
         {badges.length > 0 && (
           <div className="rounded-lg border border-border bg-card p-5">
-            <h3 className="font-display font-semibold text-foreground mb-3">Badges</h3>
+            <h3 className="font-display font-semibold text-foreground mb-3">{t.badges}</h3>
             <div className="flex flex-wrap gap-2">
               {badges.map((b: any) => (
                 <Badge key={b.badge_id} className="bg-accent text-accent-foreground">
-                  <Award className="h-3 w-3 mr-1" /> {b.badges?.name || 'Badge'}
+                  <Award className="h-3 w-3 mr-1" /> {b.badges?.name || t.badges}
                 </Badge>
               ))}
             </div>
@@ -133,15 +135,15 @@ export default function ProfilePage() {
         {/* Teams */}
         {teams.length > 0 && (
           <div className="rounded-lg border border-border bg-card p-5">
-            <h3 className="font-display font-semibold text-foreground mb-3">Teams</h3>
+            <h3 className="font-display font-semibold text-foreground mb-3">{t.teams}</h3>
             <div className="space-y-2">
-              {teams.map((t: any) => (
-                <div key={t.team_id} className="flex items-center justify-between p-3 rounded-md bg-muted/50">
+              {teams.map((tm: any) => (
+                <div key={tm.team_id} className="flex items-center justify-between p-3 rounded-md bg-muted/50">
                   <div className="flex items-center gap-2">
                     <Users className="h-4 w-4 text-primary" />
-                    <span className="text-sm font-medium text-foreground">{t.teams?.name || 'Team'}</span>
+                    <span className="text-sm font-medium text-foreground">{tm.teams?.name || t.teams}</span>
                   </div>
-                  <Badge variant="outline" className="text-xs capitalize">{t.role}</Badge>
+                  <Badge variant="outline" className="text-xs capitalize">{tm.role}</Badge>
                 </div>
               ))}
             </div>
@@ -150,27 +152,27 @@ export default function ProfilePage() {
 
         {/* Edit form */}
         <div className="rounded-lg border border-border bg-card p-6 space-y-5">
-          <h3 className="font-display font-semibold text-foreground">Edit Profile</h3>
+          <h3 className="font-display font-semibold text-foreground">{t.editProfile}</h3>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <Label>Full Name</Label>
+              <Label>{t.fullName}</Label>
               <Input value={fullName} onChange={e => setFullName(e.target.value)} />
             </div>
             <div>
-              <Label>LinkedIn URL</Label>
+              <Label>{t.linkedInUrl}</Label>
               <Input value={linkedIn} onChange={e => setLinkedIn(e.target.value)} placeholder="https://linkedin.com/in/..." />
             </div>
           </div>
           <div>
-            <Label>Bio</Label>
-            <Textarea value={bio} onChange={e => setBio(e.target.value)} placeholder="Tell us about yourself..." className="min-h-[80px]" />
+            <Label>{t.bio}</Label>
+            <Textarea value={bio} onChange={e => setBio(e.target.value)} placeholder={t.bioPlaceholder} className="min-h-[80px]" />
           </div>
           <div>
-            <Label>Portfolio URL</Label>
+            <Label>{t.portfolioUrl}</Label>
             <Input value={portfolio} onChange={e => setPortfolio(e.target.value)} placeholder="https://..." />
           </div>
           <div>
-            <Label className="mb-2 block">Skills</Label>
+            <Label className="mb-2 block">{t.skills}</Label>
             <div className="flex flex-wrap gap-2">
               {SKILL_OPTIONS.map(skill => (
                 <button
@@ -186,10 +188,10 @@ export default function ProfilePage() {
             </div>
           </div>
           <div>
-            <Label className="mb-2 block">Interests</Label>
+            <Label className="mb-2 block">{t.interests}</Label>
             <div className="flex gap-2 mb-2">
-              <Input value={interestInput} onChange={e => setInterestInput(e.target.value)} placeholder="Add interest..." onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addInterest())} />
-              <Button variant="outline" size="sm" onClick={addInterest}>Add</Button>
+              <Input value={interestInput} onChange={e => setInterestInput(e.target.value)} placeholder={t.addInterest} onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addInterest())} />
+              <Button variant="outline" size="sm" onClick={addInterest}>{t.add}</Button>
             </div>
             <div className="flex flex-wrap gap-2">
               {interests.map(i => (
@@ -199,10 +201,10 @@ export default function ProfilePage() {
           </div>
           <div className="flex items-center gap-3">
             <input type="checkbox" checked={profileVisible} onChange={e => setProfileVisible(e.target.checked)} className="rounded" />
-            <Label>Visible to classmates in my cohort</Label>
+            <Label>{t.visibleToClassmates}</Label>
           </div>
           <Button onClick={handleSave} disabled={saving} className="sim-gradient border-0">
-            <Save className="h-4 w-4 mr-1" /> {saving ? 'Saving...' : 'Save Profile'}
+            <Save className="h-4 w-4 mr-1" /> {saving ? t.saving : t.saveProfile}
           </Button>
         </div>
       </main>
