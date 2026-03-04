@@ -73,7 +73,7 @@ serve(async (req) => {
     const { count } = await supabase
       .from("ai_rate_limits")
       .select("id", { count: "exact", head: true })
-      .eq("user_id", user.id)
+      .eq("user_id", userId)
       .gte("requested_at", todayStart.toISOString());
 
     if ((count ?? 0) >= DAILY_LIMIT) {
