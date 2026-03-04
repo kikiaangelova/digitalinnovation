@@ -12,11 +12,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import {
   Lightbulb, Users, Zap, Monitor, DollarSign, TrendingUp,
-  Presentation, ChevronRight, Check, Save, Rocket, HelpCircle, Globe, LayoutGrid
+  Presentation, ChevronRight, Check, Save, Rocket, HelpCircle, Globe, LayoutGrid, ClipboardCheck
 } from 'lucide-react';
 import { INDUSTRIES } from '@/data/industry-map-data';
 import BusinessModelCanvas, { BMC_KEYS, type BMCData } from '@/components/startup/BusinessModelCanvas';
 import AIMentorPanel from '@/components/startup/AIMentorPanel';
+import IdeaEvaluation from '@/components/startup/IdeaEvaluation';
 
 interface SectionConfig {
   key: string;
@@ -325,14 +326,18 @@ export default function MyStartupIdea() {
 
         {/* Tabs: Sections | Business Model Canvas */}
         <Tabs defaultValue="sections" className="space-y-6">
-          <TabsList className="grid w-full max-w-md grid-cols-2">
+          <TabsList className="grid w-full max-w-lg grid-cols-3">
             <TabsTrigger value="sections" className="gap-1.5">
               <Lightbulb className="h-4 w-4" />
-              {t('Startup Sections', 'Секции на стартъпа')}
+              {t('Sections', 'Секции')}
+            </TabsTrigger>
+            <TabsTrigger value="evaluate" className="gap-1.5">
+              <ClipboardCheck className="h-4 w-4" />
+              {t('Evaluate', 'Оценка')}
             </TabsTrigger>
             <TabsTrigger value="bmc" className="gap-1.5">
               <LayoutGrid className="h-4 w-4" />
-              Business Model Canvas
+              BMC
             </TabsTrigger>
           </TabsList>
 
@@ -426,6 +431,21 @@ export default function MyStartupIdea() {
                 </div>
               </div>
             </div>
+          </TabsContent>
+
+          {/* Evaluate tab */}
+          <TabsContent value="evaluate">
+            <IdeaEvaluation
+              lang={lang as 'en' | 'bg'}
+              startupData={{
+                problem: data.problem,
+                customer: data.customer,
+                value_proposition: data.value_proposition,
+                digital_product: data.digital_product,
+                business_model: data.business_model,
+                industry: data.industry,
+              }}
+            />
           </TabsContent>
 
           {/* BMC tab */}
