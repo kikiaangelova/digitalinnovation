@@ -343,8 +343,8 @@ export default function CasePlayer() {
       const xpDelta = Math.max(0, currentXp - previousXp);
 
       if (xpDelta > 0) {
-        const { error: xpError } = await supabase.rpc('add_user_xp', { _user_id: user.id, _xp: xpDelta });
-        if (xpError) throw xpError;
+        const { awardXp } = await import('@/lib/xp');
+        await awardXp('case_startup_notes', id);
       }
 
       const centralAnswers = buildSessionAnswers(answers, startupNotes);

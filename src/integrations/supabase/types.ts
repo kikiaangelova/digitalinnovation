@@ -1406,6 +1406,36 @@ export type Database = {
         }
         Relationships: []
       }
+      xp_ledger: {
+        Row: {
+          action: string
+          context_id: string | null
+          created_at: string
+          id: string
+          metadata: Json | null
+          user_id: string
+          xp: number
+        }
+        Insert: {
+          action: string
+          context_id?: string | null
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          user_id: string
+          xp?: number
+        }
+        Update: {
+          action?: string
+          context_id?: string | null
+          created_at?: string
+          id?: string
+          metadata?: Json | null
+          user_id?: string
+          xp?: number
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

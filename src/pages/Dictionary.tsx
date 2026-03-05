@@ -1,11 +1,13 @@
-import { useState, useMemo, useCallback } from 'react';
+import { useState, useMemo, useCallback, useRef } from 'react';
 import AppHeader from '@/components/layout/AppHeader';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Search, Book, Lightbulb, ChevronDown, ChevronUp, Star, HelpCircle, CheckCircle2, XCircle, Shuffle } from 'lucide-react';
 import { useLang } from '@/context/LangContext';
+import { useAuth } from '@/context/AuthContext';
 import { TERMS, type DictionaryTerm } from '@/data/dictionary-terms';
+import { awardXp } from '@/lib/xp';
 
 const CATEGORY_COLORS: Record<string, string> = {
   Innovation: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20',
@@ -65,12 +67,14 @@ function generateQuiz(lang: string, exclude?: string): { term: DictionaryTerm; o
 
 export default function Dictionary() {
   const { lang } = useLang();
+  const { user } = useAuth();
   const [search, setSearch] = useState('');
   const [catFilter, setCatFilter] = useState('all');
   const [letterFilter, setLetterFilter] = useState('');
   const [showQuiz, setShowQuiz] = useState(false);
   const [quiz, setQuiz] = useState(() => generateQuiz('en'));
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const viewedTermsRef = useRef<Set<string>>(new Set());
 
   const termOfTheWeek = useMemo(() => getTermOfTheWeek(), []);
   const categories = useMemo(() => [...new Set(TERMS.map(t => t.category))].sort(), []);
@@ -188,7 +192,14 @@ export default function Dictionary() {
                     return (
                       <button
                         key={i}
-                        onClick={() => selectedAnswer === null && setSelectedAnswer(i)}
+                        onClick={() => {
+                          if (selectedAnswer !== null) return;
+                          setSelectedAnswer(i);
+                          // Award XP for correct quiz answer
+                          if (i === quiz.correctIndex && user) {
+                            awardXp('dict_quiz_correct', quiz.term.term);
+                          }
+                        }}
                         disabled={selectedAnswer !== null}
                         className={`w-full text-left rounded-md border p-2.5 text-xs leading-relaxed transition-all ${borderClass} ${
                           selectedAnswer === null ? 'hover:border-primary/40 cursor-pointer' : ''
@@ -292,7 +303,7 @@ export default function Dictionary() {
         ) : (
           <div className="space-y-3">
             {filtered.map(t => (
-              <TermCard key={t.term} term={t} catColor={catColor} lang={lang} />
+              <TermCard key={t.term} term={t} catColor={catColor} lang={lang} user={user} viewedTermsRef={viewedTermsRef} />
             ))}
           </div>
         )}
@@ -301,13 +312,21 @@ export default function Dictionary() {
   );
 }
 
-function TermCard({ term: t, catColor, lang }: { term: DictionaryTerm; catColor: (c: string) => string; lang: string }) {
+function TermCard({ term: t, catColor, lang, user, viewedTermsRef }: { term: DictionaryTerm; catColor: (c: string) => string; lang: string; user: any; viewedTermsRef: React.MutableRefObject<Set<string>> }) {
   const [expanded, setExpanded] = useState(false);
+
+  const handleToggle = () => {
+    if (!expanded && user && !viewedTermsRef.current.has(t.term)) {
+      viewedTermsRef.current.add(t.term);
+      awardXp('dict_view_term', t.term);
+    }
+    setExpanded(!expanded);
+  };
 
   return (
     <div
       className="rounded-lg border border-border bg-card hover:border-primary/30 transition-colors cursor-pointer"
-      onClick={() => setExpanded(!expanded)}
+      onClick={handleToggle}
     >
       <div className="flex items-start justify-between gap-3 p-4 pb-2">
         <div className="flex-1 min-w-0">

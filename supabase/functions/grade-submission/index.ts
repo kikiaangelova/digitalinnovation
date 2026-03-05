@@ -7,10 +7,9 @@ const corsHeaders = {
 };
 
 function xpFromPercent(pct: number): number {
-  if (pct >= 80) return 100;
-  if (pct >= 60) return 70;
-  if (pct >= 40) return 40;
-  return 10;
+  // Base: 100 XP for completion, bonus 30 for high quality (>70%)
+  if (pct >= 70) return 130; // 100 base + 30 bonus
+  return 100; // base completion XP
 }
 
 async function aiGradeQuestion(
