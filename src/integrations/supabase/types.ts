@@ -636,6 +636,7 @@ export type Database = {
           links_json: Json | null
           profile_visible: boolean | null
           skills_tags: string[] | null
+          total_xp: number
           updated_at: string
           user_id: string
         }
@@ -651,6 +652,7 @@ export type Database = {
           links_json?: Json | null
           profile_visible?: boolean | null
           skills_tags?: string[] | null
+          total_xp?: number
           updated_at?: string
           user_id: string
         }
@@ -666,6 +668,7 @@ export type Database = {
           links_json?: Json | null
           profile_visible?: boolean | null
           skills_tags?: string[] | null
+          total_xp?: number
           updated_at?: string
           user_id?: string
         }
@@ -1194,6 +1197,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      add_user_xp: { Args: { _user_id: string; _xp: number }; Returns: number }
       get_assessment_results_questions: {
         Args: { _assessment_id: string }
         Returns: {
@@ -1219,6 +1223,14 @@ export type Database = {
           question_order: number
           rubric: string
           type: string
+        }[]
+      }
+      get_leaderboard: {
+        Args: { _limit?: number }
+        Returns: {
+          display_name: string
+          total_xp: number
+          user_id: string
         }[]
       }
       get_player_assessment_questions: {

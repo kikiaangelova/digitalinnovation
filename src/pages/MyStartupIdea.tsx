@@ -268,7 +268,9 @@ export default function MyStartupIdea() {
         is_submitted: true, submitted_at: new Date().toISOString(),
       }).eq('user_id', user.id);
       setData(d => ({ ...d, is_submitted: true }));
-      toast.success(t('Project submitted!', 'Проектът е предаден!'));
+      // Award 200 XP for final submission
+      await supabase.rpc('add_user_xp' as any, { _user_id: user.id, _xp: 200 });
+      toast.success(t('Project submitted! +200 XP earned!', 'Проектът е предаден! +200 XP спечелени!'));
     } catch {
       toast.error(t('Failed to submit', 'Грешка при изпращане'));
     } finally {
