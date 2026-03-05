@@ -4,13 +4,12 @@ import { useLang } from '@/context/LangContext';
 import { Button } from '@/components/ui/button';
 import AppHeader from '@/components/layout/AppHeader';
 import InnovationShowcase from '@/components/landing/InnovationShowcase';
-import CommunityStats from '@/components/landing/CommunityStats';
 import {
-  GraduationCap, ArrowRight, Lightbulb, Search, Rocket, Brain,
-  Sparkles, Presentation, Compass, Briefcase, Hammer, Palette, Crown,
-  Trophy, BookOpen, FlaskConical, Target, TrendingUp, Mic,
-  Award, Zap, Star, Shield, BarChart3, Calendar, ChevronRight,
-  Cpu, LineChart, Package, Users, Eye,
+  GraduationCap, ArrowRight, Lightbulb, Search, Rocket,
+  Presentation, Compass, Briefcase, Palette,
+  Trophy, BookOpen, FlaskConical, TrendingUp, Mic,
+  Zap, Star, Calendar, ChevronRight,
+  Cpu, Eye,
 } from 'lucide-react';
 
 const Index = () => {
@@ -74,20 +73,6 @@ const Index = () => {
     { icon: Palette, title: t('Design Your Product', 'Създай своя продукт'), desc: t('Create your MVP and value proposition', 'Създай MVP и стойностно предложение') },
     { icon: FlaskConical, title: t('Test Strategy in the Simulator', 'Тествай стратегията в симулатора'), desc: t('Make decisions that affect your KPIs', 'Вземи решения, които влияят на KPI') },
     { icon: Presentation, title: t('Pitch Your Startup', 'Представи своя стартъп'), desc: t('Present your startup to virtual investors', 'Представи стартъпа си пред инвеститори') },
-  ];
-
-  // SECTION 5 – GAMIFICATION
-  const xpActions = [
-    { action: t('Complete case study', 'Завършване на казус'), xp: 50, icon: BookOpen },
-    { action: t('Finish simulator step', 'Завършване на стъпка от симулатора'), xp: 100, icon: BarChart3 },
-    { action: t('Submit startup idea', 'Предаване на стартъп идея'), xp: 200, icon: Rocket },
-  ];
-
-  const badges = [
-    { name: t('Innovation Explorer', 'Иноватор изследовател'), icon: Compass, color: 'from-blue-500 to-cyan-400' },
-    { name: t('Startup Builder', 'Стартъп строител'), icon: Hammer, color: 'from-emerald-500 to-teal-400' },
-    { name: t('Digital Strategist', 'Дигитален стратег'), icon: Target, color: 'from-amber-500 to-orange-400' },
-    { name: t('AI Innovator', 'AI Иноватор'), icon: Sparkles, color: 'from-purple-500 to-pink-400' },
   ];
 
   // SECTION 6 – COURSE TIMELINE
@@ -183,8 +168,6 @@ const Index = () => {
         </div>
       </section>
 
-      {/* ═══════════════════ COMMUNITY STATS ═══════════════════ */}
-      <CommunityStats lang={lang} isAdmin={isAdmin} />
 
       {/* ═══════════════════ SECTION 2: WHAT YOU WILL LEARN ═══════════════════ */}
       <section className="py-20 px-4 border-t border-border">
@@ -291,9 +274,7 @@ const Index = () => {
             </div>
 
             <div className="space-y-4">
-              {journeyStages.map((stage, i) => {
-                const progressPct = ((i + 1) / journeyStages.length) * 100;
-                return (
+              {journeyStages.map((stage, i) => (
                   <div key={i} className="flex gap-4 sm:gap-5 group">
                     <div className="relative z-10 flex h-12 w-12 sm:h-14 sm:w-14 items-center justify-center rounded-2xl sim-gradient text-primary-foreground shadow-lg shrink-0 group-hover:scale-110 transition-transform duration-300">
                       <stage.icon className="h-5 w-5 sm:h-6 sm:w-6" />
@@ -305,91 +286,10 @@ const Index = () => {
                         </span>
                       </div>
                       <h3 className="font-display font-bold text-foreground text-sm mb-1">{stage.title}</h3>
-                      <p className="text-xs text-muted-foreground mb-3">{stage.desc}</p>
-                      <div className="h-1.5 rounded-full bg-muted overflow-hidden">
-                        <div
-                          className="h-full rounded-full sim-gradient transition-all duration-700"
-                          style={{ width: `${progressPct}%` }}
-                        />
-                      </div>
+                      <p className="text-xs text-muted-foreground">{stage.desc}</p>
                     </div>
                   </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════ SECTION 5: GAMIFICATION ═══════════════════ */}
-      <section className="py-20 px-4 border-t border-border bg-muted/30">
-        <div className="container mx-auto max-w-5xl">
-          <div className="text-center mb-14">
-            <SectionBadge label={t('Gamification', 'Геймификация')} />
-            <h2 className="text-3xl sm:text-4xl font-display font-bold text-foreground mt-4 mb-3">
-              {t('Level Up, Earn XP, Collect Badges', 'Качи ниво, спечели XP, събери значки')}
-            </h2>
-            <p className="text-muted-foreground max-w-lg mx-auto">
-              {t('Every action earns experience points. Progress through 5 levels and unlock achievements.', 'Всяко действие носи точки опит. Напредни през 5 нива и отключи постижения.')}
-            </p>
-          </div>
-
-          <div className="grid gap-6 lg:grid-cols-2">
-            {/* XP Actions */}
-            <div className="rounded-2xl border border-border bg-card p-6">
-              <div className="flex items-center gap-2 mb-5">
-                <Zap className="h-5 w-5 text-[hsl(var(--sim-warning))]" />
-                <h3 className="font-display font-bold text-foreground">{t('Earn XP Points', 'Печели XP точки')}</h3>
-              </div>
-              <div className="space-y-3">
-                {xpActions.map((action, i) => (
-                  <div key={i} className="flex items-center gap-3 rounded-xl border border-border p-3 hover:border-primary/20 transition-colors">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-accent shrink-0">
-                      <action.icon className="h-4 w-4 text-primary" />
-                    </div>
-                    <p className="text-sm text-foreground flex-1">{action.action}</p>
-                    <div className="flex items-center gap-1 shrink-0">
-                      <Zap className="h-3 w-3 text-[hsl(var(--sim-warning))]" />
-                      <span className="text-sm font-bold font-mono text-[hsl(var(--sim-warning))]">+{action.xp}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* XP Progress */}
-              <div className="mt-5 rounded-xl border border-primary/20 bg-accent/50 p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-1.5">
-                    <Star className="h-4 w-4 text-primary" />
-                    <span className="text-xs font-bold text-foreground">{t('Level 3', 'Ниво 3')}</span>
-                  </div>
-                  <span className="text-xs font-mono font-bold text-primary">750 / 1000 XP</span>
-                </div>
-                <div className="h-2.5 rounded-full bg-muted overflow-hidden">
-                  <div className="h-full rounded-full sim-gradient" style={{ width: '75%' }} />
-                </div>
-                <p className="text-[10px] text-muted-foreground mt-1.5">
-                  {t('250 XP to Level 4 — Innovation Strategist', '250 XP до Ниво 4 — Стратег на иновациите')}
-                </p>
-              </div>
-            </div>
-
-            {/* Badges */}
-            <div className="rounded-2xl border border-border bg-card p-6">
-              <div className="flex items-center gap-2 mb-5">
-                <Award className="h-5 w-5 text-primary" />
-                <h3 className="font-display font-bold text-foreground">{t('Achievement Badges', 'Значки за постижения')}</h3>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                {badges.map((badge, i) => (
-                  <div key={i} className="group flex flex-col items-center rounded-xl border border-border p-4 hover:border-primary/20 transition-all hover:shadow-md">
-                    <div className={`flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br ${badge.color} shadow-lg mb-3 group-hover:scale-110 transition-transform duration-300`}>
-                      <badge.icon className="h-7 w-7 text-white" />
-                    </div>
-                    <p className="text-xs font-semibold text-foreground text-center">{badge.name}</p>
-                  </div>
-                ))}
-              </div>
+              ))}
             </div>
           </div>
         </div>
