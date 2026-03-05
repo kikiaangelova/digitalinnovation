@@ -45,7 +45,7 @@ export default function CommunityStats({ lang }: Props) {
         }
 
         // Use RPC to get leaderboard (bypasses RLS)
-        const { data: lbData } = await supabase.rpc('get_leaderboard', { _limit: 5 });
+        const { data: lbData } = await supabase.rpc('get_leaderboard', { _limit: 10 });
         
         const board: LeaderEntry[] = (lbData || []).map((row: any) => ({
           user_id: row.user_id,
@@ -69,7 +69,7 @@ export default function CommunityStats({ lang }: Props) {
 
   if (loading) return null;
 
-  const hasLeaders = leaders.length > 0 && leaders.some(l => l.xp > 0);
+  const hasLeaders = leaders.length > 0;
 
   return (
     <section className="py-20 px-4 border-t border-border bg-muted/30">
