@@ -30,6 +30,7 @@ export default function StudentDashboard() {
   const [usedAIMentor, setUsedAIMentor] = useState(false);
   const [pendingReviews, setPendingReviews] = useState(0);
   const [avgPeerScore, setAvgPeerScore] = useState<number | null>(null);
+  const [caseXpTotal, setCaseXpTotal] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -37,13 +38,14 @@ export default function StudentDashboard() {
     if (!user) { navigate('/auth?redirect=/dashboard'); return; }
     const fetchData = async () => {
       try {
-        const [casesRes, subsRes, projRes, simRes, prAssignRes, prReceivedRes] = await Promise.all([
+        const [casesRes, subsRes, projRes, simRes, prAssignRes, prReceivedRes, progressRes] = await Promise.all([
           supabase.from('case_studies').select('id, title, difficulty, est_minutes').eq('published', true),
           supabase.from('submissions').select('case_study_id, is_draft').eq('user_id', user.id),
           supabase.from('startup_projects').select('problem, customer, value_proposition, digital_product, business_model, growth_strategy, final_pitch, is_submitted').eq('user_id', user.id).maybeSingle(),
           supabase.from('simulator_progress').select('current_week, is_complete').eq('user_id', user.id).maybeSingle(),
           supabase.from('peer_review_assignments').select('id').eq('reviewer_user_id', user.id).eq('status', 'pending'),
           supabase.from('peer_reviews').select('average_score').eq('reviewee_user_id', user.id),
+          supabase.from('course_progress').select('metadata').eq('user_id', user.id).eq('module', 'case_study').eq('status', 'completed'),
         ]);
         setCases(casesRes.data || []);
         setSubmissions(subsRes.data || []);
@@ -52,6 +54,12 @@ export default function StudentDashboard() {
         setPendingReviews((prAssignRes.data || []).length);
         const prScores = (prReceivedRes.data || []) as { average_score: number | null }[];
         setAvgPeerScore(prScores.length > 0 ? prScores.reduce((a, r) => a + Number(r.average_score || 0), 0) / prScores.length : null);
+        // Sum XP from course_progress metadata
+        const caseXp = (progressRes.data || []).reduce((sum: number, row: any) => {
+          const meta = row.metadata as any;
+          return sum + (meta?.xp_awarded || 50); // fallback 50 for legacy entries
+        }, 0);
+        setCaseXpTotal(caseXp);
       } catch (err) {
         console.error('Dashboard fetch error:', err);
       } finally {
@@ -72,7 +80,7 @@ export default function StudentDashboard() {
   const startupPct = Math.round((startupFilled / startupSections.length) * 100);
 
   const xp =
-    casesCompleted * 50 +
+    caseXpTotal +
     (simWeek - 1) * 100 + (simComplete ? 100 : 0) +
     startupFilled * 75 +
     (startupProject?.is_submitted ? 200 : 0);
@@ -96,7 +104,7 @@ export default function StudentDashboard() {
   });
 
   const xpActions = [
-    { action: t('Complete case study', 'Завърши казус'), xp: '+50 XP', icon: BookOpen },
+    { action: t('Complete case study', 'Завърши казус'), xp: '10–100 XP', icon: BookOpen },
     { action: t('Finish simulator week', 'Завърши седмица от симулатора'), xp: '+100 XP', icon: BarChart3 },
     { action: t('Submit startup section', 'Подай секция от стартъп'), xp: '+75 XP', icon: Rocket },
     { action: t('Submit final pitch', 'Подай финално представяне'), xp: '+200 XP', icon: Zap },

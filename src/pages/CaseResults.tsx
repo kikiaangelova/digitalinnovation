@@ -73,7 +73,7 @@ export default function CaseResults() {
   const scorePercent = maxScore > 0 ? Math.round((totalScore / maxScore) * 100) : 0;
   const gradeLabel = scorePercent >= 80 ? tx('Excellent', 'Отлично') : scorePercent >= 60 ? tx('Good', 'Добро') : scorePercent >= 40 ? tx('Developing', 'В развитие') : tx('Needs Work', 'Нуждае се от работа');
   const gradeColor = scorePercent >= 80 ? 'text-sim-success' : scorePercent >= 60 ? 'text-primary' : scorePercent >= 40 ? 'text-sim-warning' : 'text-sim-danger';
-  const xpEarned = 50; // base XP for case completion
+  const xpEarned = scorePercent >= 80 ? 100 : scorePercent >= 60 ? 70 : scorePercent >= 40 ? 40 : 10;
   const autoGraded = results.filter(r => r.score !== null).length;
   const pendingGrade = results.length - autoGraded;
 
@@ -115,14 +115,14 @@ export default function CaseResults() {
           </div>
         </div>
 
-        {/* Pending notice */}
+        {/* Optional teacher review notice */}
         {pendingGrade > 0 && (
-          <div className="flex items-center gap-3 rounded-lg border border-sim-warning/30 bg-sim-warning/5 p-4">
-            <Award className="h-5 w-5 text-sim-warning shrink-0" />
-            <p className="text-sm text-foreground">
+          <div className="flex items-center gap-3 rounded-lg border border-border bg-muted/30 p-4">
+            <Award className="h-5 w-5 text-muted-foreground shrink-0" />
+            <p className="text-sm text-muted-foreground">
               {tx(
-                `${pendingGrade} question(s) require instructor grading. Your score may change.`,
-                `${pendingGrade} въпрос(а) изискват оценка от преподавател. Резултатът ви може да се промени.`
+                `${pendingGrade} question(s) may be reviewed by an instructor later. Your score and XP have already been awarded.`,
+                `${pendingGrade} въпрос(а) могат да бъдат прегледани от преподавател по-късно. Вашият резултат и XP вече са присъдени.`
               )}
             </p>
           </div>
@@ -203,8 +203,10 @@ export default function CaseResults() {
                   </div>
                   {r.feedback && (
                     <div className={`rounded-md p-3 mt-4 text-sm ${
-                      r.score === r.points
+                      r.score !== null && r.score === r.points
                         ? 'bg-sim-success/5 border border-sim-success/20 text-sim-success'
+                        : r.score !== null && r.score > 0
+                        ? 'bg-primary/5 border border-primary/20 text-foreground'
                         : 'bg-sim-danger/5 border border-sim-danger/20 text-sim-danger'
                     }`}>{r.feedback}</div>
                   )}
