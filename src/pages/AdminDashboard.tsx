@@ -11,8 +11,16 @@ import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import {
   BookOpen, Users, FileText, Download, Plus, Eye, EyeOff,
-  Trash2, ChevronDown, ChevronRight, MessageSquare,
+  Trash2, ChevronDown, ChevronRight, MessageSquare, Award, BarChart3,
 } from 'lucide-react';
+
+interface StudentXpSummary {
+  user_id: string;
+  full_name: string;
+  total_xp: number;
+  cases_completed: number;
+  sessions: { case_id: string; xp_earned: number; completion_status: string }[];
+}
 
 interface CaseStudyAdmin {
   id: string;
@@ -71,6 +79,7 @@ export default function AdminDashboard() {
   const [subResponses, setSubResponses] = useState<any[]>([]);
   const [subHistory, setSubHistory] = useState<AnswerHistoryAdmin[]>([]);
   const [loading, setLoading] = useState(true);
+  const [studentXpData, setStudentXpData] = useState<StudentXpSummary[]>([]);
 
   // Create form
   const [newTitle, setNewTitle] = useState('');
@@ -97,10 +106,38 @@ export default function AdminDashboard() {
       setProfiles(pm);
 
       const sm: Record<string, CaseSessionAdmin> = {};
-      (sessionsRes.data as CaseSessionAdmin[] | null)?.forEach((s) => {
+      const sessionsList = (sessionsRes.data as CaseSessionAdmin[] | null) || [];
+      sessionsList.forEach((s) => {
         sm[`${s.user_id}:${s.case_id}`] = s;
       });
       setSessionMap(sm);
+
+      // Build per-student XP summary
+      const profilesList = profsRes.data || [];
+      const xpSummaries: StudentXpSummary[] = profilesList.map((p: any) => {
+        const userSessions = sessionsList.filter(s => s.user_id === p.user_id);
+        const completedSubs = (subsRes.data || []).filter((s: any) => s.user_id === p.user_id && !s.is_draft);
+        return {
+          user_id: p.user_id,
+          full_name: p.full_name || t('Unknown', 'Неизвестен'),
+          total_xp: 0, // will be fetched from profiles
+          cases_completed: completedSubs.length,
+          sessions: userSessions.map(s => ({
+            case_id: s.case_id,
+            xp_earned: s.xp_earned,
+            completion_status: s.completion_status,
+          })),
+        };
+      }).filter(s => s.cases_completed > 0 || s.sessions.length > 0);
+
+      // Fetch actual total_xp from profiles
+      const profilesWithXp = await supabase.from('profiles').select('user_id, total_xp');
+      const xpMap: Record<string, number> = {};
+      (profilesWithXp.data || []).forEach((p: any) => { xpMap[p.user_id] = p.total_xp || 0; });
+      xpSummaries.forEach(s => { s.total_xp = xpMap[s.user_id] || 0; });
+      xpSummaries.sort((a, b) => b.total_xp - a.total_xp);
+      setStudentXpData(xpSummaries);
+
       setLoading(false);
     };
     fetchData();
@@ -369,6 +406,53 @@ export default function AdminDashboard() {
             {submissions.length === 0 && (
               <p className="text-center py-8 text-muted-foreground">{t('No submissions yet', 'Все още няма подавания')}</p>
             )}
+          </div>
+        </div>
+
+        {/* Student XP Verification */}
+        <div>
+          <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+            <Award className="h-5 w-5 text-primary" />
+            {t('Student XP Verification', 'Проверка на XP на студентите')}
+          </h2>
+          <div className="rounded-xl border border-border overflow-hidden">
+            <table className="w-full">
+              <thead className="bg-muted/50">
+                <tr>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">{t('Student', 'Студент')}</th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">{t('Total XP', 'Общо XP')}</th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">{t('Cases Completed', 'Завършени казуси')}</th>
+                  <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">{t('Session XP Details', 'XP по сесии')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {studentXpData.map(s => (
+                  <tr key={s.user_id} className="border-t border-border">
+                    <td className="px-4 py-3 text-sm font-medium text-foreground">{s.full_name}</td>
+                    <td className="px-4 py-3">
+                      <Badge className="bg-primary/10 text-primary border-0">{s.total_xp} XP</Badge>
+                    </td>
+                    <td className="px-4 py-3 text-sm text-muted-foreground">{s.cases_completed}</td>
+                    <td className="px-4 py-3">
+                      <div className="flex flex-wrap gap-1">
+                        {s.sessions.map((sess, i) => {
+                          const caseName = cases.find(c => c.id === sess.case_id)?.title || sess.case_id.slice(0, 8);
+                          return (
+                            <Badge key={i} variant="outline" className="text-xs">
+                              {caseName}: {sess.xp_earned} XP ({sess.completion_status})
+                            </Badge>
+                          );
+                        })}
+                        {s.sessions.length === 0 && <span className="text-xs text-muted-foreground">—</span>}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+                {studentXpData.length === 0 && (
+                  <tr><td colSpan={4} className="px-4 py-8 text-center text-muted-foreground">{t('No student activity yet', 'Все още няма студентска активност')}</td></tr>
+                )}
+              </tbody>
+            </table>
           </div>
         </div>
       </main>
