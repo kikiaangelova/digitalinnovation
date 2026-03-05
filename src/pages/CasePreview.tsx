@@ -11,6 +11,7 @@ import {
   BookOpen, Clock, Target, Users, FileText, CheckSquare,
   ArrowRight, ChevronRight, Lightbulb, ListChecks, BarChart3,
   Building2, Brain, TrendingUp, Rocket, PenTool, Award,
+  CheckCircle2, Lock,
 } from 'lucide-react';
 
 interface CaseStudy {
@@ -44,6 +45,9 @@ export default function CasePreview() {
   const [cs, setCs] = useState<CaseStudy | null>(null);
   const [steps, setSteps] = useState<CaseStep[]>([]);
   const [loading, setLoading] = useState(true);
+  const [completionStatus, setCompletionStatus] = useState<'not_started' | 'in_progress' | 'completed'>('not_started');
+  const [completedAt, setCompletedAt] = useState<string | null>(null);
+  const [score, setScore] = useState<{ total: number; max: number } | null>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -54,10 +58,39 @@ export default function CasePreview() {
       ]);
       setCs(caseData as CaseStudy | null);
       setSteps((stepsData as CaseStep[]) || []);
+
+      // Check completion status
+      if (user) {
+        const [sessionRes, submissionRes] = await Promise.all([
+          supabase.from('case_sessions').select('completion_status, updated_at').eq('case_id', id).eq('user_id', user.id).maybeSingle(),
+          supabase.from('submissions').select('total_score, max_score, submitted_at').eq('case_study_id', id).eq('user_id', user.id).eq('is_draft', false).maybeSingle(),
+        ]);
+        if (sessionRes.data?.completion_status === 'completed') {
+          setCompletionStatus('completed');
+          setCompletedAt(sessionRes.data.updated_at);
+        } else if (sessionRes.data) {
+          setCompletionStatus('in_progress');
+        }
+        if (submissionRes.data) {
+          setScore({ total: submissionRes.data.total_score || 0, max: submissionRes.data.max_score || 0 });
+          if (submissionRes.data.submitted_at) {
+            setCompletionStatus('completed');
+            setCompletedAt(submissionRes.data.submitted_at);
+          }
+        }
+      }
       setLoading(false);
     };
     load();
-  }, [id]);
+  }, [id, user]);
+
+  // Check if retake is allowed (48h cooldown)
+  const canRetake = (() => {
+    if (completionStatus !== 'completed' || !completedAt) return true;
+    const completedTime = new Date(completedAt).getTime();
+    const hoursSince = (Date.now() - completedTime) / (1000 * 60 * 60);
+    return hoursSince >= 48;
+  })();
 
   const diffColor = (d: string) => {
     if (d === 'beginner') return 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20';
@@ -87,6 +120,7 @@ export default function CasePreview() {
   };
 
   const outcomes = lang === 'bg' ? (cs.outcomes_bg || cs.outcomes) : cs.outcomes;
+  const scorePercent = score && score.max > 0 ? Math.round((score.total / score.max) * 100) : null;
 
   return (
     <div className="min-h-screen bg-background">
@@ -99,6 +133,28 @@ export default function CasePreview() {
           <ChevronRight className="h-3.5 w-3.5" />
           <span className="text-foreground font-medium truncate max-w-[200px]">{tx(cs.title, cs.title_bg)}</span>
         </nav>
+
+        {/* Completion banner */}
+        {completionStatus === 'completed' && (
+          <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/5 p-4 mb-6 flex items-center gap-3">
+            <CheckCircle2 className="h-6 w-6 text-emerald-600 shrink-0" />
+            <div className="flex-1">
+              <p className="text-sm font-semibold text-foreground">
+                {tl('Case Completed', 'Казусът е завършен')}
+                {scorePercent !== null && <span className="ml-2 text-muted-foreground font-normal">· {scorePercent}%</span>}
+              </p>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                {tl(
+                  'Review your analysis or explore another case.',
+                  'Прегледайте анализа си или разгледайте друг казус.'
+                )}
+              </p>
+            </div>
+            <Button variant="outline" size="sm" asChild className="shrink-0">
+              <Link to={`/case/${id}/results`}>{tl('View Results', 'Виж резултатите')}</Link>
+            </Button>
+          </div>
+        )}
 
         <div className="rounded-xl border border-border bg-card overflow-hidden mb-8">
           <div className="sim-gradient px-6 py-8 sm:px-8 sm:py-10">
@@ -272,12 +328,34 @@ export default function CasePreview() {
           </Card>
         </section>
 
-        <Button size="lg" className="w-full sim-gradient border-0 text-base font-semibold py-6"
-          onClick={handleStart} disabled={steps.length === 0}>
-          {steps.length === 0
-            ? tl('Coming Soon', 'Очаквайте скоро')
-            : <>{t.prevStartCase} <ArrowRight className="ml-2 h-5 w-5" /></>}
-        </Button>
+        {/* CTA Button with completion lock */}
+        {completionStatus === 'completed' && !canRetake ? (
+          <div className="space-y-3">
+            <Button size="lg" className="w-full text-base font-semibold py-6" disabled>
+              <Lock className="mr-2 h-5 w-5" />
+              {tl('Case completed — retake available in 48h', 'Казусът е завършен — повторно след 48ч')}
+            </Button>
+            <div className="flex gap-3">
+              <Button variant="outline" className="flex-1" asChild>
+                <Link to={`/case/${id}/results`}>{tl('Review Your Analysis', 'Преглед на анализа')}</Link>
+              </Button>
+              <Button variant="outline" className="flex-1" asChild>
+                <Link to="/cases">{tl('Explore Other Cases', 'Разгледай други казуси')}</Link>
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <Button size="lg" className="w-full sim-gradient border-0 text-base font-semibold py-6"
+            onClick={handleStart} disabled={steps.length === 0}>
+            {steps.length === 0
+              ? tl('Coming Soon', 'Очаквайте скоро')
+              : completionStatus === 'completed'
+                ? <>{tl('Retake Case', 'Повтори казуса')} <ArrowRight className="ml-2 h-5 w-5" /></>
+                : completionStatus === 'in_progress'
+                  ? <>{tl('Continue Case', 'Продължи казуса')} <ArrowRight className="ml-2 h-5 w-5" /></>
+                  : <>{t.prevStartCase} <ArrowRight className="ml-2 h-5 w-5" /></>}
+          </Button>
+        )}
       </div>
     </div>
   );

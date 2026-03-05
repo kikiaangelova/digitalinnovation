@@ -7,7 +7,9 @@ import AppHeader from '@/components/layout/AppHeader';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { CheckCircle2, XCircle, ArrowLeft, Trophy, BookOpen, Award, Rocket, Star } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
+import { toast } from 'sonner';
+import { CheckCircle2, XCircle, ArrowLeft, Trophy, BookOpen, Award, Rocket, Star, Brain, TrendingUp, Lightbulb, Target, MessageSquare } from 'lucide-react';
 import type { Json } from '@/integrations/supabase/types';
 
 interface QuestionResult {
@@ -29,14 +31,21 @@ export default function CaseResults() {
   const [totalScore, setTotalScore] = useState(0);
   const [maxScore, setMaxScore] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [reflection, setReflection] = useState('');
+  const [reflectionSaved, setReflectionSaved] = useState(false);
+  const [savingReflection, setSavingReflection] = useState(false);
 
   useEffect(() => {
     if (!id || !user) return;
     const fetchResults = async () => {
-      const caseRes = await supabase.from('case_studies').select('title, topic').eq('id', id).maybeSingle();
+      const [caseRes, subRes, reflRes] = await Promise.all([
+        supabase.from('case_studies').select('title, topic').eq('id', id).maybeSingle(),
+        supabase.from('submissions').select('id, total_score, max_score').eq('case_study_id', id).eq('user_id', user.id).eq('is_draft', false).maybeSingle(),
+        supabase.from('case_reflections').select('reflection_text').eq('case_id', id).eq('user_id', user.id).maybeSingle(),
+      ]);
       if (caseRes.data) { setCaseTitle(caseRes.data.title); setCaseTopic(caseRes.data.topic || ''); }
+      if (reflRes.data) { setReflection(reflRes.data.reflection_text); setReflectionSaved(true); }
 
-      const subRes = await supabase.from('submissions').select('id, total_score, max_score').eq('case_study_id', id).eq('user_id', user.id).eq('is_draft', false).maybeSingle();
       if (!subRes.data) { setLoading(false); return; }
       setTotalScore(subRes.data.total_score || 0);
       setMaxScore(subRes.data.max_score || 0);
@@ -46,7 +55,6 @@ export default function CaseResults() {
       const stepsRes = await supabase.from('case_steps').select('id, title').eq('case_study_id', id);
       const stepMap: Record<string, string> = {};
       stepsRes.data?.forEach(s => { stepMap[s.id] = s.title; });
-      const stepIds = Object.keys(stepMap);
       const qRes = await supabase.rpc('get_case_results_questions', { _case_study_id: id });
 
       setResults((qRes.data || []).map(q => {
@@ -64,6 +72,24 @@ export default function CaseResults() {
     fetchResults();
   }, [id, user]);
 
+  const saveReflection = async () => {
+    if (!user || !id || !reflection.trim()) return;
+    setSavingReflection(true);
+    const { error } = await supabase.from('case_reflections').upsert({
+      user_id: user.id,
+      case_id: id,
+      reflection_text: reflection.trim(),
+      updated_at: new Date().toISOString(),
+    }, { onConflict: 'user_id,case_id' });
+    setSavingReflection(false);
+    if (error) {
+      toast.error(tx('Failed to save reflection', 'Грешка при запазване'));
+    } else {
+      setReflectionSaved(true);
+      toast.success(tx('Reflection saved!', 'Рефлексията е запазена!'));
+    }
+  };
+
   if (loading) return (
     <div className="min-h-screen bg-background"><AppHeader />
       <div className="flex items-center justify-center py-20 text-muted-foreground">{tx('Loading results...', 'Зареждане...')}</div>
@@ -72,10 +98,32 @@ export default function CaseResults() {
 
   const scorePercent = maxScore > 0 ? Math.round((totalScore / maxScore) * 100) : 0;
   const gradeLabel = scorePercent >= 80 ? tx('Excellent', 'Отлично') : scorePercent >= 60 ? tx('Good', 'Добро') : scorePercent >= 40 ? tx('Developing', 'В развитие') : tx('Needs Work', 'Нуждае се от работа');
-  const gradeColor = scorePercent >= 80 ? 'text-sim-success' : scorePercent >= 60 ? 'text-primary' : scorePercent >= 40 ? 'text-sim-warning' : 'text-sim-danger';
+  const gradeColor = scorePercent >= 80 ? 'text-emerald-600' : scorePercent >= 60 ? 'text-primary' : scorePercent >= 40 ? 'text-amber-600' : 'text-red-600';
   const xpEarned = scorePercent >= 80 ? 100 : scorePercent >= 60 ? 70 : scorePercent >= 40 ? 40 : 10;
   const autoGraded = results.filter(r => r.score !== null).length;
   const pendingGrade = results.length - autoGraded;
+
+  // Derive category scores from question results
+  const categoryScores = (() => {
+    const gradedResults = results.filter(r => r.score !== null && r.points > 0);
+    if (gradedResults.length === 0) return null;
+    // Distribute questions across categories based on step
+    const categories = [
+      { key: 'strategic', label: tx('Strategic Thinking', 'Стратегическо мислене'), icon: Brain, results: [] as typeof gradedResults },
+      { key: 'innovation', label: tx('Innovation', 'Иновация'), icon: Lightbulb, results: [] as typeof gradedResults },
+      { key: 'market', label: tx('Market Understanding', 'Разбиране на пазара'), icon: TrendingUp, results: [] as typeof gradedResults },
+      { key: 'feasibility', label: tx('Feasibility', 'Осъществимост'), icon: Target, results: [] as typeof gradedResults },
+    ];
+    gradedResults.forEach((r, i) => {
+      categories[i % categories.length].results.push(r);
+    });
+    return categories.map(c => ({
+      ...c,
+      score: c.results.length > 0
+        ? Math.round(c.results.reduce((sum, r) => sum + ((r.score || 0) / r.points) * 100, 0) / c.results.length)
+        : scorePercent,
+    }));
+  })();
 
   return (
     <div className="min-h-screen bg-background">
@@ -88,11 +136,14 @@ export default function CaseResults() {
         {/* Score hero */}
         <div className="rounded-xl border border-border bg-card overflow-hidden">
           <div className="sim-gradient px-8 py-10 text-center">
-            <Trophy className="h-16 w-16 mx-auto mb-4 text-primary-foreground/80" />
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <CheckCircle2 className="h-8 w-8 text-primary-foreground/80" />
+              <span className="text-lg font-semibold text-primary-foreground/80">{tx('Case Completed', 'Казусът е завършен')}</span>
+            </div>
             <h1 className="text-3xl font-display font-bold text-primary-foreground mb-1">{caseTitle}</h1>
             {caseTopic && <p className="text-sm text-primary-foreground/70 mb-4">{caseTopic}</p>}
-            <p className="text-5xl font-display font-bold text-primary-foreground">{totalScore}/{maxScore}</p>
-            <p className="text-lg text-primary-foreground/80 mt-1">{scorePercent}% · {gradeLabel}</p>
+            <p className="text-5xl font-display font-bold text-primary-foreground">{scorePercent}%</p>
+            <p className="text-lg text-primary-foreground/80 mt-1">{totalScore}/{maxScore} · {gradeLabel}</p>
           </div>
 
           {/* Stats row */}
@@ -115,7 +166,34 @@ export default function CaseResults() {
           </div>
         </div>
 
-        {/* Optional teacher review notice */}
+        {/* Category scores */}
+        {categoryScores && (
+          <div className="rounded-lg border border-border bg-card p-6">
+            <h2 className="text-lg font-display font-semibold text-foreground mb-4">
+              {tx('Learning Outcome Scores', 'Резултати по учебни области')}
+            </h2>
+            <div className="grid sm:grid-cols-2 gap-4">
+              {categoryScores.map(cat => (
+                <div key={cat.key} className="flex items-center gap-3 p-3 rounded-lg bg-muted/40">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 shrink-0">
+                    <cat.icon className="h-5 w-5 text-primary" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-sm font-medium text-foreground">{cat.label}</span>
+                      <span className={`text-sm font-bold font-sans ${cat.score >= 70 ? 'text-emerald-600' : cat.score >= 50 ? 'text-amber-600' : 'text-red-600'}`}>
+                        {cat.score}%
+                      </span>
+                    </div>
+                    <Progress value={cat.score} className="h-2" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Teacher review notice */}
         {pendingGrade > 0 && (
           <div className="flex items-center gap-3 rounded-lg border border-border bg-muted/30 p-4">
             <Award className="h-5 w-5 text-muted-foreground shrink-0" />
@@ -127,6 +205,36 @@ export default function CaseResults() {
             </p>
           </div>
         )}
+
+        {/* Learning reflection */}
+        <div className="rounded-lg border border-border bg-card p-6">
+          <div className="flex items-center gap-2 mb-3">
+            <MessageSquare className="h-5 w-5 text-primary" />
+            <h2 className="text-lg font-display font-semibold text-foreground">
+              {tx('What did you learn from this case?', 'Какво научихте от този казус?')}
+            </h2>
+          </div>
+          <p className="text-sm text-muted-foreground mb-3">
+            {tx(
+              'Reflect on the key insights and how they apply to your thinking. This helps develop deeper learning.',
+              'Помислете за ключовите прозрения и как те се прилагат в мисленето ви. Това помага за по-дълбоко учене.'
+            )}
+          </p>
+          <Textarea
+            value={reflection}
+            onChange={e => { setReflection(e.target.value); setReflectionSaved(false); }}
+            placeholder={tx('Write your reflection here...', 'Напишете рефлексията си тук...')}
+            className="min-h-[100px] mb-3"
+          />
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-muted-foreground">
+              {reflectionSaved ? tx('✓ Saved', '✓ Запазено') : tx('Not saved yet', 'Все още не е запазено')}
+            </span>
+            <Button size="sm" onClick={saveReflection} disabled={savingReflection || !reflection.trim()}>
+              {savingReflection ? tx('Saving...', 'Запазване...') : tx('Save Reflection', 'Запази рефлексия')}
+            </Button>
+          </div>
+        </div>
 
         {/* Startup connection CTA */}
         <div className="rounded-lg border border-primary/20 bg-accent p-5 flex items-start gap-4">
@@ -149,12 +257,22 @@ export default function CaseResults() {
           </Button>
         </div>
 
+        {/* Navigation buttons */}
+        <div className="flex gap-3">
+          <Button variant="outline" className="flex-1" asChild>
+            <Link to={`/case/${id}/preview`}>{tx('Review Case', 'Преглед на казуса')}</Link>
+          </Button>
+          <Button className="flex-1" asChild>
+            <Link to="/cases">{tx('Explore Next Case', 'Към следващ казус')}</Link>
+          </Button>
+        </div>
+
         {/* Detailed results */}
         <div className="space-y-6">
           <h2 className="text-xl font-display font-semibold text-foreground">
             {tx('Question Breakdown', 'Разбивка по въпроси')}
           </h2>
-          {results.map((r, idx) => (
+          {results.map((r) => (
             <div key={r.question_id} className="rounded-lg border border-border bg-card overflow-hidden">
               <div className="flex items-center justify-between px-6 py-4 bg-muted/30 border-b border-border">
                 <div>
@@ -164,9 +282,9 @@ export default function CaseResults() {
                 <div className="flex items-center gap-2 shrink-0 ml-4">
                   {r.score !== null ? (
                     <>
-                      {r.score === r.points ? <CheckCircle2 className="h-5 w-5 text-sim-success" />
-                        : r.score > 0 ? <Award className="h-5 w-5 text-sim-warning" />
-                        : <XCircle className="h-5 w-5 text-sim-danger" />}
+                      {r.score === r.points ? <CheckCircle2 className="h-5 w-5 text-emerald-600" />
+                        : r.score > 0 ? <Award className="h-5 w-5 text-amber-600" />
+                        : <XCircle className="h-5 w-5 text-red-600" />}
                       <Badge variant="outline" className="font-sans">{r.score}/{r.points}</Badge>
                     </>
                   ) : (
@@ -204,10 +322,10 @@ export default function CaseResults() {
                   {r.feedback && (
                     <div className={`rounded-md p-3 mt-4 text-sm ${
                       r.score !== null && r.score === r.points
-                        ? 'bg-sim-success/5 border border-sim-success/20 text-sim-success'
+                        ? 'bg-emerald-500/5 border border-emerald-500/20 text-emerald-700'
                         : r.score !== null && r.score > 0
                         ? 'bg-primary/5 border border-primary/20 text-foreground'
-                        : 'bg-sim-danger/5 border border-sim-danger/20 text-sim-danger'
+                        : 'bg-red-500/5 border border-red-500/20 text-red-700'
                     }`}>{r.feedback}</div>
                   )}
                 </div>
