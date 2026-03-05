@@ -49,6 +49,20 @@ export default function AuthPage() {
 
   const redirectTo = searchParams.get('redirect') || '/dashboard';
 
+  // Clear all form fields on mount and mode switch
+  useEffect(() => {
+    setEmail('');
+    setPassword('');
+    setConfirmPassword('');
+    setFullName('');
+    setLastName('');
+    setStudentClass('');
+    setSchool('');
+    setCountry('');
+    setShowPassword(false);
+    setShowConfirm(false);
+  }, [isLogin]);
+
   useEffect(() => {
     if (user) navigate(redirectTo, { replace: true });
   }, [user]);
@@ -213,7 +227,7 @@ export default function AuthPage() {
             )}
             <div>
               <Label htmlFor="email">{t.email}</Label>
-              <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="you@university.edu" required />
+              <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="example@email.com" autoComplete="off" required />
             </div>
             <div>
               <Label htmlFor="password">{t.password}</Label>
@@ -223,7 +237,8 @@ export default function AuthPage() {
                   type={showPassword ? 'text' : 'password'}
                   value={password}
                   onChange={e => setPassword(e.target.value)}
-                  placeholder="••••••••••••"
+                  placeholder={isLogin ? '••••••••••••' : tx('Enter a strong password', 'Въведете силна парола')}
+                  autoComplete={isLogin ? 'current-password' : 'new-password'}
                   required
                   className="pr-10"
                 />
@@ -249,7 +264,8 @@ export default function AuthPage() {
                     type={showConfirm ? 'text' : 'password'}
                     value={confirmPassword}
                     onChange={e => setConfirmPassword(e.target.value)}
-                    placeholder="••••••••••••"
+                    placeholder={tx('Repeat your password', 'Повторете паролата')}
+                    autoComplete="new-password"
                     required
                     className="pr-10"
                   />
