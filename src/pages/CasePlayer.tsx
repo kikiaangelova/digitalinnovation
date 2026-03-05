@@ -143,6 +143,11 @@ export default function CasePlayer() {
 
   const prevXpRef = useRef<Record<string, boolean>>({});
 
+  // Scroll to top on step change
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [currentStep]);
+
   useEffect(() => {
     if (!id) return;
     if (!user) { navigate(`/auth?redirect=${encodeURIComponent(`/case/${id}`)}`); return; }
