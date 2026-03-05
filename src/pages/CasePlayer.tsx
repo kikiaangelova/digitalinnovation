@@ -509,10 +509,13 @@ export default function CasePlayer() {
                 <h3 className="font-display font-semibold text-foreground">
                   {tl('Apply This Case to Your Startup', 'Приложи казуса към стартъпа си')}
                 </h3>
-                <p className="text-xs text-muted-foreground">
+                <Badge variant="outline" className="text-[10px] px-2 py-0.5 font-semibold text-muted-foreground border-border mt-1 w-fit">
+                  {tl('Optional', 'По избор')}
+                </Badge>
+                <p className="text-xs text-muted-foreground mt-1">
                   {tl(
-                    'Complete all three fields below to earn 50 XP. Each must be at least 100 characters.',
-                    'Попълнете и трите полета по-долу, за да спечелите 50 XP. Всяко трябва да е поне 100 символа.'
+                    'Optional – connect this case to your startup idea if relevant. Complete all three fields (100+ characters each) to earn 50 bonus XP.',
+                    'По избор – свържете този казус със стартъп идеята си, ако е уместно. Попълнете и трите полета (100+ символа всяко), за да спечелите 50 бонус XP.'
                   )}
                 </p>
               </div>
@@ -520,10 +523,9 @@ export default function CasePlayer() {
 
             {STARTUP_FIELDS.map((field) => {
               const val = startupNotes[field.key] || '';
-              const touched = startupTouched[field.key] || false;
               const charCount = val.length;
               const isValid = charCount >= MIN_FIELD_LENGTH;
-              const showError = touched && !isValid;
+              const showError = false;
               const FieldIcon = field.icon;
               return (
                 <div key={field.key} className="space-y-2">
@@ -551,9 +553,8 @@ export default function CasePlayer() {
                     disabled={isSubmitted}
                   />
                   <div className="flex items-center justify-between">
-                    <span className={`text-xs ${showError ? 'text-destructive font-medium' : 'text-muted-foreground'}`}>
+                    <span className="text-xs text-muted-foreground">
                       {charCount}/{MIN_FIELD_LENGTH} {tl('characters', 'символа')}
-                      {showError && ` — ${tl('minimum 100 characters required', 'минимум 100 символа')}`}
                     </span>
                   </div>
                 </div>
