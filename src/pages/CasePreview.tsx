@@ -272,8 +272,11 @@ export default function CasePreview() {
           </Card>
         </section>
 
-        <Button size="lg" className="w-full sim-gradient border-0 text-base font-semibold py-6" onClick={handleStart}>
-          {t.prevStartCase} <ArrowRight className="ml-2 h-5 w-5" />
+        <Button size="lg" className="w-full sim-gradient border-0 text-base font-semibold py-6"
+          onClick={handleStart} disabled={steps.length === 0}>
+          {steps.length === 0
+            ? tl('Coming Soon', 'Очаквайте скоро')
+            : <>{t.prevStartCase} <ArrowRight className="ml-2 h-5 w-5" /></>}
         </Button>
       </div>
     </div>

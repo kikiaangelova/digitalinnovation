@@ -282,10 +282,32 @@ export default function CasePlayer() {
       <div className="flex items-center justify-center py-20 text-muted-foreground">{tl('Loading case...', 'Зареждане...')}</div>
     </div>
   );
-  if (!caseStudy || steps.length === 0) return (
+  if (!caseStudy) return (
     <div className="min-h-screen bg-background"><AppHeader />
-      <div className="flex items-center justify-center py-20 text-muted-foreground">{tl('Case not found', 'Казусът не е намерен')}</div>
+      <div className="flex flex-col items-center justify-center py-20 gap-4">
+        <p className="text-muted-foreground">{tl('Case not found', 'Казусът не е намерен')}</p>
+        <Button variant="outline" onClick={() => navigate('/cases')}>{tl('Back to Cases', 'Обратно към казусите')}</Button>
+      </div>
     </div>
+  );
+  if (steps.length === 0) return (
+    <div className="min-h-screen bg-background"><AppHeader />
+      <div className="flex flex-col items-center justify-center py-20 gap-4 max-w-md mx-auto text-center">
+        <AlertTriangle className="h-10 w-10 text-muted-foreground" />
+        <h2 className="text-lg font-display font-semibold text-foreground">{tx(caseStudy.title, caseStudy.title_bg)}</h2>
+        <p className="text-muted-foreground text-sm">
+          {tl('This case study content is currently being prepared. Please check back later or try another case.',
+             'Съдържанието на този казус се подготвя. Моля, проверете по-късно или опитайте друг казус.')}
+        </p>
+        <Button variant="outline" onClick={() => navigate('/cases')}>{tl('Browse Other Cases', 'Разгледайте други казуси')}</Button>
+      </div>
+    </div>
+  );
+
+  /* Detect if current step is missing BG content and falling back to EN */
+  const bgFallbackActive = lang === 'bg' && currentStepData && (
+    (!currentStepData.narrative_bg && !!currentStepData.narrative) ||
+    (!currentStepData.exhibit_text_bg && !!currentStepData.exhibit_text)
   );
 
   const isFirstStep = currentStep === 0;
@@ -354,7 +376,16 @@ export default function CasePlayer() {
           </div>
         </div>
 
-        {/* Required reading (step 0 only) */}
+        {/* Language fallback notice */}
+        {bgFallbackActive && (
+          <div className="flex items-center gap-2 rounded-lg border border-amber-500/30 bg-amber-500/5 px-4 py-3">
+            <AlertTriangle className="h-4 w-4 text-amber-600 shrink-0" />
+            <p className="text-xs text-amber-700">
+              Съдържанието на тази секция е налично само на английски. Навигацията остава на български.
+            </p>
+          </div>
+        )}
+
         {isStep0 && caseStudy.reading_url && (
           <a href={caseStudy.reading_url} target="_blank" rel="noopener noreferrer"
             className="flex items-center gap-4 rounded-lg border-2 border-primary/30 bg-accent p-5 hover:border-primary/60 transition-all group">
