@@ -100,6 +100,7 @@ export default function RoundView() {
           narrative={round.narrative}
           weekNumber={round.week_number}
           shockEvent={round.shock_event}
+          lang={lang}
         />
 
         {currentState && (
@@ -110,12 +111,13 @@ export default function RoundView() {
             <KPIDashboard
               kpis={isSubmitted && outcomeReport ? (getCompanyState(participantId!, round.id)?.kpis || currentState.kpis) : currentState.kpis}
               previousKpis={previousState?.kpis}
+              lang={lang}
             />
           </div>
         )}
 
         {isSubmitted && outcomeReport && (
-          <OutcomeReportView report={outcomeReport} />
+          <OutcomeReportView report={outcomeReport} lang={lang} />
         )}
 
         <div>
@@ -130,6 +132,7 @@ export default function RoundView() {
             onSaveDraft={handleSaveDraft}
             onSubmit={handleSubmit}
             isSubmitted={isSubmitted}
+            lang={lang}
           />
         </div>
       </main>

@@ -5,9 +5,12 @@ interface NarrativeBriefingProps {
   narrative: string;
   weekNumber: number;
   shockEvent?: ShockEvent;
+  lang?: 'en' | 'bg';
 }
 
-export default function NarrativeBriefing({ narrative, weekNumber, shockEvent }: NarrativeBriefingProps) {
+export default function NarrativeBriefing({ narrative, weekNumber, shockEvent, lang = 'en' }: NarrativeBriefingProps) {
+  const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
+
   return (
     <div className="space-y-4">
       <div className="rounded-xl border border-border bg-card p-6">
@@ -16,8 +19,12 @@ export default function NarrativeBriefing({ narrative, weekNumber, shockEvent }:
             <BookOpen className="h-5 w-5 text-primary-foreground" />
           </div>
           <div>
-            <h3 className="text-lg font-semibold text-foreground">Week {weekNumber} Briefing</h3>
-            <p className="text-sm text-muted-foreground">Market update & context</p>
+            <h3 className="text-lg font-semibold text-foreground">
+              {t(`Week ${weekNumber} Briefing`, `Седмица ${weekNumber} — Брифинг`)}
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              {t('Market update & context', 'Пазарна актуализация и контекст')}
+            </p>
           </div>
         </div>
         <p className="text-sm leading-relaxed text-foreground/90 whitespace-pre-line">{narrative}</p>
@@ -30,7 +37,9 @@ export default function NarrativeBriefing({ narrative, weekNumber, shockEvent }:
               <AlertTriangle className="h-5 w-5 text-sim-warning" />
             </div>
             <div>
-              <h4 className="font-semibold text-foreground">⚡ Shock Event: {shockEvent.title}</h4>
+              <h4 className="font-semibold text-foreground">
+                ⚡ {t('Shock Event', 'Шоково събитие')}: {shockEvent.title}
+              </h4>
             </div>
           </div>
           <p className="text-sm text-foreground/80">{shockEvent.description}</p>
