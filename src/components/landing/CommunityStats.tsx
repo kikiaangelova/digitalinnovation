@@ -38,6 +38,12 @@ export default function CommunityStats({ lang }: Props) {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Use RPC to get count (bypasses RLS for unauthenticated users)
+        const countRes = await supabase.rpc('get_registered_user_count');
+        if (countRes.data != null) {
+          setUserCount(countRes.data as number);
+        }
+
         const [profRes, simRes, projRes, progressRes] = await Promise.all([
           supabase.from('profiles').select('user_id, full_name, leaderboard_visible'),
           supabase.from('simulator_progress').select('user_id, current_week, is_complete'),
@@ -45,10 +51,7 @@ export default function CommunityStats({ lang }: Props) {
           supabase.from('course_progress').select('user_id, metadata').eq('module', 'case_study').eq('status', 'completed'),
         ]);
 
-        const allProfiles = profRes.data || [];
-        setUserCount(allProfiles.length);
-
-        const visibleProfiles = allProfiles.filter((p: any) => p.leaderboard_visible === true);
+        const visibleProfiles = (profRes.data || []).filter((p: any) => p.leaderboard_visible === true);
         const sims = simRes.data || [];
         const projs = projRes.data || [];
 
@@ -93,7 +96,7 @@ export default function CommunityStats({ lang }: Props) {
     };
 
     fetchData();
-    const interval = setInterval(fetchData, 5 * 60 * 1000);
+    const interval = setInterval(fetchData, 60 * 1000); // Cache: refresh every 60s
     return () => clearInterval(interval);
   }, []);
 
@@ -114,11 +117,16 @@ export default function CommunityStats({ lang }: Props) {
               {t('Join the Community of Digital Innovators', 'Присъедини се към общността на дигиталните иноватори')}
             </h3>
             <p className="text-5xl font-display font-bold text-foreground mb-2">
-              {userCount ?? '—'}
+              {userCount != null && userCount > 0 ? userCount : null}
+              {userCount === 0 || userCount == null ? (
+                <span className="text-lg">{t('Community is growing...', 'Общността расте...')}</span>
+              ) : null}
             </p>
-            <p className="text-sm text-muted-foreground">
-              {t('Registered students', 'Регистрирани студенти')}
-            </p>
+            {userCount != null && userCount > 0 && (
+              <p className="text-sm text-muted-foreground">
+                {t('Registered students', 'Регистрирани студенти')}
+              </p>
+            )}
           </div>
 
           {/* Top 5 Leaderboard */}
