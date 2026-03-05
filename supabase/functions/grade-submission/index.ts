@@ -69,7 +69,6 @@ async function aiGradeQuestion(
 
     if (!resp.ok) {
       console.error("AI grading failed:", resp.status, await resp.text());
-      // Fallback: give partial credit
       return { score: Math.round(points * 0.5), feedback: lang === 'bg' ? 'Автоматична оценка не е налична. Даден е частичен резултат.' : 'AI grading unavailable. Partial credit awarded.' };
     }
 
@@ -83,7 +82,6 @@ async function aiGradeQuestion(
       };
     }
 
-    // Fallback: try to parse content as JSON
     const content = data.choices?.[0]?.message?.content || '';
     const jsonMatch = content.match(/\{[\s\S]*\}/);
     if (jsonMatch) {
@@ -119,21 +117,19 @@ serve(async (req) => {
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const lovableApiKey = Deno.env.get("LOVABLE_API_KEY");
 
-    const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
-    const anonClient = createClient(supabaseUrl, anonKey, {
-      global: { headers: { Authorization: authHeader } },
-    });
-    const token = authHeader!.replace("Bearer ", "");
-    const { data: claimsData, error: claimsError } = await anonClient.auth.getClaims(token);
-    if (claimsError || !claimsData?.claims) {
+    // Use service role client to verify user via token
+    const adminClient = createClient(supabaseUrl, serviceRoleKey);
+
+    const token = authHeader.replace("Bearer ", "");
+    const { data: userData, error: userError } = await adminClient.auth.getUser(token);
+    if (userError || !userData?.user) {
+      console.error("Auth error:", userError?.message);
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-    const userId = claimsData.claims.sub as string;
-
-    const adminClient = createClient(supabaseUrl, serviceRoleKey);
+    const userId = userData.user.id;
 
     const { submission_id, source, lang } = await req.json();
     const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
@@ -153,6 +149,7 @@ serve(async (req) => {
       .single();
 
     if (subErr || !sub || sub.user_id !== userId) {
+      console.error("Submission lookup error:", subErr?.message, "userId:", userId, "sub.user_id:", sub?.user_id);
       return new Response(JSON.stringify({ error: "Submission not found or unauthorized" }), {
         status: 403,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -202,7 +199,6 @@ serve(async (req) => {
       const userAns = answersMap[q.id];
 
       if (q.type === "multiple_choice" && q.correct_answer) {
-        // Auto-grade MC
         const isCorrect = userAns === q.correct_answer;
         const score = isCorrect ? q.points : 0;
         totalScore += score;
@@ -219,7 +215,6 @@ serve(async (req) => {
           .eq("submission_id", submission_id)
           .eq("question_id", q.id);
       } else if (userAns && lovableApiKey) {
-        // AI-grade open-ended questions
         const answerText = typeof userAns === 'string'
           ? userAns
           : JSON.stringify(userAns);
@@ -246,7 +241,6 @@ serve(async (req) => {
             .eq("submission_id", submission_id)
             .eq("question_id", q.id);
         } else {
-          // Empty answer
           await adminClient
             .from("responses")
             .update({
@@ -258,7 +252,6 @@ serve(async (req) => {
             .eq("question_id", q.id);
         }
       } else if (userAns) {
-        // No API key fallback: give partial credit
         const score = Math.round(q.points * 0.5);
         totalScore += score;
         await adminClient
@@ -271,7 +264,6 @@ serve(async (req) => {
           .eq("submission_id", submission_id)
           .eq("question_id", q.id);
       } else {
-        // No answer
         await adminClient
           .from("responses")
           .update({
@@ -311,7 +303,7 @@ serve(async (req) => {
         status: "completed",
         completed_at: new Date().toISOString(),
         score: scorePercent,
-        metadata: { xp_awarded: xpAwarded },
+        metadata: { xp_awarded: xpAwarded, total_score: totalScore, max_score: maxScore },
       };
 
       if (existing) {
@@ -326,9 +318,27 @@ serve(async (req) => {
         });
       }
 
-      // Persist XP to profiles.total_xp
-      await adminClient.rpc("add_user_xp", { _user_id: userId, _xp: xpAwarded });
+      // Award XP to profile
+      const { error: xpError } = await adminClient.rpc("add_user_xp", { _user_id: userId, _xp: xpAwarded });
+      if (xpError) {
+        console.error("XP award error:", xpError.message);
+      }
+
+      // Update case_sessions completion status
+      if (source !== "assessment" && sub.case_study_id) {
+        await adminClient
+          .from("case_sessions")
+          .upsert({
+            user_id: userId,
+            case_id: sub.case_study_id,
+            completion_status: "completed",
+            xp_earned: xpAwarded,
+            last_saved: new Date().toISOString(),
+          }, { onConflict: "user_id,case_id" });
+      }
     }
+
+    console.log(`Graded submission ${submission_id}: ${totalScore}/${maxScore} (${scorePercent}%) → ${xpAwarded} XP for user ${userId}`);
 
     return new Response(
       JSON.stringify({ total_score: totalScore, max_score: maxScore, score_percent: scorePercent, xp_awarded: xpAwarded }),
