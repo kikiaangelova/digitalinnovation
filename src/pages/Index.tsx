@@ -1,3 +1,4 @@
+import { forwardRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
@@ -386,13 +387,14 @@ const Index = () => {
 };
 
 // Reusable section badge
-function SectionBadge({ label }: { label: string }) {
+const SectionBadge = forwardRef<HTMLDivElement, { label: string }>(({ label }, ref) => {
   return (
-    <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-accent px-3 py-1">
+    <div ref={ref} className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-accent px-3 py-1">
       <Zap className="h-3 w-3 text-primary" />
       <span className="text-[11px] font-semibold text-primary uppercase tracking-wider">{label}</span>
     </div>
   );
-}
+});
+SectionBadge.displayName = 'SectionBadge';
 
 export default Index;
