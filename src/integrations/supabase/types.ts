@@ -577,6 +577,116 @@ export type Database = {
         }
         Relationships: []
       }
+      learning_module_responses: {
+        Row: {
+          analytical_answer: string
+          analytical_score: number
+          application_answer: string
+          application_score: number
+          completed_at: string | null
+          concept_score: number
+          created_at: string
+          id: string
+          module_id: string
+          quiz_answers: Json
+          quiz_max: number
+          quiz_score: number
+          strategic_score: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          analytical_answer?: string
+          analytical_score?: number
+          application_answer?: string
+          application_score?: number
+          completed_at?: string | null
+          concept_score?: number
+          created_at?: string
+          id?: string
+          module_id: string
+          quiz_answers?: Json
+          quiz_max?: number
+          quiz_score?: number
+          strategic_score?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          analytical_answer?: string
+          analytical_score?: number
+          application_answer?: string
+          application_score?: number
+          completed_at?: string | null
+          concept_score?: number
+          created_at?: string
+          id?: string
+          module_id?: string
+          quiz_answers?: Json
+          quiz_max?: number
+          quiz_score?: number
+          strategic_score?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "learning_module_responses_module_id_fkey"
+            columns: ["module_id"]
+            isOneToOne: false
+            referencedRelation: "learning_modules"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      learning_modules: {
+        Row: {
+          analytical_question_bg: string
+          analytical_question_en: string
+          application_question_bg: string
+          application_question_en: string
+          created_at: string
+          display_order: number
+          id: string
+          quiz_questions: Json
+          slug: string
+          theory_bg: string
+          theory_en: string
+          title_bg: string
+          title_en: string
+        }
+        Insert: {
+          analytical_question_bg?: string
+          analytical_question_en?: string
+          application_question_bg?: string
+          application_question_en?: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          quiz_questions?: Json
+          slug: string
+          theory_bg?: string
+          theory_en?: string
+          title_bg: string
+          title_en: string
+        }
+        Update: {
+          analytical_question_bg?: string
+          analytical_question_en?: string
+          application_question_bg?: string
+          application_question_en?: string
+          created_at?: string
+          display_order?: number
+          id?: string
+          quiz_questions?: Json
+          slug?: string
+          theory_bg?: string
+          theory_en?: string
+          title_bg?: string
+          title_en?: string
+        }
+        Relationships: []
+      }
       peer_review_assignments: {
         Row: {
           assigned_at: string

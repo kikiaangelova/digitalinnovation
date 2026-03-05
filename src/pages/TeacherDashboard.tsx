@@ -161,6 +161,8 @@ export default function TeacherDashboard() {
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [cases, setCases] = useState<CaseStudy[]>([]);
   const [feedbacks, setFeedbacks] = useState<FeedbackRow[]>([]);
+  const [moduleResponses, setModuleResponses] = useState<any[]>([]);
+  const [dbModules, setDbModules] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   // UI state
@@ -175,13 +177,15 @@ export default function TeacherDashboard() {
   useEffect(() => {
     if (!isAdmin) return;
     const load = async () => {
-      const [profRes, projRes, simRes, subRes, caseRes, fbRes] = await Promise.all([
+      const [profRes, projRes, simRes, subRes, caseRes, fbRes, modRespRes, modRes] = await Promise.all([
         supabase.from('profiles').select('user_id, full_name, bio, skills_tags, interests, cohort_id, links_json, updated_at'),
         supabase.from('startup_projects').select('*').order('created_at', { ascending: false }),
         supabase.from('simulator_progress').select('*'),
         supabase.from('submissions').select('id, user_id, case_study_id, total_score, max_score, submitted_at, is_draft').eq('is_draft', false),
         supabase.from('case_studies').select('id, title, topic'),
         supabase.from('teacher_feedback').select('*').order('created_at', { ascending: false }),
+        supabase.from('learning_module_responses').select('*'),
+        supabase.from('learning_modules').select('id, slug, title_en, title_bg'),
       ]);
       setProfiles(profRes.data || []);
       setProjects((projRes.data || []) as StartupProject[]);
@@ -189,6 +193,8 @@ export default function TeacherDashboard() {
       setSubmissions(subRes.data || []);
       setCases(caseRes.data || []);
       setFeedbacks((fbRes.data || []) as FeedbackRow[]);
+      setModuleResponses(modRespRes.data || []);
+      setDbModules(modRes.data || []);
       setLoading(false);
     };
     load();
@@ -699,6 +705,7 @@ export default function TeacherDashboard() {
               )}
             </TabsTrigger>
             <TabsTrigger value="outcomes">{t('Learning Analytics', 'Учебни резултати')}</TabsTrigger>
+            <TabsTrigger value="modules">{t('Learning Modules', 'Учебни модули')}</TabsTrigger>
             <TabsTrigger value="analytics">{t('Analytics', 'Анализи')}</TabsTrigger>
             <TabsTrigger value="leaderboard">{t('Leaderboard', 'Класация')}</TabsTrigger>
           </TabsList>
@@ -981,7 +988,51 @@ export default function TeacherDashboard() {
             </div>
           </TabsContent>
 
-          {/* LEADERBOARD TAB */}
+          {/* LEARNING MODULES TAB */}
+          <TabsContent value="modules" className="space-y-4">
+            <div className="rounded-xl border border-border bg-card p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <GraduationCap className="h-5 w-5 text-primary" />
+                <h2 className="text-lg font-semibold text-foreground">{t('Learning Module Results', 'Резултати от учебни модули')}</h2>
+              </div>
+              {moduleResponses.filter((r: any) => r.completed_at).length === 0 ? (
+                <p className="text-sm text-muted-foreground">{t('No completed modules yet.', 'Все още няма завършени модули.')}</p>
+              ) : (
+                <div className="rounded-xl border border-border overflow-x-auto">
+                  <table className="w-full min-w-[700px]">
+                    <thead className="bg-muted/50">
+                      <tr>
+                        <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground">{t('Student', 'Ученик')}</th>
+                        <th className="px-3 py-3 text-left text-xs font-medium text-muted-foreground">{t('Module', 'Модул')}</th>
+                        <th className="px-3 py-3 text-center text-xs font-medium text-muted-foreground">{t('Quiz', 'Тест')}</th>
+                        <th className="px-3 py-3 text-center text-xs font-medium text-muted-foreground">{t('Concept', 'Концепция')}</th>
+                        <th className="px-3 py-3 text-center text-xs font-medium text-muted-foreground">{t('Analytical', 'Анализ')}</th>
+                        <th className="px-3 py-3 text-center text-xs font-medium text-muted-foreground">{t('Strategic', 'Стратегия')}</th>
+                        <th className="px-3 py-3 text-center text-xs font-medium text-muted-foreground">{t('Application', 'Приложение')}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {moduleResponses.filter((r: any) => r.completed_at).map((r: any) => {
+                        const modInfo = dbModules.find((m: any) => m.id === r.module_id);
+                        return (
+                          <tr key={r.id} className="border-t border-border hover:bg-accent/30">
+                            <td className="px-4 py-3 text-sm text-foreground">{getName(r.user_id)}</td>
+                            <td className="px-3 py-3 text-sm text-foreground">{modInfo ? (lang === 'bg' ? modInfo.title_bg : modInfo.title_en) : r.module_id}</td>
+                            <td className="px-3 py-3 text-center text-sm font-medium">{r.quiz_score}/{r.quiz_max}</td>
+                            <td className="px-3 py-3 text-center text-sm">{r.concept_score}%</td>
+                            <td className="px-3 py-3 text-center text-sm">{r.analytical_score}%</td>
+                            <td className="px-3 py-3 text-center text-sm">{r.strategic_score}%</td>
+                            <td className="px-3 py-3 text-center text-sm">{r.application_score}%</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
+          </TabsContent>
+
           <TabsContent value="leaderboard" className="space-y-4">
             <div className="rounded-xl border border-border bg-card p-6">
               <div className="flex items-center gap-2 mb-4">
