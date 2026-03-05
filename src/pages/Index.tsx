@@ -4,6 +4,7 @@ import { useLang } from '@/context/LangContext';
 import { Button } from '@/components/ui/button';
 import AppHeader from '@/components/layout/AppHeader';
 import InnovationShowcase from '@/components/landing/InnovationShowcase';
+import CommunityStats from '@/components/landing/CommunityStats';
 import {
   GraduationCap, ArrowRight, Lightbulb, Search, Rocket, Brain,
   Sparkles, Presentation, Compass, Briefcase, Hammer, Palette, Crown,
@@ -181,6 +182,9 @@ const Index = () => {
           </div>
         </div>
       </section>
+
+      {/* ═══════════════════ COMMUNITY STATS ═══════════════════ */}
+      <CommunityStats lang={lang} />
 
       {/* ═══════════════════ SECTION 2: WHAT YOU WILL LEARN ═══════════════════ */}
       <section className="py-20 px-4 border-t border-border">
