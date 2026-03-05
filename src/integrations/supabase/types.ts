@@ -1246,6 +1246,7 @@ export type Database = {
           type: string
         }[]
       }
+      get_registered_user_count: { Args: never; Returns: number }
       get_user_cohort_id: { Args: { _user_id: string }; Returns: string }
       has_role: {
         Args: {
