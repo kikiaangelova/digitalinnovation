@@ -9,9 +9,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
+import CaseStepEditor from '@/components/admin/CaseStepEditor';
 import {
   BookOpen, Users, FileText, Download, Plus, Eye, EyeOff,
-  Trash2, ChevronDown, ChevronRight, MessageSquare, Award, BarChart3,
+  Trash2, ChevronDown, ChevronRight, MessageSquare, Award, BarChart3, Edit,
 } from 'lucide-react';
 
 interface StudentXpSummary {
@@ -80,6 +81,7 @@ export default function AdminDashboard() {
   const [subHistory, setSubHistory] = useState<AnswerHistoryAdmin[]>([]);
   const [loading, setLoading] = useState(true);
   const [studentXpData, setStudentXpData] = useState<StudentXpSummary[]>([]);
+  const [editingCaseSteps, setEditingCaseSteps] = useState<string | null>(null);
 
   // Create form
   const [newTitle, setNewTitle] = useState('');
@@ -301,6 +303,7 @@ export default function AdminDashboard() {
               <tbody>
                 {cases.map(c => {
                   const diffLabel = DIFFICULTY_LABELS[c.difficulty];
+                  const isEditingSteps = editingCaseSteps === c.id;
                   return (
                     <tr key={c.id} className="border-t border-border">
                       <td className="px-4 py-3 text-sm font-medium text-foreground">{c.title}</td>
@@ -313,14 +316,24 @@ export default function AdminDashboard() {
                           <Badge variant="outline" className="text-xs">{t('Draft', 'Чернова')}</Badge>
                         )}
                       </td>
-                      <td className="px-4 py-3">
+                      <td className="px-4 py-3 flex gap-1">
                         <Button variant="ghost" size="sm" onClick={() => togglePublish(c.id, c.published)}>
                           {c.published ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                        </Button>
+                        <Button variant="ghost" size="sm" onClick={() => setEditingCaseSteps(isEditingSteps ? null : c.id)} title={t('Edit Steps', 'Редактирай стъпки')}>
+                          <Edit className="h-4 w-4" />
                         </Button>
                       </td>
                     </tr>
                   );
                 })}
+                {cases.map(c => editingCaseSteps === c.id && (
+                  <tr key={`editor-${c.id}`}>
+                    <td colSpan={5} className="px-4 py-4 bg-accent/30">
+                      <CaseStepEditor caseId={c.id} caseTopic={c.topic} />
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
