@@ -40,7 +40,7 @@ const STAGES: Stage[] = [
     descBg: 'Научете ключовите концепции за дигитална трансформация и иновации.',
     milestoneEn: 'Complete introductory case study',
     milestoneBg: 'Завършете уводния казус',
-    learnPath: '/about', casePath: '/cases', simPath: '/simulator',
+    learnPath: '/innovation-basics', casePath: '/cases', simPath: '/simulator',
   },
   {
     id: 2, icon: Search,
@@ -49,7 +49,7 @@ const STAGES: Stage[] = [
     descBg: 'Анализирайте индустрии и идентифицирайте дигитални възможности.',
     milestoneEn: 'Submit Opportunity Analysis',
     milestoneBg: 'Подайте анализ на възможностите',
-    learnPath: '/industries', casePath: '/cases', simPath: '/simulator',
+    learnPath: '/cases', casePath: '/cases', simPath: '/simulator',
     startupKey: 'problem',
   },
   {
@@ -59,7 +59,7 @@ const STAGES: Stage[] = [
     descBg: 'Дефинирайте проблема, клиента и стойностното предложение.',
     milestoneEn: 'Submit Value Proposition',
     milestoneBg: 'Подайте стойностно предложение',
-    learnPath: '/about', casePath: '/cases', simPath: '/simulator',
+    learnPath: '/my-startup?section=problem', casePath: '/cases', simPath: '/simulator',
     startupKey: 'value_proposition',
   },
   {
@@ -69,7 +69,7 @@ const STAGES: Stage[] = [
     descBg: 'Проектирайте и опишете минималния жизнеспособен продукт.',
     milestoneEn: 'Submit MVP Design',
     milestoneBg: 'Подайте MVP дизайн',
-    learnPath: '/about', casePath: '/cases', simPath: '/simulator',
+    learnPath: '/my-startup?section=digital_product', casePath: '/cases', simPath: '/simulator',
     startupKey: 'digital_product',
   },
   {
@@ -79,7 +79,7 @@ const STAGES: Stage[] = [
     descBg: 'Изградете бизнес модел и планирайте маркетинг канали.',
     milestoneEn: 'Submit Business Model & Marketing',
     milestoneBg: 'Подайте бизнес модел и маркетинг',
-    learnPath: '/about', casePath: '/cases', simPath: '/simulator',
+    learnPath: '/my-startup?section=business_model', casePath: '/cases', simPath: '/simulator',
     startupKey: 'business_model',
   },
   {
@@ -89,7 +89,7 @@ const STAGES: Stage[] = [
     descBg: 'Подгответе и подайте финалното стартъп представяне.',
     milestoneEn: 'Submit Final Startup Pitch',
     milestoneBg: 'Подайте финално стартъп представяне',
-    learnPath: '/about', casePath: '/cases', simPath: '/simulator',
+    learnPath: '/my-startup?section=final_pitch', casePath: '/cases', simPath: '/simulator',
     startupKey: 'final_pitch',
   },
 ];

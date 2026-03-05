@@ -14,7 +14,7 @@ const JOURNEY_STEPS = [
     en: 'Discover the Problem', bg: 'Открий проблема',
     descEn: 'Digital Innovation Basics & Industry exploration',
     descBg: 'Основи на дигиталните иновации и проучване на индустрии',
-    path: '/about',
+    path: '/innovation-basics',
   },
   {
     id: 2, icon: Search,
@@ -28,7 +28,7 @@ const JOURNEY_STEPS = [
     en: 'Design the Solution', bg: 'Проектирай решението',
     descEn: 'Problem definition & Value proposition',
     descBg: 'Дефиниране на проблема и стойностно предложение',
-    path: '/my-startup',
+    path: '/my-startup?section=problem',
   },
   {
     id: 4, icon: Palette,
@@ -49,7 +49,7 @@ const JOURNEY_STEPS = [
     en: 'Pitch the Startup', bg: 'Представи стартъпа',
     descEn: 'Final startup presentation & Pitch summary',
     descBg: 'Финално представяне и обобщение на стартъпа',
-    path: '/my-startup',
+    path: '/my-startup?section=final_pitch',
   },
 ];
 
