@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX IF NOT EXISTS course_progress_user_module_moduleid_idx ON public.course_progress (user_id, module, module_id);

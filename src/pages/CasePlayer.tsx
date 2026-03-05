@@ -112,7 +112,8 @@ const STARTUP_FIELDS = [
     placeholderBg: 'Обяснете какво прави вашето решение различно и по-добро...',
   },
 ] as const;
-const MIN_FIELD_LENGTH = 100;
+const MIN_FIELD_LENGTH = 30;
+const MAX_FIELD_LENGTH = 500;
 
 function wordCount(text: string): number {
   return text.trim().split(/\s+/).filter(Boolean).length;
@@ -140,6 +141,8 @@ export default function CasePlayer() {
   const [showInsight, setShowInsight] = useState<Record<number, boolean>>({});
   const autosaveRef = useRef<NodeJS.Timeout | null>(null);
 
+  const prevXpRef = useRef<Record<string, boolean>>({});
+
   useEffect(() => {
     if (!id) return;
     if (!user) { navigate(`/auth?redirect=${encodeURIComponent(`/case/${id}`)}`); return; }
@@ -151,7 +154,6 @@ export default function CasePlayer() {
       if (caseRes.data) setCaseStudy(caseRes.data as CaseStudy);
       if (stepsRes.data) {
         setSteps(stepsRes.data as CaseStep[]);
-        const stepIds = (stepsRes.data as CaseStep[]).map(s => s.id);
         const qRes = await supabase.rpc('get_player_questions', { _case_study_id: id });
         if (qRes.data) setQuestions(qRes.data as Question[]);
       }
@@ -166,6 +168,23 @@ export default function CasePlayer() {
           respRes.data.forEach(r => { map[r.question_id] = r.answer; });
           setAnswers(map);
         }
+      }
+      // Load saved startup notes from course_progress metadata
+      const progressRes = await supabase.from('course_progress')
+        .select('metadata')
+        .eq('user_id', user.id)
+        .eq('module', 'case_startup_notes')
+        .eq('module_id', id)
+        .maybeSingle();
+      if (progressRes.data?.metadata) {
+        const meta = progressRes.data.metadata as Record<string, any>;
+        const loaded: Record<string, string> = {};
+        STARTUP_FIELDS.forEach(f => { if (meta[f.key]) loaded[f.key] = String(meta[f.key]); });
+        setStartupNotes(loaded);
+        // Initialize previous XP state so we don't toast on load
+        const initXp: Record<string, boolean> = {};
+        STARTUP_FIELDS.forEach(f => { initXp[f.key] = (loaded[f.key] || '').length >= MIN_FIELD_LENGTH; });
+        prevXpRef.current = initXp;
       }
       setLoading(false);
     };
@@ -183,6 +202,19 @@ export default function CasePlayer() {
     return a && String(a).trim().length > 0;
   });
 
+  const saveStartupNotes = useCallback(async () => {
+    if (!user || !id) return;
+    const notesData: Record<string, any> = {};
+    STARTUP_FIELDS.forEach(f => { notesData[f.key] = startupNotes[f.key] || ''; });
+    await supabase.from('course_progress').upsert({
+      user_id: user.id,
+      module: 'case_startup_notes',
+      module_id: id,
+      status: 'in_progress',
+      metadata: notesData as Json,
+    }, { onConflict: 'user_id,module,module_id' });
+  }, [user, id, startupNotes]);
+
   const saveDraft = useCallback(async () => {
     if (!user || !id || isSubmitted) return;
     setSaving(true);
@@ -196,8 +228,9 @@ export default function CasePlayer() {
       submission_id: subId!, question_id: questionId, answer: answer as Json,
     }));
     if (upserts.length > 0) await supabase.from('responses').upsert(upserts, { onConflict: 'submission_id,question_id' });
+    await saveStartupNotes();
     setSaving(false);
-  }, [user, id, submissionId, answers, isSubmitted]);
+  }, [user, id, submissionId, answers, isSubmitted, saveStartupNotes]);
 
   useEffect(() => {
     if (isSubmitted || Object.keys(answers).length === 0) return;
@@ -514,8 +547,8 @@ export default function CasePlayer() {
                 </Badge>
                 <p className="text-xs text-muted-foreground mt-1">
                   {tl(
-                    'Optional – connect this case to your startup idea if relevant. Complete all three fields (100+ characters each) to earn 50 bonus XP.',
-                    'По избор – свържете този казус със стартъп идеята си, ако е уместно. Попълнете и трите полета (100+ символа всяко), за да спечелите 50 бонус XP.'
+                    'Optional – connect this case to your startup idea if relevant. Complete fields (30+ characters each) to earn bonus XP.',
+                    'По избор – свържете този казус със стартъп идеята си, ако е уместно. Попълнете полетата (30+ символа всяко), за да спечелите бонус XP.'
                   )}
                 </p>
               </div>
@@ -546,16 +579,36 @@ export default function CasePlayer() {
                   </p>
                   <Textarea
                     value={val}
-                    onChange={e => setStartupNotes(prev => ({ ...prev, [field.key]: e.target.value }))}
-                    onBlur={() => setStartupTouched(prev => ({ ...prev, [field.key]: true }))}
+                    maxLength={MAX_FIELD_LENGTH}
+                    onChange={e => {
+                      const newVal = e.target.value;
+                      setStartupNotes(prev => ({ ...prev, [field.key]: newVal }));
+                      // Check if XP threshold just crossed
+                      const wasValid = prevXpRef.current[field.key];
+                      const nowValid = newVal.length >= MIN_FIELD_LENGTH;
+                      if (nowValid && !wasValid) {
+                        prevXpRef.current = { ...prevXpRef.current, [field.key]: true };
+                        toast.success(`+${field.xp} XP ${lang === 'bg' ? 'за' : 'earned for'} ${lang === 'bg' ? field.labelBg : field.labelEn}`);
+                      } else if (!nowValid && wasValid) {
+                        prevXpRef.current = { ...prevXpRef.current, [field.key]: false };
+                      }
+                    }}
+                    onBlur={() => {
+                      setStartupTouched(prev => ({ ...prev, [field.key]: true }));
+                      saveStartupNotes();
+                    }}
                     placeholder={lang === 'bg' ? field.placeholderBg : field.placeholderEn}
-                    className={`min-h-[100px] bg-background ${showError ? 'border-destructive' : ''}`}
+                    className={`min-h-[120px] bg-background`}
                     disabled={isSubmitted}
                   />
                   <div className="flex items-center justify-between">
-                    <span className="text-xs text-muted-foreground">
-                      {charCount}/{MIN_FIELD_LENGTH} {tl('characters', 'символа')}
+                    <span className={`text-xs ${isValid ? 'text-sim-success' : 'text-muted-foreground'}`}>
+                      {charCount}/{MIN_FIELD_LENGTH} {tl('characters min', 'символа мин.')}
+                      {charCount > 0 && charCount < MIN_FIELD_LENGTH && (
+                        <span className="text-muted-foreground"> · {MIN_FIELD_LENGTH - charCount} {tl('more needed', 'още')}</span>
+                      )}
                     </span>
+                    <span className="text-xs text-muted-foreground">{charCount}/{MAX_FIELD_LENGTH}</span>
                   </div>
                 </div>
               );
