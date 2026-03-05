@@ -5,10 +5,9 @@ import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 import AppHeader from '@/components/layout/AppHeader';
 import LevelCard from '@/components/dashboard/LevelCard';
-import ProgressCards from '@/components/dashboard/ProgressCards';
+import JourneyProgress from '@/components/dashboard/JourneyProgress';
 import AchievementBadges from '@/components/dashboard/AchievementBadges';
 import AIMentorWidget from '@/components/dashboard/AIMentorWidget';
-import CourseTimeline from '@/components/dashboard/CourseTimeline';
 import LearningOutcomes, { calcOutcomeScores } from '@/components/dashboard/LearningOutcomes';
 import Leaderboard from '@/components/dashboard/Leaderboard';
 import { Button } from '@/components/ui/button';
@@ -69,23 +68,14 @@ export default function StudentDashboard() {
   const simComplete = simProgress?.is_complete || false;
 
   const startupSections = ['problem', 'customer', 'value_proposition', 'digital_product', 'business_model', 'growth_strategy', 'final_pitch'];
-  const startupFilled = startupProject
-    ? startupSections.filter(s => ((startupProject as any)[s] || '').trim().length > 20).length
-    : 0;
-  const startupPct = Math.round((startupFilled / startupSections.length) * 100);
-
-  const xp = totalXp;
-
-  const completedIds = new Set(submissions.filter(s => !s.is_draft).map(s => s.case_study_id));
-  const nextCase = cases.find(c => !completedIds.has(c.id));
-
-  const courseWeek = Math.min(6, Math.max(1, Math.ceil((casesCompleted + startupFilled * 0.5 + (simWeek - 1) * 0.5) / 1.5) + 1));
-
-  // Learning outcomes
   const startupSectionMap: Record<string, boolean> = {};
   startupSections.forEach(s => {
     startupSectionMap[s] = startupProject ? ((startupProject as any)[s] || '').trim().length > 20 : false;
   });
+
+  const xp = totalXp;
+
+  // Learning outcomes
   const outcomeScores = calcOutcomeScores({
     casesCompleted,
     casesTotal: cases.length,
@@ -131,52 +121,47 @@ export default function StudentDashboard() {
           </Button>
         </div>
 
-        {/* Level + XP Actions */}
+        {/* ═══ PRIMARY: Journey Progress + XP ═══ */}
         <div className="grid gap-4 md:grid-cols-3">
           <div className="md:col-span-2">
-            <LevelCard xp={xp} lang={lang} />
+            <JourneyProgress
+              lang={lang}
+              casesCompleted={casesCompleted}
+              startupSections={startupSectionMap}
+              startupSubmitted={startupProject?.is_submitted || false}
+              simWeek={simWeek}
+              simComplete={simComplete}
+            />
           </div>
-          <div className="rounded-xl border border-border bg-card p-5">
-            <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
-              <Zap className="h-4 w-4 text-sim-warning" />
-              {t('Earn XP', 'Спечели XP')}
-            </h3>
-            <div className="space-y-2">
-              {xpActions.map((a, i) => (
-                <div key={i} className="flex items-center justify-between py-1.5">
-                  <div className="flex items-center gap-2 text-sm text-foreground">
-                    <a.icon className="h-3.5 w-3.5 text-muted-foreground" />
-                    <span className="text-xs">{a.action}</span>
+          <div className="space-y-4">
+            <LevelCard xp={xp} lang={lang} />
+            <div className="rounded-xl border border-border bg-card p-5">
+              <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+                <Zap className="h-4 w-4 text-sim-warning" />
+                {t('Earn XP', 'Спечели XP')}
+              </h3>
+              <div className="space-y-2">
+                {xpActions.map((a, i) => (
+                  <div key={i} className="flex items-center justify-between py-1.5">
+                    <div className="flex items-center gap-2 text-sm text-foreground">
+                      <a.icon className="h-3.5 w-3.5 text-muted-foreground" />
+                      <span className="text-xs">{a.action}</span>
+                    </div>
+                    <span className="text-xs font-bold text-sim-warning">{a.xp}</span>
                   </div>
-                  <span className="text-xs font-bold text-sim-warning">{a.xp}</span>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Progress Cards */}
-        <ProgressCards
-          lang={lang}
-          casesCompleted={casesCompleted}
-          casesTotal={cases.length}
-          startupProgress={startupPct}
-          startupSubmitted={startupProject?.is_submitted || false}
-          simulatorWeek={simWeek}
-          simulatorComplete={simComplete}
-          nextCaseTitle={nextCase?.title}
-          nextCaseDifficulty={nextCase?.difficulty}
-          nextCaseMinutes={nextCase?.est_minutes || undefined}
-          nextCaseId={nextCase?.id}
-        />
-
-        {/* Learning Outcomes + Leaderboard */}
+        {/* ═══ Learning Outcomes + Leaderboard ═══ */}
         <div className="grid gap-4 md:grid-cols-2">
           <LearningOutcomes lang={lang} scores={outcomeScores} />
           <Leaderboard lang={lang} currentUserId={user?.id} limit={5} />
         </div>
 
-        {/* Badges */}
+        {/* ═══ Badges ═══ */}
         <AchievementBadges
           lang={lang}
           casesCompleted={casesCompleted}
@@ -185,7 +170,7 @@ export default function StudentDashboard() {
           usedAIMentor={usedAIMentor}
         />
 
-        {/* Peer Review */}
+        {/* ═══ Peer Review ═══ */}
         <div className="rounded-xl border border-border bg-card p-5">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
@@ -210,15 +195,12 @@ export default function StudentDashboard() {
           </div>
         </div>
 
-        {/* AI Mentor + Course Timeline */}
-        <div className="grid gap-4 md:grid-cols-2">
-          <AIMentorWidget
-            lang={lang}
-            startupData={startupProject}
-            onFeedbackReceived={() => setUsedAIMentor(true)}
-          />
-          <CourseTimeline lang={lang} currentWeek={courseWeek} />
-        </div>
+        {/* ═══ AI Mentor ═══ */}
+        <AIMentorWidget
+          lang={lang}
+          startupData={startupProject}
+          onFeedbackReceived={() => setUsedAIMentor(true)}
+        />
       </main>
     </div>
   );
