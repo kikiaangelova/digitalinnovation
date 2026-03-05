@@ -312,6 +312,41 @@ export type Database = {
           },
         ]
       }
+      case_reflections: {
+        Row: {
+          case_id: string
+          created_at: string
+          id: string
+          reflection_text: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          case_id: string
+          created_at?: string
+          id?: string
+          reflection_text?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          case_id?: string
+          created_at?: string
+          id?: string
+          reflection_text?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "case_reflections_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "case_studies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       case_sessions: {
         Row: {
           answers: Json
