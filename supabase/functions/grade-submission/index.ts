@@ -6,6 +6,101 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+function xpFromPercent(pct: number): number {
+  if (pct >= 80) return 100;
+  if (pct >= 60) return 70;
+  if (pct >= 40) return 40;
+  return 10;
+}
+
+async function aiGradeQuestion(
+  apiKey: string,
+  prompt: string,
+  answer: string,
+  points: number,
+  rubric: string | null,
+  modelAnswer: string | null,
+  lang: string
+): Promise<{ score: number; feedback: string }> {
+  const systemPrompt = lang === 'bg'
+    ? `Ти си преподавател по бизнес иновации. Оцени отговора на студента по скала от 0 до ${points} точки. Бъди справедлив и конструктивен. Отговори САМО с JSON: {"score": <число>, "feedback": "<кратка обратна връзка на български, 1-3 изречения>"}`
+    : `You are a business innovation instructor. Grade the student's answer on a scale of 0 to ${points} points. Be fair and constructive. Reply ONLY with JSON: {"score": <number>, "feedback": "<brief feedback in English, 1-3 sentences>"}`;
+
+  const userPrompt = [
+    `Question: ${prompt}`,
+    modelAnswer ? `Model answer: ${modelAnswer}` : '',
+    rubric ? `Rubric: ${rubric}` : '',
+    `Student answer: ${answer}`,
+    `Max points: ${points}`,
+  ].filter(Boolean).join('\n\n');
+
+  try {
+    const resp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "google/gemini-2.5-flash-lite",
+        messages: [
+          { role: "system", content: systemPrompt },
+          { role: "user", content: userPrompt },
+        ],
+        tools: [{
+          type: "function",
+          function: {
+            name: "grade_answer",
+            description: "Return the grade and feedback for a student answer.",
+            parameters: {
+              type: "object",
+              properties: {
+                score: { type: "number", description: `Score from 0 to ${points}` },
+                feedback: { type: "string", description: "Brief constructive feedback" },
+              },
+              required: ["score", "feedback"],
+              additionalProperties: false,
+            },
+          },
+        }],
+        tool_choice: { type: "function", function: { name: "grade_answer" } },
+      }),
+    });
+
+    if (!resp.ok) {
+      console.error("AI grading failed:", resp.status, await resp.text());
+      // Fallback: give partial credit
+      return { score: Math.round(points * 0.5), feedback: lang === 'bg' ? 'Автоматична оценка не е налична. Даден е частичен резултат.' : 'AI grading unavailable. Partial credit awarded.' };
+    }
+
+    const data = await resp.json();
+    const toolCall = data.choices?.[0]?.message?.tool_calls?.[0];
+    if (toolCall) {
+      const parsed = JSON.parse(toolCall.function.arguments);
+      return {
+        score: Math.max(0, Math.min(points, Math.round(Number(parsed.score)))),
+        feedback: String(parsed.feedback || ''),
+      };
+    }
+
+    // Fallback: try to parse content as JSON
+    const content = data.choices?.[0]?.message?.content || '';
+    const jsonMatch = content.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      const parsed = JSON.parse(jsonMatch[0]);
+      return {
+        score: Math.max(0, Math.min(points, Math.round(Number(parsed.score)))),
+        feedback: String(parsed.feedback || ''),
+      };
+    }
+
+    return { score: Math.round(points * 0.5), feedback: lang === 'bg' ? 'Частичен резултат.' : 'Partial credit awarded.' };
+  } catch (err) {
+    console.error("AI grade error:", err);
+    return { score: Math.round(points * 0.5), feedback: lang === 'bg' ? 'Частичен резултат.' : 'Partial credit awarded.' };
+  }
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response("ok", { headers: corsHeaders });
@@ -22,8 +117,8 @@ serve(async (req) => {
 
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const lovableApiKey = Deno.env.get("LOVABLE_API_KEY");
 
-    // Verify user with getClaims for JWT verification
     const anonKey = Deno.env.get("SUPABASE_ANON_KEY")!;
     const anonClient = createClient(supabaseUrl, anonKey, {
       global: { headers: { Authorization: authHeader } },
@@ -38,11 +133,9 @@ serve(async (req) => {
     }
     const userId = claimsData.claims.sub as string;
 
-    // Use service role to access correct_answer
     const adminClient = createClient(supabaseUrl, serviceRoleKey);
 
     const { submission_id, source, lang } = await req.json();
-    // source: 'assessment' | 'case'
     const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
 
     if (!submission_id) {
@@ -66,16 +159,15 @@ serve(async (req) => {
       });
     }
 
-    // Fetch questions with correct_answer (server-side only)
+    // Fetch questions with correct_answer, model_answer, rubric
     let questions: any[] = [];
     if (source === "assessment" && sub.assessment_id) {
       const { data } = await adminClient
         .from("assessment_questions")
-        .select("id, type, points, correct_answer")
+        .select("id, type, points, correct_answer, model_answer, rubric, prompt")
         .eq("assessment_id", sub.assessment_id);
       questions = data || [];
     } else {
-      // Case-based: get step IDs first
       const { data: steps } = await adminClient
         .from("case_steps")
         .select("id")
@@ -84,7 +176,7 @@ serve(async (req) => {
         const stepIds = steps.map((s: any) => s.id);
         const { data } = await adminClient
           .from("questions")
-          .select("id, type, points, correct_answer")
+          .select("id, type, points, correct_answer, model_answer, rubric, prompt")
           .in("case_step_id", stepIds);
         questions = data || [];
       }
@@ -107,8 +199,10 @@ serve(async (req) => {
 
     for (const q of questions) {
       maxScore += q.points;
+      const userAns = answersMap[q.id];
+
       if (q.type === "multiple_choice" && q.correct_answer) {
-        const userAns = answersMap[q.id];
+        // Auto-grade MC
         const isCorrect = userAns === q.correct_answer;
         const score = isCorrect ? q.points : 0;
         totalScore += score;
@@ -124,8 +218,74 @@ serve(async (req) => {
           })
           .eq("submission_id", submission_id)
           .eq("question_id", q.id);
+      } else if (userAns && lovableApiKey) {
+        // AI-grade open-ended questions
+        const answerText = typeof userAns === 'string'
+          ? userAns
+          : JSON.stringify(userAns);
+
+        if (answerText.trim().length > 0) {
+          const result = await aiGradeQuestion(
+            lovableApiKey,
+            q.prompt || '',
+            answerText,
+            q.points,
+            q.rubric,
+            q.model_answer,
+            lang || 'en'
+          );
+          totalScore += result.score;
+
+          await adminClient
+            .from("responses")
+            .update({
+              score: result.score,
+              feedback: result.feedback,
+              auto_graded: true,
+            })
+            .eq("submission_id", submission_id)
+            .eq("question_id", q.id);
+        } else {
+          // Empty answer
+          await adminClient
+            .from("responses")
+            .update({
+              score: 0,
+              feedback: t("No answer provided.", "Не е предоставен отговор."),
+              auto_graded: true,
+            })
+            .eq("submission_id", submission_id)
+            .eq("question_id", q.id);
+        }
+      } else if (userAns) {
+        // No API key fallback: give partial credit
+        const score = Math.round(q.points * 0.5);
+        totalScore += score;
+        await adminClient
+          .from("responses")
+          .update({
+            score,
+            feedback: t("Partial credit awarded. AI grading unavailable.", "Даден е частичен резултат."),
+            auto_graded: true,
+          })
+          .eq("submission_id", submission_id)
+          .eq("question_id", q.id);
+      } else {
+        // No answer
+        await adminClient
+          .from("responses")
+          .update({
+            score: 0,
+            feedback: t("No answer provided.", "Не е предоставен отговор."),
+            auto_graded: true,
+          })
+          .eq("submission_id", submission_id)
+          .eq("question_id", q.id);
       }
     }
+
+    const scorePercent = maxScore > 0 ? Math.round((totalScore / maxScore) * 100) : 0;
+    const xpAwarded = xpFromPercent(scorePercent);
 
     // Mark submission as submitted
     await adminClient.from("submissions").update({
@@ -135,7 +295,7 @@ serve(async (req) => {
       max_score: maxScore,
     }).eq("id", submission_id);
 
-    // Track course_progress for the completed case/assessment
+    // Track course_progress
     const moduleType = source === "assessment" ? "assessment" : "case_study";
     const moduleId = source === "assessment" ? sub.assessment_id : sub.case_study_id;
     if (moduleId) {
@@ -147,27 +307,28 @@ serve(async (req) => {
         .eq("module_id", moduleId)
         .maybeSingle();
 
+      const progressData = {
+        status: "completed",
+        completed_at: new Date().toISOString(),
+        score: scorePercent,
+        metadata: { xp_awarded: xpAwarded },
+      };
+
       if (existing) {
-        await adminClient.from("course_progress").update({
-          status: "completed",
-          completed_at: new Date().toISOString(),
-          score: maxScore > 0 ? Math.round((totalScore / maxScore) * 100) : null,
-        }).eq("id", existing.id);
+        await adminClient.from("course_progress").update(progressData).eq("id", existing.id);
       } else {
         await adminClient.from("course_progress").insert({
           user_id: userId,
           module: moduleType,
           module_id: moduleId,
-          status: "completed",
           started_at: new Date().toISOString(),
-          completed_at: new Date().toISOString(),
-          score: maxScore > 0 ? Math.round((totalScore / maxScore) * 100) : null,
+          ...progressData,
         });
       }
     }
 
     return new Response(
-      JSON.stringify({ total_score: totalScore, max_score: maxScore }),
+      JSON.stringify({ total_score: totalScore, max_score: maxScore, score_percent: scorePercent, xp_awarded: xpAwarded }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (err) {

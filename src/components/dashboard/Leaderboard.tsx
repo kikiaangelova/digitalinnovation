@@ -30,22 +30,31 @@ export default function Leaderboard({ lang, currentUserId, limit = 10, showTitle
   useEffect(() => {
     const fetchLeaderboard = async () => {
       try {
-        const [profRes, subsRes, simRes, projRes] = await Promise.all([
+        const [profRes, subsRes, simRes, projRes, progressRes] = await Promise.all([
           supabase.from('profiles').select('user_id, full_name, leaderboard_visible'),
           supabase.from('submissions').select('user_id, is_draft'),
           supabase.from('simulator_progress').select('user_id, current_week, is_complete'),
           supabase.from('startup_projects').select('user_id, problem, customer, value_proposition, digital_product, business_model, growth_strategy, final_pitch, is_submitted'),
+          supabase.from('course_progress').select('user_id, metadata').eq('module', 'case_study').eq('status', 'completed'),
         ]);
 
         const profiles = (profRes.data || []).filter((p: any) => p.leaderboard_visible === true);
         const subs = subsRes.data || [];
         const sims = simRes.data || [];
         const projs = projRes.data || [];
+        const progressData = progressRes.data || [];
+
+        // Build per-user case XP map from course_progress metadata
+        const userCaseXp: Record<string, number> = {};
+        progressData.forEach((row: any) => {
+          const meta = row.metadata as any;
+          const xpVal = meta?.xp_awarded || 50;
+          userCaseXp[row.user_id] = (userCaseXp[row.user_id] || 0) + xpVal;
+        });
 
         const startupSections = ['problem', 'customer', 'value_proposition', 'digital_product', 'business_model', 'growth_strategy', 'final_pitch'];
 
         const board: LeaderboardEntry[] = profiles.map((p: any) => {
-          const casesCompleted = subs.filter((s: any) => s.user_id === p.user_id && !s.is_draft).length;
           const sim = sims.find((s: any) => s.user_id === p.user_id);
           const proj = projs.find((pr: any) => pr.user_id === p.user_id);
 
@@ -54,7 +63,7 @@ export default function Leaderboard({ lang, currentUserId, limit = 10, showTitle
             : 0;
 
           const xp =
-            casesCompleted * 50 +
+            (userCaseXp[p.user_id] || 0) +
             ((sim?.current_week || 1) - 1) * 100 + (sim?.is_complete ? 100 : 0) +
             startupFilled * 75 +
             (proj?.is_submitted ? 200 : 0);
