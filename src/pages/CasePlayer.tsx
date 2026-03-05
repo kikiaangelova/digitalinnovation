@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
 import { supabase } from '@/integrations/supabase/client';
+import { generateDefaultExhibitContent } from '@/data/case-defaults';
 import AppHeader from '@/components/layout/AppHeader';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -169,7 +170,7 @@ const buildSessionAnswers = (questionAnswers: Record<string, any>, startupNotes:
 
 export default function CasePlayer() {
   const { id } = useParams<{ id: string }>();
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const { lang } = useLang();
   const navigate = useNavigate();
   const tx = (en: string | null | undefined, bg: string | null | undefined) => lang === 'bg' ? (bg || en || '') : (en || '');
@@ -499,6 +500,9 @@ export default function CasePlayer() {
   if (!currentStepData?.exhibit_text && !currentStepData?.exhibit_text_bg) missingSections.push('Data / Exhibits');
   if (currentStep >= 3 && stepQuestions.length === 0) missingSections.push('Questions');
 
+  // Only show missing-sections warning to admins, never to students
+  const showMissingSectionsWarning = isAdmin && missingSections.length > 0;
+
   const isFirstStep = currentStep === 0;
   const isLastStep = currentStep === steps.length - 1;
   const SectionIcon = SECTION_ICONS[currentStep] || FileText;
@@ -576,14 +580,22 @@ export default function CasePlayer() {
           </div>
         </div>
 
-        {/* Language/content fallback notice */}
-        {(bgFallbackActive || missingSections.length > 0) && (
+        {/* Language fallback notice (students see BG fallback only) */}
+        {bgFallbackActive && !showMissingSectionsWarning && (
           <div className="flex items-center gap-2 rounded-lg border border-sim-warning/30 bg-sim-warning/5 px-4 py-3">
             <AlertTriangle className="h-4 w-4 text-sim-warning shrink-0" />
             <p className="text-xs text-foreground/80">
-              {bgFallbackActive
-                ? 'Съдържанието на тази секция е налично само на английски. Навигацията остава на български.'
-                : `${tl('Fallback content is being used because required sections are missing:', 'Използва се резервно съдържание, защото липсват задължителни секции:')} ${missingSections.join(', ')}`}
+              Съдържанието на тази секция е налично само на английски. Навигацията остава на български.
+            </p>
+          </div>
+        )}
+
+        {/* Admin-only missing sections badge */}
+        {showMissingSectionsWarning && (
+          <div className="flex items-center gap-2 rounded-lg border border-muted bg-muted/30 px-4 py-2">
+            <AlertTriangle className="h-4 w-4 text-muted-foreground shrink-0" />
+            <p className="text-xs text-muted-foreground">
+              {tl('Missing:', 'Липсва:')} {missingSections.join(', ')} <Badge variant="outline" className="ml-2 text-[10px]">Admin only</Badge>
             </p>
           </div>
         )}
@@ -634,29 +646,40 @@ export default function CasePlayer() {
         )}
 
         {/* ── 2. EXHIBITS / INDUSTRY DATA / STRATEGIC PROBLEM ── */}
-        {(currentStepData.exhibit_text || currentStepData.exhibit_text_bg) && (
-          <div className="rounded-lg border-2 border-sim-warning/30 bg-sim-warning/5 p-6">
-            <div className="flex items-center gap-2 mb-3">
-              <BarChart3 className="h-4 w-4 text-sim-warning" />
-              <h3 className="font-display font-semibold text-foreground">
-                {currentStep === 1
-                  ? tl('Industry Data & Statistics', 'Индустриални данни и статистика')
-                  : currentStep === 2
-                  ? tl('Exhibits & Evidence', 'Приложения и доказателства')
-                  : currentStep === 3
-                  ? tl('Strategic Data & Exhibits', 'Стратегически данни и приложения')
-                  : tl('Data & Evidence', 'Данни и доказателства')}
-              </h3>
+        {(() => {
+          const hasExhibit = currentStepData.exhibit_text || currentStepData.exhibit_text_bg;
+          const showDefault = !hasExhibit && currentStep >= 1 && currentStep <= 3;
+          if (!hasExhibit && !showDefault) return null;
+          const exhibitContent = hasExhibit
+            ? tx(currentStepData.exhibit_text, currentStepData.exhibit_text_bg)
+            : generateDefaultExhibitContent(caseStudy.topic, currentStep, lang);
+          return (
+            <div className={`rounded-lg border-2 p-6 ${hasExhibit ? 'border-sim-warning/30 bg-sim-warning/5' : 'border-border bg-accent/30'}`}>
+              <div className="flex items-center gap-2 mb-3">
+                <BarChart3 className={`h-4 w-4 ${hasExhibit ? 'text-sim-warning' : 'text-muted-foreground'}`} />
+                <h3 className="font-display font-semibold text-foreground">
+                  {currentStep === 1
+                    ? tl('Industry Data & Statistics', 'Индустриални данни и статистика')
+                    : currentStep === 2
+                    ? tl('Exhibits & Evidence', 'Приложения и доказателства')
+                    : currentStep === 3
+                    ? tl('Strategic Data & Exhibits', 'Стратегически данни и приложения')
+                    : tl('Data & Evidence', 'Данни и доказателства')}
+                </h3>
+                {!hasExhibit && isAdmin && (
+                  <Badge variant="outline" className="text-[10px] ml-auto">{tl('Default template', 'Шаблон по подразбиране')}</Badge>
+                )}
+              </div>
+              <p className="text-xs text-muted-foreground mb-3">
+                {tl('Analyze the data below carefully — you will need it to answer the strategic questions.',
+                   'Анализирайте данните внимателно — ще ви трябват за отговорите на стратегическите въпроси.')}
+              </p>
+              <div className="text-sm text-foreground/85 whitespace-pre-line leading-relaxed font-mono bg-background/50 rounded-md p-4 border border-border/50 overflow-x-auto">
+                {exhibitContent}
+              </div>
             </div>
-            <p className="text-xs text-muted-foreground mb-3">
-              {tl('Analyze the data below carefully — you will need it to answer the strategic questions.',
-                 'Анализирайте данните внимателно — ще ви трябват за отговорите на стратегическите въпроси.')}
-            </p>
-            <div className="text-sm text-foreground/85 whitespace-pre-line leading-relaxed font-mono bg-background/50 rounded-md p-4 border border-border/50 overflow-x-auto">
-              {tx(currentStepData.exhibit_text, currentStepData.exhibit_text_bg)}
-            </div>
-          </div>
-        )}
+          );
+        })()}
 
         {/* ── 3. ANALYSIS QUESTIONS ── */}
         {stepQuestions.length > 0 && (
