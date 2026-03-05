@@ -65,6 +65,36 @@ export type Database = {
         }
         Relationships: []
       }
+      answer_history: {
+        Row: {
+          answer_text: string
+          case_id: string
+          created_at: string
+          id: string
+          question_id: string
+          user_id: string
+          version_number: number
+        }
+        Insert: {
+          answer_text?: string
+          case_id: string
+          created_at?: string
+          id?: string
+          question_id: string
+          user_id: string
+          version_number: number
+        }
+        Update: {
+          answer_text?: string
+          case_id?: string
+          created_at?: string
+          id?: string
+          question_id?: string
+          user_id?: string
+          version_number?: number
+        }
+        Relationships: []
+      }
       assessment_questions: {
         Row: {
           assessment_id: string
@@ -281,6 +311,45 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      case_sessions: {
+        Row: {
+          answers: Json
+          case_id: string
+          completion_status: string
+          created_at: string
+          current_step: number
+          id: string
+          last_saved: string
+          updated_at: string
+          user_id: string
+          xp_earned: number
+        }
+        Insert: {
+          answers?: Json
+          case_id: string
+          completion_status?: string
+          created_at?: string
+          current_step?: number
+          id?: string
+          last_saved?: string
+          updated_at?: string
+          user_id: string
+          xp_earned?: number
+        }
+        Update: {
+          answers?: Json
+          case_id?: string
+          completion_status?: string
+          created_at?: string
+          current_step?: number
+          id?: string
+          last_saved?: string
+          updated_at?: string
+          user_id?: string
+          xp_earned?: number
+        }
+        Relationships: []
       }
       case_steps: {
         Row: {

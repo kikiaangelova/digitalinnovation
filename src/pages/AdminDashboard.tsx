@@ -33,6 +33,25 @@ interface SubmissionAdmin {
   submitted_at: string | null;
 }
 
+interface CaseSessionAdmin {
+  user_id: string;
+  case_id: string;
+  xp_earned: number;
+  current_step: number;
+  completion_status: string;
+  last_saved: string | null;
+}
+
+interface AnswerHistoryAdmin {
+  id: string;
+  user_id: string;
+  case_id: string;
+  question_id: string;
+  version_number: number;
+  answer_text: string;
+  created_at: string;
+}
+
 const DIFFICULTY_LABELS: Record<string, { en: string; bg: string }> = {
   beginner: { en: 'Beginner', bg: 'Начинаещ' },
   intermediate: { en: 'Intermediate', bg: 'Средно ниво' },
@@ -46,9 +65,11 @@ export default function AdminDashboard() {
   const [cases, setCases] = useState<CaseStudyAdmin[]>([]);
   const [submissions, setSubmissions] = useState<SubmissionAdmin[]>([]);
   const [profiles, setProfiles] = useState<Record<string, string>>({});
+  const [sessionMap, setSessionMap] = useState<Record<string, CaseSessionAdmin>>({});
   const [showCreate, setShowCreate] = useState(false);
   const [expandedSub, setExpandedSub] = useState<string | null>(null);
   const [subResponses, setSubResponses] = useState<any[]>([]);
+  const [subHistory, setSubHistory] = useState<AnswerHistoryAdmin[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Create form
@@ -63,16 +84,23 @@ export default function AdminDashboard() {
   useEffect(() => {
     if (!isAdmin) return;
     const fetchData = async () => {
-      const [casesRes, subsRes, profsRes] = await Promise.all([
+      const [casesRes, subsRes, profsRes, sessionsRes] = await Promise.all([
         supabase.from('case_studies').select('id, title, topic, difficulty, published, created_at').order('created_at', { ascending: false }),
         supabase.from('submissions').select('id, case_study_id, user_id, is_draft, total_score, max_score, submitted_at').eq('is_draft', false).order('submitted_at', { ascending: false }),
         supabase.from('profiles').select('user_id, full_name'),
+        (supabase as any).from('case_sessions').select('user_id, case_id, xp_earned, current_step, completion_status, last_saved'),
       ]);
       setCases(casesRes.data || []);
       setSubmissions(subsRes.data || []);
       const pm: Record<string, string> = {};
       profsRes.data?.forEach(p => { pm[p.user_id] = p.full_name || t('Unknown', 'Неизвестен'); });
       setProfiles(pm);
+
+      const sm: Record<string, CaseSessionAdmin> = {};
+      (sessionsRes.data as CaseSessionAdmin[] | null)?.forEach((s) => {
+        sm[`${s.user_id}:${s.case_id}`] = s;
+      });
+      setSessionMap(sm);
       setLoading(false);
     };
     fetchData();
@@ -107,11 +135,21 @@ export default function AdminDashboard() {
     }
   };
 
-  const viewSubmission = async (subId: string) => {
+  const viewSubmission = async (subId: string, userId: string, caseId: string) => {
     if (expandedSub === subId) { setExpandedSub(null); return; }
     setExpandedSub(subId);
-    const { data } = await supabase.from('responses').select('id, question_id, answer, score, feedback').eq('submission_id', subId);
-    setSubResponses(data || []);
+    const [responsesRes, historyRes] = await Promise.all([
+      supabase.from('responses').select('id, question_id, answer, score, feedback').eq('submission_id', subId),
+      (supabase as any)
+        .from('answer_history')
+        .select('id, user_id, case_id, question_id, version_number, answer_text, created_at')
+        .eq('user_id', userId)
+        .eq('case_id', caseId)
+        .order('created_at', { ascending: false })
+        .limit(30),
+    ]);
+    setSubResponses(responsesRes.data || []);
+    setSubHistory((historyRes.data || []) as AnswerHistoryAdmin[]);
   };
 
   const updateScore = async (responseId: string, score: number, feedback: string) => {
@@ -258,10 +296,11 @@ export default function AdminDashboard() {
             {submissions.slice(0, 20).map(s => {
               const caseName = cases.find(c => c.id === s.case_study_id)?.title || t('Unknown', 'Неизвестен');
               const isExpanded = expandedSub === s.id;
+              const session = sessionMap[`${s.user_id}:${s.case_study_id}`];
               return (
                 <div key={s.id} className="rounded-xl border border-border bg-card">
                   <button
-                    onClick={() => viewSubmission(s.id)}
+                    onClick={() => viewSubmission(s.id, s.user_id, s.case_study_id)}
                     className="w-full p-4 flex items-center justify-between text-left"
                   >
                     <div>
@@ -269,12 +308,13 @@ export default function AdminDashboard() {
                       <p className="text-xs text-muted-foreground">{caseName} · {s.submitted_at ? new Date(s.submitted_at).toLocaleDateString() : ''}</p>
                     </div>
                     <div className="flex items-center gap-2">
+                      {session && <Badge variant="outline">XP {session.xp_earned}</Badge>}
                       <Badge variant="outline">{s.total_score || 0}/{s.max_score || 0}</Badge>
                       {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
                     </div>
                   </button>
                   {isExpanded && (
-                    <div className="border-t border-border p-4 space-y-3">
+                    <div className="border-t border-border p-4 space-y-4">
                       {subResponses.map(r => (
                         <div key={r.id} className="rounded-lg border border-border p-3 space-y-2">
                           <p className="text-sm text-foreground">
@@ -305,6 +345,22 @@ export default function AdminDashboard() {
                           </div>
                         </div>
                       ))}
+
+                      <div className="rounded-lg border border-border p-3 space-y-2">
+                        <p className="text-sm font-semibold text-foreground">{t('Answer History', 'История на отговорите')}</p>
+                        {subHistory.length === 0 ? (
+                          <p className="text-xs text-muted-foreground">{t('No answer history yet.', 'Все още няма история на отговорите.')}</p>
+                        ) : (
+                          <div className="space-y-2 max-h-56 overflow-auto pr-1">
+                            {subHistory.map(h => (
+                              <div key={h.id} className="rounded-md border border-border/70 p-2">
+                                <p className="text-xs text-muted-foreground">Q: {h.question_id} · v{h.version_number} · {new Date(h.created_at).toLocaleString()}</p>
+                                <p className="text-sm text-foreground whitespace-pre-wrap">{h.answer_text || '—'}</p>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   )}
                 </div>
