@@ -119,11 +119,11 @@ export default function StartupSimulator() {
     if (stepNum > prevWeek) {
       const weeksGained = stepNum - prevWeek;
       const xpEarned = weeksGained * 100 + (complete ? 100 : 0);
-      await supabase.rpc('add_user_xp' as any, { _user_id: user.id, _xp: xpEarned });
+      await supabase.rpc('add_user_xp', { _user_id: user.id, _xp: xpEarned });
       const { toast } = await import('sonner');
-      toast.success(`+${xpEarned} XP earned!`);
+      toast.success(`+${xpEarned} XP ${lang === 'bg' ? 'спечелени!' : 'earned!'}`);
     }
-  }, [user, simId]);
+  }, [user, simId, lang]);
 
   const reset = useCallback(async () => {
     setPhase('intro');

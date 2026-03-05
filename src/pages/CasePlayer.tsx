@@ -594,6 +594,10 @@ export default function CasePlayer() {
                       if (nowValid && !wasValid) {
                         prevXpRef.current = { ...prevXpRef.current, [field.key]: true };
                         toast.success(`+${field.xp} XP ${lang === 'bg' ? 'за' : 'earned for'} ${lang === 'bg' ? field.labelBg : field.labelEn}`);
+                        // Persist XP to database
+                        if (user) {
+                          supabase.rpc('add_user_xp', { _user_id: user.id, _xp: field.xp });
+                        }
                       } else if (!nowValid && wasValid) {
                         prevXpRef.current = { ...prevXpRef.current, [field.key]: false };
                       }

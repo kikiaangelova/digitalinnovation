@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, forwardRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { getCurrentLevel } from '@/components/dashboard/LevelCard';
@@ -41,7 +41,7 @@ interface Props {
   lang: 'en' | 'bg';
 }
 
-export default function InnovationShowcase({ lang }: Props) {
+const InnovationShowcase = forwardRef<HTMLDivElement, Props>(function InnovationShowcase({ lang }, ref) {
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
   const navigate = useNavigate();
   const [innovators, setInnovators] = useState<InnovatorEntry[]>([]);
@@ -257,4 +257,6 @@ export default function InnovationShowcase({ lang }: Props) {
       )}
     </>
   );
-}
+});
+
+export default InnovationShowcase;
