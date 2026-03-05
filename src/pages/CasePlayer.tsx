@@ -223,24 +223,32 @@ export default function CasePlayer() {
   const saveDraft = useCallback(async () => {
     if (!user || !id || isSubmitted) return;
     setSaving(true);
-    let subId = submissionId;
-    if (!subId) {
-      const { data, error } = await supabase.from('submissions').insert({ case_study_id: id, user_id: user.id, is_draft: true }).select('id').single();
-      if (data) { subId = data.id; setSubmissionId(data.id); }
-      if (error) { setSaving(false); return; }
+    try {
+      let subId = submissionId;
+      if (!subId) {
+        const { data, error } = await supabase.from('submissions').insert({ case_study_id: id, user_id: user.id, is_draft: true }).select('id').single();
+        if (data) { subId = data.id; setSubmissionId(data.id); }
+        if (error) { toast.error(tl('Your answer could not be saved. Please try again.', 'Отговорът не можа да бъде запазен. Моля, опитайте отново.')); setSaving(false); return; }
+      }
+      const upserts = Object.entries(answers).map(([questionId, answer]) => ({
+        submission_id: subId!, question_id: questionId, answer: answer as Json,
+      }));
+      if (upserts.length > 0) {
+        const { error: respError } = await supabase.from('responses').upsert(upserts, { onConflict: 'submission_id,question_id' });
+        if (respError) { toast.error(tl('Your answer could not be saved. Please try again.', 'Отговорът не можа да бъде запазен. Моля, опитайте отново.')); }
+      }
+      await saveStartupNotes();
+    } catch {
+      toast.error(tl('Your answer could not be saved. Please try again.', 'Отговорът не можа да бъде запазен. Моля, опитайте отново.'));
+    } finally {
+      setSaving(false);
     }
-    const upserts = Object.entries(answers).map(([questionId, answer]) => ({
-      submission_id: subId!, question_id: questionId, answer: answer as Json,
-    }));
-    if (upserts.length > 0) await supabase.from('responses').upsert(upserts, { onConflict: 'submission_id,question_id' });
-    await saveStartupNotes();
-    setSaving(false);
-  }, [user, id, submissionId, answers, isSubmitted, saveStartupNotes]);
+  }, [user, id, submissionId, answers, isSubmitted, saveStartupNotes, tl]);
 
   useEffect(() => {
     if (isSubmitted || Object.keys(answers).length === 0) return;
     if (autosaveRef.current) clearInterval(autosaveRef.current);
-    autosaveRef.current = setInterval(() => saveDraft(), 30000);
+    autosaveRef.current = setInterval(() => saveDraft(), 15000);
     return () => { if (autosaveRef.current) clearInterval(autosaveRef.current); };
   }, [saveDraft, isSubmitted, answers]);
 
@@ -343,7 +351,9 @@ export default function CasePlayer() {
             {steps.map((s, i) => {
               const StepIcon = SECTION_ICONS[i] || FileText;
               return (
-                <button key={i} onClick={() => setCurrentStep(i)}
+                <button key={i} onClick={async () => {
+                  if (i !== currentStep) { await saveDraft(); setCurrentStep(i); }
+                }}
                   title={lang === 'bg' ? SECTION_LABELS_BG[i] : SECTION_LABELS_EN[i]}
                   className={`flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-md transition-colors whitespace-nowrap ${
                     i === currentStep ? 'bg-primary text-primary-foreground font-medium'
@@ -672,7 +682,10 @@ export default function CasePlayer() {
 
         {/* Navigation */}
         <div className="flex items-center justify-between pt-4 pb-10 border-t border-border">
-          <Button variant="outline" onClick={() => setCurrentStep(prev => prev - 1)} disabled={isFirstStep}>
+          <Button variant="outline" onClick={async () => {
+            await saveDraft();
+            setCurrentStep(prev => prev - 1);
+          }} disabled={isFirstStep || saving}>
             <ArrowLeft className="h-4 w-4 mr-1" /> {tl('Previous', 'Назад')}
           </Button>
           <div className="flex items-center gap-2">
@@ -686,7 +699,10 @@ export default function CasePlayer() {
               <Lock className="h-4 w-4 mr-1" /> {saving ? tl('Submitting...', 'Изпращане...') : tl('Submit Case', 'Изпрати казуса')}
             </Button>
           ) : (
-            <Button onClick={() => setCurrentStep(prev => prev + 1)} disabled={isStep0 && !step0Gate}>
+            <Button onClick={async () => {
+              await saveDraft();
+              setCurrentStep(prev => prev + 1);
+            }} disabled={(isStep0 && !step0Gate) || saving}>
               {tl('Next', 'Напред')} <ArrowRight className="h-4 w-4 ml-1" />
             </Button>
           )}
