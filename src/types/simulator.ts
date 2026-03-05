@@ -165,6 +165,23 @@ export const KPI_LABELS: Record<keyof KPIs, string> = {
   compliance_risk: 'Compliance Risk',
 };
 
+export const KPI_LABELS_BG: Record<keyof KPIs, string> = {
+  users_total: 'Общо потребители',
+  active_users: 'Активни потребители',
+  churn_rate: 'Отток',
+  conversion_rate: 'Конверсия',
+  cac: 'CAC',
+  arpu: 'ARPU',
+  revenue: 'Приходи',
+  burn_rate: 'Разходи',
+  runway_months: 'Резерв (мес)',
+  nps: 'NPS',
+  product_quality: 'Качество на продукта',
+  tech_debt: 'Техн. дълг',
+  brand_trust: 'Доверие в марката',
+  compliance_risk: 'Риск от съответствие',
+};
+
 export const KPI_FORMATS: Record<keyof KPIs, 'number' | 'percent' | 'currency' | 'score'> = {
   users_total: 'number',
   active_users: 'number',

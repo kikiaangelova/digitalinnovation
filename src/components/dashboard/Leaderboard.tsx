@@ -35,7 +35,7 @@ export default function Leaderboard({ lang, currentUserId, limit = 10, showTitle
 
         const board: LeaderboardEntry[] = (data || []).map((row: any, i: number) => ({
           user_id: row.user_id,
-          full_name: row.display_name || 'Student',
+          full_name: row.display_name || t('Student', 'Студент'),
           xp: row.total_xp || 0,
           rank: i + 1,
         }));

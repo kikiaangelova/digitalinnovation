@@ -73,7 +73,7 @@ export default function SeasonView() {
         {latestState && (
           <div>
             <h2 className="text-lg font-semibold text-foreground mb-3">{t('Current Company Metrics', 'Текущи показатели на компанията')}</h2>
-            <KPIDashboard kpis={latestState.kpis} />
+            <KPIDashboard kpis={latestState.kpis} lang={lang} />
           </div>
         )}
 

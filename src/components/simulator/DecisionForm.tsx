@@ -21,6 +21,14 @@ const TYPE_COLORS: Record<string, string> = {
   ops_risk: 'bg-sim-danger/10 text-sim-danger border-sim-danger/30',
 };
 
+const TYPE_LABELS: Record<string, { en: string; bg: string }> = {
+  strategy: { en: 'Strategy', bg: 'Стратегия' },
+  product: { en: 'Product', bg: 'Продукт' },
+  growth: { en: 'Growth', bg: 'Растеж' },
+  data_ai: { en: 'Data/AI', bg: 'Данни/AI' },
+  ops_risk: { en: 'Ops/Risk', bg: 'Операции/Риск' },
+};
+
 interface DecisionFormProps {
   decisions: DecisionTemplate[];
   initialAnswers?: DecisionAnswer[];
@@ -29,12 +37,14 @@ interface DecisionFormProps {
   onSaveDraft: (answers: DecisionAnswer[], rationale: string, reflection: string) => void;
   onSubmit: () => void;
   isSubmitted: boolean;
+  lang?: 'en' | 'bg';
 }
 
 export default function DecisionForm({
   decisions, initialAnswers, rationale: initRationale, reflection: initReflection,
-  onSaveDraft, onSubmit, isSubmitted,
+  onSaveDraft, onSubmit, isSubmitted, lang = 'en',
 }: DecisionFormProps) {
+  const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [rationale, setRationale] = useState(initRationale || '');
   const [reflection, setReflection] = useState(initReflection || '');
@@ -84,7 +94,7 @@ export default function DecisionForm({
                 <h4 className="font-semibold text-foreground">{decision.title}</h4>
                 <Badge variant="outline" className={`text-xs ${TYPE_COLORS[decision.type]}`}>
                   <span className="mr-1">{TYPE_ICONS[decision.type]}</span>
-                  {decision.type.replace('_', '/')}
+                  {TYPE_LABELS[decision.type]?.[lang] || decision.type.replace('_', '/')}
                 </Badge>
               </div>
               <p className="text-sm text-muted-foreground">{decision.description}</p>
@@ -118,24 +128,32 @@ export default function DecisionForm({
       ))}
 
       <div className="rounded-xl border border-border bg-card p-5">
-        <h4 className="font-semibold text-foreground mb-3">📝 Decision Rationale</h4>
-        <p className="text-sm text-muted-foreground mb-2">Explain your reasoning. Cite KPIs or data that informed your choices.</p>
+        <h4 className="font-semibold text-foreground mb-3">
+          📝 {t('Decision Rationale', 'Обосновка на решението')}
+        </h4>
+        <p className="text-sm text-muted-foreground mb-2">
+          {t('Explain your reasoning. Cite KPIs or data that informed your choices.', 'Обяснете мотивите си. Посочете KPI или данни, които са повлияли на решенията ви.')}
+        </p>
         <Textarea
           value={rationale}
           onChange={e => setRationale(e.target.value)}
-          placeholder="We chose to focus on... because our data shows..."
+          placeholder={t('We chose to focus on... because our data shows...', 'Решихме да се фокусираме върху... защото данните показват...')}
           disabled={isSubmitted}
           className="min-h-[100px]"
         />
       </div>
 
       <div className="rounded-xl border border-border bg-card p-5">
-        <h4 className="font-semibold text-foreground mb-3">🔍 Reflection</h4>
-        <p className="text-sm text-muted-foreground mb-2">What did you learn this week? What would you do differently?</p>
+        <h4 className="font-semibold text-foreground mb-3">
+          🔍 {t('Reflection', 'Рефлексия')}
+        </h4>
+        <p className="text-sm text-muted-foreground mb-2">
+          {t('What did you learn this week? What would you do differently?', 'Какво научихте тази седмица? Какво бихте направили различно?')}
+        </p>
         <Textarea
           value={reflection}
           onChange={e => setReflection(e.target.value)}
-          placeholder="This week we learned that..."
+          placeholder={t('This week we learned that...', 'Тази седмица научихме, че...')}
           disabled={isSubmitted}
           className="min-h-[100px]"
         />
@@ -144,14 +162,14 @@ export default function DecisionForm({
       {!isSubmitted && (
         <div className="flex items-center justify-between">
           <p className="text-sm text-muted-foreground">
-            {Object.keys(answers).length}/{decisions.length} decisions made
+            {Object.keys(answers).length}/{decisions.length} {t('decisions made', 'взети решения')}
           </p>
           <Button
             onClick={handleSubmit}
             disabled={!allAnswered}
             className="sim-gradient border-0"
           >
-            Submit Decisions
+            {t('Submit Decisions', 'Изпрати решенията')}
           </Button>
         </div>
       )}
