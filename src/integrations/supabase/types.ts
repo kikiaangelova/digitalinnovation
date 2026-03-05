@@ -914,6 +914,7 @@ export type Database = {
           industry_analysis: string
           is_submitted: boolean
           problem: string
+          problem_validation: Json | null
           submitted_at: string | null
           updated_at: string
           user_id: string
@@ -941,6 +942,7 @@ export type Database = {
           industry_analysis?: string
           is_submitted?: boolean
           problem?: string
+          problem_validation?: Json | null
           submitted_at?: string | null
           updated_at?: string
           user_id: string
@@ -968,6 +970,7 @@ export type Database = {
           industry_analysis?: string
           is_submitted?: boolean
           problem?: string
+          problem_validation?: Json | null
           submitted_at?: string | null
           updated_at?: string
           user_id?: string
