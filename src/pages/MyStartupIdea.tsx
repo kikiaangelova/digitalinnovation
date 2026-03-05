@@ -199,6 +199,16 @@ export default function MyStartupIdea() {
   const [hasRecord, setHasRecord] = useState(false);
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  // Read ?section= query param to jump to the right section
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const sectionParam = params.get('section');
+    if (sectionParam) {
+      const idx = SECTIONS.findIndex(s => s.key === sectionParam);
+      if (idx >= 0) setActiveSection(idx);
+    }
+  }, []);
+
   useEffect(() => {
     if (!user) return;
     const load = async () => {

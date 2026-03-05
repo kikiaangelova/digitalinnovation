@@ -65,6 +65,7 @@ const App = () => (
                   <Route path="/cases" element={<CaseLibrary />} />
                   <Route path="/dictionary" element={<Dictionary />} />
                   <Route path="/about" element={<AboutDigitalInnovation />} />
+                  <Route path="/innovation-basics" element={<AboutDigitalInnovation />} />
                   <Route path="/case/:id/preview" element={<CasePreview />} />
                   <Route path="/case/:id" element={<CasePlayer />} />
                   <Route path="/case/:id/results" element={<CaseResults />} />
