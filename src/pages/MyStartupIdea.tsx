@@ -19,6 +19,7 @@ import BusinessModelCanvas, { BMC_KEYS, type BMCData } from '@/components/startu
 import AIMentorPanel from '@/components/startup/AIMentorPanel';
 import IdeaEvaluation from '@/components/startup/IdeaEvaluation';
 import IndustryProblemGenerator from '@/components/startup/IndustryProblemGenerator';
+import type { ProblemValidation } from '@/components/startup/IndustryProblemGenerator';
 
 interface SectionConfig {
   key: string;
@@ -397,7 +398,7 @@ export default function MyStartupIdea() {
           <TabsContent value="problems">
             <IndustryProblemGenerator
               lang={lang as 'en' | 'bg'}
-              onProblemSelected={(problem, industry) => {
+              onProblemSelected={async (problem, industry, validation) => {
                 const problemText = lang === 'bg' ? problem.descBg : problem.descEn;
                 const customerText = lang === 'bg' ? problem.affectedBg : problem.affectedEn;
                 const vpText = lang === 'bg' ? problem.opportunityBg : problem.opportunityEn;
@@ -409,12 +410,25 @@ export default function MyStartupIdea() {
                   industry: data.industry || industry.id,
                 };
                 setData(newData);
-                scheduleAutoSave(newData);
+                // Save project data + validation
+                try {
+                  const { is_submitted, ...rest } = newData;
+                  const payload = { ...rest, problem_validation: validation as any };
+                  if (hasRecord) {
+                    await supabase.from('startup_projects').update(payload as any).eq('user_id', user!.id);
+                  } else {
+                    await supabase.from('startup_projects').insert({ user_id: user!.id, ...payload } as any);
+                    setHasRecord(true);
+                  }
+                  setLastSaved(new Date());
+                  toast.success(t('Your problem validation has been saved.', 'Вашата валидация на проблема е запазена.'));
+                } catch {
+                  toast.error(t('Something went wrong while saving your answers. Please try again.', 'Нещо се обърка при запазване на отговорите ви. Моля, опитайте отново.'));
+                }
                 setActiveSection(0);
                 // Switch to sections tab
                 const sectionsTab = document.querySelector('[data-state][value="sections"]') as HTMLElement;
                 sectionsTab?.click();
-                toast.success(t('Problem loaded! Start building your solution.', 'Проблемът е зареден! Започнете да изграждате решение.'));
               }}
             />
           </TabsContent>

@@ -1,16 +1,28 @@
 import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { Progress } from '@/components/ui/progress';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
 import {
   Heart, Banknote, GraduationCap, Sprout, Plane, ShoppingCart, Building2,
   ChevronRight, Lightbulb, Users, AlertTriangle, Zap, Brain, Leaf,
-  Accessibility, Timer, ArrowLeft, Rocket, Check,
+  Accessibility, Timer, ArrowLeft, Rocket, Check, ClipboardCheck,
 } from 'lucide-react';
+
+export interface ProblemValidation {
+  affected_who: string;
+  frequency: string;
+  current_solutions: string;
+  why_insufficient: string;
+  market_size: string;
+}
 
 interface Props {
   lang: 'en' | 'bg';
-  onProblemSelected: (problem: ProblemCard, industry: IndustryOption) => void;
+  onProblemSelected: (problem: ProblemCard, industry: IndustryOption, validation: ProblemValidation) => void;
 }
 
 interface IndustryOption {
@@ -256,103 +268,113 @@ const PROBLEMS: Record<string, ProblemCard[]> = {
       titleBg: 'Висок процент на връщане при онлайн пазаруване',
       descEn: 'Online shoppers return up to 30% of purchases due to sizing, color, or expectation mismatches.',
       descBg: 'Онлайн купувачите връщат до 30% от покупките заради размер, цвят или неоправдани очаквания.',
-      whyEn: 'Returns cost retailers billions and increase environmental waste.',
-      whyBg: 'Връщанията струват милиарди на търговците и увеличават екологичните отпадъци.',
+      whyEn: 'Returns cost retailers billions and create massive waste.',
+      whyBg: 'Връщанията струват милиарди на търговците и създават огромно разхищение.',
       affectedEn: 'Online retailers and consumers',
       affectedBg: 'Онлайн търговци и потребители',
-      opportunityEn: 'AR virtual try-on and AI size recommendation tool.',
-      opportunityBg: 'AR виртуална пробна и AI инструмент за препоръка на размер.',
+      opportunityEn: 'AR/AI virtual try-on and smart sizing tools.',
+      opportunityBg: 'AR/AI виртуално пробване и интелигентни инструменти за размери.',
       difficulty: 'beginner',
     },
     {
       titleEn: 'Food waste in grocery retail',
       titleBg: 'Хранителни отпадъци в хранителната търговия',
-      descEn: 'Supermarkets discard tons of food daily due to overstocking and expiration.',
-      descBg: 'Супермаркетите изхвърлят тонове храна ежедневно заради свръхзапаси и изтичане на срок.',
-      whyEn: 'Food waste contributes to climate change and economic loss.',
-      whyBg: 'Хранителните отпадъци допринасят за климатичните промени и икономическите загуби.',
-      affectedEn: 'Grocery retailers, consumers, and the environment',
-      affectedBg: 'Хранителни търговци, потребители и околната среда',
-      opportunityEn: 'AI demand forecasting and dynamic pricing for near-expiry items.',
-      opportunityBg: 'AI прогнозиране на търсенето и динамично ценообразуване за продукти с наближаващ срок.',
+      descEn: 'Supermarkets discard tons of unsold food daily while people go hungry.',
+      descBg: 'Супермаркетите изхвърлят тонове непродадена храна ежедневно, докато хора гладуват.',
+      whyEn: 'Food waste contributes to climate change and social inequality.',
+      whyBg: 'Хранителните отпадъци допринасят за климатичните промени и социалното неравенство.',
+      affectedEn: 'Retailers, consumers, and the environment',
+      affectedBg: 'Търговци, потребители и околната среда',
+      opportunityEn: 'AI demand prediction and surplus food redistribution marketplace.',
+      opportunityBg: 'AI предвиждане на търсенето и маркетплейс за преразпределение на излишна храна.',
       difficulty: 'intermediate',
     },
     {
-      titleEn: 'Small retailers losing to e-commerce giants',
-      titleBg: 'Малките търговци губят от гигантите на е-търговията',
-      descEn: 'Small local shops cannot compete with the logistics, prices, and convenience of Amazon-like platforms.',
-      descBg: 'Малките местни магазини не могат да се конкурират с логистиката и цените на гигантите.',
-      whyEn: 'Losing local businesses reduces community diversity and economic resilience.',
-      whyBg: 'Загубата на местни бизнеси намалява разнообразието и икономическата устойчивост.',
-      affectedEn: 'Small retailers and local communities',
-      affectedBg: 'Малки търговци и местни общности',
-      opportunityEn: 'Hyper-local marketplace platform connecting neighbors with local shops.',
-      opportunityBg: 'Хиперлокална пазарна платформа, свързваща съседи с местни магазини.',
+      titleEn: 'Local shops losing to e-commerce giants',
+      titleBg: 'Местните магазини губят от е-commerce гиганти',
+      descEn: 'Small local retailers struggle to compete with Amazon and other online giants.',
+      descBg: 'Малките местни търговци трудно се конкурират с Amazon и другите онлайн гиганти.',
+      whyEn: 'Loss of local businesses weakens communities and reduces economic diversity.',
+      whyBg: 'Загубата на местни бизнеси отслабва общностите и намалява икономическото разнообразие.',
+      affectedEn: 'Small business owners and local communities',
+      affectedBg: 'Собственици на малки бизнеси и местни общности',
+      opportunityEn: 'Hyper-local delivery and discovery platform for neighborhood shops.',
+      opportunityBg: 'Хипер-локална платформа за доставка и откриване на квартални магазини.',
       difficulty: 'advanced',
     },
   ],
   smartcities: [
     {
-      titleEn: 'Traffic congestion in urban areas',
-      titleBg: 'Задръствания в градските райони',
-      descEn: 'Cities face daily gridlock, wasting time, fuel, and increasing pollution.',
-      descBg: 'Градовете се сблъскват с ежедневни задръствания, губещи време, гориво и увеличаващи замърсяването.',
-      whyEn: 'Congestion costs economies billions and degrades quality of life.',
-      whyBg: 'Задръстванията струват милиарди на икономиките и влошават качеството на живот.',
-      affectedEn: 'Commuters, businesses, and city residents',
-      affectedBg: 'Пътуващи, бизнеси и жители на града',
-      opportunityEn: 'AI-powered traffic management and smart routing platform.',
-      opportunityBg: 'AI-базирано управление на трафика и платформа за умно маршрутизиране.',
+      titleEn: 'Traffic congestion and commute times',
+      titleBg: 'Задръствания и дълго пътуване до работа',
+      descEn: 'Urban residents spend hours daily in traffic, wasting time and fuel.',
+      descBg: 'Градските жители прекарват часове ежедневно в задръствания, губейки време и гориво.',
+      whyEn: 'Congestion costs billions in productivity and increases air pollution.',
+      whyBg: 'Задръстванията струват милиарди загубена производителност и увеличават замърсяването.',
+      affectedEn: 'Urban commuters, delivery services, and city governments',
+      affectedBg: 'Градски пътници, доставчици и градски управи',
+      opportunityEn: 'AI traffic management and multimodal transport optimization.',
+      opportunityBg: 'AI управление на трафика и оптимизация на мултимодалния транспорт.',
       difficulty: 'beginner',
     },
     {
-      titleEn: 'Inefficient public waste collection',
-      titleBg: 'Неефективно събиране на отпадъци',
-      descEn: 'Waste trucks follow fixed routes regardless of bin fullness, wasting fuel and labor.',
-      descBg: 'Камионите за отпадъци следват фиксирани маршрути независимо от пълнотата на контейнерите.',
-      whyEn: 'Inefficient waste collection increases city costs and pollution.',
-      whyBg: 'Неефективното събиране увеличава разходите и замърсяването.',
-      affectedEn: 'Municipalities and urban residents',
-      affectedBg: 'Общини и градски жители',
-      opportunityEn: 'IoT smart bins with AI-optimized collection routes.',
-      opportunityBg: 'IoT умни контейнери с AI-оптимизирани маршрути за събиране.',
+      titleEn: 'Urban energy waste in buildings',
+      titleBg: 'Енергийно разхищение в градски сгради',
+      descEn: 'Buildings account for 40% of energy use, much of it wasted through inefficiency.',
+      descBg: 'Сградите използват 40% от енергията, голяма част от която се разхищава.',
+      whyEn: 'Energy waste accelerates climate change and increases utility costs.',
+      whyBg: 'Енергийното разхищение ускорява климатичните промени и увеличава сметките.',
+      affectedEn: 'Building owners, tenants, and city planners',
+      affectedBg: 'Собственици на сгради, наематели и градски планировчици',
+      opportunityEn: 'IoT smart building energy management systems.',
+      opportunityBg: 'IoT системи за интелигентно управление на енергията в сградите.',
       difficulty: 'intermediate',
     },
     {
-      titleEn: 'Citizen engagement in city planning',
-      titleBg: 'Гражданско участие в градското планиране',
-      descEn: 'Citizens have little voice in how their cities are designed and managed.',
-      descBg: 'Гражданите имат малко влияние върху проектирането и управлението на градовете.',
-      whyEn: 'Top-down planning leads to infrastructure that doesn\'t serve residents.',
-      whyBg: 'Планирането отгоре-надолу води до инфраструктура, която не обслужва жителите.',
-      affectedEn: 'Citizens, urban planners, and local governments',
-      affectedBg: 'Граждани, градски планиращи и местни власти',
-      opportunityEn: 'Digital civic participation platform with voting, feedback, and visualization.',
-      opportunityBg: 'Дигитална платформа за гражданско участие с гласуване, обратна връзка и визуализация.',
+      titleEn: 'Citizen engagement in local governance',
+      titleBg: 'Гражданско участие в местното управление',
+      descEn: 'Citizens feel disconnected from local government decisions that affect their lives.',
+      descBg: 'Гражданите се чувстват откъснати от решенията на местното управление.',
+      whyEn: 'Low civic engagement leads to policies that don\'t reflect community needs.',
+      whyBg: 'Ниското гражданско участие води до политики, които не отразяват нуждите на общността.',
+      affectedEn: 'Citizens and local government officials',
+      affectedBg: 'Граждани и местни управленски лица',
+      opportunityEn: 'Digital civic engagement platform with participatory budgeting.',
+      opportunityBg: 'Дигитална платформа за гражданско участие с партисипативно бюджетиране.',
       difficulty: 'advanced',
     },
   ],
 };
 
 const INNOVATION_PROMPTS = [
-  { en: '🧠 Could AI help solve this?', bg: '🧠 Може ли AI да помогне?' },
-  { en: '💰 Could it be cheaper?', bg: '💰 Може ли да е по-евтино?' },
-  { en: '⚡ Could it be faster?', bg: '⚡ Може ли да е по-бързо?' },
-  { en: '😊 Better user experience?', bg: '😊 По-добро потребителско изживяване?' },
-  { en: '♿ Could it improve accessibility?', bg: '♿ Може ли да подобри достъпността?' },
-  { en: '🌱 Is there a sustainability angle?', bg: '🌱 Има ли устойчив аспект?' },
+  { en: '🤖 Could AI help?', bg: '🤖 Може ли AI да помогне?' },
+  { en: '📱 Mobile app solution?', bg: '📱 Мобилно приложение?' },
+  { en: '🌐 Platform / Marketplace?', bg: '🌐 Платформа / Marketplace?' },
+  { en: '📊 Data analytics approach?', bg: '📊 Подход с анализ на данни?' },
+  { en: '🔗 Blockchain for trust?', bg: '🔗 Блокчейн за доверие?' },
+  { en: '🎮 Gamification?', bg: '🎮 Геймификация?' },
+  { en: '🤝 Community-driven?', bg: '🤝 Движено от общността?' },
+  { en: '♻️ Sustainability focus?', bg: '♻️ Фокус върху устойчивостта?' },
 ];
 
 const DIFFICULTY_COLORS: Record<string, string> = {
-  beginner: 'bg-[hsl(var(--sim-success))]/10 text-[hsl(var(--sim-success))]',
-  intermediate: 'bg-[hsl(var(--sim-warning))]/10 text-[hsl(var(--sim-warning))]',
-  advanced: 'bg-destructive/10 text-destructive',
+  beginner: 'bg-[hsl(var(--sim-success))]/15 text-[hsl(var(--sim-success))]',
+  intermediate: 'bg-[hsl(var(--sim-warning))]/15 text-[hsl(var(--sim-warning))]',
+  advanced: 'bg-destructive/15 text-destructive',
 };
 
 const DIFFICULTY_LABELS: Record<string, { en: string; bg: string }> = {
   beginner: { en: 'Beginner', bg: 'Начинаещ' },
-  intermediate: { en: 'Intermediate', bg: 'Среден' },
+  intermediate: { en: 'Intermediate', bg: 'Средно' },
   advanced: { en: 'Advanced', bg: 'Напреднал' },
+};
+
+const EMPTY_VALIDATION: ProblemValidation = {
+  affected_who: '',
+  frequency: '',
+  current_solutions: '',
+  why_insufficient: '',
+  market_size: '',
 };
 
 export default function IndustryProblemGenerator({ lang, onProblemSelected }: Props) {
@@ -360,7 +382,8 @@ export default function IndustryProblemGenerator({ lang, onProblemSelected }: Pr
   const [selectedIndustry, setSelectedIndustry] = useState<string | null>(null);
   const [selectedProblem, setSelectedProblem] = useState<ProblemCard | null>(null);
   const [innovationAnswer, setInnovationAnswer] = useState('');
-  const [step, setStep] = useState<'industry' | 'problems' | 'innovate'>('industry');
+  const [step, setStep] = useState<'industry' | 'problems' | 'validate' | 'innovate'>('industry');
+  const [validation, setValidation] = useState<ProblemValidation>(EMPTY_VALIDATION);
 
   const handleSelectIndustry = (id: string) => {
     setSelectedIndustry(id);
@@ -370,14 +393,26 @@ export default function IndustryProblemGenerator({ lang, onProblemSelected }: Pr
 
   const handleSelectProblem = (problem: ProblemCard) => {
     setSelectedProblem(problem);
-    setStep('innovate');
+    setValidation(EMPTY_VALIDATION);
+    setStep('validate');
   };
 
   const handleConfirm = () => {
     if (!selectedProblem || !selectedIndustry) return;
     const industry = INDUSTRY_OPTIONS.find(i => i.id === selectedIndustry)!;
-    onProblemSelected(selectedProblem, industry);
+    onProblemSelected(selectedProblem, industry, validation);
   };
+
+  // Count filled validation fields
+  const filledValidationCount = [
+    validation.affected_who.trim().length > 0,
+    validation.frequency.length > 0,
+    validation.current_solutions.trim().length > 0,
+    validation.why_insufficient.trim().length > 0,
+    validation.market_size.trim().length > 0,
+  ].filter(Boolean).length;
+  const validationProgress = Math.round((filledValidationCount / 5) * 100);
+  const canContinue = filledValidationCount >= 3;
 
   // ─── Step 1: Industry Selection ───
   if (step === 'industry') {
@@ -443,8 +478,8 @@ export default function IndustryProblemGenerator({ lang, onProblemSelected }: Pr
 
         <p className="text-sm text-muted-foreground">
           {t(
-            'Select a problem that interests you. You will then build a startup solution around it.',
-            'Изберете проблем, който ви интересува. След това ще изградите стартъп решение около него.',
+            'Select a problem that interests you. You will then validate it before building your startup solution.',
+            'Изберете проблем, който ви интересува. След това ще го валидирате преди да изградите стартъп решение.',
           )}
         </p>
 
@@ -499,14 +534,168 @@ export default function IndustryProblemGenerator({ lang, onProblemSelected }: Pr
     );
   }
 
-  // ─── Step 3: Innovation Prompts + Confirm ───
+  // ─── Step 3: Problem Validation ───
+  if (step === 'validate' && selectedProblem && selectedIndustry) {
+    return (
+      <div className="max-w-2xl mx-auto space-y-6">
+        <div className="flex items-center gap-3">
+          <Button variant="ghost" size="sm" onClick={() => setStep('problems')}>
+            <ArrowLeft className="h-4 w-4 mr-1" /> {t('Back', 'Назад')}
+          </Button>
+        </div>
+
+        {/* Selected problem summary */}
+        <div className="rounded-xl border border-primary/30 bg-primary/5 p-5 space-y-2">
+          <div className="flex items-center gap-2 text-sm font-medium text-primary">
+            <Check className="h-4 w-4" />
+            {t('Selected Problem', 'Избран проблем')}
+          </div>
+          <h3 className="text-lg font-bold text-foreground">
+            {lang === 'bg' ? selectedProblem.titleBg : selectedProblem.titleEn}
+          </h3>
+          <p className="text-sm text-muted-foreground">
+            {lang === 'bg' ? selectedProblem.descBg : selectedProblem.descEn}
+          </p>
+        </div>
+
+        {/* Validation form */}
+        <div className="rounded-xl border border-border bg-card p-6 space-y-6">
+          <div className="flex items-center gap-2">
+            <ClipboardCheck className="h-5 w-5 text-primary" />
+            <h3 className="font-display font-semibold text-foreground">
+              {t('Problem Validation', 'Валидация на проблема')}
+            </h3>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            {t(
+              'Before building a solution, validate that this is a real, significant problem. Answer at least 3 of the 5 questions below.',
+              'Преди да изградите решение, потвърдете, че това е реален и значим проблем. Отговорете на поне 3 от 5-те въпроса по-долу.',
+            )}
+          </p>
+
+          {/* Progress */}
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-muted-foreground">
+                {t('Completed', 'Попълнени')}: {filledValidationCount} / 5
+              </span>
+              <span className={`font-medium ${canContinue ? 'text-[hsl(var(--sim-success))]' : 'text-muted-foreground'}`}>
+                {canContinue
+                  ? t('✓ You can continue', '✓ Можете да продължите')
+                  : t('Fill at least 3 to continue', 'Попълнете поне 3 за да продължите')}
+              </span>
+            </div>
+            <Progress value={validationProgress} className="h-2" />
+          </div>
+
+          {/* Q1: Who is most affected */}
+          <div className="space-y-2">
+            <Label className="text-sm font-medium text-foreground">
+              {t('Who is most affected by this problem?', 'Кой е най-засегнат от този проблем?')}
+            </Label>
+            <Input
+              value={validation.affected_who}
+              onChange={e => setValidation(v => ({ ...v, affected_who: e.target.value }))}
+              placeholder={t('e.g. Elderly patients in rural areas', 'напр. Възрастни пациенти в селските райони')}
+              maxLength={200}
+            />
+          </div>
+
+          {/* Q2: Frequency */}
+          <div className="space-y-3">
+            <Label className="text-sm font-medium text-foreground">
+              {t('How often does this problem occur?', 'Колко често се случва този проблем?')}
+            </Label>
+            <RadioGroup
+              value={validation.frequency}
+              onValueChange={v => setValidation(val => ({ ...val, frequency: v }))}
+              className="flex flex-wrap gap-4"
+            >
+              {[
+                { value: 'daily', en: 'Daily', bg: 'Ежедневно' },
+                { value: 'weekly', en: 'Weekly', bg: 'Седмично' },
+                { value: 'occasionally', en: 'Occasionally', bg: 'Понякога' },
+              ].map(opt => (
+                <div key={opt.value} className="flex items-center gap-2">
+                  <RadioGroupItem value={opt.value} id={`freq-${opt.value}`} />
+                  <Label htmlFor={`freq-${opt.value}`} className="text-sm cursor-pointer">
+                    {lang === 'bg' ? opt.bg : opt.en}
+                  </Label>
+                </div>
+              ))}
+            </RadioGroup>
+          </div>
+
+          {/* Q3: Current solutions */}
+          <div className="space-y-2">
+            <Label className="text-sm font-medium text-foreground">
+              {t('How do people currently solve this problem?', 'Как хората в момента решават този проблем?')}
+            </Label>
+            <Textarea
+              value={validation.current_solutions}
+              onChange={e => setValidation(v => ({ ...v, current_solutions: e.target.value }))}
+              placeholder={t('Describe existing solutions or workarounds...', 'Опишете съществуващи решения или заобиколни пътища...')}
+              className="min-h-[80px] text-sm resize-y"
+              maxLength={500}
+            />
+          </div>
+
+          {/* Q4: Why insufficient */}
+          <div className="space-y-2">
+            <Label className="text-sm font-medium text-foreground">
+              {t('Why are current solutions not sufficient?', 'Защо настоящите решения не са достатъчни?')}
+            </Label>
+            <Textarea
+              value={validation.why_insufficient}
+              onChange={e => setValidation(v => ({ ...v, why_insufficient: e.target.value }))}
+              placeholder={t('What gaps or pain points remain?', 'Какви пропуски или болки остават?')}
+              className="min-h-[80px] text-sm resize-y"
+              maxLength={500}
+            />
+          </div>
+
+          {/* Q5: Market size */}
+          <div className="space-y-2">
+            <Label className="text-sm font-medium text-foreground">
+              {t('How big could the potential market be?', 'Колко голям може да бъде потенциалният пазар?')}
+            </Label>
+            <Textarea
+              value={validation.market_size}
+              onChange={e => setValidation(v => ({ ...v, market_size: e.target.value }))}
+              placeholder={t('Estimate the number of people affected, market value, etc.', 'Оценете броя на засегнатите хора, пазарна стойност и т.н.')}
+              className="min-h-[80px] text-sm resize-y"
+              maxLength={500}
+            />
+          </div>
+        </div>
+
+        {/* Actions */}
+        <div className="flex gap-3">
+          <Button variant="outline" onClick={() => setStep('problems')} className="flex-1">
+            <ArrowLeft className="h-4 w-4 mr-1" />
+            {t('Back', 'Назад')}
+          </Button>
+          <Button
+            onClick={() => setStep('innovate')}
+            disabled={!canContinue}
+            className="flex-1"
+          >
+            {t('Continue to Startup Idea', 'Продължи към стартъп идеята')}
+            <ChevronRight className="h-4 w-4 ml-1" />
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  // ─── Step 4: Innovation Prompts + Confirm ───
   if (step === 'innovate' && selectedProblem && selectedIndustry) {
     const ind = INDUSTRY_OPTIONS.find(i => i.id === selectedIndustry)!;
 
     return (
       <div className="max-w-2xl mx-auto space-y-6">
         <div className="flex items-center gap-3">
-          <Button variant="ghost" size="sm" onClick={() => setStep('problems')}>
+          <Button variant="ghost" size="sm" onClick={() => setStep('validate')}>
             <ArrowLeft className="h-4 w-4 mr-1" /> {t('Back', 'Назад')}
           </Button>
         </div>

@@ -1,0 +1,1 @@
+ALTER TABLE public.startup_projects ADD COLUMN IF NOT EXISTS problem_validation jsonb DEFAULT '{}'::jsonb;
