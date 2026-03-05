@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 
 const Index = () => {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
   const { lang } = useLang();
   const navigate = useNavigate();
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
@@ -184,7 +184,7 @@ const Index = () => {
       </section>
 
       {/* ═══════════════════ COMMUNITY STATS ═══════════════════ */}
-      <CommunityStats lang={lang} />
+      <CommunityStats lang={lang} isAdmin={isAdmin} />
 
       {/* ═══════════════════ SECTION 2: WHAT YOU WILL LEARN ═══════════════════ */}
       <section className="py-20 px-4 border-t border-border">
@@ -449,7 +449,7 @@ const Index = () => {
       </section>
 
       {/* ═══════════════════ INNOVATION SHOWCASE ═══════════════════ */}
-      <InnovationShowcase lang={lang} />
+      {isAdmin && <InnovationShowcase lang={lang} />}
 
       {/* ═══════════════════ CTA ═══════════════════ */}
       <section className="relative py-24 px-4 border-t border-border overflow-hidden">

@@ -27,9 +27,10 @@ function formatName(fullName: string | null): string {
 
 interface Props {
   lang: 'en' | 'bg';
+  isAdmin?: boolean;
 }
 
-export default function CommunityStats({ lang }: Props) {
+export default function CommunityStats({ lang, isAdmin = false }: Props) {
   const t = (en: string, bg: string) => (lang === 'bg' ? bg : en);
   const [userCount, setUserCount] = useState<number | null>(null);
   const [leaders, setLeaders] = useState<LeaderEntry[]>([]);
@@ -74,7 +75,7 @@ export default function CommunityStats({ lang }: Props) {
   return (
     <section className="py-20 px-4 border-t border-border bg-muted/30">
       <div className="container mx-auto max-w-4xl">
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className={`grid gap-6 ${isAdmin && hasLeaders ? 'md:grid-cols-2' : 'md:grid-cols-1'}`}>
           {/* Community Counter */}
           <div className="rounded-2xl border border-border bg-card p-8 text-center flex flex-col items-center justify-center">
             <div className="flex h-16 w-16 items-center justify-center rounded-2xl sim-gradient shadow-lg mb-5">
@@ -96,7 +97,8 @@ export default function CommunityStats({ lang }: Props) {
             )}
           </div>
 
-          {/* Top 5 Leaderboard */}
+          {/* Top Leaderboard - Admin only */}
+          {isAdmin && (
           <div className="rounded-2xl border border-border bg-card p-6">
             <div className="flex items-center gap-2 mb-5">
               <Trophy className="h-5 w-5 text-primary" />
@@ -175,6 +177,7 @@ export default function CommunityStats({ lang }: Props) {
               </div>
             )}
           </div>
+          )}
         </div>
       </div>
     </section>
