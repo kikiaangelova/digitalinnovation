@@ -115,13 +115,24 @@ export default function StartupSimulator() {
       if (data) setSimId(data.id);
     }
 
-    // Award XP for new weeks completed
-    if (stepNum > prevWeek) {
-      const weeksGained = stepNum - prevWeek;
-      const xpEarned = weeksGained * 100 + (complete ? 100 : 0);
-      await supabase.rpc('add_user_xp', { _user_id: user.id, _xp: xpEarned });
+    // Award XP for scenario completion
+    if (complete && stepNum > prevWeek) {
+      const { awardXp } = await import('@/lib/xp');
       const { toast } = await import('sonner');
-      toast.success(`+${xpEarned} XP ${lang === 'bg' ? 'спечелени!' : 'earned!'}`);
+      const result = await awardXp('sim_scenario_complete', simId || 'new');
+      let totalXpMsg = result.xp_awarded;
+      // Bonus for high performance
+      const score = Math.round(
+        newKpis.innovation * 0.25 + newKpis.marketPotential * 0.2 + newKpis.scalability * 0.2 +
+        (100 - newKpis.riskLevel) * 0.15 + newKpis.growthPotential * 0.2
+      );
+      if (score >= 75) {
+        const bonus = await awardXp('sim_high_performance', simId || 'new');
+        totalXpMsg += bonus.xp_awarded;
+      }
+      if (totalXpMsg > 0) {
+        toast.success(`+${totalXpMsg} XP ${lang === 'bg' ? 'спечелени!' : 'earned!'}`);
+      }
     }
   }, [user, simId, lang]);
 

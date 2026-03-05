@@ -85,10 +85,12 @@ export default function StudentDashboard() {
   });
 
   const xpActions = [
-    { action: t('Complete case study', 'Завърши казус'), xp: '10–100 XP', icon: BookOpen },
-    { action: t('Finish simulator week', 'Завърши седмица от симулатора'), xp: '+100 XP', icon: BarChart3 },
-    { action: t('Submit startup section', 'Подай секция от стартъп'), xp: '+75 XP', icon: Rocket },
-    { action: t('Submit final pitch', 'Подай финално представяне'), xp: '+200 XP', icon: Zap },
+    { action: t('Complete case study', 'Завърши казус'), xp: '+100 XP', icon: BookOpen },
+    { action: t('High-quality analysis (>70%)', 'Качествен анализ (>70%)'), xp: '+30 XP', icon: Zap },
+    { action: t('Complete simulator scenario', 'Завърши сценарий от симулатора'), xp: '+50 XP', icon: BarChart3 },
+    { action: t('Submit startup section', 'Подай секция от стартъп'), xp: '+40–50 XP', icon: Rocket },
+    { action: t('Submit final pitch', 'Подай финално представяне'), xp: '+120 XP', icon: Zap },
+    { action: t('Explore dictionary term', 'Научи термин от речника'), xp: '+2 XP', icon: BookOpen },
   ];
 
   if (loading) {

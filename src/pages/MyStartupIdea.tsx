@@ -217,11 +217,23 @@ export default function MyStartupIdea() {
         .select('problem, industry_analysis, competitor_analysis, customer, value_proposition, digital_product, business_model, growth_strategy, final_pitch, is_submitted, industry, bmc_customer_segments, bmc_value_proposition, bmc_channels, bmc_customer_relationships, bmc_revenue_streams, bmc_key_resources, bmc_key_activities, bmc_key_partners, bmc_cost_structure')
         .eq('user_id', user.id)
         .maybeSingle();
-      if (proj) { setData(proj as ProjectData); setHasRecord(true); }
+      if (proj) {
+        setData(proj as ProjectData);
+        setHasRecord(true);
+        // Track which sections are already filled to avoid duplicate XP
+        const sectionKeys = ['problem', 'customer', 'value_proposition', 'digital_product', 'business_model', 'growth_strategy'];
+        sectionKeys.forEach(k => {
+          if (((proj as any)[k] || '').trim().length > 20) {
+            prevSectionsRef.current[k] = true;
+          }
+        });
+      }
       setLoading(false);
     };
     load();
   }, [user]);
+
+  const prevSectionsRef = useRef<Record<string, boolean>>({});
 
   const saveProject = useCallback(async (newData: ProjectData) => {
     if (!user) return;
@@ -236,6 +248,25 @@ export default function MyStartupIdea() {
         setHasRecord(true);
       }
       setLastSaved(new Date());
+
+      // Award XP for newly filled sections
+      const { awardXp } = await import('@/lib/xp');
+      const sectionXpMap: Record<string, Parameters<typeof awardXp>[0]> = {
+        problem: 'startup_problem',
+        customer: 'startup_customer',
+        value_proposition: 'startup_value_proposition',
+        digital_product: 'startup_digital_product',
+        business_model: 'startup_business_model',
+        growth_strategy: 'startup_growth_strategy',
+      };
+      for (const [key, action] of Object.entries(sectionXpMap)) {
+        const isFilled = ((newData as any)[key] || '').trim().length > 20;
+        const wasFilled = prevSectionsRef.current[key] || false;
+        if (isFilled && !wasFilled) {
+          awardXp(action, user.id); // fire-and-forget
+          prevSectionsRef.current[key] = true;
+        }
+      }
     } catch {
       toast.error('Failed to save');
     } finally {
@@ -278,9 +309,13 @@ export default function MyStartupIdea() {
         is_submitted: true, submitted_at: new Date().toISOString(),
       }).eq('user_id', user.id);
       setData(d => ({ ...d, is_submitted: true }));
-      // Award 200 XP for final submission
-      await supabase.rpc('add_user_xp', { _user_id: user.id, _xp: 200 });
-      toast.success(t('Project submitted! +200 XP earned!', 'Проектът е предаден! +200 XP спечелени!'));
+      // Award XP for final submission via edge function
+      const { awardXp } = await import('@/lib/xp');
+      const result = await awardXp('startup_final_pitch', user.id);
+      toast.success(t(
+        `Project submitted! +${result.xp_awarded || 120} XP earned!`,
+        `Проектът е предаден! +${result.xp_awarded || 120} XP спечелени!`
+      ));
     } catch {
       toast.error(t('Failed to submit', 'Грешка при изпращане'));
     } finally {

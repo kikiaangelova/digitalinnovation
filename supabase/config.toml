@@ -8,3 +8,6 @@ verify_jwt = false
 
 [functions.grade-submission]
 verify_jwt = false
+
+[functions.award-xp]
+verify_jwt = false
