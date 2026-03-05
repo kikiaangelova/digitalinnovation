@@ -12,21 +12,12 @@ interface Entry {
   user_id: string;
   full_name: string;
   xp: number;
-  cases_completed: number;
-  sim_week: number;
-  sim_complete: boolean;
   level: ReturnType<typeof getCurrentLevel>;
   rank: number;
 }
 
 const RANK_ICONS = [Trophy, Medal, Award];
 const RANK_COLORS = ['text-[hsl(var(--sim-warning))]', 'text-muted-foreground', 'text-sim-success'];
-
-function formatName(n: string | null) {
-  if (!n) return 'Student';
-  const p = n.trim().split(/\s+/);
-  return p.length === 1 ? p[0] : `${p[0]} ${p[p.length - 1][0]}.`;
-}
 
 export default function LeaderboardPage() {
   const { user } = useAuth();
@@ -38,48 +29,17 @@ export default function LeaderboardPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [profRes, subsRes, simRes, projRes, progressRes] = await Promise.all([
-          supabase.from('profiles').select('user_id, full_name, leaderboard_visible'),
-          supabase.from('submissions').select('user_id, is_draft'),
-          supabase.from('simulator_progress').select('user_id, current_week, is_complete'),
-          supabase.from('startup_projects').select('user_id, problem, customer, value_proposition, digital_product, business_model, growth_strategy, final_pitch, is_submitted'),
-          supabase.from('course_progress').select('user_id, metadata').eq('module', 'case_study').eq('status', 'completed'),
-        ]);
+        const { data, error } = await supabase.rpc('get_leaderboard', { _limit: 50 });
+        if (error) throw error;
 
-        const profiles = (profRes.data || []).filter((p: any) => p.leaderboard_visible === true);
-        const subs = subsRes.data || [];
-        const sims = simRes.data || [];
-        const projs = projRes.data || [];
-        const sections = ['problem', 'customer', 'value_proposition', 'digital_product', 'business_model', 'growth_strategy', 'final_pitch'];
+        const board: Entry[] = (data || []).map((row: any, i: number) => ({
+          user_id: row.user_id,
+          full_name: row.display_name || 'Student',
+          xp: row.total_xp || 0,
+          level: getCurrentLevel(row.total_xp || 0),
+          rank: i + 1,
+        }));
 
-        // Build per-user case XP from course_progress metadata
-        const userCaseXp: Record<string, number> = {};
-        (progressRes.data || []).forEach((row: any) => {
-          const meta = row.metadata as any;
-          userCaseXp[row.user_id] = (userCaseXp[row.user_id] || 0) + (meta?.xp_awarded || 50);
-        });
-
-        const board: Entry[] = profiles.map((p: any) => {
-          const casesCompleted = subs.filter(s => s.user_id === p.user_id && !s.is_draft).length;
-          const sim = sims.find(s => s.user_id === p.user_id);
-          const proj = projs.find(pr => pr.user_id === p.user_id);
-          const startupFilled = proj ? sections.filter(s => ((proj as any)[s] || '').trim().length > 20).length : 0;
-          const xp = (userCaseXp[p.user_id] || 0) + ((sim?.current_week || 1) - 1) * 100 + (sim?.is_complete ? 100 : 0) + startupFilled * 75 + (proj?.is_submitted ? 200 : 0);
-
-          return {
-            user_id: p.user_id,
-            full_name: formatName(p.full_name),
-            xp,
-            cases_completed: casesCompleted,
-            sim_week: sim?.current_week || 0,
-            sim_complete: sim?.is_complete || false,
-            level: getCurrentLevel(xp),
-            rank: 0,
-          };
-        });
-
-        board.sort((a, b) => b.xp - a.xp);
-        board.forEach((e, i) => { e.rank = i + 1; });
         setEntries(board);
       } catch (err) {
         console.error('Leaderboard fetch error:', err);
@@ -130,8 +90,6 @@ export default function LeaderboardPage() {
                   <TableHead>{t('Student', 'Студент')}</TableHead>
                   <TableHead className="text-right">{t('XP Points', 'XP точки')}</TableHead>
                   <TableHead className="text-center hidden sm:table-cell">{t('Level', 'Ниво')}</TableHead>
-                  <TableHead className="text-center hidden md:table-cell">{t('Cases', 'Казуси')}</TableHead>
-                  <TableHead className="text-center hidden md:table-cell">{t('Simulator', 'Симулатор')}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -172,14 +130,6 @@ export default function LeaderboardPage() {
                       <TableCell className="text-center hidden sm:table-cell">
                         <span className="text-xs text-muted-foreground">
                           {t('Lv', 'Нв')}.{e.level.level} — {e.level.name[lang]}
-                        </span>
-                      </TableCell>
-                      <TableCell className="text-center hidden md:table-cell">
-                        <span className="text-sm font-medium text-foreground">{e.cases_completed}</span>
-                      </TableCell>
-                      <TableCell className="text-center hidden md:table-cell">
-                        <span className="text-sm text-foreground">
-                          {e.sim_complete ? '✅' : e.sim_week > 0 ? `${t('Week', 'Седм.')} ${e.sim_week}` : '—'}
                         </span>
                       </TableCell>
                     </TableRow>

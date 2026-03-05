@@ -99,6 +99,7 @@ export default function StartupSimulator() {
   ) => {
     if (!user) return;
     const grade = complete ? getStartupGrade(newKpis).grade : null;
+    const prevWeek = simId ? (await supabase.from('simulator_progress').select('current_week').eq('id', simId).single()).data?.current_week || 1 : 0;
     const payload = {
       user_id: user.id,
       current_week: stepNum,
@@ -112,6 +113,15 @@ export default function StartupSimulator() {
     } else {
       const { data } = await supabase.from('simulator_progress').insert(payload).select('id').single();
       if (data) setSimId(data.id);
+    }
+
+    // Award XP for new weeks completed
+    if (stepNum > prevWeek) {
+      const weeksGained = stepNum - prevWeek;
+      const xpEarned = weeksGained * 100 + (complete ? 100 : 0);
+      await supabase.rpc('add_user_xp' as any, { _user_id: user.id, _xp: xpEarned });
+      const { toast } = await import('sonner');
+      toast.success(`+${xpEarned} XP earned!`);
     }
   }, [user, simId]);
 

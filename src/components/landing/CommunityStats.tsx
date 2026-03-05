@@ -44,50 +44,17 @@ export default function CommunityStats({ lang }: Props) {
           setUserCount(countRes.data as number);
         }
 
-        const [profRes, simRes, projRes, progressRes] = await Promise.all([
-          supabase.from('profiles').select('user_id, full_name, leaderboard_visible'),
-          supabase.from('simulator_progress').select('user_id, current_week, is_complete'),
-          supabase.from('startup_projects').select('user_id, problem, customer, value_proposition, digital_product, business_model, growth_strategy, final_pitch, is_submitted'),
-          supabase.from('course_progress').select('user_id, metadata').eq('module', 'case_study').eq('status', 'completed'),
-        ]);
+        // Use RPC to get leaderboard (bypasses RLS)
+        const { data: lbData } = await supabase.rpc('get_leaderboard', { _limit: 5 });
+        
+        const board: LeaderEntry[] = (lbData || []).map((row: any) => ({
+          user_id: row.user_id,
+          display_name: row.display_name || 'Student',
+          xp: row.total_xp || 0,
+          level: getCurrentLevel(row.total_xp || 0),
+        }));
 
-        const visibleProfiles = (profRes.data || []).filter((p: any) => p.leaderboard_visible === true);
-        const sims = simRes.data || [];
-        const projs = projRes.data || [];
-
-        // Build per-user case XP from course_progress metadata
-        const userCaseXp: Record<string, number> = {};
-        (progressRes.data || []).forEach((row: any) => {
-          const meta = row.metadata as any;
-          userCaseXp[row.user_id] = (userCaseXp[row.user_id] || 0) + (meta?.xp_awarded || 50);
-        });
-
-        const startupSections = ['problem', 'customer', 'value_proposition', 'digital_product', 'business_model', 'growth_strategy', 'final_pitch'];
-
-        const board: LeaderEntry[] = visibleProfiles.map((p: any) => {
-          const sim = sims.find((s: any) => s.user_id === p.user_id);
-          const proj = projs.find((pr: any) => pr.user_id === p.user_id);
-          const startupFilled = proj
-            ? startupSections.filter(s => ((proj as any)[s] || '').trim().length > 20).length
-            : 0;
-
-          const xp =
-            (userCaseXp[p.user_id] || 0) +
-            ((sim?.current_week || 1) - 1) * 100 +
-            (sim?.is_complete ? 100 : 0) +
-            startupFilled * 75 +
-            (proj?.is_submitted ? 200 : 0);
-
-          return {
-            user_id: p.user_id,
-            display_name: formatName(p.full_name),
-            xp,
-            level: getCurrentLevel(xp),
-          };
-        });
-
-        board.sort((a, b) => b.xp - a.xp);
-        setLeaders(board.slice(0, 5));
+        setLeaders(board);
       } catch (err) {
         console.error('CommunityStats fetch error:', err);
       } finally {
@@ -96,7 +63,7 @@ export default function CommunityStats({ lang }: Props) {
     };
 
     fetchData();
-    const interval = setInterval(fetchData, 60 * 1000); // Cache: refresh every 60s
+    const interval = setInterval(fetchData, 60 * 1000);
     return () => clearInterval(interval);
   }, []);
 

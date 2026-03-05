@@ -325,6 +325,9 @@ serve(async (req) => {
           ...progressData,
         });
       }
+
+      // Persist XP to profiles.total_xp
+      await adminClient.rpc("add_user_xp", { _user_id: userId, _xp: xpAwarded });
     }
 
     return new Response(
