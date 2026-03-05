@@ -1336,6 +1336,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      recalculate_all_xp: { Args: never; Returns: undefined }
     }
     Enums: {
       app_role: "admin" | "student"

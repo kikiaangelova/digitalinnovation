@@ -29,7 +29,7 @@ export default function LeaderboardPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data, error } = await supabase.rpc('get_leaderboard', { _limit: 50 });
+        const { data, error } = await supabase.rpc('get_leaderboard', { _limit: 100 });
         if (error) throw error;
 
         const board: Entry[] = (data || []).map((row: any, i: number) => ({
