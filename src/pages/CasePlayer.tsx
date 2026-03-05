@@ -119,6 +119,54 @@ function wordCount(text: string): number {
   return text.trim().split(/\s+/).filter(Boolean).length;
 }
 
+interface CaseSessionState {
+  user_id: string;
+  case_id: string;
+  current_step: number;
+  answers: Record<string, any>;
+  xp_earned: number;
+  completion_status: string;
+  last_saved: string | null;
+}
+
+type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
+
+const STARTUP_PREFIX = 'startup:';
+
+const toStartupQuestionId = (key: string) => `${STARTUP_PREFIX}${key}`;
+
+const isValidXpAnswer = (text: string) => text.trim().length >= MIN_FIELD_LENGTH;
+
+const calculateStartupXp = (notes: Record<string, string>) => {
+  return STARTUP_FIELDS.reduce((sum, field) => {
+    return sum + (isValidXpAnswer(notes[field.key] || '') ? field.xp : 0);
+  }, 0);
+};
+
+const serializeAnswer = (value: any) => {
+  if (typeof value === 'string') return value;
+  if (value === null || value === undefined) return '';
+  return JSON.stringify(value);
+};
+
+const extractStartupNotesFromSession = (sessionAnswers: Record<string, any>) => {
+  const next: Record<string, string> = {};
+  STARTUP_FIELDS.forEach((field) => {
+    const value = sessionAnswers[toStartupQuestionId(field.key)];
+    if (typeof value === 'string') next[field.key] = value;
+  });
+  return next;
+};
+
+const buildSessionAnswers = (questionAnswers: Record<string, any>, startupNotes: Record<string, string>) => {
+  const startupAnswers = STARTUP_FIELDS.reduce<Record<string, string>>((acc, field) => {
+    acc[toStartupQuestionId(field.key)] = startupNotes[field.key] || '';
+    return acc;
+  }, {});
+
+  return { ...questionAnswers, ...startupAnswers };
+};
+
 export default function CasePlayer() {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
@@ -136,12 +184,16 @@ export default function CasePlayer() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle');
   const [startupNotes, setStartupNotes] = useState<Record<string, string>>({});
   const [startupTouched, setStartupTouched] = useState<Record<string, boolean>>({});
   const [showInsight, setShowInsight] = useState<Record<number, boolean>>({});
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const autosaveRef = useRef<NodeJS.Timeout | null>(null);
+  const saveStatusTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const pendingHistoryRef = useRef<Record<string, string>>({});
 
-  const prevXpRef = useRef<Record<string, boolean>>({});
+  const [caseSession, setCaseSession] = useState<CaseSessionState | null>(null);
 
   // Scroll to top on step change
   useEffect(() => {
@@ -149,50 +201,76 @@ export default function CasePlayer() {
   }, [currentStep]);
 
   useEffect(() => {
+    return () => {
+      if (saveStatusTimeoutRef.current) clearTimeout(saveStatusTimeoutRef.current);
+    };
+  }, []);
+
+  useEffect(() => {
     if (!id) return;
     if (!user) { navigate(`/auth?redirect=${encodeURIComponent(`/case/${id}`)}`); return; }
+
     const fetchCase = async () => {
-      const [caseRes, stepsRes] = await Promise.all([
+      const [caseRes, stepsRes, qRes, subRes, progressRes, sessionRes] = await Promise.all([
         supabase.from('case_studies').select('id, title, title_bg, description, description_bg, topic, topic_bg, difficulty, reading_url, reading_button_label, reading_title').eq('id', id).maybeSingle(),
         supabase.from('case_steps').select('id, step_order, title, title_bg, narrative, narrative_bg, exhibit_text, exhibit_text_bg').eq('case_study_id', id).order('step_order'),
+        supabase.rpc('get_player_questions', { _case_study_id: id }),
+        supabase.from('submissions').select('id, is_draft').eq('case_study_id', id).eq('user_id', user.id).maybeSingle(),
+        supabase.from('course_progress').select('metadata').eq('user_id', user.id).eq('module', 'case_startup_notes').eq('module_id', id).maybeSingle(),
+        (supabase as any).from('case_sessions').select('user_id, case_id, current_step, answers, xp_earned, completion_status, last_saved').eq('user_id', user.id).eq('case_id', id).maybeSingle(),
       ]);
+
       if (caseRes.data) setCaseStudy(caseRes.data as CaseStudy);
-      if (stepsRes.data) {
-        setSteps(stepsRes.data as CaseStep[]);
-        const qRes = await supabase.rpc('get_player_questions', { _case_study_id: id });
-        if (qRes.data) setQuestions(qRes.data as Question[]);
-      }
-      const subRes = await supabase.from('submissions').select('id, is_draft').eq('case_study_id', id).eq('user_id', user.id).maybeSingle();
+      const nextSteps = (stepsRes.data || []) as CaseStep[];
+      setSteps(nextSteps);
+      if (qRes.data) setQuestions(qRes.data as Question[]);
+
+      let responseMap: Record<string, any> = {};
+      let foundSubmissionId: string | null = null;
+
       if (subRes.data) {
+        foundSubmissionId = subRes.data.id;
         setSubmissionId(subRes.data.id);
         setIsSubmitted(!subRes.data.is_draft);
         if (!subRes.data.is_draft) { navigate(`/case/${id}/results`); return; }
+
         const respRes = await supabase.from('responses').select('question_id, answer').eq('submission_id', subRes.data.id);
         if (respRes.data) {
-          const map: Record<string, any> = {};
-          respRes.data.forEach(r => { map[r.question_id] = r.answer; });
-          setAnswers(map);
+          respRes.data.forEach((r) => { responseMap[r.question_id] = r.answer; });
         }
       }
-      // Load saved startup notes from course_progress metadata
-      const progressRes = await supabase.from('course_progress')
-        .select('metadata')
-        .eq('user_id', user.id)
-        .eq('module', 'case_startup_notes')
-        .eq('module_id', id)
-        .maybeSingle();
+
+      let loadedStartupNotes: Record<string, string> = {};
       if (progressRes.data?.metadata) {
         const meta = progressRes.data.metadata as Record<string, any>;
-        const loaded: Record<string, string> = {};
-        STARTUP_FIELDS.forEach(f => { if (meta[f.key]) loaded[f.key] = String(meta[f.key]); });
-        setStartupNotes(loaded);
-        // Initialize previous XP state so we don't toast on load
-        const initXp: Record<string, boolean> = {};
-        STARTUP_FIELDS.forEach(f => { initXp[f.key] = (loaded[f.key] || '').length >= MIN_FIELD_LENGTH; });
-        prevXpRef.current = initXp;
+        STARTUP_FIELDS.forEach((f) => { if (meta[f.key]) loadedStartupNotes[f.key] = String(meta[f.key]); });
       }
+
+      const sessionData = sessionRes.data as CaseSessionState | null;
+      if (sessionData) {
+        const sessionAnswers = (sessionData.answers || {}) as Record<string, any>;
+        responseMap = { ...responseMap, ...Object.fromEntries(Object.entries(sessionAnswers).filter(([k]) => !k.startsWith(STARTUP_PREFIX))) };
+        loadedStartupNotes = { ...loadedStartupNotes, ...extractStartupNotesFromSession(sessionAnswers) };
+        const safeStep = Math.max(0, Math.min(sessionData.current_step || 0, Math.max(nextSteps.length - 1, 0)));
+        setCurrentStep(safeStep);
+        setCaseSession(sessionData);
+      } else {
+        setCaseSession({
+          user_id: user.id,
+          case_id: id,
+          current_step: 0,
+          answers: {},
+          xp_earned: 0,
+          completion_status: 'in_progress',
+          last_saved: null,
+        });
+      }
+
+      setAnswers(responseMap);
+      setStartupNotes(loadedStartupNotes);
       setLoading(false);
     };
+
     fetchCase();
   }, [id, user, navigate]);
 
@@ -207,63 +285,157 @@ export default function CasePlayer() {
     return a && String(a).trim().length > 0;
   });
 
-  const saveStartupNotes = useCallback(async () => {
-    if (!user || !id) return;
-    const notesData: Record<string, any> = {};
-    STARTUP_FIELDS.forEach(f => { notesData[f.key] = startupNotes[f.key] || ''; });
-    await supabase.from('course_progress').upsert({
-      user_id: user.id,
-      module: 'case_startup_notes',
-      module_id: id,
-      status: 'in_progress',
-      metadata: notesData as Json,
-    }, { onConflict: 'user_id,module,module_id' });
-  }, [user, id, startupNotes]);
+  const saveDraft = useCallback(async (opts?: { explicitHistory?: { questionId: string; answerText: string }[] }) => {
+    if (!user || !id || isSubmitted) return false;
 
-  const saveDraft = useCallback(async () => {
-    if (!user || !id || isSubmitted) return;
     setSaving(true);
+    setSaveStatus('saving');
+
     try {
       let subId = submissionId;
+
       if (!subId) {
-        const { data, error } = await supabase.from('submissions').insert({ case_study_id: id, user_id: user.id, is_draft: true }).select('id').single();
-        if (data) { subId = data.id; setSubmissionId(data.id); }
-        if (error) { toast.error(tl('Your answer could not be saved. Please try again.', 'Отговорът не можа да бъде запазен. Моля, опитайте отново.')); setSaving(false); return; }
+        const { data, error } = await supabase
+          .from('submissions')
+          .insert({ case_study_id: id, user_id: user.id, is_draft: true })
+          .select('id')
+          .maybeSingle();
+
+        if (error || !data?.id) throw error || new Error('Failed to create draft submission');
+        subId = data.id;
+        setSubmissionId(data.id);
       }
-      const upserts = Object.entries(answers).map(([questionId, answer]) => ({
-        submission_id: subId!, question_id: questionId, answer: answer as Json,
+
+      const responseUpserts = Object.entries(answers).map(([questionId, answer]) => ({
+        submission_id: subId,
+        question_id: questionId,
+        answer: answer as Json,
       }));
-      if (upserts.length > 0) {
-        const { error: respError } = await supabase.from('responses').upsert(upserts, { onConflict: 'submission_id,question_id' });
-        if (respError) { toast.error(tl('Your answer could not be saved. Please try again.', 'Отговорът не можа да бъде запазен. Моля, опитайте отново.')); }
+
+      if (responseUpserts.length > 0) {
+        const { error: responseSaveError } = await supabase
+          .from('responses')
+          .upsert(responseUpserts, { onConflict: 'submission_id,question_id' });
+
+        if (responseSaveError) throw responseSaveError;
       }
-      await saveStartupNotes();
+
+      const notesData: Record<string, any> = {};
+      STARTUP_FIELDS.forEach((field) => {
+        notesData[field.key] = startupNotes[field.key] || '';
+      });
+
+      const { error: notesSaveError } = await supabase
+        .from('course_progress')
+        .upsert({
+          user_id: user.id,
+          module: 'case_startup_notes',
+          module_id: id,
+          status: 'in_progress',
+          metadata: notesData as Json,
+        }, { onConflict: 'user_id,module,module_id' });
+
+      if (notesSaveError) throw notesSaveError;
+
+      const currentXp = calculateStartupXp(startupNotes);
+      const previousXp = caseSession?.xp_earned || 0;
+      const xpDelta = Math.max(0, currentXp - previousXp);
+
+      if (xpDelta > 0) {
+        const { error: xpError } = await supabase.rpc('add_user_xp', { _user_id: user.id, _xp: xpDelta });
+        if (xpError) throw xpError;
+      }
+
+      const centralAnswers = buildSessionAnswers(answers, startupNotes);
+      const nextSession: CaseSessionState = {
+        user_id: user.id,
+        case_id: id,
+        current_step: currentStep,
+        answers: centralAnswers,
+        xp_earned: currentXp,
+        completion_status: isSubmitted ? 'completed' : 'in_progress',
+        last_saved: new Date().toISOString(),
+      };
+
+      const { error: sessionError } = await (supabase as any)
+        .from('case_sessions')
+        .upsert(nextSession, { onConflict: 'user_id,case_id' });
+
+      if (sessionError) throw sessionError;
+
+      const pendingEntries = { ...pendingHistoryRef.current };
+      opts?.explicitHistory?.forEach((entry) => {
+        pendingEntries[entry.questionId] = entry.answerText;
+      });
+
+      const historyRows = Object.entries(pendingEntries)
+        .filter(([, answerText]) => answerText.trim().length > 0)
+        .map(([questionId, answerText]) => ({
+          user_id: user.id,
+          case_id: id,
+          question_id: questionId,
+          answer_text: answerText,
+        }));
+
+      if (historyRows.length > 0) {
+        const { error: historyError } = await (supabase as any).from('answer_history').insert(historyRows);
+        if (historyError) throw historyError;
+        pendingHistoryRef.current = {};
+      }
+
+      setCaseSession(nextSession);
+      setHasUnsavedChanges(false);
+      setSaveStatus('saved');
+      if (saveStatusTimeoutRef.current) clearTimeout(saveStatusTimeoutRef.current);
+      saveStatusTimeoutRef.current = setTimeout(() => setSaveStatus('idle'), 1600);
+      return true;
     } catch {
+      setSaveStatus('error');
       toast.error(tl('Your answer could not be saved. Please try again.', 'Отговорът не можа да бъде запазен. Моля, опитайте отново.'));
+      return false;
     } finally {
       setSaving(false);
     }
-  }, [user, id, submissionId, answers, isSubmitted, saveStartupNotes, tl]);
+  }, [user, id, isSubmitted, submissionId, answers, startupNotes, caseSession?.xp_earned, currentStep, tl]);
 
   useEffect(() => {
-    if (isSubmitted || Object.keys(answers).length === 0) return;
+    if (isSubmitted || !hasUnsavedChanges) return;
     if (autosaveRef.current) clearInterval(autosaveRef.current);
-    autosaveRef.current = setInterval(() => saveDraft(), 15000);
-    return () => { if (autosaveRef.current) clearInterval(autosaveRef.current); };
-  }, [saveDraft, isSubmitted, answers]);
+
+    autosaveRef.current = setInterval(() => {
+      saveDraft();
+    }, 15000);
+
+    return () => {
+      if (autosaveRef.current) clearInterval(autosaveRef.current);
+    };
+  }, [saveDraft, isSubmitted, hasUnsavedChanges]);
 
   const handleSubmit = async () => {
-    await saveDraft();
-    if (!submissionId) return;
+    const saved = await saveDraft();
+    if (!saved || !submissionId) return;
+
     setSaving(true);
+    setSaveStatus('saving');
+
     try {
-      const { data, error } = await supabase.functions.invoke('grade-submission', {
+      const { error } = await supabase.functions.invoke('grade-submission', {
         body: { submission_id: submissionId, source: 'case', lang },
       });
+
       if (error) throw error;
+
+      await (supabase as any)
+        .from('case_sessions')
+        .update({ completion_status: 'completed', current_step: currentStep, last_saved: new Date().toISOString() })
+        .eq('user_id', user?.id)
+        .eq('case_id', id);
+
+      setSaveStatus('saved');
       toast.success(tl('Case submitted successfully!', 'Казусът е изпратен успешно!'));
       navigate(`/case/${id}/results`);
-    } catch (err) {
+    } catch {
+      setSaveStatus('error');
       toast.error(tl('Failed to submit', 'Грешка при изпращане'));
     } finally {
       setSaving(false);
@@ -273,6 +445,8 @@ export default function CasePlayer() {
   const updateAnswer = (questionId: string, value: any) => {
     if (isSubmitted) return;
     setAnswers(prev => ({ ...prev, [questionId]: value }));
+    pendingHistoryRef.current = { ...pendingHistoryRef.current, [questionId]: serializeAnswer(value) };
+    setHasUnsavedChanges(true);
   };
 
   const isStep0 = currentStepData?.step_order === 0;
@@ -284,6 +458,8 @@ export default function CasePlayer() {
   const totalQuestions = questions.length;
   const answeredQuestions = questions.filter(q => answers[q.id] && String(answers[q.id]).trim().length > 0).length;
   const progressPercent = totalQuestions > 0 ? Math.round((answeredQuestions / totalQuestions) * 100) : 0;
+  const liveStartupXp = calculateStartupXp(startupNotes);
+
 
   if (loading) return (
     <div className="min-h-screen bg-background"><AppHeader />
@@ -318,6 +494,11 @@ export default function CasePlayer() {
     (!currentStepData.exhibit_text_bg && !!currentStepData.exhibit_text)
   );
 
+  const missingSections: string[] = [];
+  if (!currentStepData?.narrative && !currentStepData?.narrative_bg) missingSections.push('Context');
+  if (!currentStepData?.exhibit_text && !currentStepData?.exhibit_text_bg) missingSections.push('Data / Exhibits');
+  if (currentStep >= 3 && stepQuestions.length === 0) missingSections.push('Questions');
+
   const isFirstStep = currentStep === 0;
   const isLastStep = currentStep === steps.length - 1;
   const SectionIcon = SECTION_ICONS[currentStep] || FileText;
@@ -327,6 +508,12 @@ export default function CasePlayer() {
   const sectionHint = lang === 'bg'
     ? SECTION_HINTS_BG[currentStep] || ''
     : SECTION_HINTS_EN[currentStep] || '';
+
+  const navigateToStep = async (targetStep: number) => {
+    const saved = await saveDraft();
+    if (!saved) return;
+    setCurrentStep(targetStep);
+  };
 
   /* Should we show the "Apply to Startup" panel on this step? Show on steps 3+ (after analysis) */
   const showStartupPanel = currentStep >= 3 && !isStep0;
@@ -351,14 +538,17 @@ export default function CasePlayer() {
             {steps.map((s, i) => {
               const StepIcon = SECTION_ICONS[i] || FileText;
               return (
-                <button key={i} onClick={async () => {
-                  if (i !== currentStep) { await saveDraft(); setCurrentStep(i); }
-                }}
+                <button
+                  key={i}
+                  onClick={async () => {
+                    if (i !== currentStep) await navigateToStep(i);
+                  }}
                   title={lang === 'bg' ? SECTION_LABELS_BG[i] : SECTION_LABELS_EN[i]}
                   className={`flex items-center gap-1.5 text-xs px-2.5 py-1.5 rounded-md transition-colors whitespace-nowrap ${
                     i === currentStep ? 'bg-primary text-primary-foreground font-medium'
                       : i < currentStep ? 'bg-accent text-accent-foreground' : 'bg-muted text-muted-foreground'
-                  }`}>
+                  }`}
+                >
                   <StepIcon className="h-3 w-3" />
                   <span className="hidden sm:inline">{(lang === 'bg' ? SECTION_LABELS_BG[i] : SECTION_LABELS_EN[i]) || `${i + 1}`}</span>
                   <span className="sm:hidden">{i + 1}</span>
@@ -386,12 +576,14 @@ export default function CasePlayer() {
           </div>
         </div>
 
-        {/* Language fallback notice */}
-        {bgFallbackActive && (
-          <div className="flex items-center gap-2 rounded-lg border border-amber-500/30 bg-amber-500/5 px-4 py-3">
-            <AlertTriangle className="h-4 w-4 text-amber-600 shrink-0" />
-            <p className="text-xs text-amber-700">
-              Съдържанието на тази секция е налично само на английски. Навигацията остава на български.
+        {/* Language/content fallback notice */}
+        {(bgFallbackActive || missingSections.length > 0) && (
+          <div className="flex items-center gap-2 rounded-lg border border-sim-warning/30 bg-sim-warning/5 px-4 py-3">
+            <AlertTriangle className="h-4 w-4 text-sim-warning shrink-0" />
+            <p className="text-xs text-foreground/80">
+              {bgFallbackActive
+                ? 'Съдържанието на тази секция е налично само на английски. Навигацията остава на български.'
+                : `${tl('Fallback content is being used because required sections are missing:', 'Използва се резервно съдържание, защото липсват задължителни секции:')} ${missingSections.join(', ')}`}
             </p>
           </div>
         )}
@@ -476,9 +668,27 @@ export default function CasePlayer() {
               </div>
             )}
             {stepQuestions.map((q, idx) => (
-              <QuestionCard key={q.id} question={q} index={idx} answer={answers[q.id]}
-                isSubmitted={isSubmitted} isStep0={isStep0} step0NotesId={step0NotesQuestion?.id}
-                step0WordCount={step0WordCount} onAnswer={updateAnswer} tx={tx} tl={tl} lang={lang} />
+              <QuestionCard
+                key={q.id}
+                question={q}
+                index={idx}
+                answer={answers[q.id]}
+                isSubmitted={isSubmitted}
+                isStep0={isStep0}
+                step0NotesId={step0NotesQuestion?.id}
+                step0WordCount={step0WordCount}
+                onAnswer={updateAnswer}
+                onBlur={async (questionId, value) => {
+                  pendingHistoryRef.current = {
+                    ...pendingHistoryRef.current,
+                    [questionId]: serializeAnswer(value),
+                  };
+                  await saveDraft({ explicitHistory: [{ questionId, answerText: serializeAnswer(value) }] });
+                }}
+                tx={tx}
+                tl={tl}
+                lang={lang}
+              />
             ))}
           </div>
         )}
@@ -629,26 +839,20 @@ export default function CasePlayer() {
                     onChange={e => {
                       const newVal = e.target.value;
                       setStartupNotes(prev => ({ ...prev, [field.key]: newVal }));
-                      // Check if XP threshold just crossed
-                      const wasValid = prevXpRef.current[field.key];
-                      const nowValid = newVal.length >= MIN_FIELD_LENGTH;
-                      if (nowValid && !wasValid) {
-                        prevXpRef.current = { ...prevXpRef.current, [field.key]: true };
-                        toast.success(`+${field.xp} XP ${lang === 'bg' ? 'за' : 'earned for'} ${lang === 'bg' ? field.labelBg : field.labelEn}`);
-                        // Persist XP to database
-                        if (user) {
-                          supabase.rpc('add_user_xp', { _user_id: user.id, _xp: field.xp });
-                        }
-                      } else if (!nowValid && wasValid) {
-                        prevXpRef.current = { ...prevXpRef.current, [field.key]: false };
-                      }
+                      pendingHistoryRef.current = {
+                        ...pendingHistoryRef.current,
+                        [toStartupQuestionId(field.key)]: newVal,
+                      };
+                      setHasUnsavedChanges(true);
                     }}
-                    onBlur={() => {
+                    onBlur={async () => {
                       setStartupTouched(prev => ({ ...prev, [field.key]: true }));
-                      saveStartupNotes();
+                      await saveDraft({
+                        explicitHistory: [{ questionId: toStartupQuestionId(field.key), answerText: val }],
+                      });
                     }}
                     placeholder={lang === 'bg' ? field.placeholderBg : field.placeholderEn}
-                    className={`min-h-[120px] bg-background`}
+                    className="min-h-[120px] bg-background"
                     disabled={isSubmitted}
                   />
                   <div className="flex items-center justify-between">
@@ -669,7 +873,7 @@ export default function CasePlayer() {
               <div className="flex items-center gap-2">
                 <Zap className="h-4 w-4 text-sim-warning" />
                 <span className="text-sm font-semibold text-foreground">
-                  {tl('XP Earned', 'Спечелени XP')}: {STARTUP_FIELDS.reduce((sum, f) => sum + ((startupNotes[f.key] || '').length >= MIN_FIELD_LENGTH ? f.xp : 0), 0)}/50
+                  {tl('XP Earned', 'Спечелени XP')}: {liveStartupXp}/50
                 </span>
               </div>
               <Button variant="outline" size="sm" onClick={() => navigate('/my-startup')}>
@@ -682,15 +886,19 @@ export default function CasePlayer() {
 
         {/* Navigation */}
         <div className="flex items-center justify-between pt-4 pb-10 border-t border-border">
-          <Button variant="outline" onClick={async () => {
-            await saveDraft();
-            setCurrentStep(prev => prev - 1);
-          }} disabled={isFirstStep || saving}>
+          <Button
+            variant="outline"
+            onClick={async () => {
+              if (!isFirstStep) await navigateToStep(currentStep - 1);
+            }}
+            disabled={isFirstStep || saving}
+          >
             <ArrowLeft className="h-4 w-4 mr-1" /> {tl('Previous', 'Назад')}
           </Button>
           <div className="flex items-center gap-2">
-            {saving && <span className="text-xs text-muted-foreground animate-pulse font-sans">{tl('Saving...', 'Запазване...')}</span>}
-            <Button variant="outline" size="sm" onClick={saveDraft} disabled={saving}>
+            {saveStatus === 'saving' && <span className="text-xs text-muted-foreground animate-pulse font-sans">{tl('Saving...', 'Запазване...')}</span>}
+            {saveStatus === 'saved' && <span className="text-xs text-sim-success font-sans">{tl('Saved ✓', 'Запазено ✓')}</span>}
+            <Button variant="outline" size="sm" onClick={() => void saveDraft()} disabled={saving}>
               <Save className="h-4 w-4 mr-1" /> {tl('Save', 'Запази')}
             </Button>
           </div>
@@ -699,10 +907,12 @@ export default function CasePlayer() {
               <Lock className="h-4 w-4 mr-1" /> {saving ? tl('Submitting...', 'Изпращане...') : tl('Submit Case', 'Изпрати казуса')}
             </Button>
           ) : (
-            <Button onClick={async () => {
-              await saveDraft();
-              setCurrentStep(prev => prev + 1);
-            }} disabled={(isStep0 && !step0Gate) || saving}>
+            <Button
+              onClick={async () => {
+                await navigateToStep(currentStep + 1);
+              }}
+              disabled={(isStep0 && !step0Gate) || saving}
+            >
               {tl('Next', 'Напред')} <ArrowRight className="h-4 w-4 ml-1" />
             </Button>
           )}
@@ -713,10 +923,11 @@ export default function CasePlayer() {
 }
 
 /* ── Question Card ── */
-function QuestionCard({ question: q, index: idx, answer, isSubmitted, isStep0, step0NotesId, step0WordCount, onAnswer, tx, tl, lang }: {
+function QuestionCard({ question: q, index: idx, answer, isSubmitted, isStep0, step0NotesId, step0WordCount, onAnswer, onBlur, tx, tl, lang }: {
   question: Question; index: number; answer: any; isSubmitted: boolean;
   isStep0: boolean; step0NotesId?: string; step0WordCount: number;
   onAnswer: (id: string, val: any) => void;
+  onBlur: (id: string, val: any) => Promise<void>;
   tx: (en: string | null | undefined, bg: string | null | undefined) => string;
   tl: (en: string, bg: string) => string;
   lang: string;
@@ -751,10 +962,14 @@ function QuestionCard({ question: q, index: idx, answer, isSubmitted, isStep0, s
 
       {(q.type === 'short_answer' || q.type === 'long_answer') && (
         <div>
-          <Textarea value={answer || ''} onChange={e => onAnswer(q.id, e.target.value)}
+          <Textarea
+            value={answer || ''}
+            onChange={e => onAnswer(q.id, e.target.value)}
+            onBlur={() => void onBlur(q.id, answer || '')}
             placeholder={tl('Write your answer...', 'Напишете отговора си...')}
             disabled={isSubmitted}
-            className={q.type === 'long_answer' ? 'min-h-[180px]' : 'min-h-[100px]'} />
+            className={q.type === 'long_answer' ? 'min-h-[180px]' : 'min-h-[100px]'}
+          />
           {isStep0 && step0NotesId === q.id && (
             <p className={`text-xs mt-2 font-sans ${step0WordCount >= 100 ? 'text-sim-success' : 'text-muted-foreground'}`}>
               {step0WordCount}/100 {tl('words minimum', 'думи минимум')}
