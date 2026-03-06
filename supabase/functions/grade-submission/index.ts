@@ -204,6 +204,10 @@ serve(async (req) => {
       answersMap[r.question_id] = r.answer;
     });
 
+    // Grade
+    let totalScore = 0;
+    let maxScore = 0;
+
     // Grade with bounded concurrency + global time budget to avoid gateway timeout
     const gradingStartedAt = Date.now();
 
