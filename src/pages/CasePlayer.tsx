@@ -431,6 +431,8 @@ export default function CasePlayer() {
   }, [saveDraft, isSubmitted, hasUnsavedChanges]);
 
   const handleSubmit = async () => {
+    // Wait for any in-flight blur save to finish, then save once more
+    if (savingPromiseRef.current) await savingPromiseRef.current;
     const saved = await saveDraft();
     if (!saved || !submissionId) return;
 
