@@ -34,6 +34,7 @@ export default function CaseResults() {
   const [reflection, setReflection] = useState('');
   const [reflectionSaved, setReflectionSaved] = useState(false);
   const [savingReflection, setSavingReflection] = useState(false);
+  const [actualXpEarned, setActualXpEarned] = useState<number | null>(null);
 
   useEffect(() => {
     if (!id || !user) return;
