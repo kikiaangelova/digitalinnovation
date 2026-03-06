@@ -38,6 +38,9 @@ async function aiGradeQuestion(
   ].filter(Boolean).join('\n\n');
 
   try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), AI_REQUEST_TIMEOUT_MS);
+
     const resp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -68,7 +71,10 @@ async function aiGradeQuestion(
         }],
         tool_choice: { type: "function", function: { name: "grade_answer" } },
       }),
+      signal: controller.signal,
     });
+
+    clearTimeout(timeoutId);
 
     if (!resp.ok) {
       console.error("AI grading failed:", resp.status, await resp.text());
@@ -97,7 +103,12 @@ async function aiGradeQuestion(
 
     return { score: Math.round(points * 0.5), feedback: lang === 'bg' ? 'Частичен резултат.' : 'Partial credit awarded.' };
   } catch (err) {
-    console.error("AI grade error:", err);
+    const isAbort = err instanceof Error && err.name === "AbortError";
+    if (isAbort) {
+      console.warn("AI grading timeout; falling back to partial credit.");
+    } else {
+      console.error("AI grade error:", err);
+    }
     return { score: Math.round(points * 0.5), feedback: lang === 'bg' ? 'Частичен резултат.' : 'Partial credit awarded.' };
   }
 }
