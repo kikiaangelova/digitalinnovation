@@ -432,15 +432,16 @@ export default function CasePlayer() {
   }, [saveDraft, isSubmitted, hasUnsavedChanges]);
 
   const handleSubmit = async () => {
-    // Wait for any in-flight blur save to finish, then save once more
-    if (savingPromiseRef.current) await savingPromiseRef.current;
-    const saved = await saveDraft();
-    if (!saved || !submissionId) return;
-
-    setSaving(true);
-    setSaveStatus('saving');
-
+    if (submitting) return;
+    setSubmitting(true);
     try {
+      // Wait for any in-flight blur save to finish, then save once more
+      if (savingPromiseRef.current) await savingPromiseRef.current;
+      const saved = await saveDraft();
+      if (!saved || !submissionId) return;
+
+      setSaveStatus('saving');
+
       const { error } = await supabase.functions.invoke('grade-submission', {
         body: { submission_id: submissionId, source: 'case', lang },
       });
@@ -460,7 +461,7 @@ export default function CasePlayer() {
       setSaveStatus('error');
       toast.error(tl('Failed to submit', 'Грешка при изпращане'));
     } finally {
-      setSaving(false);
+      setSubmitting(false);
     }
   };
 
