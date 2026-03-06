@@ -293,7 +293,7 @@ export default function CasePlayer() {
     return a && String(a).trim().length > 0;
   });
 
-  const saveDraft = useCallback(async (opts?: { explicitHistory?: { questionId: string; answerText: string }[] }) => {
+  const saveDraftInner = useCallback(async (opts?: { explicitHistory?: { questionId: string; answerText: string }[] }) => {
     if (!user || !id || isSubmitted) return false;
 
     setSaving(true);
@@ -403,8 +403,19 @@ export default function CasePlayer() {
       return false;
     } finally {
       setSaving(false);
+      savingPromiseRef.current = null;
     }
   }, [user, id, isSubmitted, submissionId, answers, startupNotes, caseSession?.xp_earned, currentStep, tl]);
+
+  // Deduplicated saveDraft: if a save is already in flight, return its promise
+  const saveDraft = useCallback((opts?: { explicitHistory?: { questionId: string; answerText: string }[] }) => {
+    if (savingPromiseRef.current && !opts?.explicitHistory) {
+      return savingPromiseRef.current;
+    }
+    const promise = saveDraftInner(opts);
+    savingPromiseRef.current = promise;
+    return promise;
+  }, [saveDraftInner]);
 
   useEffect(() => {
     if (isSubmitted || !hasUnsavedChanges) return;
