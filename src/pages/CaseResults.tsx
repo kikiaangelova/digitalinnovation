@@ -47,10 +47,10 @@ export default function CaseResults() {
       if (caseRes.data) { setCaseTitle(caseRes.data.title); setCaseTopic(caseRes.data.topic || ''); }
       if (reflRes.data) { setReflection(reflRes.data.reflection_text); setReflectionSaved(true); }
 
-      // Fetch actual XP earned for this case from xp_ledger
-      const xpRes = await supabase.from('xp_ledger').select('xp').eq('user_id', user.id).eq('context_id', id).in('action', ['case_complete', 'case_high_quality']);
-      if (xpRes.data && xpRes.data.length > 0) {
-        setActualXpEarned(xpRes.data.reduce((sum, r) => sum + (r.xp || 0), 0));
+      // Fetch actual XP earned for this case from case_sessions (grade-submission stores it there)
+      const sessionRes = await supabase.from('case_sessions').select('xp_earned').eq('user_id', user.id).eq('case_id', id).maybeSingle();
+      if (sessionRes.data && sessionRes.data.xp_earned > 0) {
+        setActualXpEarned(sessionRes.data.xp_earned);
       }
 
       if (!subRes.data) { setLoading(false); return; }

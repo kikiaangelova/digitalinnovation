@@ -191,6 +191,7 @@ export default function CasePlayer() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle');
   const [startupNotes, setStartupNotes] = useState<Record<string, string>>({});
   const [startupTouched, setStartupTouched] = useState<Record<string, boolean>>({});
@@ -431,13 +432,16 @@ export default function CasePlayer() {
   }, [saveDraft, isSubmitted, hasUnsavedChanges]);
 
   const handleSubmit = async () => {
-    const saved = await saveDraft();
-    if (!saved || !submissionId) return;
-
-    setSaving(true);
-    setSaveStatus('saving');
-
+    if (submitting) return;
+    setSubmitting(true);
     try {
+      // Wait for any in-flight blur save to finish, then save once more
+      if (savingPromiseRef.current) await savingPromiseRef.current;
+      const saved = await saveDraft();
+      if (!saved || !submissionId) return;
+
+      setSaveStatus('saving');
+
       const { error } = await supabase.functions.invoke('grade-submission', {
         body: { submission_id: submissionId, source: 'case', lang },
       });
@@ -457,7 +461,7 @@ export default function CasePlayer() {
       setSaveStatus('error');
       toast.error(tl('Failed to submit', 'Грешка при изпращане'));
     } finally {
-      setSaving(false);
+      setSubmitting(false);
     }
   };
 
@@ -944,8 +948,8 @@ export default function CasePlayer() {
             </Button>
           </div>
           {isLastStep ? (
-            <Button onClick={handleSubmit} disabled={saving} className="sim-gradient border-0">
-              <Lock className="h-4 w-4 mr-1" /> {saving ? tl('Submitting...', 'Изпращане...') : tl('Submit Case', 'Изпрати казуса')}
+            <Button onClick={handleSubmit} disabled={submitting} className="sim-gradient border-0">
+              <Lock className="h-4 w-4 mr-1" /> {submitting ? tl('Submitting...', 'Изпращане...') : tl('Submit Case', 'Изпрати казуса')}
             </Button>
           ) : (
             <Button
