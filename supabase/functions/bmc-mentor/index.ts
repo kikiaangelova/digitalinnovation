@@ -67,16 +67,32 @@ serve(async (req) => {
       });
     }
 
-    // Rate limit
+    // Rate limit — insert first to prevent TOCTOU race
     const todayStart = new Date();
     todayStart.setHours(0, 0, 0, 0);
+
+    // Reserve a slot atomically by inserting first
+    await supabase.from("ai_rate_limits").insert({ user_id: userId, feedback_type: feedbackType });
+
+    // Now count including the just-inserted record
     const { count } = await supabase
       .from("ai_rate_limits")
       .select("id", { count: "exact", head: true })
       .eq("user_id", userId)
       .gte("requested_at", todayStart.toISOString());
 
-    if ((count ?? 0) >= DAILY_LIMIT) {
+    if ((count ?? 0) > DAILY_LIMIT) {
+      // Over limit — delete the just-inserted record and reject
+      const { data: latest } = await supabase
+        .from("ai_rate_limits")
+        .select("id")
+        .eq("user_id", userId)
+        .eq("feedback_type", feedbackType)
+        .order("requested_at", { ascending: false })
+        .limit(1)
+        .single();
+      if (latest) await supabase.from("ai_rate_limits").delete().eq("id", latest.id);
+
       const errMsg = lang === "bg"
         ? `Достигнахте дневния лимит от ${DAILY_LIMIT} AI заявки. Опитайте утре.`
         : `Daily limit of ${DAILY_LIMIT} AI requests reached. Try again tomorrow.`;
@@ -195,10 +211,7 @@ Cost Structure: ${bmc.bmc_cost_structure || "(empty)"}`;
     }
 
     const feedback = JSON.parse(toolCall.function.arguments);
-    const remaining = DAILY_LIMIT - (count ?? 0) - 1;
-
-    // Record rate limit
-    await supabase.from("ai_rate_limits").insert({ user_id: userId, feedback_type: feedbackType });
+    const remaining = DAILY_LIMIT - (count ?? 0);
 
     // Cache
     await supabase.from("ai_feedback_cache").upsert({

@@ -64,16 +64,32 @@ serve(async (req) => {
       });
     }
 
-    // Check rate limit (3 per day)
+    // Check rate limit (3 per day) — insert first to prevent TOCTOU race
     const todayStart = new Date();
     todayStart.setHours(0, 0, 0, 0);
+
+    // Reserve a slot atomically by inserting first
+    await supabase.from("ai_rate_limits").insert({ user_id: userId, feedback_type: feedbackType });
+
+    // Now count including the just-inserted record
     const { count } = await supabase
       .from("ai_rate_limits")
       .select("id", { count: "exact", head: true })
       .eq("user_id", userId)
       .gte("requested_at", todayStart.toISOString());
 
-    if ((count ?? 0) >= DAILY_LIMIT) {
+    if ((count ?? 0) > DAILY_LIMIT) {
+      // Over limit — delete the just-inserted record and reject
+      const { data: latest } = await supabase
+        .from("ai_rate_limits")
+        .select("id")
+        .eq("user_id", userId)
+        .eq("feedback_type", feedbackType)
+        .order("requested_at", { ascending: false })
+        .limit(1)
+        .single();
+      if (latest) await supabase.from("ai_rate_limits").delete().eq("id", latest.id);
+
       const errMsg = lang === "bg"
         ? `Достигнахте дневния лимит от ${DAILY_LIMIT} AI заявки. Опитайте утре.`
         : `Daily limit of ${DAILY_LIMIT} AI requests reached. Try again tomorrow.`;
@@ -142,10 +158,7 @@ Structure your response with these sections:
 
     const result = await response.json();
     const feedback = result.choices?.[0]?.message?.content || (lang === "bg" ? "Не може да се генерира обратна връзка." : "Unable to generate feedback.");
-    const remaining = DAILY_LIMIT - (count ?? 0) - 1;
-
-    // Record rate limit entry
-    await supabase.from("ai_rate_limits").insert({ user_id: userId, feedback_type: feedbackType });
+    const remaining = DAILY_LIMIT - (count ?? 0);
 
     // Cache the response
     await supabase.from("ai_feedback_cache").upsert({
