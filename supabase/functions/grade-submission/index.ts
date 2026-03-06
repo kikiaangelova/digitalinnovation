@@ -193,86 +193,40 @@ serve(async (req) => {
     let totalScore = 0;
     let maxScore = 0;
 
-    for (const q of questions) {
-      maxScore += q.points;
+    // Grade all questions in parallel to avoid timeout
+    const gradePromises = questions.map(async (q) => {
       const userAns = answersMap[q.id];
+      let score = 0;
+      let feedback = t("No answer provided.", "Не е предоставен отговор.");
 
       if (q.type === "multiple_choice" && q.correct_answer) {
         const isCorrect = userAns === q.correct_answer;
-        const score = isCorrect ? q.points : 0;
-        totalScore += score;
-
-        await adminClient
-          .from("responses")
-          .update({
-            score,
-            feedback: isCorrect
-              ? t("Correct!", "Правилно!")
-              : `${t("Incorrect. The correct answer is:", "Неправилно. Верният отговор е:")} ${q.correct_answer}`,
-            auto_graded: true,
-          })
-          .eq("submission_id", submission_id)
-          .eq("question_id", q.id);
+        score = isCorrect ? q.points : 0;
+        feedback = isCorrect
+          ? t("Correct!", "Правилно!")
+          : `${t("Incorrect. The correct answer is:", "Неправилно. Верният отговор е:")} ${q.correct_answer}`;
       } else if (userAns && lovableApiKey) {
-        const answerText = typeof userAns === 'string'
-          ? userAns
-          : JSON.stringify(userAns);
-
+        const answerText = typeof userAns === 'string' ? userAns : JSON.stringify(userAns);
         if (answerText.trim().length > 0) {
-          const result = await aiGradeQuestion(
-            lovableApiKey,
-            q.prompt || '',
-            answerText,
-            q.points,
-            q.rubric,
-            q.model_answer,
-            lang || 'en'
-          );
-          totalScore += result.score;
-
-          await adminClient
-            .from("responses")
-            .update({
-              score: result.score,
-              feedback: result.feedback,
-              auto_graded: true,
-            })
-            .eq("submission_id", submission_id)
-            .eq("question_id", q.id);
-        } else {
-          await adminClient
-            .from("responses")
-            .update({
-              score: 0,
-              feedback: t("No answer provided.", "Не е предоставен отговор."),
-              auto_graded: true,
-            })
-            .eq("submission_id", submission_id)
-            .eq("question_id", q.id);
+          const result = await aiGradeQuestion(lovableApiKey, q.prompt || '', answerText, q.points, q.rubric, q.model_answer, lang || 'en');
+          score = result.score;
+          feedback = result.feedback;
         }
       } else if (userAns) {
-        const score = Math.round(q.points * 0.5);
-        totalScore += score;
-        await adminClient
-          .from("responses")
-          .update({
-            score,
-            feedback: t("Partial credit awarded. AI grading unavailable.", "Даден е частичен резултат."),
-            auto_graded: true,
-          })
-          .eq("submission_id", submission_id)
-          .eq("question_id", q.id);
-      } else {
-        await adminClient
-          .from("responses")
-          .update({
-            score: 0,
-            feedback: t("No answer provided.", "Не е предоставен отговор."),
-            auto_graded: true,
-          })
-          .eq("submission_id", submission_id)
-          .eq("question_id", q.id);
+        score = Math.round(q.points * 0.5);
+        feedback = t("Partial credit awarded. AI grading unavailable.", "Даден е частичен резултат.");
       }
+
+      await adminClient.from("responses").update({ score, feedback, auto_graded: true })
+        .eq("submission_id", submission_id).eq("question_id", q.id);
+
+      return { points: q.points, score };
+    });
+
+    const results = await Promise.all(gradePromises);
+    for (const r of results) {
+      maxScore += r.points;
+      totalScore += r.score;
     }
 
     const scorePercent = maxScore > 0 ? Math.round((totalScore / maxScore) * 100) : 0;
