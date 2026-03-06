@@ -120,6 +120,12 @@ function wordCount(text: string): number {
   return text.trim().split(/\s+/).filter(Boolean).length;
 }
 
+function wordCountColor(count: number): string {
+  if (count >= 100) return 'text-sim-success';
+  if (count >= 50) return 'text-sim-warning';
+  return 'text-destructive';
+}
+
 interface CaseSessionState {
   user_id: string;
   case_id: string;
@@ -454,7 +460,7 @@ export default function CasePlayer() {
   const step0Questions = isStep0 ? stepQuestions : [];
   const step0NotesQuestion = step0Questions.find(q => q.type === 'long_answer' || q.type === 'short_answer');
   const step0WordCount = step0NotesQuestion ? wordCount(String(answers[step0NotesQuestion.id] || '')) : 0;
-  const step0Gate = isStep0 && step0NotesQuestion ? step0WordCount >= 100 : true;
+  
 
   const totalQuestions = questions.length;
   const answeredQuestions = questions.filter(q => answers[q.id] && String(answers[q.id]).trim().length > 0).length;
@@ -716,14 +722,14 @@ export default function CasePlayer() {
           </div>
         )}
 
-        {/* ── Reading gate (step 0) ── */}
-        {isStep0 && !step0Gate && (
+        {/* ── Reading recommendation (step 0) ── */}
+        {isStep0 && step0NotesQuestion && step0WordCount < 100 && (
           <div className="flex items-center gap-2 rounded-lg border border-sim-warning/30 bg-sim-warning/5 p-4">
             <AlertTriangle className="h-5 w-5 text-sim-warning shrink-0" />
             <p className="text-sm text-foreground">
               {tl(
-                `Please write at least 100 words in your research notes before proceeding. (${step0WordCount}/100)`,
-                `Моля, напишете поне 100 думи в бележките си. (${step0WordCount}/100)`
+                `Recommended: write at least 100 words for deeper analysis. (${step0WordCount}/100)`,
+                `Препоръчително: напишете поне 100 думи за по-задълбочен анализ. (${step0WordCount}/100)`
               )}
             </p>
           </div>
@@ -934,7 +940,7 @@ export default function CasePlayer() {
               onClick={async () => {
                 await navigateToStep(currentStep + 1);
               }}
-              disabled={(isStep0 && !step0Gate) || saving}
+              disabled={saving}
             >
               {tl('Next', 'Напред')} <ArrowRight className="h-4 w-4 ml-1" />
             </Button>
@@ -994,8 +1000,8 @@ function QuestionCard({ question: q, index: idx, answer, isSubmitted, isStep0, s
             className={q.type === 'long_answer' ? 'min-h-[180px]' : 'min-h-[100px]'}
           />
           {isStep0 && step0NotesId === q.id && (
-            <p className={`text-xs mt-2 font-sans ${step0WordCount >= 100 ? 'text-sim-success' : 'text-muted-foreground'}`}>
-              {step0WordCount}/100 {tl('words minimum', 'думи минимум')}
+            <p className={`text-xs mt-2 font-sans ${wordCountColor(step0WordCount)}`}>
+              {tl(`Words: ${step0WordCount} / 100 recommended`, `Думи: ${step0WordCount} / 100 препоръчителни`)}
             </p>
           )}
         </div>
