@@ -370,7 +370,7 @@ export default function CasePreview() {
               {[
                 { label: tl('Analysis Quality', 'Качество на анализа'), desc: tl('Depth of strategic thinking', 'Дълбочина на стратегическото мислене') },
                 { label: tl('Innovation Idea', 'Иновативна идея'), desc: tl('Creativity of digital solution', 'Креативност на дигиталното решение') },
-                { label: tl('XP Reward', 'XP Награда'), desc: tl('+50 XP on completion', '+50 XP при завършване') },
+                { label: tl('XP Reward', 'XP Награда'), desc: tl('Up to 130 XP based on grade', 'До 130 XP спрямо оценката') },
               ].map((item, i) => (
                 <div key={i} className="text-center p-3 rounded-lg bg-muted/50">
                   <p className="text-sm font-semibold text-foreground">{item.label}</p>
