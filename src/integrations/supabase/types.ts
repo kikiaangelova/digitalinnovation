@@ -1469,6 +1469,15 @@ export type Database = {
           type: string
         }[]
       }
+      get_cohort_classmates: {
+        Args: { _user_id: string }
+        Returns: {
+          avatar_url: string
+          full_name: string
+          skills_tags: string[]
+          user_id: string
+        }[]
+      }
       get_leaderboard: {
         Args: { _limit?: number }
         Returns: {
