@@ -696,7 +696,7 @@ export default function CasePlayer() {
                    'Анализирайте данните внимателно — ще ви трябват за отговорите на стратегическите въпроси.')}
               </p>
               <div className="bg-background/50 rounded-md p-4 border border-border/50 overflow-x-auto">
-                <MarkdownContent content={exhibitContent || ''} className="prose-table:text-xs font-mono" />
+                <MarkdownContent content={exhibitContent || ''} />
               </div>
             </div>
           );
