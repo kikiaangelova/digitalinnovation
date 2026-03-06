@@ -199,6 +199,7 @@ export default function CasePlayer() {
   const autosaveRef = useRef<NodeJS.Timeout | null>(null);
   const saveStatusTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const pendingHistoryRef = useRef<Record<string, string>>({});
+  const savingPromiseRef = useRef<Promise<boolean> | null>(null);
 
   const [caseSession, setCaseSession] = useState<CaseSessionState | null>(null);
 
