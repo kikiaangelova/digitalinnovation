@@ -695,8 +695,8 @@ export default function CasePlayer() {
                 {tl('Analyze the data below carefully — you will need it to answer the strategic questions.',
                    'Анализирайте данните внимателно — ще ви трябват за отговорите на стратегическите въпроси.')}
               </p>
-              <div className="text-sm text-foreground/85 whitespace-pre-line leading-relaxed font-mono bg-background/50 rounded-md p-4 border border-border/50 overflow-x-auto">
-                {exhibitContent}
+              <div className="bg-background/50 rounded-md p-4 border border-border/50 overflow-x-auto">
+                <MarkdownContent content={exhibitContent || ''} className="prose-table:text-xs font-mono" />
               </div>
             </div>
           );
