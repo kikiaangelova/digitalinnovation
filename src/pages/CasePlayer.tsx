@@ -199,6 +199,7 @@ export default function CasePlayer() {
   const autosaveRef = useRef<NodeJS.Timeout | null>(null);
   const saveStatusTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const pendingHistoryRef = useRef<Record<string, string>>({});
+  const savingPromiseRef = useRef<Promise<boolean> | null>(null);
 
   const [caseSession, setCaseSession] = useState<CaseSessionState | null>(null);
 
@@ -292,7 +293,7 @@ export default function CasePlayer() {
     return a && String(a).trim().length > 0;
   });
 
-  const saveDraft = useCallback(async (opts?: { explicitHistory?: { questionId: string; answerText: string }[] }) => {
+  const saveDraftInner = useCallback(async (opts?: { explicitHistory?: { questionId: string; answerText: string }[] }) => {
     if (!user || !id || isSubmitted) return false;
 
     setSaving(true);
@@ -402,8 +403,19 @@ export default function CasePlayer() {
       return false;
     } finally {
       setSaving(false);
+      savingPromiseRef.current = null;
     }
   }, [user, id, isSubmitted, submissionId, answers, startupNotes, caseSession?.xp_earned, currentStep, tl]);
+
+  // Deduplicated saveDraft: if a save is already in flight, return its promise
+  const saveDraft = useCallback((opts?: { explicitHistory?: { questionId: string; answerText: string }[] }) => {
+    if (savingPromiseRef.current && !opts?.explicitHistory) {
+      return savingPromiseRef.current;
+    }
+    const promise = saveDraftInner(opts);
+    savingPromiseRef.current = promise;
+    return promise;
+  }, [saveDraftInner]);
 
   useEffect(() => {
     if (isSubmitted || !hasUnsavedChanges) return;
@@ -920,7 +932,7 @@ export default function CasePlayer() {
             onClick={async () => {
               if (!isFirstStep) await navigateToStep(currentStep - 1);
             }}
-            disabled={isFirstStep || saving}
+            disabled={isFirstStep}
           >
             <ArrowLeft className="h-4 w-4 mr-1" /> {tl('Previous', 'Назад')}
           </Button>
@@ -940,7 +952,6 @@ export default function CasePlayer() {
               onClick={async () => {
                 await navigateToStep(currentStep + 1);
               }}
-              disabled={saving}
             >
               {tl('Next', 'Напред')} <ArrowRight className="h-4 w-4 ml-1" />
             </Button>
