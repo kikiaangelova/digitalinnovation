@@ -948,8 +948,8 @@ export default function CasePlayer() {
             </Button>
           </div>
           {isLastStep ? (
-            <Button onClick={handleSubmit} disabled={saving} className="sim-gradient border-0">
-              <Lock className="h-4 w-4 mr-1" /> {saving ? tl('Submitting...', 'Изпращане...') : tl('Submit Case', 'Изпрати казуса')}
+            <Button onClick={handleSubmit} disabled={submitting} className="sim-gradient border-0">
+              <Lock className="h-4 w-4 mr-1" /> {submitting ? tl('Submitting...', 'Изпращане...') : tl('Submit Case', 'Изпрати казуса')}
             </Button>
           ) : (
             <Button
