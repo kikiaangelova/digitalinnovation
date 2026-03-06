@@ -952,7 +952,6 @@ export default function CasePlayer() {
               onClick={async () => {
                 await navigateToStep(currentStep + 1);
               }}
-              disabled={false}
             >
               {tl('Next', 'Напред')} <ArrowRight className="h-4 w-4 ml-1" />
             </Button>
