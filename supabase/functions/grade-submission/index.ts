@@ -6,6 +6,10 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+const AI_REQUEST_TIMEOUT_MS = 6000;
+const MAX_CONCURRENT_GRADES = 3;
+const EDGE_SAFE_BUDGET_MS = 22000;
+
 function xpFromPercent(pct: number): number {
   // Base: 100 XP for completion, bonus 30 for high quality (>70%)
   if (pct >= 70) return 130; // 100 base + 30 bonus
