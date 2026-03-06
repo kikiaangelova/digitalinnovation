@@ -191,6 +191,7 @@ export default function CasePlayer() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [saveStatus, setSaveStatus] = useState<SaveStatus>('idle');
   const [startupNotes, setStartupNotes] = useState<Record<string, string>>({});
   const [startupTouched, setStartupTouched] = useState<Record<string, boolean>>({});
