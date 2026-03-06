@@ -31,6 +31,8 @@ export interface SimWeek {
   descEn: string;
   descBg: string;
   icon: string;
+  theoryConceptEn?: string;
+  theoryConceptBg?: string;
   decisions: SimDecision[];
 }
 
@@ -51,6 +53,8 @@ export const SIM_WEEKS: SimWeek[] = [
     descEn: 'Choose the industry your startup will operate in. Each industry has different innovation dynamics, market sizes, and risk profiles.',
     descBg: 'Изберете индустрията, в която ще работи вашият стартъп. Всяка индустрия има различна динамика на иновациите, размер на пазара и рисков профил.',
     icon: '🏭',
+    theoryConceptEn: 'Digital Ecosystems',
+    theoryConceptBg: 'Дигитални екосистеми',
     decisions: [
       {
         questionEn: 'Which industry will your startup target?',
@@ -73,6 +77,8 @@ export const SIM_WEEKS: SimWeek[] = [
     descEn: 'Define the problem your startup solves. The best startups solve real, urgent, and widespread problems.',
     descBg: 'Дефинирайте проблема, който вашият стартъп решава. Най-добрите стартъпи решават реални, неотложни и широко разпространени проблеми.',
     icon: '🎯',
+    theoryConceptEn: 'Product-Market Fit',
+    theoryConceptBg: 'Продуктово-пазарно съответствие',
     decisions: [
       {
         questionEn: 'How significant is the problem you are solving?',
@@ -102,6 +108,8 @@ export const SIM_WEEKS: SimWeek[] = [
     descEn: 'Identify your competitive landscape and choose how you will differentiate. Strategy is about making distinct choices.',
     descBg: 'Идентифицирайте конкурентната среда и изберете как ще се разграничите. Стратегията е свързана с правене на ясни избори.',
     icon: '⚔️',
+    theoryConceptEn: 'Platform Business Models',
+    theoryConceptBg: 'Платформени бизнес модели',
     decisions: [
       {
         questionEn: 'How crowded is your market?',
@@ -132,6 +140,8 @@ export const SIM_WEEKS: SimWeek[] = [
     descEn: 'Choose the type of digital product you will build. Many successful startups combine multiple product types into one solution.',
     descBg: 'Изберете типа дигитален продукт, който ще създадете. Много успешни стартъпи комбинират множество типове продукти.',
     icon: '🛠️',
+    theoryConceptEn: 'Network Effects',
+    theoryConceptBg: 'Мрежови ефекти',
     decisions: [
       {
         questionEn: 'What type of digital product will you build? (Select all that apply)',
@@ -156,6 +166,8 @@ export const SIM_WEEKS: SimWeek[] = [
     descEn: 'Design how your startup will generate revenue. The best startups often combine multiple revenue streams to diversify risk.',
     descBg: 'Проектирайте как вашият стартъп ще генерира приходи. Най-добрите стартъпи често комбинират множество приходни потоци.',
     icon: '💰',
+    theoryConceptEn: 'Platform Business Models',
+    theoryConceptBg: 'Платформени бизнес модели',
     decisions: [
       {
         questionEn: 'How will your startup make money? (Select all that apply)',
@@ -181,6 +193,8 @@ export const SIM_WEEKS: SimWeek[] = [
     descEn: 'Choose how you will acquire customers and grow your startup. The best founders use a strategic mix of channels.',
     descBg: 'Изберете как ще привлечете клиенти и ще развиете стартъпа. Най-добрите основатели използват стратегически микс от канали.',
     icon: '📣',
+    theoryConceptEn: 'Customer Acquisition Cost',
+    theoryConceptBg: 'Цена за привличане на клиент (CAC)',
     decisions: [
       {
         questionEn: 'Which marketing channels will you use? (Select all that apply)',

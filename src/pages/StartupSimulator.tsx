@@ -12,7 +12,7 @@ import {
   ChevronRight, Play, RotateCcw, CheckCircle2,
   Lightbulb, TrendingUp, Layers, ShieldAlert, Rocket,
   Factory, Target, Swords, Wrench, DollarSign, Megaphone,
-  BarChart3, HelpCircle
+  BarChart3, HelpCircle, BookOpen
 } from 'lucide-react';
 import {
   RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
@@ -594,6 +594,16 @@ export default function StartupSimulator() {
         <p className="text-sm text-muted-foreground mb-6">
           {lang === 'bg' ? step.descBg : step.descEn}
         </p>
+
+        {/* Theory concept badge */}
+        {step.theoryConceptEn && (
+          <div className="flex items-center gap-2 mb-4">
+            <Badge variant="outline" className="text-xs border-primary/30 bg-primary/5 text-primary">
+              <BookOpen className="h-3 w-3 mr-1" />
+              {t('Related', 'Свързано')}: {lang === 'bg' ? step.theoryConceptBg : step.theoryConceptEn}
+            </Badge>
+          </div>
+        )}
 
         {/* Decision */}
         <div className="rounded-xl border border-border bg-card p-5">

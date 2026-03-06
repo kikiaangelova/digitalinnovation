@@ -30,6 +30,9 @@ const XP_CONFIG: Record<string, { xp: number; daily_cap?: number }> = {
   dict_weekly_challenge: { xp: 15, daily_cap: 15 },
   // Startup notes from case
   case_startup_notes: { xp: 50 },
+  // Theory modules
+  theory_complete: { xp: 10 },
+  theory_quiz_pass: { xp: 15 },
 };
 
 serve(async (req) => {
@@ -99,6 +102,7 @@ serve(async (req) => {
       'startup_problem', 'startup_customer', 'startup_value_proposition',
       'startup_digital_product', 'startup_business_model', 'startup_growth_strategy',
       'startup_final_pitch', 'case_startup_notes',
+      'theory_complete', 'theory_quiz_pass',
     ];
 
     // context_id-scoped dedup: actions that require a context_id and deduplicate per context

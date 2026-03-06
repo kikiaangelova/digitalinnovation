@@ -24,6 +24,15 @@ export interface LearningModule {
   application_question_en: string;
   application_question_bg: string;
   display_order: number;
+  // Theory-to-Case mapping
+  related_case_topic?: string;
+  case_transition_en?: string;
+  case_transition_bg?: string;
+  // Theory-to-Simulator mapping
+  related_sim_concepts_en?: string[];
+  related_sim_concepts_bg?: string[];
+  sim_transition_en?: string;
+  sim_transition_bg?: string;
 }
 
 export const LEARNING_MODULES: LearningModule[] = [
@@ -59,6 +68,13 @@ Understanding network effects is essential for designing digital products that g
     application_question_en: 'How could you leverage network effects in your own startup idea? What type of network effect would be most relevant and how would you achieve critical mass?',
     application_question_bg: 'Как бихте използвали мрежовите ефекти във вашата стартъп идея? Кой тип мрежови ефект би бил най-подходящ и как бихте постигнали критична маса?',
     display_order: 1,
+    related_case_topic: 'Platform Economy',
+    case_transition_en: 'You just learned about network effects. Now analyze how Uber used network effects to dominate the mobility market.',
+    case_transition_bg: 'Току-що научихте за мрежовите ефекти. Сега анализирайте как Uber използва мрежовите ефекти, за да доминира на пазара за мобилност.',
+    related_sim_concepts_en: ['Network Effects', 'Platform Scaling'],
+    related_sim_concepts_bg: ['Мрежови ефекти', 'Мащабиране на платформа'],
+    sim_transition_en: 'Apply network effects strategy in the startup simulator to test how your platform can grow.',
+    sim_transition_bg: 'Приложете стратегия за мрежови ефекти в стартъп симулатора, за да тествате как вашата платформа може да расте.',
   },
   {
     slug: 'platform-business-models',
@@ -91,6 +107,13 @@ Examples include Airbnb (hosts and guests), YouTube (creators and viewers), and 
     application_question_en: 'If your startup were a platform, who would be the producers and consumers? How would you solve the chicken-and-egg problem?',
     application_question_bg: 'Ако вашият стартъп беше платформа, кои биха били производителите и потребителите? Как бихте решили проблема кокошка и яйце?',
     display_order: 2,
+    related_case_topic: 'Platform Economy',
+    case_transition_en: 'You just learned about platform business models. Now analyze how real platforms solved the chicken-and-egg problem.',
+    case_transition_bg: 'Току-що научихте за платформените бизнес модели. Сега анализирайте как реални платформи решиха проблема кокошка и яйце.',
+    related_sim_concepts_en: ['Platform Business Models', 'Two-sided Markets'],
+    related_sim_concepts_bg: ['Платформени бизнес модели', 'Двустранни пазари'],
+    sim_transition_en: 'Test your platform strategy in the startup simulator.',
+    sim_transition_bg: 'Тествайте вашата платформена стратегия в стартъп симулатора.',
   },
   {
     slug: 'customer-acquisition-cost',
@@ -128,6 +151,13 @@ CAC е критичен, защото директно влияе на рент�
     application_question_en: 'How would you reduce CAC for your own startup idea? What acquisition channels would you prioritize and why?',
     application_question_bg: 'Как бихте намалили CAC за вашата стартъп идея? Кои канали за привличане бихте приоритизирали и защо?',
     display_order: 3,
+    related_case_topic: 'FinTech',
+    case_transition_en: 'You just learned about CAC. Now analyze how FinTech startups optimize customer acquisition in a regulated market.',
+    case_transition_bg: 'Току-що научихте за CAC. Сега анализирайте как FinTech стартъпите оптимизират привличането на клиенти в регулиран пазар.',
+    related_sim_concepts_en: ['Customer Acquisition Cost', 'Growth Channels'],
+    related_sim_concepts_bg: ['Цена за привличане на клиент', 'Канали за растеж'],
+    sim_transition_en: 'Apply CAC optimization strategies in the startup simulator marketing decisions.',
+    sim_transition_bg: 'Приложете стратегии за оптимизация на CAC в маркетинговите решения на стартъп симулатора.',
   },
   {
     slug: 'product-market-fit',
@@ -161,6 +191,13 @@ Once PMF is achieved, the focus shifts to scaling. But PMF is not permanent — 
     application_question_en: 'How would you test for Product-Market Fit in your startup idea? What metrics would you track and what experiments would you run?',
     application_question_bg: 'Как бихте тествали за продуктово-пазарно съответствие във вашата стартъп идея? Какви метрики бихте проследявали?',
     display_order: 4,
+    related_case_topic: 'EdTech',
+    case_transition_en: 'You just learned about Product-Market Fit. Now analyze how EdTech platforms found PMF in the education market.',
+    case_transition_bg: 'Току-що научихте за продуктово-пазарно съответствие. Сега анализирайте как EdTech платформи намериха PMF.',
+    related_sim_concepts_en: ['Product-Market Fit', 'MVP Strategy'],
+    related_sim_concepts_bg: ['Продуктово-пазарно съответствие', 'MVP стратегия'],
+    sim_transition_en: 'Test your product-market fit strategy in the startup simulator.',
+    sim_transition_bg: 'Тествайте стратегията си за продуктово-пазарно съответствие в стартъп симулатора.',
   },
   {
     slug: 'digital-ecosystems',
@@ -193,5 +230,26 @@ The future of competition is increasingly between ecosystems, not individual com
     application_question_en: 'Could your startup idea become part of or create a digital ecosystem? What complementary products or services would strengthen your value proposition?',
     application_question_bg: 'Може ли вашата стартъп идея да стане част от или да създаде дигитална екосистема? Какви допълващи продукти или услуги биха укрепили вашето ценностно предложение?',
     display_order: 5,
+    related_case_topic: 'AI',
+    case_transition_en: 'You just learned about digital ecosystems. Now analyze how AI-powered smart cities create interconnected value.',
+    case_transition_bg: 'Току-що научихте за дигиталните екосистеми. Сега анализирайте как умните градове с AI създават взаимосвързана стойност.',
+    related_sim_concepts_en: ['Digital Ecosystems', 'API Strategy'],
+    related_sim_concepts_bg: ['Дигитални екосистеми', 'API стратегия'],
+    sim_transition_en: 'Apply ecosystem thinking in the startup simulator to build a stronger product.',
+    sim_transition_bg: 'Приложете екосистемно мислене в стартъп симулатора, за да изградите по-силен продукт.',
   },
 ];
+
+// Reverse mapping: case topic keyword → module slug
+export const CASE_TOPIC_TO_MODULE: Record<string, string> = {
+  'Platform Economy': 'network-effects',
+  'Network Effects': 'network-effects',
+  'FinTech': 'customer-acquisition-cost',
+  'FinTech Disruption': 'customer-acquisition-cost',
+  'EdTech': 'product-market-fit',
+  'AI': 'digital-ecosystems',
+  'AI Smart Cities': 'digital-ecosystems',
+  'Digital Twin': 'digital-ecosystems',
+  'Spotify': 'platform-business-models',
+  'Algorithm Economy': 'platform-business-models',
+};

@@ -3,6 +3,7 @@ import { useParams, useNavigate, Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
+import { CASE_TOPIC_TO_MODULE, LEARNING_MODULES } from '@/data/learning-modules';
 import AppHeader from '@/components/layout/AppHeader';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -11,7 +12,7 @@ import {
   BookOpen, Clock, Target, Users, FileText, CheckSquare,
   ArrowRight, ChevronRight, Lightbulb, ListChecks, BarChart3,
   Building2, Brain, TrendingUp, Rocket, PenTool, Award,
-  CheckCircle2, Lock,
+  CheckCircle2, Lock, GraduationCap,
 } from 'lucide-react';
 
 interface CaseStudy {
@@ -48,6 +49,7 @@ export default function CasePreview() {
   const [completionStatus, setCompletionStatus] = useState<'not_started' | 'in_progress' | 'completed'>('not_started');
   const [completedAt, setCompletedAt] = useState<string | null>(null);
   const [score, setScore] = useState<{ total: number; max: number } | null>(null);
+  const [theoryBanner, setTheoryBanner] = useState<{ slug: string; titleEn: string; titleBg: string } | null>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -79,6 +81,33 @@ export default function CasePreview() {
           }
         }
       }
+
+      // Check for recommended theory module
+      if (caseData?.topic && user) {
+        const moduleSlug = Object.entries(CASE_TOPIC_TO_MODULE).find(
+          ([key]) => caseData.topic?.toLowerCase().includes(key.toLowerCase())
+        )?.[1];
+
+        if (moduleSlug) {
+          const mod = LEARNING_MODULES.find(m => m.slug === moduleSlug);
+          if (mod) {
+            // Check if module DB entry exists + user completed it
+            const { data: dbMod } = await supabase.from('learning_modules')
+              .select('id').eq('slug', moduleSlug).maybeSingle();
+            if (dbMod) {
+              const { data: response } = await supabase.from('learning_module_responses')
+                .select('completed_at').eq('module_id', dbMod.id).eq('user_id', user.id).maybeSingle();
+              if (!response?.completed_at) {
+                setTheoryBanner({ slug: moduleSlug, titleEn: mod.title_en, titleBg: mod.title_bg });
+              }
+            } else {
+              // Module not in DB yet = not completed
+              setTheoryBanner({ slug: moduleSlug, titleEn: mod.title_en, titleBg: mod.title_bg });
+            }
+          }
+        }
+      }
+
       setLoading(false);
     };
     load();
@@ -152,6 +181,30 @@ export default function CasePreview() {
             </div>
             <Button variant="outline" size="sm" asChild className="shrink-0">
               <Link to={`/case/${id}/results`}>{tl('View Results', 'Виж резултатите')}</Link>
+            </Button>
+          </div>
+        )}
+
+        {/* Recommended Theory Banner */}
+        {theoryBanner && completionStatus !== 'completed' && (
+          <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-4 mb-6 flex items-center gap-3">
+            <GraduationCap className="h-6 w-6 text-amber-600 shrink-0" />
+            <div className="flex-1">
+              <p className="text-sm font-semibold text-foreground">
+                {tl('Prepare for this case', 'Подгответе се за този казус')}
+              </p>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                {tl(
+                  `Study "${theoryBanner.titleEn}" first for better analysis.`,
+                  `Научете „${theoryBanner.titleBg}" първо за по-добър анализ.`
+                )}
+              </p>
+            </div>
+            <Button variant="outline" size="sm" asChild className="shrink-0">
+              <Link to={`/learn/${theoryBanner.slug}`}>
+                <BookOpen className="h-3.5 w-3.5 mr-1" />
+                {tl('Study Theory', 'Учи теория')}
+              </Link>
             </Button>
           </div>
         )}

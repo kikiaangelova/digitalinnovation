@@ -17,7 +17,9 @@ export type XpAction =
   | 'dict_view_term'
   | 'dict_quiz_correct'
   | 'dict_weekly_challenge'
-  | 'case_startup_notes';
+  | 'case_startup_notes'
+  | 'theory_complete'
+  | 'theory_quiz_pass';
 
 export const XP_VALUES: Record<XpAction, number> = {
   case_open: 5,
@@ -37,6 +39,8 @@ export const XP_VALUES: Record<XpAction, number> = {
   dict_quiz_correct: 10,
   dict_weekly_challenge: 15,
   case_startup_notes: 50,
+  theory_complete: 10,
+  theory_quiz_pass: 15,
 };
 
 interface AwardXpResult {

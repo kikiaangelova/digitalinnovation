@@ -9,11 +9,13 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Progress } from '@/components/ui/progress';
+import { Card } from '@/components/ui/card';
 import { toast } from 'sonner';
+import { awardXp } from '@/lib/xp';
 import ReactMarkdown from 'react-markdown';
 import {
   ArrowLeft, BookOpen, CheckCircle2, XCircle, Brain, Target,
-  Lightbulb, Rocket, Send, ChevronRight,
+  Lightbulb, Rocket, Send, ChevronRight, FileText, Zap,
 } from 'lucide-react';
 
 type Phase = 'theory' | 'quiz' | 'analytical' | 'application' | 'results';
@@ -159,9 +161,24 @@ export default function LearningModulePlayer() {
       await supabase.from('learning_module_responses').insert(payload as any);
     }
 
+    // Award XP for theory completion
+    const xpResult = await awardXp('theory_complete', mod.slug);
+    let totalXp = xpResult.xp_awarded;
+
+    // Award bonus XP if quiz score >= 60%
+    const quizPct = (quizScore / Math.max(quizMax, 1)) * 100;
+    if (quizPct >= 60) {
+      const quizXpResult = await awardXp('theory_quiz_pass', mod.slug);
+      totalXp += quizXpResult.xp_awarded;
+    }
+
     setSaving(false);
     setPhase('results');
-    toast.success(t('Module completed!', 'Модулът е завършен!'));
+    if (totalXp > 0) {
+      toast.success(`+${totalXp} XP ${t('earned!', 'спечелени!')}`);
+    } else {
+      toast.success(t('Module completed!', 'Модулът е завършен!'));
+    }
   };
 
   const phases: { key: Phase; label: string }[] = [
@@ -396,6 +413,34 @@ export default function LearningModulePlayer() {
               </div>
             </div>
 
+            {/* Theory → Case CTA */}
+            {mod.case_transition_en && (
+              <TheoryToCaseCTA mod={mod} lang={lang} t={t} navigate={navigate} />
+            )}
+
+            {/* Theory → Simulator CTA */}
+            {mod.sim_transition_en && (
+              <Card className="p-5 border-primary/20 bg-primary/5">
+                <div className="flex items-start gap-4">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 shrink-0">
+                    <Zap className="h-5 w-5 text-primary" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-sm font-semibold text-foreground mb-1">
+                      {t('Test in Simulator', 'Тествай в симулатора')}
+                    </h3>
+                    <p className="text-xs text-muted-foreground mb-3">
+                      {lang === 'bg' ? mod.sim_transition_bg : mod.sim_transition_en}
+                    </p>
+                    <Button size="sm" variant="outline" onClick={() => navigate('/simulator')}>
+                      <Rocket className="h-3.5 w-3.5 mr-1" />
+                      {t('Open Simulator', 'Отвори симулатора')}
+                    </Button>
+                  </div>
+                </div>
+              </Card>
+            )}
+
             <div className="flex justify-between">
               <Button variant="outline" onClick={() => navigate('/learn')}>
                 <ArrowLeft className="h-4 w-4 mr-1" /> {t('All Modules', 'Всички модули')}
@@ -413,5 +458,51 @@ export default function LearningModulePlayer() {
         )}
       </main>
     </div>
+  );
+}
+
+// Sub-component: Theory → Case CTA (fetches matching case from DB)
+function TheoryToCaseCTA({ mod, lang, t, navigate }: { mod: LearningModule; lang: string; t: (en: string, bg: string) => string; navigate: (path: string) => void }) {
+  const [caseId, setCaseId] = useState<string | null>(null);
+  const [caseTitle, setCaseTitle] = useState('');
+
+  useEffect(() => {
+    if (!mod.related_case_topic) return;
+    supabase.from('case_studies')
+      .select('id, title, title_bg')
+      .eq('published', true)
+      .ilike('topic', `%${mod.related_case_topic}%`)
+      .limit(1)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (data) {
+          setCaseId(data.id);
+          setCaseTitle(lang === 'bg' ? (data.title_bg || data.title) : data.title);
+        }
+      });
+  }, [mod.related_case_topic, lang]);
+
+  if (!caseId) return null;
+
+  return (
+    <Card className="p-5 border-primary/20 bg-accent">
+      <div className="flex items-start gap-4">
+        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 shrink-0">
+          <FileText className="h-5 w-5 text-primary" />
+        </div>
+        <div className="flex-1">
+          <h3 className="text-sm font-semibold text-foreground mb-1">
+            {t('Apply in a Case Study', 'Приложи в казус')}
+          </h3>
+          <p className="text-xs text-muted-foreground mb-3">
+            {lang === 'bg' ? mod.case_transition_bg : mod.case_transition_en}
+          </p>
+          <Button size="sm" onClick={() => navigate(`/case/${caseId}/preview`)}>
+            <FileText className="h-3.5 w-3.5 mr-1" />
+            {t('Start Case Study', 'Започни казус')}
+          </Button>
+        </div>
+      </div>
+    </Card>
   );
 }
