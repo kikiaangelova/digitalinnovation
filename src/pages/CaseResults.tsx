@@ -106,7 +106,7 @@ export default function CaseResults() {
   const scorePercent = maxScore > 0 ? Math.round((totalScore / maxScore) * 100) : 0;
   const gradeLabel = scorePercent >= 80 ? tx('Excellent', 'Отлично') : scorePercent >= 60 ? tx('Good', 'Добро') : scorePercent >= 40 ? tx('Developing', 'В развитие') : tx('Needs Work', 'Нуждае се от работа');
   const gradeColor = scorePercent >= 80 ? 'text-emerald-600' : scorePercent >= 60 ? 'text-primary' : scorePercent >= 40 ? 'text-amber-600' : 'text-red-600';
-  const xpEarned = scorePercent >= 80 ? 100 : scorePercent >= 60 ? 70 : scorePercent >= 40 ? 40 : 10;
+  const xpEarned = actualXpEarned ?? (scorePercent >= 80 ? 100 : scorePercent >= 60 ? 70 : scorePercent >= 40 ? 40 : 10);
   const autoGraded = results.filter(r => r.score !== null).length;
   const pendingGrade = results.length - autoGraded;
 
