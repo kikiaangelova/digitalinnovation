@@ -932,7 +932,7 @@ export default function CasePlayer() {
             onClick={async () => {
               if (!isFirstStep) await navigateToStep(currentStep - 1);
             }}
-            disabled={isFirstStep || saving}
+            disabled={isFirstStep}
           >
             <ArrowLeft className="h-4 w-4 mr-1" /> {tl('Previous', 'Назад')}
           </Button>
