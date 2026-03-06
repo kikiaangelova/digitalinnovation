@@ -50,14 +50,17 @@ const InnovationShowcase = forwardRef<HTMLDivElement, Props>(function Innovation
 
   useEffect(() => {
     const fetchData = async () => {
-        const [lbRes, projRes, profRes] = await Promise.all([
+        const [lbRes, projRes] = await Promise.all([
           supabase.rpc('get_leaderboard', { _limit: 3 }),
           supabase.from('startup_projects').select('id, user_id, problem, customer, value_proposition, digital_product, business_model, growth_strategy, final_pitch, is_submitted, industry'),
-          supabase.from('profiles').select('user_id, full_name, leaderboard_visible'),
         ]);
 
         const projs = projRes.data || [];
-        const allProfiles = profRes.data || [];
+        // Build a name map from leaderboard RPC data (already privacy-safe)
+        const leaderboardNames: Record<string, string> = {};
+        (lbRes.data || []).forEach((row: any) => {
+          leaderboardNames[row.user_id] = row.display_name || 'Student';
+        });
         const startupSections = ['problem', 'customer', 'value_proposition', 'digital_product', 'business_model', 'growth_strategy', 'final_pitch'];
 
         // Build innovators from leaderboard RPC
@@ -77,11 +80,10 @@ const InnovationShowcase = forwardRef<HTMLDivElement, Props>(function Innovation
         .filter((p: any) => p.is_submitted)
         .map((p: any) => {
           const filled = startupSections.filter(s => ((p as any)[s] || '').trim().length > 20).length;
-          const founderProfile = allProfiles.find((pr: any) => pr.user_id === p.user_id);
-          const founderVisible = founderProfile && (founderProfile as any).leaderboard_visible;
+          const founderName = leaderboardNames[p.user_id];
           return {
             id: p.id,
-            founder_name: founderVisible ? formatName((founderProfile as any)?.full_name) : t('Anonymous', 'Анонимен'),
+            founder_name: founderName || t('Anonymous', 'Анонимен'),
             industry: p.industry || t('Technology', 'Технологии'),
             problem: p.problem || '',
             value_proposition: p.value_proposition || '',
