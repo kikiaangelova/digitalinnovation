@@ -11,9 +11,10 @@ const MAX_CONCURRENT_GRADES = 3;
 const EDGE_SAFE_BUDGET_MS = 22000;
 
 function xpFromPercent(pct: number): number {
-  // Base: 100 XP for completion, bonus 30 for high quality (>70%)
-  if (pct >= 70) return 130; // 100 base + 30 bonus
-  return 100; // base completion XP
+  // XP scales with grade: 30 base + up to 100 scaled by score percentage
+  // Max: 130 XP (at 100%), Min: 30 XP (at 0%)
+  // Examples: 100% → 130, 80% → 110, 60% → 90, 40% → 70, 20% → 50, 0% → 30
+  return 30 + Math.round(pct);
 }
 
 async function aiGradeQuestion(
