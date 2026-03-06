@@ -34,6 +34,7 @@ export default function CaseResults() {
   const [reflection, setReflection] = useState('');
   const [reflectionSaved, setReflectionSaved] = useState(false);
   const [savingReflection, setSavingReflection] = useState(false);
+  const [actualXpEarned, setActualXpEarned] = useState<number | null>(null);
 
   useEffect(() => {
     if (!id || !user) return;
@@ -45,6 +46,12 @@ export default function CaseResults() {
       ]);
       if (caseRes.data) { setCaseTitle(caseRes.data.title); setCaseTopic(caseRes.data.topic || ''); }
       if (reflRes.data) { setReflection(reflRes.data.reflection_text); setReflectionSaved(true); }
+
+      // Fetch actual XP earned for this case from xp_ledger
+      const xpRes = await supabase.from('xp_ledger').select('xp').eq('user_id', user.id).eq('context_id', id).in('action', ['case_complete', 'case_high_quality']);
+      if (xpRes.data && xpRes.data.length > 0) {
+        setActualXpEarned(xpRes.data.reduce((sum, r) => sum + (r.xp || 0), 0));
+      }
 
       if (!subRes.data) { setLoading(false); return; }
       setTotalScore(subRes.data.total_score || 0);
@@ -99,7 +106,7 @@ export default function CaseResults() {
   const scorePercent = maxScore > 0 ? Math.round((totalScore / maxScore) * 100) : 0;
   const gradeLabel = scorePercent >= 80 ? tx('Excellent', 'Отлично') : scorePercent >= 60 ? tx('Good', 'Добро') : scorePercent >= 40 ? tx('Developing', 'В развитие') : tx('Needs Work', 'Нуждае се от работа');
   const gradeColor = scorePercent >= 80 ? 'text-emerald-600' : scorePercent >= 60 ? 'text-primary' : scorePercent >= 40 ? 'text-amber-600' : 'text-red-600';
-  const xpEarned = scorePercent >= 80 ? 100 : scorePercent >= 60 ? 70 : scorePercent >= 40 ? 40 : 10;
+  const xpEarned = actualXpEarned ?? (scorePercent >= 80 ? 100 : scorePercent >= 60 ? 70 : scorePercent >= 40 ? 40 : 10);
   const autoGraded = results.filter(r => r.score !== null).length;
   const pendingGrade = results.length - autoGraded;
 
