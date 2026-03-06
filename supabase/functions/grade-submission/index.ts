@@ -204,12 +204,10 @@ serve(async (req) => {
       answersMap[r.question_id] = r.answer;
     });
 
-    // Grade
-    let totalScore = 0;
-    let maxScore = 0;
+    // Grade with bounded concurrency + global time budget to avoid gateway timeout
+    const gradingStartedAt = Date.now();
 
-    // Grade all questions in parallel to avoid timeout
-    const gradePromises = questions.map(async (q) => {
+    const gradeOneQuestion = async (q: any) => {
       const userAns = answersMap[q.id];
       let score = 0;
       let feedback = t("No answer provided.", "Не е предоставен отговор.");
@@ -221,24 +219,39 @@ serve(async (req) => {
           ? t("Correct!", "Правилно!")
           : `${t("Incorrect. The correct answer is:", "Неправилно. Верният отговор е:")} ${q.correct_answer}`;
       } else if (userAns && lovableApiKey) {
-        const answerText = typeof userAns === 'string' ? userAns : JSON.stringify(userAns);
-        if (answerText.trim().length > 0) {
-          const result = await aiGradeQuestion(lovableApiKey, q.prompt || '', answerText, q.points, q.rubric, q.model_answer, lang || 'en');
+        const elapsed = Date.now() - gradingStartedAt;
+        const outOfTime = elapsed > EDGE_SAFE_BUDGET_MS;
+        const answerText = typeof userAns === "string" ? userAns : JSON.stringify(userAns);
+
+        if (!outOfTime && answerText.trim().length > 0) {
+          const result = await aiGradeQuestion(lovableApiKey, q.prompt || "", answerText, q.points, q.rubric, q.model_answer, lang || "en");
           score = result.score;
           feedback = result.feedback;
+        } else {
+          score = Math.round(q.points * 0.5);
+          feedback = t("Partial credit awarded to avoid timeout.", "Даден е частичен резултат за избягване на таймаут.");
         }
       } else if (userAns) {
         score = Math.round(q.points * 0.5);
         feedback = t("Partial credit awarded. AI grading unavailable.", "Даден е частичен резултат.");
       }
 
-      await adminClient.from("responses").update({ score, feedback, auto_graded: true })
-        .eq("submission_id", submission_id).eq("question_id", q.id);
+      await adminClient
+        .from("responses")
+        .update({ score, feedback, auto_graded: true })
+        .eq("submission_id", submission_id)
+        .eq("question_id", q.id);
 
       return { points: q.points, score };
-    });
+    };
 
-    const results = await Promise.all(gradePromises);
+    const results: Array<{ points: number; score: number }> = [];
+    for (let i = 0; i < questions.length; i += MAX_CONCURRENT_GRADES) {
+      const batch = questions.slice(i, i + MAX_CONCURRENT_GRADES);
+      const batchResults = await Promise.all(batch.map(gradeOneQuestion));
+      results.push(...batchResults);
+    }
+
     for (const r of results) {
       maxScore += r.points;
       totalScore += r.score;
