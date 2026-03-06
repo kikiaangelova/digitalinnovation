@@ -6,6 +6,10 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+const AI_REQUEST_TIMEOUT_MS = 6000;
+const MAX_CONCURRENT_GRADES = 3;
+const EDGE_SAFE_BUDGET_MS = 22000;
+
 function xpFromPercent(pct: number): number {
   // Base: 100 XP for completion, bonus 30 for high quality (>70%)
   if (pct >= 70) return 130; // 100 base + 30 bonus
@@ -34,6 +38,9 @@ async function aiGradeQuestion(
   ].filter(Boolean).join('\n\n');
 
   try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), AI_REQUEST_TIMEOUT_MS);
+
     const resp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -64,7 +71,10 @@ async function aiGradeQuestion(
         }],
         tool_choice: { type: "function", function: { name: "grade_answer" } },
       }),
+      signal: controller.signal,
     });
+
+    clearTimeout(timeoutId);
 
     if (!resp.ok) {
       console.error("AI grading failed:", resp.status, await resp.text());
@@ -93,7 +103,12 @@ async function aiGradeQuestion(
 
     return { score: Math.round(points * 0.5), feedback: lang === 'bg' ? 'Частичен резултат.' : 'Partial credit awarded.' };
   } catch (err) {
-    console.error("AI grade error:", err);
+    const isAbort = err instanceof Error && err.name === "AbortError";
+    if (isAbort) {
+      console.warn("AI grading timeout; falling back to partial credit.");
+    } else {
+      console.error("AI grade error:", err);
+    }
     return { score: Math.round(points * 0.5), feedback: lang === 'bg' ? 'Частичен резултат.' : 'Partial credit awarded.' };
   }
 }
@@ -193,8 +208,10 @@ serve(async (req) => {
     let totalScore = 0;
     let maxScore = 0;
 
-    // Grade all questions in parallel to avoid timeout
-    const gradePromises = questions.map(async (q) => {
+    // Grade with bounded concurrency + global time budget to avoid gateway timeout
+    const gradingStartedAt = Date.now();
+
+    const gradeOneQuestion = async (q: any) => {
       const userAns = answersMap[q.id];
       let score = 0;
       let feedback = t("No answer provided.", "Не е предоставен отговор.");
@@ -206,24 +223,39 @@ serve(async (req) => {
           ? t("Correct!", "Правилно!")
           : `${t("Incorrect. The correct answer is:", "Неправилно. Верният отговор е:")} ${q.correct_answer}`;
       } else if (userAns && lovableApiKey) {
-        const answerText = typeof userAns === 'string' ? userAns : JSON.stringify(userAns);
-        if (answerText.trim().length > 0) {
-          const result = await aiGradeQuestion(lovableApiKey, q.prompt || '', answerText, q.points, q.rubric, q.model_answer, lang || 'en');
+        const elapsed = Date.now() - gradingStartedAt;
+        const outOfTime = elapsed > EDGE_SAFE_BUDGET_MS;
+        const answerText = typeof userAns === "string" ? userAns : JSON.stringify(userAns);
+
+        if (!outOfTime && answerText.trim().length > 0) {
+          const result = await aiGradeQuestion(lovableApiKey, q.prompt || "", answerText, q.points, q.rubric, q.model_answer, lang || "en");
           score = result.score;
           feedback = result.feedback;
+        } else {
+          score = Math.round(q.points * 0.5);
+          feedback = t("Partial credit awarded to avoid timeout.", "Даден е частичен резултат за избягване на таймаут.");
         }
       } else if (userAns) {
         score = Math.round(q.points * 0.5);
         feedback = t("Partial credit awarded. AI grading unavailable.", "Даден е частичен резултат.");
       }
 
-      await adminClient.from("responses").update({ score, feedback, auto_graded: true })
-        .eq("submission_id", submission_id).eq("question_id", q.id);
+      await adminClient
+        .from("responses")
+        .update({ score, feedback, auto_graded: true })
+        .eq("submission_id", submission_id)
+        .eq("question_id", q.id);
 
       return { points: q.points, score };
-    });
+    };
 
-    const results = await Promise.all(gradePromises);
+    const results: Array<{ points: number; score: number }> = [];
+    for (let i = 0; i < questions.length; i += MAX_CONCURRENT_GRADES) {
+      const batch = questions.slice(i, i + MAX_CONCURRENT_GRADES);
+      const batchResults = await Promise.all(batch.map(gradeOneQuestion));
+      results.push(...batchResults);
+    }
+
     for (const r of results) {
       maxScore += r.points;
       totalScore += r.score;
