@@ -47,6 +47,12 @@ export default function CaseResults() {
       if (caseRes.data) { setCaseTitle(caseRes.data.title); setCaseTopic(caseRes.data.topic || ''); }
       if (reflRes.data) { setReflection(reflRes.data.reflection_text); setReflectionSaved(true); }
 
+      // Fetch actual XP earned for this case from xp_ledger
+      const xpRes = await supabase.from('xp_ledger').select('xp').eq('user_id', user.id).eq('context_id', id).in('action', ['case_complete', 'case_high_quality']);
+      if (xpRes.data && xpRes.data.length > 0) {
+        setActualXpEarned(xpRes.data.reduce((sum, r) => sum + (r.xp || 0), 0));
+      }
+
       if (!subRes.data) { setLoading(false); return; }
       setTotalScore(subRes.data.total_score || 0);
       setMaxScore(subRes.data.max_score || 0);
