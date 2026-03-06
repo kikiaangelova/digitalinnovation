@@ -10,6 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
+import MarkdownContent from '@/components/ui/markdown-content';
 import { toast } from 'sonner';
 import {
   ArrowLeft, ArrowRight, ExternalLink, CheckCircle2, Save,
