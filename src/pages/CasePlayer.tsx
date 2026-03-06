@@ -662,9 +662,7 @@ export default function CasePlayer() {
                   : tl('Context', 'Контекст')}
               </h3>
             </div>
-            <div className="text-sm text-foreground/85 whitespace-pre-line leading-relaxed">
-              {tx(currentStepData.narrative, currentStepData.narrative_bg)}
-            </div>
+            <MarkdownContent content={tx(currentStepData.narrative, currentStepData.narrative_bg) || ''} />
           </div>
         )}
 
