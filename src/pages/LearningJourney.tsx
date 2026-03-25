@@ -177,7 +177,7 @@ const STAGES: Stage[] = [
     descEn: 'Learn key concepts of digital transformation and innovation.',
     descBg: 'Научете ключовите концепции за дигитална трансформация и иновации.',
     milestoneEn: 'Complete introductory case study',
-    milestoneBg: 'Завършете уводния казус',
+    milestoneBg: 'Завърши уводния казус',
     learnPath: '/innovation-basics', casePath: '/cases', simPath: '/simulator',
   },
   {
