@@ -226,9 +226,16 @@ export default function CaseLibrary() {
               return (
                 <button
                   key={domain.id}
-                  onClick={() => setSelectedDomain(domain)}
-                  className="group text-left rounded-lg border border-border bg-card p-5 hover:border-primary/50 hover:shadow-md transition-all"
+                  onClick={() => count > 0 ? setSelectedDomain(domain) : undefined}
+                  className={`group text-left rounded-lg border border-border bg-card p-5 transition-all relative ${count > 0 ? 'hover:border-primary/50 hover:shadow-md cursor-pointer' : 'opacity-70 cursor-default'}`}
                 >
+                  {count === 0 && (
+                    <div className="absolute top-3 right-3">
+                      <Badge variant="secondary" className="text-[10px] bg-muted text-muted-foreground">
+                        {tl('Coming Soon', 'Очаквайте скоро')}
+                      </Badge>
+                    </div>
+                  )}
                   <div className="flex items-center gap-3 mb-3">
                     <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-border" style={{ backgroundColor: `${domain.color}15` }}>
                       <Icon className="h-5 w-5" style={{ color: domain.color }} />
@@ -238,7 +245,7 @@ export default function CaseLibrary() {
                         {lang === 'bg' ? domain.nameBg : domain.nameEn}
                       </h3>
                       <span className="text-xs text-muted-foreground">
-                        {count} {tl('cases', 'казуса')}
+                        {count > 0 ? `${count} ${tl('cases', 'казуса')}` : ''}
                       </span>
                     </div>
                   </div>
