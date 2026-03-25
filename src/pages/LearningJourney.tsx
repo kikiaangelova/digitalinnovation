@@ -524,7 +524,7 @@ export default function LearningJourney() {
                             onClick={() => navigate('/my-startup')}
                           >
                             <AlertCircle className="h-3.5 w-3.5 mr-1" />
-                            {t('Complete previous step', 'Завършете предишната стъпка')}
+                            {t('Complete previous step', 'Завърши предишната стъпка')}
                           </Button>
                         </div>
                       )}
