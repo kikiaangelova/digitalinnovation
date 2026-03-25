@@ -134,7 +134,7 @@ export default function Leaderboard({ lang, currentUserId, limit = 10, showTitle
                       {e.full_name} {isMe && <span className="text-xs text-primary">({t('You', 'Ти')})</span>}
                     </p>
                   </div>
-                  <span className="text-xs font-bold text-sim-warning shrink-0">{e.xp} XP</span>
+                  <span className="text-xs font-bold text-xp-gold shrink-0">{e.xp} XP</span>
                 </div>
               );
             })

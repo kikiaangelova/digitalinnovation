@@ -126,8 +126,8 @@ export default function LeaderboardPage() {
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-1">
-                          <Zap className="h-3 w-3 text-[hsl(var(--sim-warning))]" />
-                          <span className="font-bold font-mono text-sm text-[hsl(var(--sim-warning))]">{e.xp}</span>
+                          <Zap className="h-3 w-3 text-xp-gold" />
+                          <span className="font-bold font-mono text-sm text-xp-gold">{e.xp}</span>
                         </div>
                       </TableCell>
                       <TableCell className="text-center hidden sm:table-cell">

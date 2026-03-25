@@ -147,7 +147,7 @@ export default function JourneyProgress(props: JourneyProgressProps) {
                     </Badge>
                   )}
                   {status === 'in_progress' && !isRecommended && (
-                    <Badge className="bg-sim-warning/15 text-sim-warning border-0 text-[10px] px-1.5 py-0">
+                    <Badge className="bg-primary/10 text-primary border-0 text-[10px] px-1.5 py-0">
                       <Play className="h-2.5 w-2.5 mr-0.5" />{t('Started', 'Започнато')}
                     </Badge>
                   )}
