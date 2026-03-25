@@ -201,6 +201,14 @@ export default function CaseResults() {
           </div>
         )}
 
+        {/* AI Structured Feedback */}
+        {maxScore > 0 && (
+          <StructuredFeedback
+            context={{ type: 'case_submission', caseTitle, totalScore, maxScore }}
+            lang={lang as 'en' | 'bg'}
+          />
+        )}
+
         {/* Teacher review notice */}
         {pendingGrade > 0 && (
           <div className="flex items-center gap-3 rounded-lg border border-border bg-muted/30 p-4">
