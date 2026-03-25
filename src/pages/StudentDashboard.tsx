@@ -179,23 +179,18 @@ export default function StudentDashboard() {
           </div>
         </div>
 
-        {/* ═══ SECTION 1: Progress & XP ═══ */}
-        <div className="grid gap-4 md:grid-cols-3">
-          <div className="md:col-span-2">
-            <JourneyProgress
-              lang={lang}
-              casesCompleted={casesCompleted}
-              startupSections={startupSectionMap}
-              startupSubmitted={startupProject?.is_submitted || false}
-              simWeek={simWeek}
-              simComplete={simComplete}
-            />
-          </div>
-          <div className="space-y-4">
-            <LevelCard xp={xp} lang={lang} />
-            <DailyChallenge lang={lang} userId={user?.id} />
-          </div>
-        </div>
+        {/* ═══ SECTION 1: Learning Navigator ═══ */}
+        <LearningNavigator
+          lang={lang}
+          xp={xp}
+          casesCompleted={casesCompleted}
+          startupSections={startupSectionMap}
+          startupSubmitted={startupProject?.is_submitted || false}
+          simWeek={simWeek}
+          simComplete={simComplete}
+          outcomeScores={outcomeScores}
+        />
+        <DailyChallenge lang={lang} userId={user?.id} />
 
         {/* ═══ SECTION 2: Learning & Competition ═══ */}
         <div>
