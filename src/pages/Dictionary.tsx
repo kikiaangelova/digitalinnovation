@@ -42,6 +42,11 @@ const CATEGORY_TRANSLATIONS: Record<string, string> = {
   AI: 'AI',
   'Business Model': 'Бизнес модел',
   Growth: 'Растеж',
+  Marketing: 'Маркетинг',
+  'Pricing & Revenue': 'Ценообразуване и приходи',
+  'Team & Roles': 'Екип и роли',
+  Operations: 'Операции',
+  'Supply Chain': 'Верига на доставки',
 };
 
 // Deterministic "Term of the Week" based on week number
