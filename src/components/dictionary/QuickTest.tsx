@@ -32,16 +32,15 @@ function generateAdaptiveQuestions(
   lang: string,
   category: string,
   startDifficulty: TermDifficulty,
+  weakAreas: string[] = [],
+  pastAvg?: number | null,
 ): QuizQuestion[] {
   const isBg = lang === 'bg';
   const pool = category === 'All' ? [...TERMS] : TERMS.filter(t => t.category === category);
 
-  // Sort by difficulty for adaptive selection
-  const difficultyOrder: Record<TermDifficulty, number> = { beginner: 0, intermediate: 1, advanced: 2 };
   const byDifficulty: Record<TermDifficulty, DictionaryTerm[]> = { beginner: [], intermediate: [], advanced: [] };
   pool.forEach(t => byDifficulty[getTermDifficulty(t)].push(t));
 
-  // Shuffle each bucket
   Object.values(byDifficulty).forEach(arr => {
     for (let i = arr.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -49,28 +48,42 @@ function generateAdaptiveQuestions(
     }
   });
 
-  // Build question sequence: start at given difficulty, mix in harder/easier
   const selected: DictionaryTerm[] = [];
-  let currentDiff = startDifficulty;
   const diffLevels: TermDifficulty[] = ['beginner', 'intermediate', 'advanced'];
   const pointers: Record<TermDifficulty, number> = { beginner: 0, intermediate: 0, advanced: 0 };
 
-  for (let i = 0; i < Math.min(QUESTIONS_PER_TEST, pool.length); i++) {
-    // Try current difficulty, then adjacent
+  // Reinforcement first: if weak areas exist, start with easier clarifying terms from weak categories
+  if (weakAreas.length > 0) {
+    const weakPool = pool
+      .filter(t => weakAreas.includes(t.category))
+      .sort((a, b) => (getTermDifficulty(a) === 'beginner' ? -1 : 1) - (getTermDifficulty(b) === 'beginner' ? -1 : 1));
+
+    for (const term of weakPool.slice(0, 3)) {
+      if (!selected.some(s => s.term === term.term)) selected.push(term);
+    }
+  }
+
+  let currentDiff = startDifficulty;
+  for (let i = selected.length; i < Math.min(QUESTIONS_PER_TEST, pool.length); i++) {
+    // adaptive ramp from historical performance
+    if ((pastAvg ?? 0) >= 80 && i >= 2) currentDiff = 'advanced';
+    else if ((pastAvg ?? 0) >= 60 && i >= 3) currentDiff = 'intermediate';
+    else if (i >= 6) currentDiff = 'intermediate';
+    else currentDiff = 'beginner';
+
     let picked = false;
     for (const tryDiff of [currentDiff, ...diffLevels.filter(d => d !== currentDiff)]) {
-      if (pointers[tryDiff] < byDifficulty[tryDiff].length) {
-        selected.push(byDifficulty[tryDiff][pointers[tryDiff]]);
-        pointers[tryDiff]++;
-        picked = true;
-        break;
+      while (pointers[tryDiff] < byDifficulty[tryDiff].length) {
+        const candidate = byDifficulty[tryDiff][pointers[tryDiff]++];
+        if (!selected.some(s => s.term === candidate.term)) {
+          selected.push(candidate);
+          picked = true;
+          break;
+        }
       }
+      if (picked) break;
     }
     if (!picked) break;
-
-    // Gradually increase difficulty through the test
-    if (i >= 3 && i < 6) currentDiff = 'intermediate';
-    if (i >= 6) currentDiff = 'advanced';
   }
 
   return selected.map(term => {
