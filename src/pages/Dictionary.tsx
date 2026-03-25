@@ -22,6 +22,11 @@ const CATEGORY_COLORS: Record<string, string> = {
   AI: 'bg-teal-500/10 text-teal-600 border-teal-500/20',
   'Business Model': 'bg-indigo-500/10 text-indigo-600 border-indigo-500/20',
   Growth: 'bg-lime-500/10 text-lime-600 border-lime-500/20',
+  Marketing: 'bg-sky-500/10 text-sky-600 border-sky-500/20',
+  'Pricing & Revenue': 'bg-yellow-500/10 text-yellow-600 border-yellow-500/20',
+  'Team & Roles': 'bg-fuchsia-500/10 text-fuchsia-600 border-fuchsia-500/20',
+  Operations: 'bg-slate-500/10 text-slate-600 border-slate-500/20',
+  'Supply Chain': 'bg-red-500/10 text-red-600 border-red-500/20',
 };
 
 const CATEGORY_TRANSLATIONS: Record<string, string> = {
@@ -37,6 +42,11 @@ const CATEGORY_TRANSLATIONS: Record<string, string> = {
   AI: 'AI',
   'Business Model': 'Бизнес модел',
   Growth: 'Растеж',
+  Marketing: 'Маркетинг',
+  'Pricing & Revenue': 'Ценообразуване и приходи',
+  'Team & Roles': 'Екип и роли',
+  Operations: 'Операции',
+  'Supply Chain': 'Верига на доставки',
 };
 
 // Deterministic "Term of the Week" based on week number

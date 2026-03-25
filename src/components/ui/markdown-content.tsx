@@ -1,9 +1,40 @@
+import React, { useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { TERMS } from '@/data/dictionary-terms';
+import { TermTooltip } from '@/components/ui/term-tooltip';
 
 interface MarkdownContentProps {
   content: string;
   className?: string;
+  /** Disable automatic term tooltip highlighting */
+  disableTermTooltips?: boolean;
+}
+
+// Build regex once at module level for perf
+const termNames = TERMS.map(t => t.term).sort((a, b) => b.length - a.length);
+const escapedTerms = termNames.map(n => n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+const termRegex = escapedTerms.length > 0
+  ? new RegExp(`\\b(${escapedTerms.join('|')})\\b`, 'gi')
+  : null;
+
+/** Splits a plain text string into segments, wrapping known dictionary terms in TermTooltip */
+function injectTermTooltips(text: string): React.ReactNode[] {
+  if (!termRegex) return [text];
+  const parts: React.ReactNode[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+  termRegex.lastIndex = 0;
+  let key = 0;
+  while ((match = termRegex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index));
+    }
+    parts.push(<TermTooltip key={key++} term={match[0]}>{match[0]}</TermTooltip>);
+    lastIndex = termRegex.lastIndex;
+  }
+  if (lastIndex < text.length) parts.push(text.slice(lastIndex));
+  return parts;
 }
 
 /**
@@ -90,8 +121,21 @@ function boxTableToMarkdown(lines: string[]): string | null {
   return mdLines.join('\n');
 }
 
-export default function MarkdownContent({ content, className = '' }: MarkdownContentProps) {
+export default function MarkdownContent({ content, className = '', disableTermTooltips = false }: MarkdownContentProps) {
   const processed = preprocessContent(content);
+
+  /** Recursively walk React children and inject term tooltips into string nodes */
+  const enhance = useMemo(() => {
+    if (disableTermTooltips) return undefined;
+    return (children: React.ReactNode): React.ReactNode => {
+      return React.Children.map(children, child => {
+        if (typeof child === 'string') return <>{injectTermTooltips(child)}</>;
+        return child;
+      });
+    };
+  }, [disableTermTooltips]);
+
+  const wrap = (children: React.ReactNode) => enhance ? enhance(children) : children;
 
   return (
     <div className={`markdown-content text-sm leading-relaxed ${className}`}>
@@ -129,7 +173,7 @@ export default function MarkdownContent({ content, className = '' }: MarkdownCon
             <h3 className="text-sm font-display font-semibold text-foreground mt-3 mb-1">{children}</h3>
           ),
           p: ({ children }) => (
-            <p className="text-foreground/85 leading-relaxed mb-2">{children}</p>
+            <p className="text-foreground/85 leading-relaxed mb-2">{wrap(children)}</p>
           ),
           strong: ({ children }) => (
             <strong className="text-foreground font-semibold">{children}</strong>
@@ -141,7 +185,7 @@ export default function MarkdownContent({ content, className = '' }: MarkdownCon
             <ol className="list-decimal pl-5 mb-2 text-foreground/85 space-y-1">{children}</ol>
           ),
           li: ({ children }) => (
-            <li className="text-foreground/85">{children}</li>
+            <li className="text-foreground/85">{wrap(children)}</li>
           ),
           code: ({ children, className: codeClassName }) => {
             const isInline = !codeClassName;
