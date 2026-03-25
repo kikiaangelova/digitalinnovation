@@ -113,7 +113,7 @@ export default function CaseLibrary() {
               <h1 className="typo-h1">
                 {lang === 'bg' ? selectedDomain.nameBg : selectedDomain.nameEn}
               </h1>
-              <p className="text-sm text-muted-foreground mt-1">
+              <p className="typo-helper mt-1">
                 {domainCases.length} {tl('case studies', 'казуса')}
               </p>
             </div>
