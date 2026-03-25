@@ -631,7 +631,7 @@ const translations = {
     editProfile: 'Редактирай профил',
     linkedInUrl: 'LinkedIn URL',
     bio: 'Биография',
-    bioPlaceholder: 'Разкажете ни за себе си...',
+    bioPlaceholder: 'Разкажи ни за себе си...',
     portfolioUrl: 'Портфолио URL',
     skills: 'Умения',
     interests: 'Интереси',
