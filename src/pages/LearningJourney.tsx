@@ -216,7 +216,7 @@ const STAGES: Stage[] = [
     descEn: 'Build your business model and plan marketing channels.',
     descBg: 'Изградете бизнес модел и планирайте маркетинг канали.',
     milestoneEn: 'Submit Business Model & Marketing',
-    milestoneBg: 'Подайте бизнес модел и маркетинг',
+    milestoneBg: 'Подай бизнес модел и маркетинг',
     learnPath: '/my-startup?section=business_model', casePath: '/cases', simPath: '/simulator',
     startupKey: 'business_model',
   },
