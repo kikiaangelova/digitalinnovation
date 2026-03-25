@@ -359,6 +359,17 @@ export default function LearningModulePlayer() {
         {phase === 'application' && (
           <div className="rounded-xl border border-border bg-card p-6 space-y-4">
             <Badge variant="outline">{t('🚀 Apply to Your Startup', '🚀 Приложи към твоя стартъп')}</Badge>
+            {mod.startup_field && (
+              <div className="rounded-lg bg-primary/5 border border-primary/20 p-3 flex items-start gap-2">
+                <Rocket className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                <p className="text-xs text-muted-foreground">
+                  {t(
+                    'Your answer will automatically update your startup project. Build your real business step by step!',
+                    'Отговорът ти автоматично ще обнови стартъп проекта ти. Изграждай реалния си бизнес стъпка по стъпка!'
+                  )}
+                </p>
+              </div>
+            )}
             <p className="text-sm font-semibold text-foreground">
               {lang === 'bg' ? mod.application_question_bg : mod.application_question_en}
             </p>
