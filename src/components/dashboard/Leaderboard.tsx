@@ -22,25 +22,34 @@ const RANK_STYLES = [
   { icon: Award, gradient: 'gradient-builder', text: 'text-sim-success' },
 ];
 
+type Tab = 'weekly' | 'alltime';
+
 export default function Leaderboard({ lang, currentUserId, limit = 10, showTitle = true }: LeaderboardProps) {
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
-  const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
+  const [tab, setTab] = useState<Tab>('weekly');
+  const [allTimeEntries, setAllTimeEntries] = useState<LeaderboardEntry[]>([]);
+  const [weeklyEntries, setWeeklyEntries] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchLeaderboard = async () => {
+    const fetchBoth = async () => {
+      setLoading(true);
       try {
-        const { data, error } = await supabase.rpc('get_leaderboard', { _limit: limit });
-        if (error) throw error;
+        const [allRes, weekRes] = await Promise.all([
+          supabase.rpc('get_leaderboard', { _limit: limit }),
+          supabase.rpc('get_weekly_leaderboard' as any, { _limit: limit }),
+        ]);
 
-        const board: LeaderboardEntry[] = (data || []).map((row: any, i: number) => ({
-          user_id: row.user_id,
-          full_name: row.display_name || t('Student', 'Студент'),
-          xp: row.total_xp || 0,
-          rank: i + 1,
-        }));
+        const mapEntries = (data: any[]) =>
+          (data || []).map((row: any, i: number) => ({
+            user_id: row.user_id,
+            full_name: row.display_name || t('Student', 'Студент'),
+            xp: row.total_xp || 0,
+            rank: i + 1,
+          }));
 
-        setEntries(board);
+        setAllTimeEntries(mapEntries(allRes.data));
+        setWeeklyEntries(mapEntries(weekRes.data));
       } catch (err) {
         console.error('Leaderboard fetch error:', err);
       } finally {
@@ -48,59 +57,86 @@ export default function Leaderboard({ lang, currentUserId, limit = 10, showTitle
       }
     };
 
-    fetchLeaderboard();
+    fetchBoth();
   }, [limit]);
 
-  if (loading) {
-    return (
-      <div className="rounded-xl border border-border bg-card p-5">
-        <div className="animate-pulse text-center text-sm text-muted-foreground py-4">{t('Loading...', 'Зареждане...')}</div>
-      </div>
-    );
-  }
+  const entries = tab === 'weekly' ? weeklyEntries : allTimeEntries;
 
   return (
     <div className="rounded-xl border border-border bg-card p-5">
       {showTitle && (
-        <div className="flex items-center gap-2 mb-4">
+        <div className="flex items-center gap-2 mb-3">
           <Trophy className="h-5 w-5 text-sim-warning" />
           <h2 className="text-lg font-display font-semibold text-foreground">{t('Leaderboard', 'Класация')}</h2>
         </div>
       )}
-      <div className="space-y-2">
-        {entries.length === 0 ? (
-          <p className="text-sm text-muted-foreground text-center py-4">{t('No data yet', 'Няма данни')}</p>
-        ) : (
-          entries.map(e => {
-            const isMe = e.user_id === currentUserId;
-            const rankStyle = e.rank <= 3 ? RANK_STYLES[e.rank - 1] : null;
-            const RankIcon = rankStyle?.icon;
 
-            return (
-              <div
-                key={e.user_id}
-                className={`flex items-center gap-3 rounded-lg p-3 transition-colors ${isMe ? 'bg-accent border border-primary/20' : 'bg-muted/30'}`}
-              >
-                {RankIcon ? (
-                  <div className={`flex h-8 w-8 items-center justify-center rounded-full ${rankStyle.gradient} shrink-0`}>
-                    <RankIcon className={`h-4 w-4 ${e.rank === 1 ? 'text-primary-foreground' : e.rank === 3 ? 'text-primary-foreground' : 'text-foreground'}`} />
-                  </div>
-                ) : (
-                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted shrink-0">
-                    <span className="text-xs font-bold text-muted-foreground">{e.rank}</span>
-                  </div>
-                )}
-                <div className="flex-1 min-w-0">
-                  <p className={`text-sm font-medium truncate ${isMe ? 'text-primary' : 'text-foreground'}`}>
-                    {e.full_name} {isMe && <span className="text-xs text-primary">({t('You', 'Ти')})</span>}
-                  </p>
-                </div>
-                <span className="text-xs font-bold text-sim-warning shrink-0">{e.xp} XP</span>
-              </div>
-            );
-          })
-        )}
+      {/* Tabs */}
+      <div className="flex gap-1 mb-4 rounded-lg bg-muted p-1">
+        <button
+          onClick={() => setTab('weekly')}
+          className={`flex-1 flex items-center justify-center gap-1.5 rounded-md px-3 py-1.5 text-xs font-medium transition-all ${
+            tab === 'weekly'
+              ? 'bg-card text-foreground shadow-sm'
+              : 'text-muted-foreground hover:text-foreground'
+          }`}
+        >
+          🏆 {t('This Week', 'Тази седмица')}
+        </button>
+        <button
+          onClick={() => setTab('alltime')}
+          className={`flex-1 rounded-md px-3 py-1.5 text-xs font-medium transition-all ${
+            tab === 'alltime'
+              ? 'bg-card text-foreground shadow-sm'
+              : 'text-muted-foreground hover:text-foreground'
+          }`}
+        >
+          {t('All Time', 'Всички времена')}
+        </button>
       </div>
+
+      {loading ? (
+        <div className="animate-pulse text-center text-sm text-muted-foreground py-4">{t('Loading...', 'Зареждане...')}</div>
+      ) : (
+        <div className="space-y-2">
+          {entries.length === 0 ? (
+            <p className="text-sm text-muted-foreground text-center py-4">
+              {tab === 'weekly'
+                ? t('No XP earned this week yet — be the first!', 'Все още няма спечелени XP тази седмица — бъди първият!')
+                : t('No data yet', 'Няма данни')}
+            </p>
+          ) : (
+            entries.map(e => {
+              const isMe = e.user_id === currentUserId;
+              const rankStyle = e.rank <= 3 ? RANK_STYLES[e.rank - 1] : null;
+              const RankIcon = rankStyle?.icon;
+
+              return (
+                <div
+                  key={e.user_id}
+                  className={`flex items-center gap-3 rounded-lg p-3 transition-colors ${isMe ? 'bg-accent border border-primary/20' : 'bg-muted/30'}`}
+                >
+                  {RankIcon ? (
+                    <div className={`flex h-8 w-8 items-center justify-center rounded-full ${rankStyle.gradient} shrink-0`}>
+                      <RankIcon className={`h-4 w-4 ${e.rank === 1 ? 'text-primary-foreground' : e.rank === 3 ? 'text-primary-foreground' : 'text-foreground'}`} />
+                    </div>
+                  ) : (
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted shrink-0">
+                      <span className="text-xs font-bold text-muted-foreground">{e.rank}</span>
+                    </div>
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <p className={`text-sm font-medium truncate ${isMe ? 'text-primary' : 'text-foreground'}`}>
+                      {e.full_name} {isMe && <span className="text-xs text-primary">({t('You', 'Ти')})</span>}
+                    </p>
+                  </div>
+                  <span className="text-xs font-bold text-sim-warning shrink-0">{e.xp} XP</span>
+                </div>
+              );
+            })
+          )}
+        </div>
+      )}
     </div>
   );
 }
