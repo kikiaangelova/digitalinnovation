@@ -423,7 +423,21 @@ export default function LearningModulePlayer() {
               </div>
             </div>
 
-            {/* Theory → Case CTA */}
+            {/* AI Structured Feedback */}
+            {mod && (
+              <StructuredFeedback
+                context={{
+                  type: 'quiz_result',
+                  moduleTitle: lang === 'bg' ? mod.title_bg : mod.title_en,
+                  quizScore,
+                  quizMax,
+                  analyticalAnswer,
+                  applicationAnswer,
+                }}
+                lang={lang as 'en' | 'bg'}
+              />
+            )}
+
             {mod.case_transition_en && (
               <TheoryToCaseCTA mod={mod} lang={lang} t={t} navigate={navigate} />
             )}
