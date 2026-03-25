@@ -175,7 +175,7 @@ export default function StudentDashboard() {
           <div className="space-y-4">
             <LevelCard xp={xp} lang={lang} />
             <div className="rounded-xl border border-border bg-card p-5">
-              <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+              <h3 className="typo-card-title mb-3 flex items-center gap-2">
                 <Zap className="h-4 w-4 text-xp-gold" />
                 {t('Earn XP', 'Спечели XP')}
               </h3>
