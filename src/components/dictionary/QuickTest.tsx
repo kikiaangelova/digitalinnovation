@@ -186,9 +186,10 @@ export default function QuickTest() {
   const [answers, setAnswers] = useState<(number | null)[]>([]);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [saving, setSaving] = useState(false);
-  const [savedResult, setSavedResult] = useState<{ score: number; xp: number; bonusXp: number } | null>(null);
+  const [savedResult, setSavedResult] = useState<{ score: number; xp: number; bonusXp: number; unlockedBadges: string[]; nextStep: string | null } | null>(null);
   const [startDifficulty, setStartDifficulty] = useState<TermDifficulty>('beginner');
   const [pastAvg, setPastAvg] = useState<number | null>(null);
+  const [recentWeakAreas, setRecentWeakAreas] = useState<string[]>([]);
 
   // Load past performance to determine adaptive difficulty
   useEffect(() => {
