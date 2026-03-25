@@ -26,6 +26,8 @@ export interface LearningModule {
   display_order: number;
   /** Which curriculum level this module belongs to (1 = Innovation Thinking, 2 = Business Fundamentals) */
   level?: number;
+  /** Which startup_projects field to update with the application answer */
+  startup_field?: string;
   // Theory-to-Case mapping
   related_case_topic?: string;
   case_transition_en?: string;
