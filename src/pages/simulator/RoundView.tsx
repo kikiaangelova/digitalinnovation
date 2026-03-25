@@ -7,6 +7,7 @@ import NarrativeBriefing from '@/components/simulator/NarrativeBriefing';
 import DecisionForm from '@/components/simulator/DecisionForm';
 import OutcomeReportView from '@/components/simulator/OutcomeReportView';
 import StructuredFeedback from '@/components/feedback/StructuredFeedback';
+import SkillsImproved from '@/components/learning/SkillsImproved';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 import { toast } from 'sonner';
