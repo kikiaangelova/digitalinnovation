@@ -490,7 +490,7 @@ const translations = {
     simWeek4: 'Проектиране на MVP',
     simWeek5: 'Стратегия за растеж и маркетинг',
     simWeek6: 'Финално представяне и резултати',
-    simKpiTitle: 'Учениците проследяват показатели:',
+    simKpiTitle: 'Проследяваш ключови показатели:',
     simKpiUsers: 'Потребители',
     simKpiRevenue: 'Приходи',
     simKpiConversion: 'Конверсия',
@@ -501,7 +501,7 @@ const translations = {
     simStartButton: 'Стартирай бизнес симулатор',
     launchSimulator: 'Стартирай симулатор',
     instantFeedback: 'Незабавна обратна връзка',
-    instantFeedbackDesc: 'Получете автоматично оценени резултати, примерни отговори и обратна връзка от инструктора.',
+    instantFeedbackDesc: 'Получи автоматично оценени резултати, примерни отговори и обратна връзка от преподавателя.',
     viewDashboard: 'Към таблото',
 
     // Learning Journey
