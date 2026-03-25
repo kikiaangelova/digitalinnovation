@@ -114,6 +114,28 @@ export default function AnalyticsDashboard() {
     }));
   }, [submissions, simProgress, startups]);
 
+  const quizImprovementData = useMemo(() => {
+    const days: Record<string, { date: string; total: number; count: number }> = {};
+    for (let i = 13; i >= 0; i--) {
+      const d = format(subDays(new Date(), i), 'yyyy-MM-dd');
+      days[d] = { date: d, total: 0, count: 0 };
+    }
+
+    quizResults.forEach(r => {
+      const d = format(startOfDay(parseISO(r.created_at)), 'yyyy-MM-dd');
+      if (days[d]) {
+        days[d].total += r.score;
+        days[d].count += 1;
+      }
+    });
+
+    return Object.values(days).map(d => ({
+      date: format(parseISO(d.date), 'MMM dd'),
+      avgScore: d.count > 0 ? Math.round(d.total / d.count) : null,
+      tests: d.count,
+    }));
+  }, [quizResults]);
+
   // Top students
   const topStudents = useMemo(() => {
     const studentMap: Record<string, { name: string; cases: number; score: number; sims: number }> = {};
