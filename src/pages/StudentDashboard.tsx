@@ -32,6 +32,8 @@ export default function StudentDashboard() {
   const [avgPeerScore, setAvgPeerScore] = useState<number | null>(null);
   const [totalXp, setTotalXp] = useState(0);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [peerReviewsGiven, setPeerReviewsGiven] = useState(0);
+  const [loginStreakDays, setLoginStreakDays] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
