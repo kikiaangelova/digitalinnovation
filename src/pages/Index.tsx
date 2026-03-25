@@ -287,7 +287,7 @@ const Index = () => {
                   <week.icon className="h-5 w-5" />
                 </div>
                 <div className="flex-1">
-                  <span className="text-xs font-bold text-primary uppercase tracking-wider">{t.week} {week.week}</span>
+                  <span className="typo-stage-label">{t.week} {week.week}</span>
                   <p className="text-sm font-semibold text-foreground">{week.title}</p>
                 </div>
               </div>
