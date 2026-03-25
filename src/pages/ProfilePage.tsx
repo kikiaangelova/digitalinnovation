@@ -111,7 +111,7 @@ export default function ProfilePage() {
     <div className="min-h-screen bg-background">
       <AppHeader />
       <main className="container mx-auto px-4 py-8 max-w-3xl space-y-8">
-        <h1 className="text-2xl font-display font-bold text-foreground">{t.myProfile}</h1>
+        <h1 className="typo-h1">{t.myProfile}</h1>
 
         {/* Stats row */}
         <div className="grid grid-cols-3 gap-4">
