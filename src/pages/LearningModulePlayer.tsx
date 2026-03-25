@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { LearningPhaseBar, WhatYouWillLearn, THEORY_MODULE_OUTCOMES } from '@/components/learning/LearningStructure';
+import StructuredFeedback from '@/components/feedback/StructuredFeedback';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
@@ -422,7 +423,21 @@ export default function LearningModulePlayer() {
               </div>
             </div>
 
-            {/* Theory → Case CTA */}
+            {/* AI Structured Feedback */}
+            {mod && (
+              <StructuredFeedback
+                context={{
+                  type: 'quiz_result',
+                  moduleTitle: lang === 'bg' ? mod.title_bg : mod.title_en,
+                  quizScore,
+                  quizMax,
+                  analyticalAnswer,
+                  applicationAnswer,
+                }}
+                lang={lang as 'en' | 'bg'}
+              />
+            )}
+
             {mod.case_transition_en && (
               <TheoryToCaseCTA mod={mod} lang={lang} t={t} navigate={navigate} />
             )}

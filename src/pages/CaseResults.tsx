@@ -10,6 +10,7 @@ import { Progress } from '@/components/ui/progress';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { CheckCircle2, XCircle, ArrowLeft, Trophy, BookOpen, Award, Rocket, Star, Brain, TrendingUp, Lightbulb, Target, MessageSquare } from 'lucide-react';
+import StructuredFeedback from '@/components/feedback/StructuredFeedback';
 import type { Json } from '@/integrations/supabase/types';
 
 interface QuestionResult {
@@ -198,6 +199,14 @@ export default function CaseResults() {
               ))}
             </div>
           </div>
+        )}
+
+        {/* AI Structured Feedback */}
+        {maxScore > 0 && (
+          <StructuredFeedback
+            context={{ type: 'case_submission', caseTitle, totalScore, maxScore }}
+            lang={lang as 'en' | 'bg'}
+          />
         )}
 
         {/* Teacher review notice */}
