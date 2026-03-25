@@ -204,7 +204,7 @@ const STAGES: Stage[] = [
     id: 4, icon: Palette,
     en: 'Product Design (MVP)', bg: 'Продуктов дизайн (MVP)',
     descEn: 'Design and describe your minimum viable product.',
-    descBg: 'Проектирайте и опишете минималния жизнеспособен продукт.',
+    descBg: 'Проектирай и опиши минималния жизнеспособен продукт.',
     milestoneEn: 'Submit MVP Design',
     milestoneBg: 'Подай MVP дизайн',
     learnPath: '/my-startup?section=digital_product', casePath: '/cases', simPath: '/simulator',
