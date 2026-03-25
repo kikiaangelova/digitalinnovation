@@ -618,7 +618,7 @@ export default function CasePlayer() {
           <div className="flex items-center gap-2 rounded-lg border border-muted bg-muted/30 px-4 py-2">
             <AlertTriangle className="h-4 w-4 text-muted-foreground shrink-0" />
             <p className="text-xs text-muted-foreground">
-              {tl('Missing:', 'Липсва:')} {missingSections.join(', ')} <Badge variant="outline" className="ml-2 text-[10px]">Admin only</Badge>
+              {tl('Missing:', 'Липсва:')} {missingSections.join(', ')} <Badge variant="outline" className="ml-2 text-xs">Admin only</Badge>
             </p>
           </div>
         )}
