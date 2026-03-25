@@ -134,6 +134,7 @@ export default function AchievementBadges(props: AchievementBadgesProps) {
   // Test badges
   if ((props.quizTestsCompleted || 0) >= 1) earned.add('quiz_starter');
   if ((props.quizTestsCompleted || 0) >= 5) earned.add('knowledge_builder');
+  if ((props.quizHighScores80 || 0) >= 3) earned.add('test_sharp_analyst');
   if ((props.quizCategoriesTested || 0) >= 3) earned.add('test_explorer');
   if ((props.quizConsecutiveImprovements || 0) >= 3) earned.add('consistency_master');
 
