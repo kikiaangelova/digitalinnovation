@@ -355,6 +355,12 @@ export default function MyStartupIdea() {
           </span>
         </nav>
 
+        {/* Learning Structure */}
+        <div className="mb-4 space-y-3">
+          <LearningPhaseBar currentPhase="practice" lang={lang as 'en' | 'bg'} completedPhases={['learn']} />
+          <WhatYouWillLearn outcomes={STARTUP_BUILDER_OUTCOMES} lang={lang as 'en' | 'bg'} activityType={{ en: 'Startup Builder', bg: 'Стартъп' }} />
+        </div>
+
         {/* Header */}
         <div className="mb-6">
           <div className="flex items-center gap-3 mb-3">
