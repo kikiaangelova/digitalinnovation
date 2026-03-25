@@ -176,7 +176,7 @@ export default function CasePreview() {
               <p className="text-xs text-muted-foreground mt-0.5">
                 {tl(
                   'Review your analysis or explore another case.',
-                  'Прегледайте анализа си или разгледайте друг казус.'
+                  'Прегледай анализа си или разгледай друг казус.'
                 )}
               </p>
             </div>
@@ -338,12 +338,12 @@ export default function CasePreview() {
               </div>
               <div>
                 <h3 className="font-display font-semibold text-foreground mb-1">
-                  {tl('Connect to Your Startup', 'Свържете с вашия стартъп')}
+                  {tl('Connect to Your Startup', 'Свържи с твоя стартъп')}
                 </h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">
                   {tl(
-                    'After completing this case, you\'ll apply your analysis to improve your own startup project — refining your problem definition, value proposition, and business model.',
-                    'След приключване на казуса ще приложите анализа си, за да подобрите собствения си стартъп проект — дефиниция на проблема, стойностно предложение и бизнес модел.'
+                    'After completing this case, you can apply your analysis to improve your startup project — refining your problem definition, value proposition, and business model.',
+                    'След приключване на казуса можеш да приложиш анализа си, за да подобриш стартъп проекта си — дефиниция на проблема, стойностно предложение и бизнес модел.'
                   )}
                 </p>
               </div>

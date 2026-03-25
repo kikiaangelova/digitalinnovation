@@ -104,7 +104,10 @@ export default function FinalExam() {
               {t('Final Exam', 'Финален изпит')}
             </h1>
             <p className="typo-helper mt-1">
-              {t('Certificate in Digital Innovation & Startup Thinking', 'Сертификат по дигитални иновации и предприемаческо мислене')}
+              {t(
+                'Demonstrate your skills across 4 sections. Score 70+ to earn your certificate.',
+                'Демонстрирай уменията си в 4 секции. Вземи 70+ точки, за да получиш сертификат.'
+              )}
             </p>
           </div>
           {result?.passed && (
@@ -113,6 +116,26 @@ export default function FinalExam() {
             </Button>
           )}
         </div>
+
+        {/* Scoring criteria */}
+        {!result && (
+          <div className="rounded-lg border border-border bg-accent/50 p-4">
+            <p className="text-xs font-semibold text-foreground mb-2">
+              {t('You will be evaluated on:', 'Ще бъдеш оценен по:')}
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {[
+                t('Problem Understanding', 'Разбиране на проблема'),
+                t('Strategic Thinking', 'Стратегическо мислене'),
+                t('Innovation', 'Иновативност'),
+                t('Clarity', 'Яснота'),
+                t('Business Logic', 'Бизнес логика'),
+              ].map(c => (
+                <Badge key={c} variant="secondary" className="text-xs">{c}</Badge>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Progress */}
         <div className="space-y-2">
@@ -171,11 +194,11 @@ export default function FinalExam() {
                   )}
                   {currentSection < SECTIONS.length - 1 ? (
                     <Button size="sm" onClick={() => setCurrentSection(currentSection + 1)} className="gap-1">
-                      {t('Next', 'Напред')} <ArrowRight className="h-3.5 w-3.5" />
+                      {t(`Continue to ${SECTIONS[currentSection + 1]?.enTitle || 'Next'}`, `Продължи към ${SECTIONS[currentSection + 1]?.bgTitle || 'Напред'}`)} <ArrowRight className="h-3.5 w-3.5" />
                     </Button>
                   ) : (
                     <Button size="sm" onClick={handleSubmit} disabled={submitting} className="gap-1">
-                      {submitting ? t('Grading...', 'Оценяване...') : t('Submit Exam', 'Подай изпита')}
+                      {submitting ? t('Grading...', 'Оценяване...') : t('Submit for Grading', 'Изпрати за оценяване')}
                     </Button>
                   )}
                 </div>

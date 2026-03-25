@@ -61,24 +61,24 @@ const SECTION_LABELS_BG: Record<number, string> = {
 
 /* ── Section descriptions for students ── */
 const SECTION_HINTS_EN: Record<number, string> = {
-  0: 'Read the required material and take research notes.',
-  1: 'Understand the industry landscape, market data, and key trends.',
-  2: 'Analyze how digital technologies are disrupting this industry.',
-  3: 'Study the strategic scenario, exhibits, and data tables provided.',
-  4: 'Identify the key strategic decision and answer analytical questions.',
-  5: 'Apply critical thinking to analyze the situation using the data.',
+  0: 'Read the material and take notes before moving on.',
+  1: 'Explore the industry landscape, market data, and key trends.',
+  2: 'Examine how digital technologies are reshaping this industry.',
+  3: 'Review the strategic scenario and data tables carefully.',
+  4: 'Answer the analytical questions using the data provided.',
+  5: 'Use critical thinking to build your analysis step by step.',
   6: 'Design your strategic recommendation with supporting evidence.',
-  7: 'Write your final recommendation as a professional brief.',
+  7: 'Write your final recommendation as a concise professional brief.',
 };
 const SECTION_HINTS_BG: Record<number, string> = {
-  0: 'Прочетете задължителния материал и направете бележки.',
-  1: 'Разберете индустриалния пейзаж, пазарни данни и ключови тенденции.',
-  2: 'Анализирайте как дигиталните технологии трансформират тази индустрия.',
-  3: 'Изучете стратегическия сценарий, приложенията и таблиците с данни.',
-  4: 'Идентифицирайте ключовото стратегическо решение и отговорете на аналитичните въпроси.',
-  5: 'Приложете критично мислене за анализ на ситуацията чрез данните.',
-  6: 'Проектирайте стратегическата си препоръка с подкрепящи доказателства.',
-  7: 'Напишете финалната си препоръка като професионален бриф.',
+  0: 'Прочети материала и направи бележки.',
+  1: 'Разбери индустрията, пазарните данни и ключовите тенденции.',
+  2: 'Анализирай как дигиталните технологии трансформират тази индустрия.',
+  3: 'Проучи стратегическия сценарий, приложенията и таблиците с данни.',
+  4: 'Идентифицирай ключовото стратегическо решение и отговори на аналитичните въпроси.',
+  5: 'Приложи критично мислене за анализ на ситуацията чрез данните.',
+  6: 'Проектирай стратегическата си препоръка с подкрепящи доказателства.',
+  7: 'Напиши финалната си препоръка като професионален бриф.',
 };
 
 /* ── Structured startup analysis fields ── */

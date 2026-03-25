@@ -37,15 +37,15 @@ const STAGE_OUTCOMES: StageOutcomes[] = [
     knowBg: [
       'Какво е дигитална иновация и защо е важна',
       '3 вида дигитална дисрупция (поддържаща, нискобюджетна, нов пазар)',
-      'Как да идентифицирате иновационни възможности във всяка индустрия',
+      'Как да идентифицираш иновационни възможности във всяка индустрия',
     ],
     doEn: [
       'Analyze an industry for digital opportunities',
       'Complete your first case study',
     ],
     doBg: [
-      'Анализирайте индустрия за дигитални възможности',
-      'Завършете първия си казус',
+      'Анализирай индустрия за дигитални възможности',
+      'Завърши първия си казус',
     ],
     estMinutes: 45,
     xpAvailable: 130,
@@ -56,7 +56,7 @@ const STAGE_OUTCOMES: StageOutcomes[] = [
       'What makes a digital business model defensible',
     ],
     knowBg: [
-      'Как да картографирате конкурентната среда',
+      'Как да картографираш конкурентната среда',
       'Какво прави дигиталния бизнес модел защитим',
     ],
     doEn: [
@@ -64,8 +64,8 @@ const STAGE_OUTCOMES: StageOutcomes[] = [
       'Apply an analytical framework to a real industry',
     ],
     doBg: [
-      'Идентифицирайте 3 конкурента и анализирайте силните и слабите им страни',
-      'Приложете аналитична рамка към реална индустрия',
+      'Идентифицирай 3 конкурента и анализирай силните и слабите им страни',
+      'Приложи аналитична рамка към реална индустрия',
     ],
     estMinutes: 60,
     xpAvailable: 140,
@@ -76,16 +76,16 @@ const STAGE_OUTCOMES: StageOutcomes[] = [
       'How to define customer segments precisely',
     ],
     knowBg: [
-      'Какво е стойностно предложение и как да го създадете',
-      'Как да дефинирате клиентски сегменти прецизно',
+      'Какво е стойностно предложение и как да го създадеш',
+      'Как да дефинираш клиентски сегменти прецизно',
     ],
     doEn: [
       'Write a clear problem statement',
       'Define your target customer with specific demographics and needs',
     ],
     doBg: [
-      'Напишете ясна формулировка на проблема',
-      'Дефинирайте целевия клиент с конкретни демографски данни и нужди',
+      'Напиши ясна формулировка на проблема',
+      'Дефинирай целевия клиент с конкретни демографски данни и нужди',
     ],
     estMinutes: 50,
     xpAvailable: 120,
@@ -104,8 +104,8 @@ const STAGE_OUTCOMES: StageOutcomes[] = [
       'Define your MVP concept with key features',
     ],
     doBg: [
-      'Попълнете пълен BMC за вашата стартъп идея',
-      'Дефинирайте MVP концепцията с ключови функции',
+      'Попълни пълен BMC за твоята стартъп идея',
+      'Дефинирай MVP концепцията с ключови функции',
     ],
     estMinutes: 90,
     xpAvailable: 200,
@@ -124,8 +124,8 @@ const STAGE_OUTCOMES: StageOutcomes[] = [
       'Interpret your startup performance score',
     ],
     doBg: [
-      'Проведете пълен симулаторен сценарий',
-      'Интерпретирайте резултата от представянето на стартъпа',
+      'Проведи пълен симулаторен сценарий',
+      'Интерпретирай резултата от представянето на стартъпа',
     ],
     estMinutes: 40,
     xpAvailable: 100,
@@ -144,8 +144,8 @@ const STAGE_OUTCOMES: StageOutcomes[] = [
       'Receive and give constructive peer feedback',
     ],
     doBg: [
-      'Представете пълно стартъп представяне',
-      'Получете и дайте конструктивна партньорска обратна връзка',
+      'Представи пълно стартъп представяне',
+      'Получи и дай конструктивна партньорска обратна връзка',
     ],
     estMinutes: 60,
     xpAvailable: 170,
@@ -175,18 +175,18 @@ const STAGES: Stage[] = [
     id: 1, icon: BookOpen,
     en: 'Digital Innovation Basics', bg: 'Основи на дигиталните иновации',
     descEn: 'Learn key concepts of digital transformation and innovation.',
-    descBg: 'Научете ключовите концепции за дигитална трансформация и иновации.',
+    descBg: 'Научи ключовите концепции за дигитална трансформация и иновации.',
     milestoneEn: 'Complete introductory case study',
-    milestoneBg: 'Завършете уводния казус',
+    milestoneBg: 'Завърши уводния казус',
     learnPath: '/innovation-basics', casePath: '/cases', simPath: '/simulator',
   },
   {
     id: 2, icon: Search,
     en: 'Industry & Competitor Analysis', bg: 'Анализ на индустрията и конкуренцията',
     descEn: 'Analyze industries and identify digital opportunities.',
-    descBg: 'Анализирайте индустрии и идентифицирайте дигитални възможности.',
+    descBg: 'Анализирай индустрии и идентифицирай дигитални възможности.',
     milestoneEn: 'Submit Opportunity Analysis',
-    milestoneBg: 'Подайте анализ на възможностите',
+    milestoneBg: 'Подай анализ на възможностите',
     learnPath: '/cases', casePath: '/cases', simPath: '/simulator',
     startupKey: 'problem',
   },
@@ -194,9 +194,9 @@ const STAGES: Stage[] = [
     id: 3, icon: Lightbulb,
     en: 'Startup Idea & Value Proposition', bg: 'Стартъп идея и стойностно предложение',
     descEn: 'Define your startup problem, customer, and value proposition.',
-    descBg: 'Дефинирайте проблема, клиента и стойностното предложение.',
+    descBg: 'Дефинирай проблема, клиента и стойностното предложение.',
     milestoneEn: 'Submit Value Proposition',
-    milestoneBg: 'Подайте стойностно предложение',
+    milestoneBg: 'Подай стойностно предложение',
     learnPath: '/my-startup?section=problem', casePath: '/cases', simPath: '/simulator',
     startupKey: 'value_proposition',
   },
@@ -204,9 +204,9 @@ const STAGES: Stage[] = [
     id: 4, icon: Palette,
     en: 'Product Design (MVP)', bg: 'Продуктов дизайн (MVP)',
     descEn: 'Design and describe your minimum viable product.',
-    descBg: 'Проектирайте и опишете минималния жизнеспособен продукт.',
+    descBg: 'Проектирай и опиши минималния жизнеспособен продукт.',
     milestoneEn: 'Submit MVP Design',
-    milestoneBg: 'Подайте MVP дизайн',
+    milestoneBg: 'Подай MVP дизайн',
     learnPath: '/my-startup?section=digital_product', casePath: '/cases', simPath: '/simulator',
     startupKey: 'digital_product',
   },
@@ -214,9 +214,9 @@ const STAGES: Stage[] = [
     id: 5, icon: TrendingUp,
     en: 'Business Model & Marketing Strategy', bg: 'Бизнес модел и маркетинг стратегия',
     descEn: 'Build your business model and plan marketing channels.',
-    descBg: 'Изградете бизнес модел и планирайте маркетинг канали.',
+    descBg: 'Изгради бизнес модел и планирай маркетинг канали.',
     milestoneEn: 'Submit Business Model & Marketing',
-    milestoneBg: 'Подайте бизнес модел и маркетинг',
+    milestoneBg: 'Подай бизнес модел и маркетинг',
     learnPath: '/my-startup?section=business_model', casePath: '/cases', simPath: '/simulator',
     startupKey: 'business_model',
   },
@@ -224,9 +224,9 @@ const STAGES: Stage[] = [
     id: 6, icon: Presentation,
     en: 'Startup Pitch', bg: 'Стартъп представяне',
     descEn: 'Prepare and submit your final startup pitch.',
-    descBg: 'Подгответе и подайте финалното стартъп представяне.',
+    descBg: 'Подготви и подай финалното стартъп представяне.',
     milestoneEn: 'Submit Final Startup Pitch',
-    milestoneBg: 'Подайте финално стартъп представяне',
+    milestoneBg: 'Подай финално стартъп представяне',
     learnPath: '/my-startup?section=final_pitch', casePath: '/cases', simPath: '/simulator',
     startupKey: 'final_pitch',
   },
@@ -344,7 +344,7 @@ export default function LearningJourney() {
 
   function handleSubmitAttempt(stageIdx: number) {
     if (!canSubmit(stageIdx)) {
-      toast.error(t('Complete the previous step first.', 'Завършете предишната стъпка първо.'));
+      toast.error(t('Complete the previous step first.', 'Завърши предишната стъпка първо.'));
       return;
     }
     navigate('/my-startup');
@@ -371,8 +371,8 @@ export default function LearningJourney() {
             {t('Startup Journey', 'Стартъп пътешествие')}
           </h1>
           <p className="text-muted-foreground text-sm mt-1">
-            {t('Follow the guided path to build your digital startup — explore freely, submit when ready.',
-               'Следвайте ръководения път за изграждане на вашия дигитален стартъп — разглеждайте свободно, подавайте когато сте готови.')}
+            {t('Build your startup step by step. Complete each stage before moving to the next.',
+               'Изгради стартъпа си стъпка по стъпка. Завърши всеки етап, преди да преминеш към следващия.')}
           </p>
         </div>
 
@@ -466,7 +466,7 @@ export default function LearningJourney() {
                       <div>
                         <h4 className="flex items-center gap-1.5 text-xs font-semibold text-foreground mb-1.5">
                           <GraduationCap className="h-3.5 w-3.5 text-primary" />
-                          {t('What you will KNOW', 'Какво ще ЗНАЕТЕ')}
+                          {t('What you will KNOW', 'Какво ще ЗНАЕШ')}
                         </h4>
                         <ul className="space-y-1 pl-5">
                           {(lang === 'bg' ? outcomes.knowBg : outcomes.knowEn).map((item, i) => (
@@ -479,7 +479,7 @@ export default function LearningJourney() {
                       <div>
                         <h4 className="flex items-center gap-1.5 text-xs font-semibold text-foreground mb-1.5">
                           <Target className="h-3.5 w-3.5 text-success" />
-                          {t('What you will BE ABLE TO DO', 'Какво ще МОЖЕТЕ да правите')}
+                          {t('What you will BE ABLE TO DO', 'Какво ще МОЖЕШ да правиш')}
                         </h4>
                         <ul className="space-y-1 pl-5">
                           {(lang === 'bg' ? outcomes.doBg : outcomes.doEn).map((item, i) => (
@@ -524,7 +524,7 @@ export default function LearningJourney() {
                             onClick={() => navigate('/my-startup')}
                           >
                             <AlertCircle className="h-3.5 w-3.5 mr-1" />
-                            {t('Complete previous step', 'Завършете предишната стъпка')}
+                            {t('Complete previous step', 'Завърши предишната стъпка')}
                           </Button>
                         </div>
                       )}
@@ -535,7 +535,7 @@ export default function LearningJourney() {
                     <div className="pt-2 border-t border-border">
                       <Button size="sm" onClick={() => navigate('/cases')}>
                         <BookOpen className="h-3.5 w-3.5 mr-1" />
-                        {t('Complete a Case Study', 'Завършете казус')}
+                        {t('Complete a Case Study', 'Завърши казус')}
                       </Button>
                     </div>
                   )}

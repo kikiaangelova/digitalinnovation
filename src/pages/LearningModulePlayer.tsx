@@ -308,7 +308,7 @@ export default function LearningModulePlayer() {
                   <p className="text-xs text-muted-foreground">{Math.round((quizScore / quizMax) * 100)}%</p>
                 </div>
                 <Button onClick={() => setPhase('analytical')}>
-                  {t('Continue', 'Продължи')} <ChevronRight className="h-4 w-4 ml-1" />
+                  {t('Continue to Analysis', 'Продължи към анализа')} <ChevronRight className="h-4 w-4 ml-1" />
                 </Button>
               </div>
             )}
@@ -329,10 +329,10 @@ export default function LearningModulePlayer() {
               className="min-h-[120px]"
               disabled={!!existingResponse?.completed_at}
             />
-            <p className="text-xs text-muted-foreground">{analyticalAnswer.length} {t('characters', 'знака')} (min 20)</p>
+            <p className="text-xs text-muted-foreground">{analyticalAnswer.length} {t('characters', 'знака')} ({t('min 20', 'мин. 20')})</p>
             <div className="flex justify-end">
               <Button onClick={() => setPhase('application')}>
-                {t('Continue', 'Продължи')} <ChevronRight className="h-4 w-4 ml-1" />
+                {t('Continue to Application', 'Продължи към приложението')} <ChevronRight className="h-4 w-4 ml-1" />
               </Button>
             </div>
           </div>
@@ -352,7 +352,7 @@ export default function LearningModulePlayer() {
               className="min-h-[120px]"
               disabled={!!existingResponse?.completed_at}
             />
-            <p className="text-xs text-muted-foreground">{applicationAnswer.length} {t('characters', 'знака')} (min 20)</p>
+            <p className="text-xs text-muted-foreground">{applicationAnswer.length} {t('characters', 'знака')} ({t('min 20', 'мин. 20')})</p>
             {!existingResponse?.completed_at && (
               <div className="flex justify-end">
                 <Button onClick={handleSubmitAll} disabled={saving}>
