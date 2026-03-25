@@ -83,13 +83,28 @@ export default function Dictionary() {
   const [search, setSearch] = useState('');
   const [catFilter, setCatFilter] = useState('all');
   const [letterFilter, setLetterFilter] = useState('');
-  const [showQuiz, setShowQuiz] = useState(false);
-  const [quiz, setQuiz] = useState(() => generateQuiz('en'));
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const viewedTermsRef = useRef<Set<string>>(new Set());
+  const [quizStats, setQuizStats] = useState<{ count: number; avg: number; last: number | null } | null>(null);
 
   const termOfTheWeek = useMemo(() => getTermOfTheWeek(), []);
   const categories = useMemo(() => [...new Set(TERMS.map(t => t.category))].sort(), []);
+
+  // Load quiz stats
+  useEffect(() => {
+    if (!user) return;
+    (async () => {
+      const { data } = await supabase
+        .from('quiz_results')
+        .select('score, created_at')
+        .eq('user_id', user.id)
+        .eq('quiz_type', 'dictionary')
+        .order('created_at', { ascending: false });
+      if (data && data.length > 0) {
+        const avg = Math.round(data.reduce((s, r) => s + r.score, 0) / data.length);
+        setQuizStats({ count: data.length, avg, last: data[0].score });
+      }
+    })();
+  }, [user]);
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase();
@@ -107,19 +122,6 @@ export default function Dictionary() {
   }, []);
 
   const catColor = (c: string) => CATEGORY_COLORS[c] || 'bg-muted text-muted-foreground';
-
-  const nextQuiz = useCallback(() => {
-    setQuiz(generateQuiz(lang, quiz.term.term));
-    setSelectedAnswer(null);
-  }, [quiz.term.term, lang]);
-
-  // Regenerate quiz when language changes
-  const [prevLang, setPrevLang] = useState(lang);
-  if (lang !== prevLang) {
-    setPrevLang(lang);
-    setQuiz(generateQuiz(lang));
-    setSelectedAnswer(null);
-  }
 
   return (
     <div className="min-h-screen bg-background">
