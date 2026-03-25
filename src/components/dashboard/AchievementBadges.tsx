@@ -17,7 +17,7 @@ const ALL_BADGES: BadgeDef[] = [
   { id: 'startup_builder', icon: Shield, nameEn: 'Startup Builder', nameBg: 'Стартъп строител', descEn: 'Submitted startup idea', descBg: 'Подадена стартъп идея' },
   { id: 'full_canvas', icon: LayoutGrid, nameEn: 'Canvas Master', nameBg: 'Майстор на Канваса', descEn: 'Completed all 9 BMC sections', descBg: 'Завършени всички 9 секции на BMC' },
   { id: 'pitch_master', icon: Mic, nameEn: 'Pitch Master', nameBg: 'Майстор на Представянето', descEn: 'Submitted final startup pitch', descBg: 'Подадено финално представяне' },
-  { id: 'growth_hacker', icon: TrendingUp, nameEn: 'Growth Hacker', nameBg: 'Growth Hacker', descEn: 'Completed simulator', descBg: 'Завършен симулатор' },
+  { id: 'growth_hacker', icon: TrendingUp, nameEn: 'Growth Hacker', nameBg: 'Майстор на растежа', descEn: 'Completed simulator', descBg: 'Завършен симулатор' },
   { id: 'first_reviewer', icon: MessageSquare, nameEn: 'First Feedback', nameBg: 'Първа Рецензия', descEn: 'Completed a peer review', descBg: 'Завършена партньорска рецензия' },
   { id: 'ai_innovator', icon: Brain, nameEn: 'AI Innovator', nameBg: 'AI Иноватор', descEn: 'Used AI mentor feedback', descBg: 'Използвана AI обратна връзка' },
   { id: 'comeback_kid', icon: RotateCcw, nameEn: 'Comeback', nameBg: 'Завръщането', descEn: 'Returned after 3 days away', descBg: 'Върна се след 3 дни отсъствие' },

@@ -73,7 +73,7 @@ export default function CaseResults() {
           answer: resp?.answer ?? null, score: resp?.score ?? null,
           feedback: resp?.feedback ?? null, correct_answer: q.correct_answer,
           model_answer: q.model_answer, rubric: q.rubric,
-          step_title: stepMap[q.case_step_id] || 'Unknown',
+          step_title: stepMap[q.case_step_id] || tx('Unknown', 'Неизвестен'),
         };
       }));
       setLoading(false);
