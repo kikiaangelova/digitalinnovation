@@ -84,7 +84,9 @@ export default function StudentDashboard() {
     fetchData();
   }, [user, authLoading, navigate]);
 
-  const casesCompleted = submissions.filter(s => !s.is_draft).length;
+  const completedSubs = submissions.filter(s => !s.is_draft);
+  const casesCompleted = completedSubs.length;
+  const casesAbove80Percent = completedSubs.filter(s => s.total_score && s.max_score && (s.total_score / s.max_score) >= 0.8).length;
   const simWeek = simProgress?.current_week || 1;
   const simComplete = simProgress?.is_complete || false;
 
@@ -93,6 +95,14 @@ export default function StudentDashboard() {
   startupSections.forEach(s => {
     startupSectionMap[s] = startupProject ? ((startupProject as any)[s] || '').trim().length > 20 : false;
   });
+
+  const bmcFields = ['bmc_customer_segments', 'bmc_value_proposition', 'bmc_channels', 'bmc_customer_relationships', 'bmc_revenue_streams', 'bmc_key_resources', 'bmc_key_activities', 'bmc_key_partners', 'bmc_cost_structure'];
+  const bmcSectionsCompleted = startupProject ? bmcFields.filter(f => ((startupProject as any)[f] || '').trim().length > 10).length : 0;
+  const finalPitchSubmitted = startupProject ? ((startupProject as any).final_pitch || '').trim().length > 20 : false;
+
+  // Industries explored: count distinct topics from completed cases
+  const completedCaseIds = new Set(completedSubs.map(s => s.case_study_id));
+  const industriesExplored = new Set(cases.filter(c => completedCaseIds.has(c.id) && c.topic).map(c => c.topic)).size;
 
   const xp = totalXp;
 
