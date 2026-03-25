@@ -169,21 +169,21 @@ serve(async (req) => {
     await adminClient.from('xp_ledger').insert({
       user_id: userId,
       action,
-      xp: config.xp,
+      xp: xpToAward,
       context_id: context_id || null,
       metadata: metadata || null,
     });
 
     // Award XP to profile
-    const { error: xpError } = await adminClient.rpc("add_user_xp", { _user_id: userId, _xp: config.xp });
+    const { error: xpError } = await adminClient.rpc("add_user_xp", { _user_id: userId, _xp: xpToAward });
     if (xpError) {
       console.error("XP award error:", xpError.message);
     }
 
-    console.log(`Awarded ${config.xp} XP to ${userId} for ${action} (context: ${context_id || 'none'})`);
+    console.log(`Awarded ${xpToAward} XP to ${userId} for ${action} (context: ${context_id || 'none'})`);
 
     return new Response(JSON.stringify({ 
-      xp_awarded: config.xp, 
+      xp_awarded: xpToAward, 
       action,
       context_id 
     }), {
