@@ -173,8 +173,8 @@ export default function PeerReviewAdmin() {
 
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div>
-            <h1 className="text-2xl font-display font-bold text-foreground">{t('Peer Review Management', 'Управление на рецензии')}</h1>
-            <p className="text-sm text-muted-foreground">{t(`${reviews.length} reviews total`, `${reviews.length} рецензии общо`)}</p>
+             <h1 className="typo-h1">{t('Peer Review Management', 'Управление на рецензии')}</h1>
+            <p className="typo-helper">{t(`${reviews.length} reviews total`, `${reviews.length} рецензии общо`)}</p>
           </div>
           <Button onClick={assignPeerReviews} disabled={assigning}>
             <Shuffle className="h-4 w-4 mr-2" /> {assigning ? '...' : t('Auto-Assign Reviews', 'Автоматично разпределяне')}
