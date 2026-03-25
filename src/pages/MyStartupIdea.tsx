@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { LearningPhaseBar, WhatYouWillLearn, STARTUP_BUILDER_OUTCOMES } from '@/components/learning/LearningStructure';
+import StructuredFeedback from '@/components/feedback/StructuredFeedback';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
@@ -580,7 +581,7 @@ export default function MyStartupIdea() {
           </TabsContent>
 
           {/* Evaluate tab */}
-          <TabsContent value="evaluate">
+          <TabsContent value="evaluate" className="space-y-6">
             <IdeaEvaluation
               lang={lang as 'en' | 'bg'}
               startupData={{
@@ -592,6 +593,20 @@ export default function MyStartupIdea() {
                 industry: data.industry,
               }}
             />
+            {filledCount >= 3 && (
+              <StructuredFeedback
+                context={{
+                  type: 'startup_project',
+                  problem: data.problem,
+                  customer: data.customer,
+                  valueProp: data.value_proposition,
+                  businessModel: data.business_model,
+                  growthStrategy: data.growth_strategy,
+                  finalPitch: data.final_pitch,
+                }}
+                lang={lang as 'en' | 'bg'}
+              />
+            )}
           </TabsContent>
 
           {/* BMC tab */}

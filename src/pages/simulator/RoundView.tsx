@@ -6,6 +6,7 @@ import KPIDashboard from '@/components/simulator/KPIDashboard';
 import NarrativeBriefing from '@/components/simulator/NarrativeBriefing';
 import DecisionForm from '@/components/simulator/DecisionForm';
 import OutcomeReportView from '@/components/simulator/OutcomeReportView';
+import StructuredFeedback from '@/components/feedback/StructuredFeedback';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 import { toast } from 'sonner';
@@ -118,6 +119,19 @@ export default function RoundView() {
 
         {isSubmitted && outcomeReport && (
           <OutcomeReportView report={outcomeReport} lang={lang} />
+        )}
+
+        {isSubmitted && outcomeReport && currentState && (
+          <StructuredFeedback
+            context={{
+              type: 'simulator',
+              currentWeek: weekNumber,
+              kpis: currentState.kpis,
+              grade: undefined,
+              decisions: submission?.answers,
+            }}
+            lang={lang as 'en' | 'bg'}
+          />
         )}
 
         <div>
