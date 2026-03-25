@@ -255,6 +255,24 @@ export default function StudentDashboard() {
           </div>
         </div>
 
+        {/* ═══ Final Exam ═══ */}
+        <div className="rounded-xl border border-primary/30 bg-primary/5 p-5">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                <Award className="h-5 w-5 text-primary" />
+              </div>
+              <div>
+                <h3 className="typo-card-title">{t('Final Exam & Certificate', 'Финален изпит и сертификат')}</h3>
+                <p className="text-xs text-muted-foreground">{t('Prove your skills and earn your certificate', 'Докажи уменията си и получи сертификат')}</p>
+              </div>
+            </div>
+            <Button onClick={() => navigate('/final-exam')} className="gap-2">
+              <Award className="h-4 w-4" /> {t('Take Exam', 'Започни изпит')}
+            </Button>
+          </div>
+        </div>
+
         {/* ═══ AI Mentor ═══ */}
         <AIMentorWidget
           lang={lang}
