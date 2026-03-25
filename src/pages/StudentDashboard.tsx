@@ -148,10 +148,10 @@ export default function StudentDashboard() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl md:text-3xl font-display font-bold text-foreground">
+            <h1 className="typo-h1">
               {t('Your Innovation Dashboard', 'Твоето иновационно табло')}
             </h1>
-            <p className="text-muted-foreground text-sm mt-1">
+            <p className="typo-helper mt-1">
               {t('Track your progress, earn XP, and build your startup', 'Проследи напредъка си, спечели XP и изгради своя стартъп')}
             </p>
           </div>
