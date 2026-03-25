@@ -44,8 +44,8 @@ const STAGE_OUTCOMES: StageOutcomes[] = [
       'Complete your first case study',
     ],
     doBg: [
-      'Анализирайте индустрия за дигитални възможности',
-      'Завършете първия си казус',
+      'Анализирай индустрия за дигитални възможности',
+      'Завърши първия си казус',
     ],
     estMinutes: 45,
     xpAvailable: 130,
