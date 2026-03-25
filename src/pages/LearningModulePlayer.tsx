@@ -202,14 +202,28 @@ export default function LearningModulePlayer() {
     }
   };
 
+  const hasCase = !!mod.embedded_case;
   const phases: { key: Phase; label: string }[] = [
     { key: 'theory', label: t('Theory', 'Теория') },
     { key: 'quiz', label: t('Quiz', 'Тест') },
+    ...(hasCase ? [{ key: 'case_study' as Phase, label: t('Case', 'Казус') }] : []),
     { key: 'analytical', label: t('Analysis', 'Анализ') },
     { key: 'application', label: t('Application', 'Приложение') },
     { key: 'results', label: t('Results', 'Резултати') },
   ];
   const phaseIdx = phases.findIndex(p => p.key === phase);
+  const nextAfterQuiz: Phase = hasCase ? 'case_study' : 'analytical';
+
+  const canNavigateTo = (key: Phase): boolean => {
+    if (phase === 'results') return true;
+    if (key === 'theory') return true;
+    if (key === 'quiz' && phaseIdx >= 1) return true;
+    if (key === 'case_study' && quizSubmitted) return true;
+    if (key === 'analytical' && quizSubmitted) return true;
+    if (key === 'application' && quizSubmitted) return true;
+    if (key === 'results' && existingResponse?.completed_at) return true;
+    return false;
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -232,21 +246,18 @@ export default function LearningModulePlayer() {
 
         {/* Learning Structure Bar */}
         <LearningPhaseBar
-          currentPhase={phase === 'theory' ? 'learn' : phase === 'quiz' ? 'practice' : phase === 'analytical' ? 'feedback' : phase === 'application' ? 'reflect' : 'next'}
+          currentPhase={phase === 'theory' ? 'learn' : phase === 'quiz' ? 'practice' : phase === 'case_study' ? 'practice' : phase === 'analytical' ? 'feedback' : phase === 'application' ? 'reflect' : 'next'}
           lang={lang as 'en' | 'bg'}
           completedPhases={phase === 'results' ? ['learn', 'practice', 'feedback', 'reflect', 'next'] : []}
         />
         <WhatYouWillLearn outcomes={THEORY_MODULE_OUTCOMES} lang={lang as 'en' | 'bg'} activityType={{ en: 'Theory Module', bg: 'Теоретичен модул' }} />
 
         {/* Phase Progress */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 flex-wrap">
           {phases.map((p, i) => (
             <div key={p.key} className="flex items-center gap-1">
               <button
-                onClick={() => {
-                  if (phase === 'results' || (p.key === 'theory') || (p.key === 'quiz' && phaseIdx >= 1) || (p.key === 'analytical' && quizSubmitted) || (p.key === 'application' && quizSubmitted) || (p.key === 'results' && existingResponse?.completed_at))
-                    setPhase(p.key);
-                }}
+                onClick={() => { if (canNavigateTo(p.key)) setPhase(p.key); }}
                 className={`text-xs px-3 py-1.5 rounded-full transition-colors ${i === phaseIdx ? 'bg-primary text-primary-foreground font-semibold' : i < phaseIdx ? 'bg-primary/20 text-primary' : 'bg-accent text-muted-foreground'}`}
               >
                 {p.label}
