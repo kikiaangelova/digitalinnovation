@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import AppHeader from '@/components/layout/AppHeader';
 import LearningNavigator from '@/components/dashboard/LearningNavigator';
 import AchievementBadges from '@/components/dashboard/AchievementBadges';
+import TestInsights from '@/components/dashboard/TestInsights';
 import AIMentorWidget from '@/components/dashboard/AIMentorWidget';
 import LearningOutcomes, { calcOutcomeScores } from '@/components/dashboard/LearningOutcomes';
 import Leaderboard from '@/components/dashboard/Leaderboard';
