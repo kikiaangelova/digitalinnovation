@@ -682,16 +682,16 @@ const translations = {
     stepOf: 'Стъпка {current} от {total}',
 
     // Simulator student landing
-    yourSimulations: 'Вашите симулации',
-    yourSimulationsDesc: 'Управлявайте виртуален стартъп и вземайте стратегически решения, които оформят бъдещето на компанията ви.',
+    yourSimulations: 'Твоите симулации',
+    yourSimulationsDesc: 'Управлявай виртуален стартъп и вземай стратегически решения, които оформят бъдещето на компанията ти.',
     weeks: 'седмици',
     continueSimulator: 'Продължи симулатора',
     notStartedYet: 'Още не си стартирал симулатора. Започни сега, за да започнеш Седмица 1.',
     week1PreviewTitle: 'Какво ще правиш в Седмица 1:',
     startIndividualSimulator: 'Започни индивидуален симулатор',
-    week1DefineMarket: 'Определете целевия пазар',
-    week1ChooseStrategy: 'Изберете продуктова стратегия',
-    week1SetPriorities: 'Задайте приоритети за растеж',
+    week1DefineMarket: 'Определи целевия пазар',
+    week1ChooseStrategy: 'Избери продуктова стратегия',
+    week1SetPriorities: 'Задай приоритети за растеж',
   },
 } as const;
 
