@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import AppHeader from '@/components/layout/AppHeader';
 import LearningNavigator from '@/components/dashboard/LearningNavigator';
 import AchievementBadges from '@/components/dashboard/AchievementBadges';
+import TestInsights from '@/components/dashboard/TestInsights';
 import AIMentorWidget from '@/components/dashboard/AIMentorWidget';
 import LearningOutcomes, { calcOutcomeScores } from '@/components/dashboard/LearningOutcomes';
 import Leaderboard from '@/components/dashboard/Leaderboard';
@@ -34,6 +35,9 @@ export default function StudentDashboard() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [peerReviewsGiven, setPeerReviewsGiven] = useState(0);
   const [loginStreakDays, setLoginStreakDays] = useState(0);
+  const [quizTestsCompleted, setQuizTestsCompleted] = useState(0);
+  const [quizCategoriesTested, setQuizCategoriesTested] = useState(0);
+  const [quizConsecutiveImprovements, setQuizConsecutiveImprovements] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -73,6 +77,24 @@ export default function StudentDashboard() {
             if (diff <= 1.5) streak++; else break;
           }
           setLoginStreakDays(streak);
+        }
+        // Quiz stats for badges
+        const { data: quizData } = await supabase
+          .from('quiz_results')
+          .select('score, category, created_at')
+          .eq('user_id', user.id)
+          .eq('quiz_type', 'dictionary')
+          .order('created_at', { ascending: true });
+        if (quizData && quizData.length > 0) {
+          setQuizTestsCompleted(quizData.length);
+          setQuizCategoriesTested(new Set(quizData.map(r => r.category).filter(Boolean)).size);
+          // Count consecutive improvements
+          let consec = 0, maxConsec = 0;
+          for (let i = 1; i < quizData.length; i++) {
+            if (quizData[i].score > quizData[i - 1].score) { consec++; maxConsec = Math.max(maxConsec, consec); }
+            else consec = 0;
+          }
+          setQuizConsecutiveImprovements(maxConsec);
         }
       } catch (err) {
         console.error('Dashboard fetch error:', err);
@@ -191,6 +213,7 @@ export default function StudentDashboard() {
           outcomeScores={outcomeScores}
         />
         <DailyChallenge lang={lang} userId={user?.id} />
+        <TestInsights lang={lang} userId={user?.id} />
 
         {/* ═══ SECTION 2: Learning & Competition ═══ */}
         <div>
@@ -224,6 +247,9 @@ export default function StudentDashboard() {
               peerReviewsGiven={peerReviewsGiven}
               industriesExplored={industriesExplored}
               loginStreakDays={loginStreakDays}
+              quizTestsCompleted={quizTestsCompleted}
+              quizCategoriesTested={quizCategoriesTested}
+              quizConsecutiveImprovements={quizConsecutiveImprovements}
             />
 
             {/* Peer Review + XP Actions — side by side */}

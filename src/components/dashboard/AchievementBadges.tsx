@@ -1,4 +1,4 @@
-import { Award, Search, Lightbulb, TrendingUp, Brain, Shield, Check, LayoutGrid, Mic, MessageSquare, RotateCcw, Briefcase, Calendar } from 'lucide-react';
+import { Award, Search, Lightbulb, TrendingUp, Brain, Shield, Check, LayoutGrid, Mic, MessageSquare, RotateCcw, Briefcase, Calendar, HelpCircle, BookOpen, Target, Repeat } from 'lucide-react';
 import { type LucideIcon } from 'lucide-react';
 
 interface BadgeDef {
@@ -23,6 +23,11 @@ const ALL_BADGES: BadgeDef[] = [
   { id: 'comeback_kid', icon: RotateCcw, nameEn: 'Comeback', nameBg: 'Завръщането', descEn: 'Returned after 3 days away', descBg: 'Върна се след 3 дни отсъствие' },
   { id: 'industry_expert', icon: Briefcase, nameEn: 'Industry Expert', nameBg: 'Индустриален Експерт', descEn: 'Completed cases in 3 different industries', descBg: 'Завършени казуси в 3 различни индустрии' },
   { id: 'perfect_week', icon: Calendar, nameEn: 'Perfect Week', nameBg: 'Перфектна Седмица', descEn: 'Logged in 5 days in a row', descBg: 'Влизал 5 дни подред' },
+  // Test-related badges
+  { id: 'quiz_starter', icon: HelpCircle, nameEn: 'Quiz Starter', nameBg: 'Начало на теста', descEn: 'Completed first quiz test', descBg: 'Завършен първи тест' },
+  { id: 'knowledge_builder', icon: BookOpen, nameEn: 'Knowledge Builder', nameBg: 'Строител на знания', descEn: 'Completed 5 quiz tests', descBg: 'Завършени 5 тестa' },
+  { id: 'test_explorer', icon: Target, nameEn: 'Test Explorer', nameBg: 'Изследовател на тестове', descEn: 'Tested in 3 different categories', descBg: 'Тестван в 3 различни категории' },
+  { id: 'consistency_master', icon: Repeat, nameEn: 'Consistency Master', nameBg: 'Майстор на постоянството', descEn: 'Improved score 3 times in a row', descBg: 'Подобрен резултат 3 пъти подред' },
 ];
 
 export interface AchievementBadgesProps {
@@ -38,6 +43,10 @@ export interface AchievementBadgesProps {
   returnedAfterAbsence?: boolean;
   industriesExplored?: number;
   loginStreakDays?: number;
+  // Test badges
+  quizTestsCompleted?: number;
+  quizCategoriesTested?: number;
+  quizConsecutiveImprovements?: number;
 }
 
 function getProgress(id: string, lang: 'en' | 'bg', props: AchievementBadgesProps): { label: string; current: number; max: number } | null {
@@ -77,6 +86,23 @@ function getProgress(id: string, lang: 'en' | 'bg', props: AchievementBadgesProp
       const v = props.loginStreakDays || 0;
       return { label: bg ? `${Math.min(v, 5)} / 5 дни подред` : `${Math.min(v, 5)} / 5 days in a row`, current: Math.min(v, 5), max: 5 };
     }
+    // Test badges
+    case 'quiz_starter': {
+      const v = props.quizTestsCompleted || 0;
+      return { label: bg ? `${Math.min(v, 1)} / 1 тест` : `${Math.min(v, 1)} / 1 test`, current: Math.min(v, 1), max: 1 };
+    }
+    case 'knowledge_builder': {
+      const v = props.quizTestsCompleted || 0;
+      return { label: bg ? `${Math.min(v, 5)} / 5 тестa` : `${Math.min(v, 5)} / 5 tests`, current: Math.min(v, 5), max: 5 };
+    }
+    case 'test_explorer': {
+      const v = props.quizCategoriesTested || 0;
+      return { label: bg ? `${Math.min(v, 3)} / 3 категории` : `${Math.min(v, 3)} / 3 categories`, current: Math.min(v, 3), max: 3 };
+    }
+    case 'consistency_master': {
+      const v = props.quizConsecutiveImprovements || 0;
+      return { label: bg ? `${Math.min(v, 3)} / 3 подобрения` : `${Math.min(v, 3)} / 3 improvements`, current: Math.min(v, 3), max: 3 };
+    }
     default:
       return null;
   }
@@ -99,6 +125,11 @@ export default function AchievementBadges(props: AchievementBadgesProps) {
   if (props.returnedAfterAbsence) earned.add('comeback_kid');
   if ((props.industriesExplored || 0) >= 3) earned.add('industry_expert');
   if ((props.loginStreakDays || 0) >= 5) earned.add('perfect_week');
+  // Test badges
+  if ((props.quizTestsCompleted || 0) >= 1) earned.add('quiz_starter');
+  if ((props.quizTestsCompleted || 0) >= 5) earned.add('knowledge_builder');
+  if ((props.quizCategoriesTested || 0) >= 3) earned.add('test_explorer');
+  if ((props.quizConsecutiveImprovements || 0) >= 3) earned.add('consistency_master');
 
   return (
     <div className="rounded-xl border border-border bg-card p-5">
