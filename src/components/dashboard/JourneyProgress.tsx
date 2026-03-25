@@ -106,7 +106,7 @@ export default function JourneyProgress(props: JourneyProgressProps) {
             {t(`Step ${completedCount} of 6`, `Стъпка ${completedCount} от 6`)}
           </span>
         </div>
-        <Progress value={overallPct} className="h-2.5" />
+        <Progress value={overallPct} className="h-2.5" indicatorClassName={overallPct >= 100 ? 'bg-sim-success' : 'bg-primary'} />
         <p className="text-xs text-muted-foreground mt-1.5">{overallPct}% {t('complete', 'завършено')}</p>
       </div>
 
