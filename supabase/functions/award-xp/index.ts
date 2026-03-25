@@ -77,7 +77,31 @@ serve(async (req) => {
     const config = XP_CONFIG[action];
     let xpToAward = config.xp;
 
-    // Check daily cap for dictionary actions
+    // Allow only validated XP overrides for adaptive dictionary quizzes
+    if (action === 'dict_quiz_complete') {
+      const override = Number(metadata?.xp_override);
+      const allowed = new Set([10, 20, 30, 50]);
+      if (!allowed.has(override)) {
+        return new Response(JSON.stringify({ error: 'Invalid xp_override for dict_quiz_complete' }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      xpToAward = override;
+    }
+
+    if (action === 'dict_quiz_bonus') {
+      const bonusType = String(metadata?.bonus_type || '');
+      if (!['first_high_score', 'improved_retry'].includes(bonusType)) {
+        return new Response(JSON.stringify({ error: 'Invalid bonus_type for dict_quiz_bonus' }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      xpToAward = 10;
+    }
+
+    // Check daily cap for capped actions
     if (config.daily_cap) {
       const today = new Date().toISOString().split('T')[0];
       const { count } = await adminClient
@@ -87,7 +111,7 @@ serve(async (req) => {
         .eq('action', action)
         .gte('created_at', `${today}T00:00:00Z`);
 
-      const dailyXpUsed = (count || 0) * config.xp;
+      const dailyXpUsed = (count || 0) * xpToAward;
       if (dailyXpUsed >= config.daily_cap) {
         return new Response(JSON.stringify({ 
           xp_awarded: 0, 
