@@ -1516,6 +1516,14 @@ export type Database = {
       }
       get_registered_user_count: { Args: never; Returns: number }
       get_user_cohort_id: { Args: { _user_id: string }; Returns: string }
+      get_weekly_leaderboard: {
+        Args: { _limit?: number }
+        Returns: {
+          display_name: string
+          total_xp: number
+          user_id: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
