@@ -46,6 +46,8 @@ import PeerReviewAdmin from "./pages/admin/PeerReviewAdmin";
 import LearningJourney from "./pages/LearningJourney";
 import LearningModules from "./pages/LearningModules";
 import LearningModulePlayer from "./pages/LearningModulePlayer";
+import FinalExam from "./pages/FinalExam";
+import Certificate from "./pages/Certificate";
 
 const queryClient = new QueryClient();
 
