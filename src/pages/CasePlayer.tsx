@@ -550,6 +550,12 @@ export default function CasePlayer() {
   /* Should we show "Key Insight" reveal? Show on steps with questions, after all answered */
   const showInsightPanel = stepQuestions.length > 0 && currentStep >= 1;
 
+  /* Map case steps to learning phases */
+  const currentLearningPhase: LearningPhase = currentStep <= 1 ? 'learn' : currentStep <= 5 ? 'practice' : currentStep === 6 ? 'feedback' : 'reflect';
+  const completedLearningPhases: LearningPhase[] = currentStep > 1 ? ['learn'] as LearningPhase[] : [];
+  if (currentStep > 5) completedLearningPhases.push('practice');
+  if (currentStep > 6) completedLearningPhases.push('feedback');
+
   return (
     <div className="min-h-screen bg-background">
       <AppHeader />
@@ -564,6 +570,10 @@ export default function CasePlayer() {
             </span>
           </div>
           <Progress value={((currentStep + 1) / steps.length) * 100} className="h-2" />
+          {/* Learning phase bar */}
+          <div className="mt-2">
+            <LearningPhaseBar currentPhase={currentLearningPhase} lang={lang as 'en' | 'bg'} completedPhases={completedLearningPhases} />
+          </div>
           <div className="flex gap-1 mt-2 overflow-x-auto pb-1">
             {steps.map((s, i) => {
               const StepIcon = SECTION_ICONS[i] || FileText;
@@ -590,6 +600,10 @@ export default function CasePlayer() {
       </div>
 
       <main className="container mx-auto px-4 py-8 max-w-3xl space-y-6">
+        {/* What You Will Learn – shown on first step */}
+        {currentStep === 0 && (
+          <WhatYouWillLearn outcomes={CASE_STUDY_OUTCOMES} lang={lang as 'en' | 'bg'} activityType={{ en: 'Case Study', bg: 'Казус' }} />
+        )}
         {/* Section header with hint */}
         <div className="flex items-start gap-4">
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 shrink-0">
