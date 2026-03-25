@@ -81,9 +81,9 @@ export default function StructuredFeedback({ context, lang, autoLoad = false, cl
   };
 
   // Auto-load on mount if requested
-  useState(() => {
+  useEffect(() => {
     if (autoLoad) requestFeedback();
-  });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className={`rounded-xl border-2 border-primary/20 bg-card overflow-hidden ${className}`}>
