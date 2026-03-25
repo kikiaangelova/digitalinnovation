@@ -177,8 +177,8 @@
 }
 
 [data-sonner-toast].xp-toast {
-  background: linear-gradient(135deg, hsl(226 70% 55%), hsl(226 70% 40%));
+  background: linear-gradient(135deg, hsl(var(--xp-gold)), hsl(28 90% 45%));
   color: white;
   border: none;
-  box-shadow: 0 8px 24px hsl(226 70% 40% / 0.35);
+  box-shadow: 0 8px 24px hsl(var(--xp-gold) / 0.4);
 }
