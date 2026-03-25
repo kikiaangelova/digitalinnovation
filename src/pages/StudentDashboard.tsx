@@ -13,6 +13,7 @@ import Leaderboard from '@/components/dashboard/Leaderboard';
 import WelcomeOnboarding from '@/components/onboarding/WelcomeOnboarding';
 import { Button } from '@/components/ui/button';
 import { Zap, BookOpen, Rocket, BarChart3, FileText, Users, Star } from 'lucide-react';
+import DailyChallenge from '@/components/dashboard/DailyChallenge';
 
 interface CaseRow { id: string; title: string; difficulty: string; est_minutes: number | null; topic?: string | null; }
 interface SubRow { case_study_id: string; is_draft: boolean; total_score?: number | null; max_score?: number | null; }
