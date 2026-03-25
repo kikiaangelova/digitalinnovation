@@ -194,15 +194,9 @@ export default function ProfilePage() {
               </select>
             </div>
           </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <Label>{t.fullName}</Label>
-              <Input value={fullName} onChange={e => setFullName(e.target.value)} />
-            </div>
-            <div>
-              <Label>{t.linkedInUrl}</Label>
-              <Input value={linkedIn} onChange={e => setLinkedIn(e.target.value)} placeholder="https://linkedin.com/in/..." />
-            </div>
+          <div>
+            <Label>{t.linkedInUrl}</Label>
+            <Input value={linkedIn} onChange={e => setLinkedIn(e.target.value)} placeholder="https://linkedin.com/in/..." />
           </div>
           <div>
             <Label>{t.bio}</Label>
