@@ -45,6 +45,7 @@ export default function ProfilePage() {
       const { data: p } = await supabase.from('profiles').select('*').eq('user_id', user.id).maybeSingle();
       if (p) {
         setFullName(p.full_name || '');
+        setDisplayName((p as any).display_name || '');
         setBio((p as any).bio || '');
         setSkillsTags((p as any).skills_tags || []);
         setInterests((p as any).interests || []);
