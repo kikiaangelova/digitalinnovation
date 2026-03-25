@@ -247,6 +247,9 @@ export default function StudentDashboard() {
               peerReviewsGiven={peerReviewsGiven}
               industriesExplored={industriesExplored}
               loginStreakDays={loginStreakDays}
+              quizTestsCompleted={quizTestsCompleted}
+              quizCategoriesTested={quizCategoriesTested}
+              quizConsecutiveImprovements={quizConsecutiveImprovements}
             />
 
             {/* Peer Review + XP Actions — side by side */}
