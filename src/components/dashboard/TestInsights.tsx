@@ -70,7 +70,8 @@ export default function TestInsights({ lang, userId }: TestInsightsProps) {
         improving = recent > older;
       }
 
-      setStats({ count: data.length, avg, best, lastScore, strongCategory, weakCategory, improving });
+      const recommendedNextTest = weakCategory || null;
+      setStats({ count: data.length, avg, best, lastScore, strongCategory, weakCategory, improving, recommendedNextTest });
     })();
   }, [userId]);
 
