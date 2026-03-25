@@ -39,6 +39,7 @@ export default function AuthPage() {
   const [studentClass, setStudentClass] = useState('');
   const [school, setSchool] = useState('');
   const [country, setCountry] = useState('');
+  const [displayName, setDisplayName] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
