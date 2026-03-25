@@ -1,13 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
-import { Zap, Star, Shield, Rocket, Crown } from 'lucide-react';
+import { Zap, Star, Shield, Rocket, Crown, Gem } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 
 const LEVELS = [
-  { level: 1, name: { en: 'Digital Explorer', bg: 'Дигитален Изследовател' }, xpNeeded: 0, icon: Zap, gradient: 'gradient-explorer' },
-  { level: 2, name: { en: 'Problem Solver', bg: 'Решавач на проблеми' }, xpNeeded: 200, icon: Star, gradient: 'gradient-strategist' },
-  { level: 3, name: { en: 'Startup Builder', bg: 'Стартъп строител' }, xpNeeded: 500, icon: Shield, gradient: 'gradient-builder' },
-  { level: 4, name: { en: 'Innovation Strategist', bg: 'Иновационен стратег' }, xpNeeded: 1000, icon: Rocket, gradient: 'gradient-designer' },
-  { level: 5, name: { en: 'Startup Founder', bg: 'Стартъп основател' }, xpNeeded: 1800, icon: Crown, gradient: 'gradient-founder' },
+  { level: 1, name: { en: 'Explorer', bg: 'Изследовател' }, xpNeeded: 0, icon: Zap, gradient: 'gradient-explorer' },
+  { level: 2, name: { en: 'Solver', bg: 'Решавач' }, xpNeeded: 201, icon: Star, gradient: 'gradient-strategist' },
+  { level: 3, name: { en: 'Strategist', bg: 'Стратег' }, xpNeeded: 501, icon: Shield, gradient: 'gradient-builder' },
+  { level: 4, name: { en: 'Innovator', bg: 'Иноватор' }, xpNeeded: 901, icon: Rocket, gradient: 'gradient-designer' },
+  { level: 5, name: { en: 'Founder', bg: 'Основател' }, xpNeeded: 1401, icon: Crown, gradient: 'gradient-founder' },
+  { level: 6, name: { en: 'Legend', bg: 'Легенда' }, xpNeeded: 2001, icon: Gem, gradient: 'gradient-legend' },
 ];
 
 interface LevelCardProps {
@@ -85,7 +86,7 @@ export default function LevelCard({ xp, lang }: LevelCardProps) {
           <Progress value={progressToNext} className="h-2.5" indicatorClassName="bg-xp-gold" />
         </div>
       ) : (
-        <p className="text-sm font-medium text-sim-success">
+        <p className="text-sm font-medium text-success">
           {lang === 'bg' ? '🎉 Максимално ниво достигнато!' : '🎉 Max level reached!'}
         </p>
       )}
