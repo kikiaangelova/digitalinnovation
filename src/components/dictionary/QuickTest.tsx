@@ -527,7 +527,7 @@ export default function QuickTest() {
 
   // ─── RESULTS PHASE ───
   if (phase === 'results' && savedResult) {
-    const { score, xp, bonusXp } = savedResult;
+    const { score, xp, bonusXp, unlockedBadges, nextStep } = savedResult;
     const correctCount = answers.filter((a, i) => a === questions[i]?.correctIndex).length;
     const tier = getXpTier(score);
     const { strong, weak } = detectWeakAreas(questions, answers);
