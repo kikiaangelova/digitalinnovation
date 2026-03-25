@@ -168,7 +168,7 @@ ${data.question_context ? `\nContext/Exhibits provided: ${data.question_context}
         model: "google/gemini-2.5-flash-lite",
         max_tokens: 400,
         messages: [
-          { role: "system", content: systemPrompt },
+          { role: "system", content: mentorSystemPrompt },
           { role: "user", content: userPrompt },
         ],
       }),
