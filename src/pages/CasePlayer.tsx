@@ -1,5 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
+import { LearningPhaseBar, WhatYouWillLearn, CASE_STUDY_OUTCOMES } from '@/components/learning/LearningStructure';
+import type { LearningPhase } from '@/components/learning/LearningStructure';
 import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -548,6 +550,12 @@ export default function CasePlayer() {
   /* Should we show "Key Insight" reveal? Show on steps with questions, after all answered */
   const showInsightPanel = stepQuestions.length > 0 && currentStep >= 1;
 
+  /* Map case steps to learning phases */
+  const currentLearningPhase: LearningPhase = currentStep <= 1 ? 'learn' : currentStep <= 5 ? 'practice' : currentStep === 6 ? 'feedback' : 'reflect';
+  const completedLearningPhases: LearningPhase[] = currentStep > 1 ? ['learn'] as LearningPhase[] : [];
+  if (currentStep > 5) completedLearningPhases.push('practice');
+  if (currentStep > 6) completedLearningPhases.push('feedback');
+
   return (
     <div className="min-h-screen bg-background">
       <AppHeader />
@@ -562,6 +570,10 @@ export default function CasePlayer() {
             </span>
           </div>
           <Progress value={((currentStep + 1) / steps.length) * 100} className="h-2" />
+          {/* Learning phase bar */}
+          <div className="mt-2">
+            <LearningPhaseBar currentPhase={currentLearningPhase} lang={lang as 'en' | 'bg'} completedPhases={completedLearningPhases} />
+          </div>
           <div className="flex gap-1 mt-2 overflow-x-auto pb-1">
             {steps.map((s, i) => {
               const StepIcon = SECTION_ICONS[i] || FileText;
@@ -588,6 +600,10 @@ export default function CasePlayer() {
       </div>
 
       <main className="container mx-auto px-4 py-8 max-w-3xl space-y-6">
+        {/* What You Will Learn – shown on first step */}
+        {currentStep === 0 && (
+          <WhatYouWillLearn outcomes={CASE_STUDY_OUTCOMES} lang={lang as 'en' | 'bg'} activityType={{ en: 'Case Study', bg: 'Казус' }} />
+        )}
         {/* Section header with hint */}
         <div className="flex items-start gap-4">
           <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10 shrink-0">
@@ -928,6 +944,37 @@ export default function CasePlayer() {
                 {tl('Go to My Startup', 'Отиди на Моят стартъп')}
               </Button>
             </div>
+          </div>
+        )}
+
+        {/* ── Learning Outcome Summary (last step) ── */}
+        {isLastStep && (
+          <div className="rounded-xl border border-primary/20 bg-primary/5 p-5 space-y-3">
+            <div className="flex items-center gap-2">
+              <Award className="h-5 w-5 text-primary" />
+              <h3 className="text-base font-display font-semibold text-foreground">
+                {tl('What you practiced in this case:', 'Какво упражнихте в този казус:')}
+              </h3>
+            </div>
+            <div className="grid sm:grid-cols-2 gap-2">
+              {[
+                { icon: Brain, en: 'Analytical thinking & problem decomposition', bg: 'Аналитично мислене и разлагане на проблеми' },
+                { icon: TrendingUp, en: 'Market & industry data interpretation', bg: 'Интерпретация на пазарни и индустриални данни' },
+                { icon: Target, en: 'Evidence-based strategic decisions', bg: 'Стратегически решения, базирани на доказателства' },
+                { icon: Lightbulb, en: 'Innovation proposal & recommendation', bg: 'Иновационно предложение и препоръка' },
+              ].map((item, i) => (
+                <div key={i} className="flex items-center gap-2 rounded-lg bg-card/80 border border-border/50 p-2.5">
+                  <item.icon className="h-4 w-4 text-primary shrink-0" />
+                  <span className="text-xs text-foreground">{tl(item.en, item.bg)}</span>
+                </div>
+              ))}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {tl(
+                'Submit your case to receive AI feedback, a detailed score breakdown, and skills improvement analysis.',
+                'Изпратете казуса, за да получите AI обратна връзка, подробна разбивка на резултата и анализ на подобрените умения.'
+              )}
+            </p>
           </div>
         )}
 
