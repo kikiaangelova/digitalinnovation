@@ -128,7 +128,7 @@ export default function ProfilePage() {
             <p className="text-2xl font-bold text-foreground">{avgScore}%</p>
             <p className="text-xs text-muted-foreground">{t.avgScore}</p>
             {avgScore === 0 && (
-              <p className="text-[10px] text-muted-foreground mt-1">{lang === 'bg' ? 'Завърши казус, за да видиш резултат' : 'Complete a case to see your score'}</p>
+              <p className="text-xs text-muted-foreground mt-1">{lang === 'bg' ? 'Завърши казус, за да видиш резултат' : 'Complete a case to see your score'}</p>
             )}
           </div>
           <div className="rounded-lg border border-border bg-card p-4 text-center">
