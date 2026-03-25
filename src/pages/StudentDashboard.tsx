@@ -89,6 +89,7 @@ export default function StudentDashboard() {
         if (quizData && quizData.length > 0) {
           setQuizTestsCompleted(quizData.length);
           setQuizCategoriesTested(new Set(quizData.map(r => r.category).filter(Boolean)).size);
+          setQuizHighScores80(quizData.filter(r => r.score >= 80).length);
           // Count consecutive improvements
           let consec = 0, maxConsec = 0;
           for (let i = 1; i < quizData.length; i++) {
