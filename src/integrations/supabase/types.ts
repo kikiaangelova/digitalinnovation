@@ -843,6 +843,7 @@ export type Database = {
           bio: string | null
           cohort_id: string | null
           created_at: string
+          display_name: string | null
           full_name: string | null
           id: string
           interests: string[] | null
@@ -860,6 +861,7 @@ export type Database = {
           bio?: string | null
           cohort_id?: string | null
           created_at?: string
+          display_name?: string | null
           full_name?: string | null
           id?: string
           interests?: string[] | null
@@ -877,6 +879,7 @@ export type Database = {
           bio?: string | null
           cohort_id?: string | null
           created_at?: string
+          display_name?: string | null
           full_name?: string | null
           id?: string
           interests?: string[] | null
