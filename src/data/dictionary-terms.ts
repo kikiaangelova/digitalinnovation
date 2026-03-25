@@ -1,3 +1,5 @@
+export type TermDifficulty = 'beginner' | 'intermediate' | 'advanced';
+
 export interface DictionaryTerm {
   term: string;
   termBg: string;
@@ -5,6 +7,32 @@ export interface DictionaryTerm {
   definitionBg: string;
   category: string;
   example?: string;
+  difficulty?: TermDifficulty;
+}
+
+// Assign difficulty based on category complexity
+const CATEGORY_DIFFICULTY: Record<string, TermDifficulty> = {
+  Innovation: 'beginner',
+  Startup: 'beginner',
+  Product: 'intermediate',
+  Data: 'intermediate',
+  Technology: 'beginner',
+  Strategy: 'advanced',
+  Platform: 'intermediate',
+  Metrics: 'advanced',
+  Experimentation: 'intermediate',
+  AI: 'intermediate',
+  'Business Model': 'intermediate',
+  Growth: 'advanced',
+  Marketing: 'beginner',
+  'Pricing & Revenue': 'intermediate',
+  'Team & Roles': 'beginner',
+  Operations: 'intermediate',
+  'Supply Chain': 'intermediate',
+};
+
+export function getTermDifficulty(term: DictionaryTerm): TermDifficulty {
+  return term.difficulty || CATEGORY_DIFFICULTY[term.category] || 'intermediate';
 }
 
 export const TERMS: DictionaryTerm[] = [
