@@ -122,7 +122,7 @@ export default function Leaderboard({ lang, currentUserId, limit = 10, showTitle
                 >
                   {RankIcon ? (
                     <div className={`flex h-8 w-8 items-center justify-center rounded-full ${rankStyle.gradient} shrink-0`}>
-                      <RankIcon className={`h-4 w-4 ${e.rank === 1 ? 'text-primary-foreground' : e.rank === 3 ? 'text-primary-foreground' : 'text-foreground'}`} />
+                      <RankIcon className={`h-4 w-4 text-white`} />
                     </div>
                   ) : (
                     <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted shrink-0">
