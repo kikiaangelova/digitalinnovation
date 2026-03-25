@@ -397,20 +397,20 @@ const translations = {
     learningPath: 'Вашият 6-седмичен учебен път',
     learningPathDesc: 'Структурирана програма от основите до представянето на стартъп.',
     week: 'Седмица',
-    readyToInnovate: 'Готови ли сте да иновирате?',
-    readyToInnovateDesc: 'Присъединете се към лабораторията за дигитални иновации и започнете да строите бъдещето си днес.',
+    readyToInnovate: 'Готов ли си да иновираш?',
+    readyToInnovateDesc: 'Присъедини се към лабораторията за дигитални иновации и започни да градиш бъдещето си днес.',
 
     // Learn cards
     learnDigitalInnovation: 'Дигитални иновации',
     learnDigitalInnovationDesc: 'Разбери как технологиите трансформират индустриите.',
-    learnStartupThinking: 'Стартиращо предприемачество',
-    learnStartupThinkingDesc: 'Научи се да откривш проблеми и да създаваш решения.',
+    learnStartupThinking: 'Стартъп мислене',
+    learnStartupThinkingDesc: 'Научи се да откриваш проблеми и да създаваш решения.',
     learnBusinessModels: 'Бизнес модели',
     learnBusinessModelsDesc: 'Проектирай как стартъпът ти генерира приходи.',
-    learnProductDesign: 'Дизайн на дигитален продукт',
-    learnProductDesignDesc: 'Създай концепция за минимално жизнеспособен продукт.',
-    learnGrowthStrategy: 'Стратегии за растеж',
-    learnGrowthStrategyDesc: 'Избери маркетинг и стратегии за мащабиране.',
+    learnProductDesign: 'Дизайн на продукт',
+    learnProductDesignDesc: 'Създай концепция за минимално жизнеспособен продукт (MVP).',
+    learnGrowthStrategy: 'Стратегия за растеж',
+    learnGrowthStrategyDesc: 'Избери маркетинг канали и стратегии за мащабиране.',
 
     // Build steps
     buildIdentifyProblem: 'Открий проблем',
