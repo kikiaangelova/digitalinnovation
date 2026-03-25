@@ -848,6 +848,7 @@ export type Database = {
           interests: string[] | null
           leaderboard_visible: boolean
           links_json: Json | null
+          onboarding_completed: boolean
           profile_visible: boolean | null
           skills_tags: string[] | null
           total_xp: number
@@ -864,6 +865,7 @@ export type Database = {
           interests?: string[] | null
           leaderboard_visible?: boolean
           links_json?: Json | null
+          onboarding_completed?: boolean
           profile_visible?: boolean | null
           skills_tags?: string[] | null
           total_xp?: number
@@ -880,6 +882,7 @@ export type Database = {
           interests?: string[] | null
           leaderboard_visible?: boolean
           links_json?: Json | null
+          onboarding_completed?: boolean
           profile_visible?: boolean | null
           skills_tags?: string[] | null
           total_xp?: number
