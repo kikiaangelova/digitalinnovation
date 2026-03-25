@@ -12,7 +12,7 @@ import {
 } from 'recharts';
 import {
   Users, BookOpen, Rocket, Gamepad2, Trophy, TrendingUp,
-  Activity, ArrowLeft, Wifi,
+  Activity, ArrowLeft, Wifi, Brain, HelpCircle, TrendingDown, AlertTriangle,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { format, subDays, startOfDay, parseISO } from 'date-fns';
