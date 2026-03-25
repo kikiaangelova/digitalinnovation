@@ -329,10 +329,10 @@ export default function LearningModulePlayer() {
               className="min-h-[120px]"
               disabled={!!existingResponse?.completed_at}
             />
-            <p className="text-xs text-muted-foreground">{analyticalAnswer.length} {t('characters', 'знака')} (min 20)</p>
+            <p className="text-xs text-muted-foreground">{analyticalAnswer.length} {t('characters', 'знака')} ({t('min 20', 'мин. 20')})</p>
             <div className="flex justify-end">
               <Button onClick={() => setPhase('application')}>
-                {t('Continue', 'Продължи')} <ChevronRight className="h-4 w-4 ml-1" />
+                {t('Continue to Application', 'Продължи към приложението')} <ChevronRight className="h-4 w-4 ml-1" />
               </Button>
             </div>
           </div>
