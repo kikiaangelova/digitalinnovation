@@ -111,6 +111,7 @@ serve(async (req) => {
     // context_id-scoped dedup: actions that require a context_id and deduplicate per context
     const contextDedupActions = [
       'case_question_answer', 'sim_scenario_complete', 'sim_high_performance',
+      'dict_quiz_complete', 'dict_quiz_bonus',
     ];
 
     // Require context_id for all dedup and context-scoped actions
