@@ -101,6 +101,10 @@ function getProgress(id: string, lang: 'en' | 'bg', props: AchievementBadgesProp
       const v = props.quizCategoriesTested || 0;
       return { label: bg ? `${Math.min(v, 3)} / 3 категории` : `${Math.min(v, 3)} / 3 categories`, current: Math.min(v, 3), max: 3 };
     }
+    case 'test_sharp_analyst': {
+      const v = props.quizHighScores80 || 0;
+      return { label: bg ? `${Math.min(v, 3)} / 3 теста над 80%` : `${Math.min(v, 3)} / 3 tests above 80%`, current: Math.min(v, 3), max: 3 };
+    }
     case 'consistency_master': {
       const v = props.quizConsecutiveImprovements || 0;
       return { label: bg ? `${Math.min(v, 3)} / 3 подобрения` : `${Math.min(v, 3)} / 3 improvements`, current: Math.min(v, 3), max: 3 };
