@@ -118,9 +118,9 @@ export default function ProfilePage() {
           <div className="rounded-lg border border-border bg-card p-4 text-center">
             <BookOpen className="h-5 w-5 text-primary mx-auto mb-1" />
             <p className="text-2xl font-bold text-foreground">{completedCount}</p>
-            <p className="text-xs text-muted-foreground">{t.casesDone}</p>
+             <p className="text-xs text-muted-foreground">{t.casesDone}</p>
             {completedCount === 0 && (
-              <p className="text-[10px] text-primary mt-1">{lang === 'bg' ? 'Започни от Пътешествието →' : 'Start from the Journey →'}</p>
+              <p className="text-xs text-primary mt-1">{lang === 'bg' ? 'Започни от Пътешествието →' : 'Start from the Journey →'}</p>
             )}
           </div>
           <div className="rounded-lg border border-border bg-card p-4 text-center">
