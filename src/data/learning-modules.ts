@@ -311,6 +311,34 @@ Key metrics to track: **CAC** (cost to acquire), **LTV** (lifetime value), **con
     case_transition_bg: 'Научихте основите на маркетинга. Сега анализирайте как FinTech стартъпите привличат и задържат клиенти.',
     sim_transition_en: 'Apply your marketing strategy in the startup simulator to see how channel choices affect growth.',
     sim_transition_bg: 'Приложете маркетинговата си стратегия в стартъп симулатора, за да видите как изборът на канали влияе на растежа.',
+    embedded_case: {
+      title_en: 'Airbnb: How a Startup Grew Without a Marketing Budget',
+      title_bg: 'Airbnb: Как стартъп порасна без маркетингов бюджет',
+      learning_goal_en: 'Understand how creative, low-cost marketing strategies can drive explosive early growth.',
+      learning_goal_bg: 'Разбери как креативни, нискобюджетни маркетинг стратегии могат да движат експлозивен ранен растеж.',
+      context_en: `In 2009, Airbnb was struggling. The founders — Brian Chesky, Joe Gebbia, and Nathan Blecharczyk — had a platform for renting spare rooms, but almost nobody was booking. Listings had terrible photos, descriptions were vague, and trust between strangers was low. The company had almost no money for traditional advertising.
+
+Instead of buying ads, the founders made an unconventional decision: they personally visited hosts in New York, took professional photos of their apartments, and rewrote their listings. They also discovered that many potential hosts were already listing on Craigslist — the dominant classifieds platform at the time.
+
+Airbnb built a tool that allowed hosts to cross-post their Airbnb listing to Craigslist with one click, effectively hijacking Craigslist's massive traffic. This was not an official API integration — it was a creative (and controversial) growth hack.`,
+      context_bg: `През 2009 г. Airbnb се бореше. Основателите — Брайън Чески, Джо Гебиа и Нейтън Блечарчик — имаха платформа за наемане на стаи, но почти никой не резервираше. Обявите имаха ужасни снимки, описанията бяха неясни, а доверието между непознати беше ниско. Компанията нямаше почти никакви пари за реклама.
+
+Вместо да купуват реклами, основателите взеха нестандартно решение: лично посетиха домакини в Ню Йорк, направиха професионални снимки на апартаментите им и пренаписаха обявите им. Също така откриха, че много потенциални домакини вече публикуваха в Craigslist — доминиращата платформа за обяви.
+
+Airbnb създаде инструмент, който позволяваше на домакините да публикуват обявата си от Airbnb в Craigslist с едно кликване, ефективно пренасочвайки огромния трафик на Craigslist. Това не беше официална API интеграция — беше креативен (и спорен) growth hack.`,
+      problem_en: 'How can a startup with zero marketing budget acquire its first thousands of users in a market dominated by an established competitor (Craigslist)?',
+      problem_bg: 'Как стартъп с нулев маркетинг бюджет може да привлече първите си хиляди потребители на пазар, доминиран от утвърден конкурент (Craigslist)?',
+      key_decision_en: 'Airbnb chose guerrilla marketing over paid advertising: professional photography for hosts (improving supply quality), Craigslist cross-posting (hijacking existing demand), and personal outreach to build trust. They invested founder time instead of money.',
+      key_decision_bg: 'Airbnb избра партизански маркетинг пред платена реклама: професионална фотография за домакините (подобряване на качеството), кръстосано публикуване в Craigslist (пренасочване на съществуващо търсене) и личен контакт за изграждане на доверие. Инвестираха основателско време вместо пари.',
+      outcome_en: 'The strategy worked dramatically. Professional photos doubled booking rates. The Craigslist integration brought thousands of new users. By 2011, Airbnb had 1 million bookings. The company is now worth over $80 billion. However, the Craigslist hack was eventually shut down, proving that borrowed distribution is temporary — you must build your own channels.',
+      outcome_bg: 'Стратегията проработи драматично. Професионалните снимки удвоиха процента на резервации. Интеграцията с Craigslist донесе хиляди нови потребители. До 2011 г. Airbnb имаше 1 милион резервации. Компанията сега струва над 80 милиарда долара. Обаче Craigslist хакът в крайна сметка беше спрян, доказвайки, че заетата дистрибуция е временна — трябва да изградиш собствени канали.',
+      outcome_type: 'success',
+      analytical_questions: [
+        { id: 'ac1', question_en: 'What was the real problem Airbnb solved — was it a marketing problem, a trust problem, or a supply quality problem? Explain your reasoning.', question_bg: 'Какъв беше истинският проблем, който Airbnb реши — маркетингов, проблем с доверието или проблем с качеството на предлагането? Обосновете.' },
+        { id: 'ac2', question_en: 'Evaluate Airbnb\'s decision to use Craigslist cross-posting. Was it ethical? Was it sustainable? What are the risks of building growth on someone else\'s platform?', question_bg: 'Оценете решението на Airbnb да използва кръстосано публикуване в Craigslist. Беше ли етично? Устойчиво ли беше? Какви са рисковете от изграждане на растеж върху чужда платформа?' },
+        { id: 'ac3', question_en: 'Propose an alternative marketing strategy Airbnb could have used instead of the Craigslist hack. Would it have been as effective? Why or why not?', question_bg: 'Предложете алтернативна маркетинг стратегия, която Airbnb можеше да използва. Щеше ли да е толкова ефективна? Защо или защо не?' },
+      ],
+    },
   },
   {
     slug: 'pricing-and-revenue',
