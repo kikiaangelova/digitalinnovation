@@ -17,9 +17,9 @@ interface LeaderboardProps {
 }
 
 const RANK_STYLES = [
-  { icon: Trophy, gradient: 'gradient-designer', text: 'text-[hsl(var(--sim-warning))]' },
-  { icon: Medal, gradient: 'bg-muted', text: 'text-muted-foreground' },
-  { icon: Award, gradient: 'gradient-builder', text: 'text-sim-success' },
+  { icon: Trophy, gradient: 'bg-rank-gold', text: 'text-rank-gold' },
+  { icon: Medal, gradient: 'bg-rank-silver', text: 'text-rank-silver' },
+  { icon: Award, gradient: 'bg-rank-bronze', text: 'text-rank-bronze' },
 ];
 
 type Tab = 'weekly' | 'alltime';
