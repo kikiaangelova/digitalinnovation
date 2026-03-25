@@ -127,9 +127,9 @@ export default function JourneyProgress(props: JourneyProgressProps) {
             >
               {/* Status icon */}
               <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-transform group-hover:scale-105
-                ${status === 'completed' ? 'bg-sim-success text-primary-foreground'
+                ${status === 'completed' ? 'bg-sim-success text-white'
                   : isRecommended ? 'sim-gradient text-primary-foreground'
-                  : status === 'in_progress' ? 'bg-sim-warning/20 text-sim-warning border border-sim-warning/30'
+                  : status === 'in_progress' ? 'bg-primary/15 text-primary border border-primary/30'
                   : 'bg-muted text-muted-foreground'}`}
               >
                 {status === 'completed' ? <CheckCircle2 className="h-4 w-4" /> : <Icon className="h-4 w-4" />}
