@@ -158,6 +158,29 @@
   .gradient-designer { background: linear-gradient(135deg, hsl(38 92% 50%), hsl(25 90% 50%)); }
   .gradient-founder { background: linear-gradient(135deg, hsl(0 72% 51%), hsl(330 70% 50%)); }
 
+  /* ═══ Typography System ═══ */
+  .typo-h1 {
+    @apply text-2xl md:text-[32px] font-display font-bold text-foreground leading-tight;
+  }
+  .typo-h2 {
+    @apply text-2xl font-display font-semibold text-foreground;
+  }
+  .typo-card-title {
+    @apply text-base font-semibold text-foreground;
+  }
+  .typo-body {
+    @apply text-sm font-normal text-foreground;
+  }
+  .typo-helper {
+    @apply text-[13px] text-muted-foreground;
+  }
+  .typo-xp {
+    @apply font-bold text-xp-gold;
+  }
+  .typo-stage-label {
+    @apply text-xs font-bold uppercase text-primary tracking-[0.05em];
+  }
+
   .xp-pulse {
     animation: xp-pulse-anim 0.8s ease-in-out;
   }
