@@ -868,7 +868,7 @@ export default function CasePlayer() {
                       <span className="text-sm font-semibold text-foreground">
                         {lang === 'bg' ? field.labelBg : field.labelEn}
                       </span>
-                      <Badge variant="outline" className="text-[10px] px-1.5 py-0 font-bold text-sim-warning border-sim-warning/30">
+                       <Badge variant="outline" className="text-xs px-1.5 py-0 typo-xp border-xp-gold/30">
                         +{field.xp} XP
                       </Badge>
                     </div>

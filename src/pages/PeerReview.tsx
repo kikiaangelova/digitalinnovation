@@ -372,7 +372,7 @@ export default function PeerReview() {
                   {RUBRIC_CRITERIA.map(c => (
                     <div key={c.key} className="text-center">
                       <p className="text-lg font-bold text-foreground">{(r as any)[c.key]}</p>
-                      <p className="text-[10px] text-muted-foreground leading-tight">{lang === 'bg' ? c.bg : c.en}</p>
+                      <p className="text-xs text-muted-foreground leading-tight">{lang === 'bg' ? c.bg : c.en}</p>
                     </div>
                   ))}
                 </div>
