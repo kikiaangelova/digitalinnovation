@@ -54,8 +54,8 @@ export default function SimulatorPreview() {
             </div>
             <Badge variant="outline" className="text-xs">{t.simPrevType}</Badge>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-display font-bold text-foreground mb-3">{t.businessSimulator}</h1>
-          <p className="text-base text-muted-foreground leading-relaxed">{t.simPrevDesc}</p>
+           <h1 className="typo-h1 mb-3">{t.businessSimulator}</h1>
+          <p className="typo-helper leading-relaxed">{t.simPrevDesc}</p>
         </div>
 
         {/* Info badges */}
