@@ -17,7 +17,7 @@ interface Entry {
 }
 
 const RANK_ICONS = [Trophy, Medal, Award];
-const RANK_COLORS = ['text-[hsl(var(--sim-warning))]', 'text-muted-foreground', 'text-sim-success'];
+const RANK_COLORS = ['text-rank-gold', 'text-rank-silver', 'text-rank-bronze'];
 
 export default function LeaderboardPage() {
   const { user } = useAuth();
