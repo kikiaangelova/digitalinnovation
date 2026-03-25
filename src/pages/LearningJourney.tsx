@@ -104,8 +104,8 @@ const STAGE_OUTCOMES: StageOutcomes[] = [
       'Define your MVP concept with key features',
     ],
     doBg: [
-      'Попълнете пълен BMC за вашата стартъп идея',
-      'Дефинирайте MVP концепцията с ключови функции',
+      'Попълни пълен BMC за твоята стартъп идея',
+      'Дефинирай MVP концепцията с ключови функции',
     ],
     estMinutes: 90,
     xpAvailable: 200,
