@@ -24,6 +24,8 @@ export interface LearningModule {
   application_question_en: string;
   application_question_bg: string;
   display_order: number;
+  /** Which curriculum level this module belongs to (1 = Innovation Thinking, 2 = Business Fundamentals) */
+  level?: number;
   // Theory-to-Case mapping
   related_case_topic?: string;
   case_transition_en?: string;
@@ -238,6 +240,105 @@ The future of competition is increasingly between ecosystems, not individual com
     sim_transition_en: 'Apply ecosystem thinking in the startup simulator to build a stronger product.',
     sim_transition_bg: 'Приложете екосистемно мислене в стартъп симулатора, за да изградите по-силен продукт.',
   },
+  /* ── Level 2: Business Fundamentals ── */
+  {
+    slug: 'marketing-fundamentals',
+    title_en: 'Marketing Fundamentals',
+    title_bg: 'Основи на маркетинга',
+    level: 2,
+    theory_en: `Marketing is the process of creating, communicating, and delivering value to customers. For startups, marketing is not about big budgets — it's about deeply understanding your audience and crafting the right message.
+
+The **4Ps framework** (Product, Price, Place, Promotion) remains a useful lens. But modern digital marketing adds a critical fifth: **People**. Understanding your customer persona — their pain points, habits, and decision-making process — is the foundation of everything.
+
+**Content marketing** builds trust over time. Blog posts, videos, and social media create awareness without hard-selling. **Performance marketing** (Google Ads, Meta Ads) delivers measurable results but requires budget and optimization skills.
+
+The **marketing funnel** maps the customer journey: Awareness → Interest → Consideration → Conversion → Retention. Most startups focus too much on acquisition and too little on retention. Yet retaining an existing customer is **5–7x cheaper** than acquiring a new one.
+
+**Growth hacking** combines marketing creativity with data analytics. Dropbox's referral program (give storage, get storage) is a classic example — it grew users 3900% in 15 months with almost zero ad spend.
+
+Key metrics to track: **CAC** (cost to acquire), **LTV** (lifetime value), **conversion rate**, **churn rate**, and **NPS** (Net Promoter Score). Data-driven marketing means making decisions based on these numbers, not gut feelings.`,
+    theory_bg: `Маркетингът е процесът на създаване, комуникиране и доставяне на стойност до клиентите. За стартъпи маркетингът не е за големи бюджети — а за дълбоко разбиране на аудиторията и правилното послание.
+
+**Рамката 4P** (Продукт, Цена, Място, Промоция) остава полезна. Но модерният дигитален маркетинг добавя критично пето P: **Хора (People)**. Разбирането на клиентската персона — болки, навици и процес на вземане на решения — е основата на всичко.
+
+**Контент маркетингът** изгражда доверие с времето. **Пърформанс маркетингът** (Google Ads, Meta Ads) дава измерими резултати, но изисква бюджет и оптимизация.
+
+**Маркетинговата фуния** описва пътя на клиента: Осведоменост → Интерес → Обмисляне → Конверсия → Задържане. Повечето стартъпи се фокусират прекалено върху придобиване и твърде малко върху задържане. Задържането на съществуващ клиент е **5–7 пъти по-евтино** от придобиването на нов.
+
+**Growth hacking** комбинира маркетингова креативност с анализ на данни. Програмата за препоръки на Dropbox е класически пример — нарасна с 3900% за 15 месеца почти без рекламен бюджет.
+
+Ключови метрики: **CAC**, **LTV**, **конверсионен процент**, **churn rate** и **NPS**. Маркетинг, базиран на данни, означава решения на база числа, не интуиция.`,
+    quiz_questions: [
+      { id: 'mf1', question_en: 'What is the marketing funnel?', question_bg: 'Какво е маркетинговата фуния?', options: [{ id: 'a', en: 'A physical tool for pouring ads', bg: 'Физически инструмент за реклами', correct: false }, { id: 'b', en: 'A model mapping the customer journey from awareness to retention', bg: 'Модел на пътя на клиента от осведоменост до задържане', correct: true }, { id: 'c', en: 'A pricing strategy', bg: 'Ценова стратегия', correct: false }] },
+      { id: 'mf2', question_en: 'Why is customer retention cheaper than acquisition?', question_bg: 'Защо задържането на клиенти е по-евтино от привличането?', options: [{ id: 'a', en: 'Existing customers already trust your brand', bg: 'Съществуващите клиенти вече имат доверие', correct: true }, { id: 'b', en: 'Retention requires no effort', bg: 'Задържането не изисква усилия', correct: false }, { id: 'c', en: 'New customers are always more expensive to serve', bg: 'Новите клиенти винаги струват повече за обслужване', correct: false }] },
+      { id: 'mf3', question_en: 'What made Dropbox\'s referral program successful?', question_bg: 'Какво направи програмата за препоръки на Dropbox успешна?', options: [{ id: 'a', en: 'Massive TV advertising', bg: 'Масивна телевизионна реклама', correct: false }, { id: 'b', en: 'Both referrer and referred got value (free storage)', bg: 'И двете страни получаваха стойност (безплатно пространство)', correct: true }, { id: 'c', en: 'They paid influencers', bg: 'Плащали са на инфлуенсъри', correct: false }] },
+    ],
+    analytical_question_en: 'Compare content marketing with performance marketing. When should a startup prioritize each approach, and what are the trade-offs?',
+    analytical_question_bg: 'Сравнете контент маркетинга с пърформанс маркетинга. Кога стартъп трябва да приоритизира всеки подход и какви са компромисите?',
+    application_question_en: 'Design a marketing strategy for your startup idea. Which channels would you use in the first 6 months, and how would you measure success?',
+    application_question_bg: 'Проектирайте маркетингова стратегия за вашата стартъп идея. Кои канали бихте използвали в първите 6 месеца и как бихте измервали успеха?',
+    display_order: 6,
+    related_case_topic: 'FinTech',
+    case_transition_en: 'You learned marketing fundamentals. Now analyze how FinTech startups acquire and retain customers in competitive markets.',
+    case_transition_bg: 'Научихте основите на маркетинга. Сега анализирайте как FinTech стартъпите привличат и задържат клиенти.',
+    sim_transition_en: 'Apply your marketing strategy in the startup simulator to see how channel choices affect growth.',
+    sim_transition_bg: 'Приложете маркетинговата си стратегия в стартъп симулатора, за да видите как изборът на канали влияе на растежа.',
+  },
+  {
+    slug: 'pricing-and-revenue',
+    title_en: 'Pricing & Revenue Models',
+    title_bg: 'Ценообразуване и приходни модели',
+    level: 2,
+    theory_en: `Pricing is one of the most powerful levers for startup success — and one of the most neglected. A 1% improvement in pricing can boost profits by 11%, more than any other business lever.
+
+**Cost-based pricing** sets prices by adding a margin to costs. It's simple but ignores what customers are willing to pay. **Value-based pricing** sets prices based on perceived customer value — this is the gold standard for startups because it captures more of the value you create.
+
+Common revenue models for digital startups:
+
+- **Freemium**: Free basic tier, paid premium features (Spotify, Slack). Works when free users create network effects or convert over time.
+- **Subscription (SaaS)**: Monthly/annual recurring revenue (Netflix, Salesforce). Creates predictable cash flow and high LTV.
+- **Transaction fee**: Take a percentage of each transaction (Stripe, Uber). Scales with customer success.
+- **Marketplace commission**: Charge sellers or buyers per transaction (Airbnb, eBay). Requires critical mass on both sides.
+- **Advertising**: Monetize attention (Google, Instagram). Requires massive scale to be profitable.
+
+**Unit economics** is the foundation: Revenue per customer (LTV) must exceed Cost per customer (CAC + COGS). The **payback period** — how long until you recover CAC — determines how fast you can grow.
+
+**Pricing psychology** matters: Anchoring (show the expensive plan first), decoy pricing (add an unattractive option to make another look better), and ending prices in 9 or 7 all influence decisions.
+
+The best approach is to **start higher** than you think. It's easier to lower prices than raise them. And always test — A/B test pricing pages, run experiments with different segments, and iterate based on data.`,
+    theory_bg: `Ценообразуването е един от най-мощните лостове за успех на стартъп — и един от най-пренебрегваните. 1% подобрение в ценообразуването може да увеличи печалбите с 11%.
+
+**Разходно ценообразуване** определя цени чрез добавяне на марж. **Ценообразуване базирано на стойност** определя цени въз основа на възприеманата клиентска стойност — златният стандарт за стартъпи.
+
+Често срещани приходни модели за дигитални стартъпи:
+
+- **Freemium**: Безплатно основно ниво, платени премиум функции (Spotify, Slack). Работи когато безплатните потребители създават мрежови ефекти.
+- **Абонамент (SaaS)**: Месечен/годишен рекурентен приход (Netflix, Salesforce). Създава предсказуем паричен поток.
+- **Такса за транзакция**: Процент от всяка транзакция (Stripe, Uber). Мащабира се с успеха на клиента.
+- **Комисионна на маркетплейс**: Такса за продавачи или купувачи (Airbnb, eBay). Изисква критична маса.
+- **Реклама**: Монетизиране на вниманието (Google, Instagram). Изисква огромен мащаб.
+
+**Unit economics** е основата: Приходът на клиент (LTV) трябва да надвишава Разходите на клиент (CAC + COGS). **Периодът на изплащане** определя колко бързо можете да растете.
+
+**Психология на ценообразуването** има значение: Закотвяне, примамливо ценообразуване и числа, завършващи на 9 или 7, влияят на решенията.
+
+Най-добрият подход е да **започнете по-високо** отколкото мислите. По-лесно е да намалите цените. И винаги тествайте — A/B тест на ценови страници и експерименти.`,
+    quiz_questions: [
+      { id: 'pr1', question_en: 'What is value-based pricing?', question_bg: 'Какво е ценообразуване базирано на стойност?', options: [{ id: 'a', en: 'Setting prices based on perceived customer value', bg: 'Определяне на цени въз основа на възприеманата клиентска стойност', correct: true }, { id: 'b', en: 'Adding a fixed margin to production costs', bg: 'Добавяне на фиксиран марж към производствените разходи', correct: false }, { id: 'c', en: 'Matching competitor prices', bg: 'Съвпадение с цените на конкурентите', correct: false }] },
+      { id: 'pr2', question_en: 'Which revenue model creates the most predictable cash flow?', question_bg: 'Кой приходен модел създава най-предсказуем паричен поток?', options: [{ id: 'a', en: 'One-time product sales', bg: 'Еднократна продажба на продукти', correct: false }, { id: 'b', en: 'Subscription (SaaS)', bg: 'Абонамент (SaaS)', correct: true }, { id: 'c', en: 'Advertising', bg: 'Реклама', correct: false }] },
+      { id: 'pr3', question_en: 'Why should startups "start higher" with pricing?', question_bg: 'Защо стартъпите трябва да „започнат по-високо" с ценообразуването?', options: [{ id: 'a', en: 'It\'s easier to lower prices than raise them', bg: 'По-лесно е да се намалят цените, отколкото да се вдигнат', correct: true }, { id: 'b', en: 'High prices always mean more profit', bg: 'Високите цени винаги означават повече печалба', correct: false }, { id: 'c', en: 'Customers prefer expensive products', bg: 'Клиентите предпочитат скъпи продукти', correct: false }] },
+    ],
+    analytical_question_en: 'Compare freemium, subscription, and transaction-based revenue models. What type of startup is each model best suited for, and what are the risks of choosing the wrong model?',
+    analytical_question_bg: 'Сравнете freemium, абонаментен и транзакционен приходен модел. За кой тип стартъп е най-подходящ всеки модел и какви са рисковете от грешен избор?',
+    application_question_en: 'What pricing and revenue model would you choose for your startup idea? Justify your choice with unit economics reasoning (estimated CAC, LTV, payback period).',
+    application_question_bg: 'Какъв ценови и приходен модел бихте избрали за вашата стартъп идея? Обосновете избора си с unit economics (прогнозен CAC, LTV, период на изплащане).',
+    display_order: 7,
+    related_case_topic: 'Platform Economy',
+    case_transition_en: 'You learned about pricing and revenue. Now analyze how platform businesses monetize their networks.',
+    case_transition_bg: 'Научихте за ценообразуване и приходи. Сега анализирайте как платформените бизнеси монетизират мрежите си.',
+    sim_transition_en: 'Test different pricing strategies in the startup simulator to see their impact on growth and revenue.',
+    sim_transition_bg: 'Тествайте различни ценови стратегии в стартъп симулатора, за да видите въздействието им върху растежа и приходите.',
+  },
 ];
 
 // Reverse mapping: case topic keyword → module slug
@@ -253,3 +354,22 @@ export const CASE_TOPIC_TO_MODULE: Record<string, string> = {
   'Spotify': 'platform-business-models',
   'Algorithm Economy': 'platform-business-models',
 };
+
+/** Get modules by level */
+export const LEVEL_1_MODULES = LEARNING_MODULES.filter(m => (m.level || 1) === 1);
+export const LEVEL_2_MODULES = LEARNING_MODULES.filter(m => m.level === 2);
+
+export const LEVEL_INFO = {
+  1: {
+    en: 'Innovation Thinking',
+    bg: 'Иновационно мислене',
+    desc_en: 'Master the foundations of digital innovation, network effects, and platform strategy.',
+    desc_bg: 'Овладейте основите на дигиталната иновация, мрежовите ефекти и платформената стратегия.',
+  },
+  2: {
+    en: 'Business Fundamentals',
+    bg: 'Бизнес основи',
+    desc_en: 'Learn marketing, pricing, and revenue — the business skills every founder needs.',
+    desc_bg: 'Научете маркетинг, ценообразуване и приходи — бизнес уменията, от които всеки основател се нуждае.',
+  },
+} as const;
