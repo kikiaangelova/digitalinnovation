@@ -21,7 +21,7 @@ import {
   Lightbulb, Rocket, Send, ChevronRight, FileText, Zap,
 } from 'lucide-react';
 
-type Phase = 'theory' | 'quiz' | 'analytical' | 'application' | 'results';
+type Phase = 'theory' | 'quiz' | 'case_study' | 'analytical' | 'application' | 'results';
 
 export default function LearningModulePlayer() {
   const { slug } = useParams<{ slug: string }>();
@@ -36,6 +36,7 @@ export default function LearningModulePlayer() {
   const [quizAnswers, setQuizAnswers] = useState<Record<string, string>>({});
   const [quizSubmitted, setQuizSubmitted] = useState(false);
   const [analyticalAnswer, setAnalyticalAnswer] = useState('');
+  const [caseAnswers, setCaseAnswers] = useState<Record<string, string>>({});
   const [applicationAnswer, setApplicationAnswer] = useState('');
   const [saving, setSaving] = useState(false);
   const [existingResponse, setExistingResponse] = useState<any>(null);
@@ -201,14 +202,28 @@ export default function LearningModulePlayer() {
     }
   };
 
+  const hasCase = !!mod.embedded_case;
   const phases: { key: Phase; label: string }[] = [
     { key: 'theory', label: t('Theory', 'Теория') },
     { key: 'quiz', label: t('Quiz', 'Тест') },
+    ...(hasCase ? [{ key: 'case_study' as Phase, label: t('Case', 'Казус') }] : []),
     { key: 'analytical', label: t('Analysis', 'Анализ') },
     { key: 'application', label: t('Application', 'Приложение') },
     { key: 'results', label: t('Results', 'Резултати') },
   ];
   const phaseIdx = phases.findIndex(p => p.key === phase);
+  const nextAfterQuiz: Phase = hasCase ? 'case_study' : 'analytical';
+
+  const canNavigateTo = (key: Phase): boolean => {
+    if (phase === 'results') return true;
+    if (key === 'theory') return true;
+    if (key === 'quiz' && phaseIdx >= 1) return true;
+    if (key === 'case_study' && quizSubmitted) return true;
+    if (key === 'analytical' && quizSubmitted) return true;
+    if (key === 'application' && quizSubmitted) return true;
+    if (key === 'results' && existingResponse?.completed_at) return true;
+    return false;
+  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -231,21 +246,18 @@ export default function LearningModulePlayer() {
 
         {/* Learning Structure Bar */}
         <LearningPhaseBar
-          currentPhase={phase === 'theory' ? 'learn' : phase === 'quiz' ? 'practice' : phase === 'analytical' ? 'feedback' : phase === 'application' ? 'reflect' : 'next'}
+          currentPhase={phase === 'theory' ? 'learn' : phase === 'quiz' ? 'practice' : phase === 'case_study' ? 'practice' : phase === 'analytical' ? 'feedback' : phase === 'application' ? 'reflect' : 'next'}
           lang={lang as 'en' | 'bg'}
           completedPhases={phase === 'results' ? ['learn', 'practice', 'feedback', 'reflect', 'next'] : []}
         />
         <WhatYouWillLearn outcomes={THEORY_MODULE_OUTCOMES} lang={lang as 'en' | 'bg'} activityType={{ en: 'Theory Module', bg: 'Теоретичен модул' }} />
 
         {/* Phase Progress */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 flex-wrap">
           {phases.map((p, i) => (
             <div key={p.key} className="flex items-center gap-1">
               <button
-                onClick={() => {
-                  if (phase === 'results' || (p.key === 'theory') || (p.key === 'quiz' && phaseIdx >= 1) || (p.key === 'analytical' && quizSubmitted) || (p.key === 'application' && quizSubmitted) || (p.key === 'results' && existingResponse?.completed_at))
-                    setPhase(p.key);
-                }}
+                onClick={() => { if (canNavigateTo(p.key)) setPhase(p.key); }}
                 className={`text-xs px-3 py-1.5 rounded-full transition-colors ${i === phaseIdx ? 'bg-primary text-primary-foreground font-semibold' : i < phaseIdx ? 'bg-primary/20 text-primary' : 'bg-accent text-muted-foreground'}`}
               >
                 {p.label}
@@ -324,11 +336,112 @@ export default function LearningModulePlayer() {
                   <p className="text-sm font-semibold text-foreground">{t('Quiz Score', 'Резултат от теста')}: {quizScore}/{quizMax}</p>
                   <p className="text-xs text-muted-foreground">{Math.round((quizScore / quizMax) * 100)}%</p>
                 </div>
-                <Button onClick={() => setPhase('analytical')}>
-                  {t('Continue to Analysis', 'Продължи към анализа')} <ChevronRight className="h-4 w-4 ml-1" />
+                <Button onClick={() => setPhase(nextAfterQuiz)}>
+                  {hasCase
+                    ? t('Continue to Case Study', 'Продължи към казуса')
+                    : t('Continue to Analysis', 'Продължи към анализа')
+                  } <ChevronRight className="h-4 w-4 ml-1" />
                 </Button>
               </div>
             )}
+          </div>
+        )}
+
+        {/* CASE STUDY PHASE */}
+        {phase === 'case_study' && mod.embedded_case && (
+          <div className="space-y-4">
+            {/* Case header */}
+            <div className="rounded-xl border-2 border-primary/30 bg-card p-6 space-y-4">
+              <div className="flex items-center gap-2 mb-1">
+                <Badge className={`text-xs border-0 ${mod.embedded_case.outcome_type === 'success' ? 'bg-primary/15 text-primary' : mod.embedded_case.outcome_type === 'failure' ? 'bg-destructive/15 text-destructive' : 'bg-warning/15 text-warning'}`}>
+                  {mod.embedded_case.outcome_type === 'success' ? '✅ ' : mod.embedded_case.outcome_type === 'failure' ? '❌ ' : '⚠️ '}
+                  {t('Real-World Case', 'Реален казус')}
+                </Badge>
+              </div>
+              <h2 className="text-lg font-bold text-foreground">
+                {lang === 'bg' ? mod.embedded_case.title_bg : mod.embedded_case.title_en}
+              </h2>
+              <div className="rounded-lg bg-accent/50 p-3">
+                <p className="text-xs font-semibold text-primary mb-1">🎯 {t('Learning Goal', 'Учебна цел')}</p>
+                <p className="text-sm text-foreground">{lang === 'bg' ? mod.embedded_case.learning_goal_bg : mod.embedded_case.learning_goal_en}</p>
+              </div>
+            </div>
+
+            {/* Context */}
+            <div className="rounded-xl border border-border bg-card p-5 space-y-3">
+              <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                <BookOpen className="h-4 w-4 text-primary" />
+                {t('Context', 'Контекст')}
+              </h3>
+              <div className="prose prose-sm max-w-none text-foreground dark:prose-invert">
+                <ReactMarkdown>{lang === 'bg' ? mod.embedded_case.context_bg : mod.embedded_case.context_en}</ReactMarkdown>
+              </div>
+            </div>
+
+            {/* Problem */}
+            <div className="rounded-xl border border-warning/30 bg-warning/5 p-5 space-y-2">
+              <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                <Target className="h-4 w-4 text-warning" />
+                {t('Business Problem', 'Бизнес проблем')}
+              </h3>
+              <p className="text-sm text-foreground italic">{lang === 'bg' ? mod.embedded_case.problem_bg : mod.embedded_case.problem_en}</p>
+            </div>
+
+            {/* Key Decision */}
+            <div className="rounded-xl border border-border bg-card p-5 space-y-2">
+              <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                <Lightbulb className="h-4 w-4 text-primary" />
+                {t('Key Decision', 'Ключово решение')}
+              </h3>
+              <p className="text-sm text-foreground">{lang === 'bg' ? mod.embedded_case.key_decision_bg : mod.embedded_case.key_decision_en}</p>
+            </div>
+
+            {/* Outcome */}
+            <div className={`rounded-xl border p-5 space-y-2 ${mod.embedded_case.outcome_type === 'success' ? 'border-primary/30 bg-primary/5' : 'border-destructive/30 bg-destructive/5'}`}>
+              <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                {mod.embedded_case.outcome_type === 'success'
+                  ? <CheckCircle2 className="h-4 w-4 text-primary" />
+                  : <XCircle className="h-4 w-4 text-destructive" />
+                }
+                {t('Outcome', 'Резултат')}
+              </h3>
+              <p className="text-sm text-foreground">{lang === 'bg' ? mod.embedded_case.outcome_bg : mod.embedded_case.outcome_en}</p>
+            </div>
+
+            {/* Analytical Questions */}
+            <div className="rounded-xl border border-border bg-card p-5 space-y-4">
+              <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                <Brain className="h-4 w-4 text-primary" />
+                {t('Your Analysis', 'Твоят анализ')}
+              </h3>
+              <p className="text-xs text-muted-foreground">
+                {t('Answer at least one question in depth. Your analysis will receive AI feedback after submission.',
+                   'Отговори на поне един въпрос в дълбочина. Анализът ти ще получи AI обратна връзка след изпращане.')}
+              </p>
+              {mod.embedded_case.analytical_questions.map((q, qi) => (
+                <div key={q.id} className="space-y-2">
+                  <p className="text-sm font-semibold text-foreground">
+                    {qi + 1}. {lang === 'bg' ? q.question_bg : q.question_en}
+                  </p>
+                  <Textarea
+                    value={caseAnswers[q.id] || ''}
+                    onChange={e => setCaseAnswers(prev => ({ ...prev, [q.id]: e.target.value }))}
+                    placeholder={t('Write your analysis...', 'Напиши анализа си...')}
+                    className="min-h-[100px]"
+                    disabled={!!existingResponse?.completed_at}
+                  />
+                  <p className={`text-xs ${(caseAnswers[q.id] || '').length >= 50 ? 'text-primary' : (caseAnswers[q.id] || '').length >= 20 ? 'text-yellow-500' : 'text-muted-foreground'}`}>
+                    {(caseAnswers[q.id] || '').length} {t('characters', 'знака')}
+                  </p>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex justify-end">
+              <Button onClick={() => setPhase('analytical')}>
+                {t('Continue to Module Analysis', 'Продължи към анализа на модула')} <ChevronRight className="h-4 w-4 ml-1" />
+              </Button>
+            </div>
           </div>
         )}
 

@@ -12,6 +12,29 @@ export interface QuizQuestion {
   options: QuizOption[];
 }
 
+export interface CaseAnalyticalQuestion {
+  id: string;
+  question_en: string;
+  question_bg: string;
+}
+
+export interface EmbeddedCaseStudy {
+  title_en: string;
+  title_bg: string;
+  learning_goal_en: string;
+  learning_goal_bg: string;
+  context_en: string;
+  context_bg: string;
+  problem_en: string;
+  problem_bg: string;
+  key_decision_en: string;
+  key_decision_bg: string;
+  outcome_en: string;
+  outcome_bg: string;
+  outcome_type: 'success' | 'failure' | 'mixed';
+  analytical_questions: CaseAnalyticalQuestion[];
+}
+
 export interface LearningModule {
   slug: string;
   title_en: string;
@@ -28,6 +51,8 @@ export interface LearningModule {
   level?: number;
   /** Which startup_projects field to update with the application answer */
   startup_field?: string;
+  /** Embedded real-world case study for Level 2+ modules */
+  embedded_case?: EmbeddedCaseStudy;
   // Theory-to-Case mapping
   related_case_topic?: string;
   case_transition_en?: string;
@@ -286,6 +311,34 @@ Key metrics to track: **CAC** (cost to acquire), **LTV** (lifetime value), **con
     case_transition_bg: 'Научихте основите на маркетинга. Сега анализирайте как FinTech стартъпите привличат и задържат клиенти.',
     sim_transition_en: 'Apply your marketing strategy in the startup simulator to see how channel choices affect growth.',
     sim_transition_bg: 'Приложете маркетинговата си стратегия в стартъп симулатора, за да видите как изборът на канали влияе на растежа.',
+    embedded_case: {
+      title_en: 'Airbnb: How a Startup Grew Without a Marketing Budget',
+      title_bg: 'Airbnb: Как стартъп порасна без маркетингов бюджет',
+      learning_goal_en: 'Understand how creative, low-cost marketing strategies can drive explosive early growth.',
+      learning_goal_bg: 'Разбери как креативни, нискобюджетни маркетинг стратегии могат да движат експлозивен ранен растеж.',
+      context_en: `In 2009, Airbnb was struggling. The founders — Brian Chesky, Joe Gebbia, and Nathan Blecharczyk — had a platform for renting spare rooms, but almost nobody was booking. Listings had terrible photos, descriptions were vague, and trust between strangers was low. The company had almost no money for traditional advertising.
+
+Instead of buying ads, the founders made an unconventional decision: they personally visited hosts in New York, took professional photos of their apartments, and rewrote their listings. They also discovered that many potential hosts were already listing on Craigslist — the dominant classifieds platform at the time.
+
+Airbnb built a tool that allowed hosts to cross-post their Airbnb listing to Craigslist with one click, effectively hijacking Craigslist's massive traffic. This was not an official API integration — it was a creative (and controversial) growth hack.`,
+      context_bg: `През 2009 г. Airbnb се бореше. Основателите — Брайън Чески, Джо Гебиа и Нейтън Блечарчик — имаха платформа за наемане на стаи, но почти никой не резервираше. Обявите имаха ужасни снимки, описанията бяха неясни, а доверието между непознати беше ниско. Компанията нямаше почти никакви пари за реклама.
+
+Вместо да купуват реклами, основателите взеха нестандартно решение: лично посетиха домакини в Ню Йорк, направиха професионални снимки на апартаментите им и пренаписаха обявите им. Също така откриха, че много потенциални домакини вече публикуваха в Craigslist — доминиращата платформа за обяви.
+
+Airbnb създаде инструмент, който позволяваше на домакините да публикуват обявата си от Airbnb в Craigslist с едно кликване, ефективно пренасочвайки огромния трафик на Craigslist. Това не беше официална API интеграция — беше креативен (и спорен) growth hack.`,
+      problem_en: 'How can a startup with zero marketing budget acquire its first thousands of users in a market dominated by an established competitor (Craigslist)?',
+      problem_bg: 'Как стартъп с нулев маркетинг бюджет може да привлече първите си хиляди потребители на пазар, доминиран от утвърден конкурент (Craigslist)?',
+      key_decision_en: 'Airbnb chose guerrilla marketing over paid advertising: professional photography for hosts (improving supply quality), Craigslist cross-posting (hijacking existing demand), and personal outreach to build trust. They invested founder time instead of money.',
+      key_decision_bg: 'Airbnb избра партизански маркетинг пред платена реклама: професионална фотография за домакините (подобряване на качеството), кръстосано публикуване в Craigslist (пренасочване на съществуващо търсене) и личен контакт за изграждане на доверие. Инвестираха основателско време вместо пари.',
+      outcome_en: 'The strategy worked dramatically. Professional photos doubled booking rates. The Craigslist integration brought thousands of new users. By 2011, Airbnb had 1 million bookings. The company is now worth over $80 billion. However, the Craigslist hack was eventually shut down, proving that borrowed distribution is temporary — you must build your own channels.',
+      outcome_bg: 'Стратегията проработи драматично. Професионалните снимки удвоиха процента на резервации. Интеграцията с Craigslist донесе хиляди нови потребители. До 2011 г. Airbnb имаше 1 милион резервации. Компанията сега струва над 80 милиарда долара. Обаче Craigslist хакът в крайна сметка беше спрян, доказвайки, че заетата дистрибуция е временна — трябва да изградиш собствени канали.',
+      outcome_type: 'success',
+      analytical_questions: [
+        { id: 'ac1', question_en: 'What was the real problem Airbnb solved — was it a marketing problem, a trust problem, or a supply quality problem? Explain your reasoning.', question_bg: 'Какъв беше истинският проблем, който Airbnb реши — маркетингов, проблем с доверието или проблем с качеството на предлагането? Обосновете.' },
+        { id: 'ac2', question_en: 'Evaluate Airbnb\'s decision to use Craigslist cross-posting. Was it ethical? Was it sustainable? What are the risks of building growth on someone else\'s platform?', question_bg: 'Оценете решението на Airbnb да използва кръстосано публикуване в Craigslist. Беше ли етично? Устойчиво ли беше? Какви са рисковете от изграждане на растеж върху чужда платформа?' },
+        { id: 'ac3', question_en: 'Propose an alternative marketing strategy Airbnb could have used instead of the Craigslist hack. Would it have been as effective? Why or why not?', question_bg: 'Предложете алтернативна маркетинг стратегия, която Airbnb можеше да използва. Щеше ли да е толкова ефективна? Защо или защо не?' },
+      ],
+    },
   },
   {
     slug: 'pricing-and-revenue',
@@ -342,6 +395,38 @@ The best approach is to **start higher** than you think. It's easier to lower pr
     case_transition_bg: 'Научихте за ценообразуване и приходи. Сега анализирайте как платформените бизнеси монетизират мрежите си.',
     sim_transition_en: 'Test different pricing strategies in the startup simulator to see their impact on growth and revenue.',
     sim_transition_bg: 'Тествайте различни ценови стратегии в стартъп симулатора, за да видите въздействието им върху растежа и приходите.',
+    embedded_case: {
+      title_en: 'Bird Scooters: When Unit Economics Don\'t Add Up',
+      title_bg: 'Bird Scooters: Когато unit economics не работят',
+      learning_goal_en: 'Understand why pricing and unit economics must be validated before scaling, even with massive demand.',
+      learning_goal_bg: 'Разбери защо ценообразуването и unit economics трябва да се валидират преди мащабиране, дори при огромно търсене.',
+      context_en: `Bird launched in 2017 as the first electric scooter-sharing company. The idea was simple: drop scooters around cities, let people unlock them with an app, charge $1 to start + $0.15 per minute. Within 12 months, Bird raised $415 million and was valued at $2 billion — the fastest company in history to reach "unicorn" status.
+
+The growth was explosive. Scooters appeared in over 100 cities. Riders loved the convenience. Cities struggled to regulate them. Bird's revenue grew from $0 to $100+ million in a single year.
+
+But underneath the impressive top-line numbers, a critical problem was brewing: each scooter cost $500+, lasted only 3-4 months on the street (due to vandalism, weather, and abuse), and generated about $3-5 per day in revenue. Bird also had to pay "chargers" — gig workers who collected, charged, and redistributed scooters every night — adding $3-5 per scooter per day in operational costs.
+
+The math was devastating: **Revenue per scooter lifetime ≈ $300-450. Cost per scooter lifetime (hardware + operations) ≈ $600-900.** Bird was losing money on every single ride.`,
+      context_bg: `Bird стартира през 2017 г. като първата компания за споделяне на електрически тротинетки. Идеята беше проста: оставяш тротинетки из градовете, хората ги отключват с приложение, таксуваш $1 за старт + $0.15 на минута. В рамките на 12 месеца Bird привлече $415 милиона и беше оценена на $2 милиарда — най-бързата компания в историята, достигнала статус на "еднорог".
+
+Растежът беше експлозивен. Тротинетки се появиха в над 100 града. Потребителите обожаваха удобството. Приходите нараснаха от $0 до $100+ милиона за една година.
+
+Но под впечатляващите числа се криеше критичен проблем: всяка тротинетка струваше $500+, издържаше само 3-4 месеца на улицата (заради вандализъм и злоупотреба) и генерираше около $3-5 на ден приходи. Bird също трябваше да плаща на "зарядчици" — gig работници, които събираха, зареждаха и преразпределяха тротинетките всяка нощ — добавяйки $3-5 на тротинетка на ден оперативни разходи.
+
+Математиката беше опустошителна: **Приход за живот на тротинетка ≈ $300-450. Разходи за живот (хардуер + операции) ≈ $600-900.** Bird губеше пари от всяко едно пътуване.`,
+      problem_en: 'Can a company with negative unit economics survive by scaling, or does scaling only make the losses worse? How should Bird have structured its pricing?',
+      problem_bg: 'Може ли компания с негативен unit economics да оцелее чрез мащабиране, или мащабирането само влошава загубите? Как Bird трябваше да структурира ценообразуването си?',
+      key_decision_en: 'Bird chose to prioritize growth over profitability. They raised billions in venture capital to subsidize operations, hoping that scale would eventually reduce costs. They kept prices low to maximize rides and market share. They also tried switching to cheaper scooters, which broke down even faster.',
+      key_decision_bg: 'Bird избра да приоритизира растежа пред рентабилността. Привлякоха милиарди рисков капитал за субсидиране на операциите, надявайки се, че мащабът ще намали разходите. Поддържаха ниски цени за максимизиране на пътуванията. Също така опитаха по-евтини тротинетки, които се чупеха още по-бързо.',
+      outcome_en: 'Bird went public in 2021 at a $2.5B valuation but its stock crashed 99%. By 2023, Bird filed for bankruptcy. The core lesson: **no amount of growth fixes broken unit economics.** If you lose money on every transaction, more transactions = more losses. Bird needed to either charge higher prices, build more durable scooters, or find a fundamentally different cost structure before scaling.',
+      outcome_bg: 'Bird стана публична през 2021 г. при оценка от $2.5 млрд., но акциите паднаха с 99%. До 2023 г. Bird обяви фалит. Основният урок: **никакъв растеж не поправя счупен unit economics.** Ако губиш пари от всяка транзакция, повече транзакции = повече загуби. Bird трябваше или да вдигне цените, или да построи по-издръжливи тротинетки, или да намери фундаментално различна разходна структура преди мащабирането.',
+      outcome_type: 'failure',
+      analytical_questions: [
+        { id: 'bc1', question_en: 'What was the real problem at Bird — was it pricing too low, scooter durability, operational costs, or all three? Which factor was most critical and why?', question_bg: 'Какъв беше истинският проблем на Bird — прекалено ниски цени, издръжливост на тротинетките, оперативни разходи, или и трите? Кой фактор беше най-критичен?' },
+        { id: 'bc2', question_en: 'Evaluate Bird\'s decision to prioritize growth over profitability. In what situations is this a valid strategy, and when does it become dangerous? Use the LTV:CAC framework.', question_bg: 'Оценете решението на Bird да приоритизира растежа пред рентабилността. В кои ситуации това е валидна стратегия и кога става опасно? Използвайте LTV:CAC рамката.' },
+        { id: 'bc3', question_en: 'Redesign Bird\'s pricing model to achieve profitability. Consider subscription plans, surge pricing, premium tiers, or partnership models. What would you change?', question_bg: 'Редизайнирайте ценовия модел на Bird за постигане на рентабилност. Помислете за абонаментни планове, динамично ценообразуване, премиум нива или партньорски модели.' },
+      ],
+    },
   },
   /* ── Level 2: Team & Roles ── */
   {
@@ -394,6 +479,38 @@ Key principle: **Hire slow, fire fast.** A wrong hire at an early stage can dest
     display_order: 8,
     sim_transition_en: 'Apply your team-building insights in the startup simulator hiring decisions.',
     sim_transition_bg: 'Приложете знанията си за изграждане на екип в решенията за наемане в стартъп симулатора.',
+    embedded_case: {
+      title_en: 'Juicero: The $400 Juicer That Destroyed a Startup',
+      title_bg: 'Juicero: Сокоизстисквачката за $400, която унищожи стартъп',
+      learning_goal_en: 'Understand how team composition and founder blind spots can lead to catastrophic product decisions.',
+      learning_goal_bg: 'Разбери как съставът на екипа и слепите петна на основателите могат да доведат до катастрофални продуктови решения.',
+      context_en: `Juicero was founded in 2013 by Doug Evans, a charismatic entrepreneur who pitched a vision of "the Keurig for juice" — a machine that would make cold-pressed juice at home from pre-packaged produce packs. The company raised $120 million from top-tier investors including Google Ventures and Kleiner Perkins.
+
+The team Evans assembled was heavily tilted toward hardware engineering and design. Juicero hired former Apple and Tesla engineers to build a beautifully designed, WiFi-connected machine with custom-built parts and 4 tons of pressing force. The juicer was over-engineered to an extreme — it contained a custom processor, a QR code scanner for each juice pack, and a motor powerful enough to lift two Teslas.
+
+What the team lacked: anyone who deeply understood consumer behavior, pricing psychology, or food industry operations. There was no "voice of the customer" at the leadership table. The machine launched at $699 (later reduced to $399), and the proprietary juice packs cost $5-8 each.
+
+In April 2017, Bloomberg reporters discovered something devastating: **you could squeeze the juice packs by hand and get the same result.** The $400 machine was unnecessary.`,
+      context_bg: `Juicero беше основана през 2013 г. от Дъг Еванс, харизматичен предприемач, който представи визия за "Keurig за сок" — машина, която прави студено пресован сок у дома от предварително опаковани пакети. Компанията привлече $120 милиона от топ инвеститори като Google Ventures и Kleiner Perkins.
+
+Екипът, който Еванс събра, беше силно наклонен към хардуерно инженерство и дизайн. Juicero нае бивши инженери от Apple и Tesla, за да построят красиво проектирана, WiFi-свързана машина с персонализирани части и 4 тона натиск. Сокоизстисквачката беше свръхинженерирана — съдържаше персонализиран процесор, QR скенер за всеки пакет и мотор, достатъчно мощен да вдигне две Tesla.
+
+Какво липсваше на екипа: някой, който дълбоко разбира потребителското поведение, ценовата психология или операциите в хранителната индустрия. Нямаше "глас на клиента" на масата на лидерството. Машината стартира на $699 (по-късно намалена до $399), а патентованите пакети сок струваха $5-8 всеки.
+
+През април 2017 г. репортери на Bloomberg откриха нещо опустошително: **можеше да изстискаш пакетите с ръце и да получиш същия резултат.** Машината за $400 беше ненужна.`,
+      problem_en: 'How did an all-engineering team with $120M build a product nobody needed? What role did team composition play in this failure?',
+      problem_bg: 'Как изцяло инженерен екип с $120 млн. построи продукт, от който никой не се нуждаеше? Каква роля изигра съставът на екипа в този провал?',
+      key_decision_en: 'Evans focused on building the most technologically impressive juicer possible, rather than validating whether consumers actually needed a machine to squeeze pre-cut produce. The team had no one asking "but would people actually pay $400 for this?" The all-technical leadership optimized for engineering excellence instead of customer value.',
+      key_decision_bg: 'Еванс се фокусира върху създаването на най-технологично впечатляващата сокоизстисквачка, вместо да валидира дали потребителите изобщо имат нужда от машина. Екипът нямаше никой, който да попита "но хората наистина ли биха платили $400 за това?" Изцяло техническото лидерство оптимизираше за инженерно съвършенство вместо за клиентска стойност.',
+      outcome_en: 'Juicero shut down in September 2017, just 16 months after launch. The $120M investment was a total loss. The case became a Silicon Valley cautionary tale about the danger of building technology for technology\'s sake. Key lesson: **a balanced team with business, customer, and technical perspectives would have caught this fatal flaw before spending $120M.** One person asking "can you just squeeze it by hand?" would have changed everything.',
+      outcome_bg: 'Juicero затвори през септември 2017 г., само 16 месеца след стартирането. Инвестицията от $120 млн. беше пълна загуба. Случаят стана предупредителна история за опасността от създаване на технология заради технологията. Ключов урок: **балансиран екип с бизнес, клиентска и техническа перспектива щеше да улови този фатален недостатък преди харченето на $120 млн.** Един човек, питащ "може ли просто да го стиснеш с ръце?" щеше да промени всичко.',
+      outcome_type: 'failure',
+      analytical_questions: [
+        { id: 'jc1', question_en: 'What was the real problem at Juicero — the technology, the team composition, the lack of customer validation, or the pricing? Rank these factors by importance and explain.', question_bg: 'Какъв беше истинският проблем на Juicero — технологията, съставът на екипа, липсата на клиентска валидация или ценообразуването? Подредете тези фактори по важност.' },
+        { id: 'jc2', question_en: 'If you were an advisor to Juicero before launch, what team changes would you recommend? What roles were missing and how would adding them have changed the outcome?', question_bg: 'Ако бяхте съветник на Juicero преди стартирането, какви промени в екипа бихте препоръчали? Какви роли липсваха и как добавянето им щеше да промени резултата?' },
+        { id: 'jc3', question_en: 'Propose an alternative business concept using the same team and funding. How could Juicero have pivoted to create real value with their engineering talent?', question_bg: 'Предложете алтернативна бизнес концепция със същия екип и финансиране. Как Juicero можеше да пивотира, за да създаде реална стойност с инженерния си талант?' },
+      ],
+    },
   },
   /* ── Level 2: Operations ── */
   {
