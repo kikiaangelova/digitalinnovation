@@ -35,6 +35,9 @@ export default function StudentDashboard() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [peerReviewsGiven, setPeerReviewsGiven] = useState(0);
   const [loginStreakDays, setLoginStreakDays] = useState(0);
+  const [quizTestsCompleted, setQuizTestsCompleted] = useState(0);
+  const [quizCategoriesTested, setQuizCategoriesTested] = useState(0);
+  const [quizConsecutiveImprovements, setQuizConsecutiveImprovements] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
