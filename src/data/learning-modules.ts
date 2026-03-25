@@ -479,6 +479,38 @@ Key principle: **Hire slow, fire fast.** A wrong hire at an early stage can dest
     display_order: 8,
     sim_transition_en: 'Apply your team-building insights in the startup simulator hiring decisions.',
     sim_transition_bg: 'Приложете знанията си за изграждане на екип в решенията за наемане в стартъп симулатора.',
+    embedded_case: {
+      title_en: 'Juicero: The $400 Juicer That Destroyed a Startup',
+      title_bg: 'Juicero: Сокоизстисквачката за $400, която унищожи стартъп',
+      learning_goal_en: 'Understand how team composition and founder blind spots can lead to catastrophic product decisions.',
+      learning_goal_bg: 'Разбери как съставът на екипа и слепите петна на основателите могат да доведат до катастрофални продуктови решения.',
+      context_en: `Juicero was founded in 2013 by Doug Evans, a charismatic entrepreneur who pitched a vision of "the Keurig for juice" — a machine that would make cold-pressed juice at home from pre-packaged produce packs. The company raised $120 million from top-tier investors including Google Ventures and Kleiner Perkins.
+
+The team Evans assembled was heavily tilted toward hardware engineering and design. Juicero hired former Apple and Tesla engineers to build a beautifully designed, WiFi-connected machine with custom-built parts and 4 tons of pressing force. The juicer was over-engineered to an extreme — it contained a custom processor, a QR code scanner for each juice pack, and a motor powerful enough to lift two Teslas.
+
+What the team lacked: anyone who deeply understood consumer behavior, pricing psychology, or food industry operations. There was no "voice of the customer" at the leadership table. The machine launched at $699 (later reduced to $399), and the proprietary juice packs cost $5-8 each.
+
+In April 2017, Bloomberg reporters discovered something devastating: **you could squeeze the juice packs by hand and get the same result.** The $400 machine was unnecessary.`,
+      context_bg: `Juicero беше основана през 2013 г. от Дъг Еванс, харизматичен предприемач, който представи визия за "Keurig за сок" — машина, която прави студено пресован сок у дома от предварително опаковани пакети. Компанията привлече $120 милиона от топ инвеститори като Google Ventures и Kleiner Perkins.
+
+Екипът, който Еванс събра, беше силно наклонен към хардуерно инженерство и дизайн. Juicero нае бивши инженери от Apple и Tesla, за да построят красиво проектирана, WiFi-свързана машина с персонализирани части и 4 тона натиск. Сокоизстисквачката беше свръхинженерирана — съдържаше персонализиран процесор, QR скенер за всеки пакет и мотор, достатъчно мощен да вдигне две Tesla.
+
+Какво липсваше на екипа: някой, който дълбоко разбира потребителското поведение, ценовата психология или операциите в хранителната индустрия. Нямаше "глас на клиента" на масата на лидерството. Машината стартира на $699 (по-късно намалена до $399), а патентованите пакети сок струваха $5-8 всеки.
+
+През април 2017 г. репортери на Bloomberg откриха нещо опустошително: **можеше да изстискаш пакетите с ръце и да получиш същия резултат.** Машината за $400 беше ненужна.`,
+      problem_en: 'How did an all-engineering team with $120M build a product nobody needed? What role did team composition play in this failure?',
+      problem_bg: 'Как изцяло инженерен екип с $120 млн. построи продукт, от който никой не се нуждаеше? Каква роля изигра съставът на екипа в този провал?',
+      key_decision_en: 'Evans focused on building the most technologically impressive juicer possible, rather than validating whether consumers actually needed a machine to squeeze pre-cut produce. The team had no one asking "but would people actually pay $400 for this?" The all-technical leadership optimized for engineering excellence instead of customer value.',
+      key_decision_bg: 'Еванс се фокусира върху създаването на най-технологично впечатляващата сокоизстисквачка, вместо да валидира дали потребителите изобщо имат нужда от машина. Екипът нямаше никой, който да попита "но хората наистина ли биха платили $400 за това?" Изцяло техническото лидерство оптимизираше за инженерно съвършенство вместо за клиентска стойност.',
+      outcome_en: 'Juicero shut down in September 2017, just 16 months after launch. The $120M investment was a total loss. The case became a Silicon Valley cautionary tale about the danger of building technology for technology\'s sake. Key lesson: **a balanced team with business, customer, and technical perspectives would have caught this fatal flaw before spending $120M.** One person asking "can you just squeeze it by hand?" would have changed everything.',
+      outcome_bg: 'Juicero затвори през септември 2017 г., само 16 месеца след стартирането. Инвестицията от $120 млн. беше пълна загуба. Случаят стана предупредителна история за опасността от създаване на технология заради технологията. Ключов урок: **балансиран екип с бизнес, клиентска и техническа перспектива щеше да улови този фатален недостатък преди харченето на $120 млн.** Един човек, питащ "може ли просто да го стиснеш с ръце?" щеше да промени всичко.',
+      outcome_type: 'failure',
+      analytical_questions: [
+        { id: 'jc1', question_en: 'What was the real problem at Juicero — the technology, the team composition, the lack of customer validation, or the pricing? Rank these factors by importance and explain.', question_bg: 'Какъв беше истинският проблем на Juicero — технологията, съставът на екипа, липсата на клиентска валидация или ценообразуването? Подредете тези фактори по важност.' },
+        { id: 'jc2', question_en: 'If you were an advisor to Juicero before launch, what team changes would you recommend? What roles were missing and how would adding them have changed the outcome?', question_bg: 'Ако бяхте съветник на Juicero преди стартирането, какви промени в екипа бихте препоръчали? Какви роли липсваха и как добавянето им щеше да промени резултата?' },
+        { id: 'jc3', question_en: 'Propose an alternative business concept using the same team and funding. How could Juicero have pivoted to create real value with their engineering talent?', question_bg: 'Предложете алтернативна бизнес концепция със същия екип и финансиране. Как Juicero можеше да пивотира, за да създаде реална стойност с инженерния си талант?' },
+      ],
+    },
   },
   /* ── Level 2: Operations ── */
   {
