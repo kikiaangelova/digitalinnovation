@@ -206,7 +206,7 @@ const STAGES: Stage[] = [
     descEn: 'Design and describe your minimum viable product.',
     descBg: 'Проектирайте и опишете минималния жизнеспособен продукт.',
     milestoneEn: 'Submit MVP Design',
-    milestoneBg: 'Подайте MVP дизайн',
+    milestoneBg: 'Подай MVP дизайн',
     learnPath: '/my-startup?section=digital_product', casePath: '/cases', simPath: '/simulator',
     startupKey: 'digital_product',
   },
