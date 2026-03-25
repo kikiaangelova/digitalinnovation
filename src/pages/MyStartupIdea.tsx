@@ -595,18 +595,25 @@ export default function MyStartupIdea() {
               }}
             />
             {filledCount >= 3 && (
-              <StructuredFeedback
-                context={{
-                  type: 'startup_project',
-                  problem: data.problem,
-                  customer: data.customer,
-                  valueProp: data.value_proposition,
-                  businessModel: data.business_model,
-                  growthStrategy: data.growth_strategy,
-                  finalPitch: data.final_pitch,
-                }}
-                lang={lang as 'en' | 'bg'}
-              />
+              <>
+                <SkillsImproved
+                  activityType="startup_builder"
+                  scorePercent={progressPercent}
+                  lang={lang as 'en' | 'bg'}
+                />
+                <StructuredFeedback
+                  context={{
+                    type: 'startup_project',
+                    problem: data.problem,
+                    customer: data.customer,
+                    valueProp: data.value_proposition,
+                    businessModel: data.business_model,
+                    growthStrategy: data.growth_strategy,
+                    finalPitch: data.final_pitch,
+                  }}
+                  lang={lang as 'en' | 'bg'}
+                />
+              </>
             )}
           </TabsContent>
 
