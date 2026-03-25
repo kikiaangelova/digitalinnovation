@@ -248,6 +248,7 @@ The future of competition is increasingly between ecosystems, not individual com
     title_en: 'Marketing Fundamentals',
     title_bg: 'Основи на маркетинга',
     level: 2,
+    startup_field: 'customer',
     theory_en: `Marketing is the process of creating, communicating, and delivering value to customers. For startups, marketing is not about big budgets — it's about deeply understanding your audience and crafting the right message.
 
 The **4Ps framework** (Product, Price, Place, Promotion) remains a useful lens. But modern digital marketing adds a critical fifth: **People**. Understanding your customer persona — their pain points, habits, and decision-making process — is the foundation of everything.
