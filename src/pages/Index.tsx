@@ -272,7 +272,7 @@ const Index = () => {
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
                     <Calendar className="h-3 w-3 text-primary" />
-                    <span className="text-xs font-bold text-primary uppercase tracking-wider">{t.week} {week.week}</span>
+                     <span className="typo-stage-label">{t.week} {week.week}</span>
                   </div>
                   <h3 className="font-display font-bold text-foreground text-sm">{week.title}</h3>
                   <p className="text-xs text-muted-foreground mt-1">{week.desc}</p>
