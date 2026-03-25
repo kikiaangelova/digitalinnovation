@@ -196,7 +196,7 @@ const STAGES: Stage[] = [
     descEn: 'Define your startup problem, customer, and value proposition.',
     descBg: 'Дефинирайте проблема, клиента и стойностното предложение.',
     milestoneEn: 'Submit Value Proposition',
-    milestoneBg: 'Подайте стойностно предложение',
+    milestoneBg: 'Подай стойностно предложение',
     learnPath: '/my-startup?section=problem', casePath: '/cases', simPath: '/simulator',
     startupKey: 'value_proposition',
   },
