@@ -699,7 +699,7 @@ export default function TeacherDashboard() {
             <TabsTrigger value="support" className="relative">
               {t('Needs Support', 'Нуждае се от помощ')}
               {studentsNeedingSupport.length > 0 && (
-                <span className="ml-1.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold">
+                <span className="ml-1.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-destructive-foreground text-xs font-bold">
                   {studentsNeedingSupport.length}
                 </span>
               )}
