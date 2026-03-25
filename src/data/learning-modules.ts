@@ -453,6 +453,7 @@ For digital startups, **key operational processes** include:
     title_en: 'Supply Chain Basics',
     title_bg: 'Основи на веригата за доставки',
     level: 2,
+    startup_field: 'bmc_channels',
     theory_en: `Even digital startups have a supply chain — the network of resources, processes, and partners needed to deliver your product to customers. Understanding supply chain basics helps founders make smarter decisions about partnerships, costs, and scalability.
 
 **Traditional supply chain**: Raw materials → Manufacturing → Distribution → Retail → Customer. Each step adds cost and time.
