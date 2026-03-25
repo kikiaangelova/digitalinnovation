@@ -9,7 +9,7 @@ import {
   GraduationCap, ArrowRight, Lightbulb, Search, Rocket,
   Presentation, Compass, Briefcase, Palette,
   Trophy, BookOpen, FlaskConical, TrendingUp, Mic,
-  Zap, Star, Calendar, ChevronRight,
+  Zap, Star, Calendar, ChevronRight, Book,
   Cpu, Eye, Users, Mail,
 } from 'lucide-react';
 
