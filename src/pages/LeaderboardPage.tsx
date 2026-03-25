@@ -17,7 +17,7 @@ interface Entry {
 }
 
 const RANK_ICONS = [Trophy, Medal, Award];
-const RANK_COLORS = ['text-[hsl(var(--sim-warning))]', 'text-muted-foreground', 'text-sim-success'];
+const RANK_COLORS = ['text-rank-gold', 'text-rank-silver', 'text-rank-bronze'];
 
 export default function LeaderboardPage() {
   const { user } = useAuth();
@@ -56,7 +56,7 @@ export default function LeaderboardPage() {
       <main className="container mx-auto px-4 py-8 max-w-4xl">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-2">
-            <Trophy className="h-6 w-6 text-[hsl(var(--sim-warning))]" />
+            <Trophy className="h-6 w-6 text-rank-gold" />
             <h1 className="text-3xl font-display font-bold text-foreground">
               {t('Leaderboard', 'Класация')}
             </h1>
@@ -126,8 +126,8 @@ export default function LeaderboardPage() {
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-1">
-                          <Zap className="h-3 w-3 text-[hsl(var(--sim-warning))]" />
-                          <span className="font-bold font-mono text-sm text-[hsl(var(--sim-warning))]">{e.xp}</span>
+                          <Zap className="h-3 w-3 text-xp-gold" />
+                          <span className="font-bold font-mono text-sm text-xp-gold">{e.xp}</span>
                         </div>
                       </TableCell>
                       <TableCell className="text-center hidden sm:table-cell">

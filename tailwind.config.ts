@@ -70,6 +70,15 @@ export default {
           surface: "hsl(var(--sim-surface))",
           "kpi-bg": "hsl(var(--sim-kpi-bg))",
         },
+        xp: {
+          gold: "hsl(var(--xp-gold))",
+          "gold-glow": "hsl(var(--xp-gold-glow))",
+        },
+        rank: {
+          gold: "hsl(var(--rank-gold))",
+          silver: "hsl(var(--rank-silver))",
+          bronze: "hsl(var(--rank-bronze))",
+        },
         chart: {
           "1": "hsl(var(--chart-1))",
           "2": "hsl(var(--chart-2))",

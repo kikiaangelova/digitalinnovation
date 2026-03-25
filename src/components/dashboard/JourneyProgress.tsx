@@ -106,7 +106,7 @@ export default function JourneyProgress(props: JourneyProgressProps) {
             {t(`Step ${completedCount} of 6`, `Стъпка ${completedCount} от 6`)}
           </span>
         </div>
-        <Progress value={overallPct} className="h-2.5" />
+        <Progress value={overallPct} className="h-2.5" indicatorClassName={overallPct >= 100 ? 'bg-sim-success' : 'bg-primary'} />
         <p className="text-xs text-muted-foreground mt-1.5">{overallPct}% {t('complete', 'завършено')}</p>
       </div>
 
@@ -127,9 +127,9 @@ export default function JourneyProgress(props: JourneyProgressProps) {
             >
               {/* Status icon */}
               <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-transform group-hover:scale-105
-                ${status === 'completed' ? 'bg-sim-success text-primary-foreground'
+                ${status === 'completed' ? 'bg-sim-success text-white'
                   : isRecommended ? 'sim-gradient text-primary-foreground'
-                  : status === 'in_progress' ? 'bg-sim-warning/20 text-sim-warning border border-sim-warning/30'
+                  : status === 'in_progress' ? 'bg-primary/15 text-primary border border-primary/30'
                   : 'bg-muted text-muted-foreground'}`}
               >
                 {status === 'completed' ? <CheckCircle2 className="h-4 w-4" /> : <Icon className="h-4 w-4" />}
@@ -147,7 +147,7 @@ export default function JourneyProgress(props: JourneyProgressProps) {
                     </Badge>
                   )}
                   {status === 'in_progress' && !isRecommended && (
-                    <Badge className="bg-sim-warning/15 text-sim-warning border-0 text-[10px] px-1.5 py-0">
+                    <Badge className="bg-primary/10 text-primary border-0 text-[10px] px-1.5 py-0">
                       <Play className="h-2.5 w-2.5 mr-0.5" />{t('Started', 'Започнато')}
                     </Badge>
                   )}

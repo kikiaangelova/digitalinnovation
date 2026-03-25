@@ -8,22 +8,21 @@ interface BadgeDef {
   nameBg: string;
   descEn: string;
   descBg: string;
-  gradient: string;
 }
 
 const ALL_BADGES: BadgeDef[] = [
-  { id: 'innovation_explorer', icon: Search, nameEn: 'Innovation Explorer', nameBg: 'Иновативен изследовател', descEn: 'Completed first case study', descBg: 'Завършен първи казус', gradient: 'gradient-explorer' },
-  { id: 'case_solver', icon: Lightbulb, nameEn: 'Case Solver', nameBg: 'Решител на казуси', descEn: 'Completed 3 case studies', descBg: 'Завършени 3 казуса', gradient: 'gradient-strategist' },
-  { id: 'sharp_analyst', icon: TrendingUp, nameEn: 'Sharp Analyst', nameBg: 'Остър Анализатор', descEn: 'Scored above 80% on a case', descBg: 'Резултат над 80% на казус', gradient: 'gradient-explorer' },
-  { id: 'startup_builder', icon: Shield, nameEn: 'Startup Builder', nameBg: 'Стартъп строител', descEn: 'Submitted startup idea', descBg: 'Подадена стартъп идея', gradient: 'gradient-builder' },
-  { id: 'full_canvas', icon: LayoutGrid, nameEn: 'Canvas Master', nameBg: 'Майстор на Канваса', descEn: 'Completed all 9 BMC sections', descBg: 'Завършени всички 9 секции на BMC', gradient: 'gradient-strategist' },
-  { id: 'pitch_master', icon: Mic, nameEn: 'Pitch Master', nameBg: 'Майстор на Представянето', descEn: 'Submitted final startup pitch', descBg: 'Подадено финално представяне', gradient: 'gradient-designer' },
-  { id: 'growth_hacker', icon: TrendingUp, nameEn: 'Growth Hacker', nameBg: 'Growth Hacker', descEn: 'Completed simulator', descBg: 'Завършен симулатор', gradient: 'gradient-designer' },
-  { id: 'first_reviewer', icon: MessageSquare, nameEn: 'First Feedback', nameBg: 'Първа Рецензия', descEn: 'Completed a peer review', descBg: 'Завършена партньорска рецензия', gradient: 'gradient-builder' },
-  { id: 'ai_innovator', icon: Brain, nameEn: 'AI Innovator', nameBg: 'AI Иноватор', descEn: 'Used AI mentor feedback', descBg: 'Използвана AI обратна връзка', gradient: 'gradient-founder' },
-  { id: 'comeback_kid', icon: RotateCcw, nameEn: 'Comeback', nameBg: 'Завръщането', descEn: 'Returned after 3 days away', descBg: 'Върна се след 3 дни отсъствие', gradient: 'gradient-explorer' },
-  { id: 'industry_expert', icon: Briefcase, nameEn: 'Industry Expert', nameBg: 'Индустриален Експерт', descEn: 'Completed cases in 3 different industries', descBg: 'Завършени казуси в 3 различни индустрии', gradient: 'gradient-strategist' },
-  { id: 'perfect_week', icon: Calendar, nameEn: 'Perfect Week', nameBg: 'Перфектна Седмица', descEn: 'Logged in 5 days in a row', descBg: 'Влизал 5 дни подред', gradient: 'gradient-founder' },
+  { id: 'innovation_explorer', icon: Search, nameEn: 'Innovation Explorer', nameBg: 'Иновативен изследовател', descEn: 'Completed first case study', descBg: 'Завършен първи казус' },
+  { id: 'case_solver', icon: Lightbulb, nameEn: 'Case Solver', nameBg: 'Решител на казуси', descEn: 'Completed 3 case studies', descBg: 'Завършени 3 казуса' },
+  { id: 'sharp_analyst', icon: TrendingUp, nameEn: 'Sharp Analyst', nameBg: 'Остър Анализатор', descEn: 'Scored above 80% on a case', descBg: 'Резултат над 80% на казус' },
+  { id: 'startup_builder', icon: Shield, nameEn: 'Startup Builder', nameBg: 'Стартъп строител', descEn: 'Submitted startup idea', descBg: 'Подадена стартъп идея' },
+  { id: 'full_canvas', icon: LayoutGrid, nameEn: 'Canvas Master', nameBg: 'Майстор на Канваса', descEn: 'Completed all 9 BMC sections', descBg: 'Завършени всички 9 секции на BMC' },
+  { id: 'pitch_master', icon: Mic, nameEn: 'Pitch Master', nameBg: 'Майстор на Представянето', descEn: 'Submitted final startup pitch', descBg: 'Подадено финално представяне' },
+  { id: 'growth_hacker', icon: TrendingUp, nameEn: 'Growth Hacker', nameBg: 'Growth Hacker', descEn: 'Completed simulator', descBg: 'Завършен симулатор' },
+  { id: 'first_reviewer', icon: MessageSquare, nameEn: 'First Feedback', nameBg: 'Първа Рецензия', descEn: 'Completed a peer review', descBg: 'Завършена партньорска рецензия' },
+  { id: 'ai_innovator', icon: Brain, nameEn: 'AI Innovator', nameBg: 'AI Иноватор', descEn: 'Used AI mentor feedback', descBg: 'Използвана AI обратна връзка' },
+  { id: 'comeback_kid', icon: RotateCcw, nameEn: 'Comeback', nameBg: 'Завръщането', descEn: 'Returned after 3 days away', descBg: 'Върна се след 3 дни отсъствие' },
+  { id: 'industry_expert', icon: Briefcase, nameEn: 'Industry Expert', nameBg: 'Индустриален Експерт', descEn: 'Completed cases in 3 different industries', descBg: 'Завършени казуси в 3 различни индустрии' },
+  { id: 'perfect_week', icon: Calendar, nameEn: 'Perfect Week', nameBg: 'Перфектна Седмица', descEn: 'Logged in 5 days in a row', descBg: 'Влизал 5 дни подред' },
 ];
 
 export interface AchievementBadgesProps {
@@ -104,7 +103,7 @@ export default function AchievementBadges(props: AchievementBadgesProps) {
   return (
     <div className="rounded-xl border border-border bg-card p-5">
       <div className="flex items-center gap-2 mb-4">
-        <Award className="h-5 w-5 text-sim-warning" />
+        <Award className="h-5 w-5 text-xp-gold" />
         <h2 className="text-lg font-display font-semibold text-foreground">{t('Achievement Badges', 'Постижения')}</h2>
         <span className="ml-auto text-xs text-muted-foreground">{earned.size} / {ALL_BADGES.length}</span>
       </div>
@@ -116,10 +115,10 @@ export default function AchievementBadges(props: AchievementBadgesProps) {
           const pct = progress ? (progress.current / progress.max) * 100 : 0;
 
           return (
-            <div key={b.id} className={`flex flex-col items-center text-center p-3 rounded-lg transition-all ${isEarned ? 'bg-accent' : 'bg-muted/50 opacity-60'}`}>
+            <div key={b.id} className={`flex flex-col items-center text-center p-3 rounded-lg transition-all ${isEarned ? 'bg-xp-gold/10 ring-1 ring-xp-gold/30' : 'bg-muted/30 opacity-40'}`}>
               <div className="relative">
-                <div className={`flex h-12 w-12 items-center justify-center rounded-full mb-2 ${isEarned ? b.gradient : 'bg-muted'}`}>
-                  <Icon className={`h-6 w-6 ${isEarned ? 'text-primary-foreground' : 'text-muted-foreground'}`} />
+                <div className={`flex h-12 w-12 items-center justify-center rounded-full mb-2 ${isEarned ? 'bg-xp-gold shadow-[0_0_16px_hsl(var(--xp-gold)/0.4)]' : 'bg-muted'}`}>
+                  <Icon className={`h-6 w-6 ${isEarned ? 'text-white' : 'text-muted-foreground'}`} />
                 </div>
                 {isEarned && (
                   <div className="absolute -top-1 -right-1 h-5 w-5 rounded-full bg-sim-success flex items-center justify-center">
@@ -133,7 +132,7 @@ export default function AchievementBadges(props: AchievementBadgesProps) {
                 <div className="w-full mt-1.5 space-y-0.5">
                   <div className="w-full h-1 rounded-full bg-muted overflow-hidden">
                     <div
-                      className="h-full rounded-full bg-primary transition-all duration-500"
+                      className="h-full rounded-full bg-xp-gold transition-all duration-500"
                       style={{ width: `${pct}%` }}
                     />
                   </div>

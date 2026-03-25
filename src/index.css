@@ -45,8 +45,13 @@
     --sidebar-border: 222 30% 20%;
     --sidebar-ring: 226 70% 60%;
 
-    --sim-success: 152 60% 40%;
+    --sim-success: 160 84% 39%;
     --sim-warning: 38 92% 50%;
+    --xp-gold: 38 92% 50%;
+    --xp-gold-glow: 38 92% 50%;
+    --rank-gold: 38 92% 50%;
+    --rank-silver: 220 9% 64%;
+    --rank-bronze: 28 90% 37%;
     --sim-danger: 0 72% 51%;
     --sim-info: 226 70% 55%;
     --sim-surface: 220 20% 96%;
@@ -97,8 +102,13 @@
     --sidebar-border: 222 20% 15%;
     --sidebar-ring: 226 70% 60%;
 
-    --sim-success: 152 60% 42%;
+    --sim-success: 160 84% 39%;
     --sim-warning: 38 92% 50%;
+    --xp-gold: 43 96% 56%;
+    --xp-gold-glow: 43 96% 56%;
+    --rank-gold: 43 96% 56%;
+    --rank-silver: 220 9% 64%;
+    --rank-bronze: 28 80% 45%;
     --sim-danger: 0 72% 51%;
     --sim-info: 226 70% 60%;
     --sim-surface: 222 30% 12%;
@@ -154,7 +164,7 @@
 
   @keyframes xp-pulse-anim {
     0% { transform: scale(1); }
-    30% { transform: scale(1.15); color: hsl(38 92% 50%); }
+    30% { transform: scale(1.15); color: hsl(var(--xp-gold)); }
     60% { transform: scale(0.95); }
     100% { transform: scale(1); }
   }
@@ -167,8 +177,8 @@
 }
 
 [data-sonner-toast].xp-toast {
-  background: linear-gradient(135deg, hsl(226 70% 55%), hsl(226 70% 40%));
+  background: linear-gradient(135deg, hsl(var(--xp-gold)), hsl(28 90% 45%));
   color: white;
   border: none;
-  box-shadow: 0 8px 24px hsl(226 70% 40% / 0.35);
+  box-shadow: 0 8px 24px hsl(var(--xp-gold) / 0.4);
 }
