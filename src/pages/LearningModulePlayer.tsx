@@ -36,6 +36,7 @@ export default function LearningModulePlayer() {
   const [quizAnswers, setQuizAnswers] = useState<Record<string, string>>({});
   const [quizSubmitted, setQuizSubmitted] = useState(false);
   const [analyticalAnswer, setAnalyticalAnswer] = useState('');
+  const [caseAnswers, setCaseAnswers] = useState<Record<string, string>>({});
   const [applicationAnswer, setApplicationAnswer] = useState('');
   const [saving, setSaving] = useState(false);
   const [existingResponse, setExistingResponse] = useState<any>(null);
