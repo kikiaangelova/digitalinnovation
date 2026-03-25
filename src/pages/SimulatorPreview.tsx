@@ -136,7 +136,7 @@ export default function SimulatorPreview() {
         <section className="mb-10">
           <div className="flex items-center gap-2 mb-3">
             <FileText className="h-5 w-5 text-primary" />
-            <h2 className="text-lg font-display font-semibold text-foreground">{t.prevDeliverables}</h2>
+            <h2 className="typo-h2">{t.prevDeliverables}</h2>
           </div>
           <Card className="p-5 border-border">
             <p className="text-sm font-medium text-foreground/80 mb-3">{t.simPrevDelivIntro}</p>
