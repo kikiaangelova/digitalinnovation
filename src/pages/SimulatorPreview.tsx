@@ -74,7 +74,7 @@ export default function SimulatorPreview() {
         <section className="mb-8">
           <div className="flex items-center gap-2 mb-3">
             <Lightbulb className="h-5 w-5 text-primary" />
-            <h2 className="text-lg font-display font-semibold text-foreground">{t.simPrevWhatTitle}</h2>
+            <h2 className="typo-h2">{t.simPrevWhatTitle}</h2>
           </div>
           <Card className="p-5 border-border">
             <ul className="space-y-2">
