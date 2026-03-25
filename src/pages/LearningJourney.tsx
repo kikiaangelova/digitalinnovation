@@ -7,11 +7,150 @@ import AppHeader from '@/components/layout/AppHeader';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { useIsMobile } from '@/hooks/use-mobile';
 import {
   BookOpen, Search, Lightbulb, Palette, TrendingUp, Presentation,
-  CheckCircle2, ArrowRight, Lock, AlertCircle, Play, FileText, Rocket
+  CheckCircle2, ArrowRight, Lock, AlertCircle, Play, FileText, Rocket,
+  ChevronDown, ChevronUp, GraduationCap, Target, Clock, Zap,
 } from 'lucide-react';
 import { toast } from 'sonner';
+
+/* ------------------------------------------------------------------ */
+/* Learning outcomes per stage                                         */
+/* ------------------------------------------------------------------ */
+interface StageOutcomes {
+  knowEn: string[];
+  knowBg: string[];
+  doEn: string[];
+  doBg: string[];
+  estMinutes: number;
+  xpAvailable: number;
+}
+
+const STAGE_OUTCOMES: StageOutcomes[] = [
+  {
+    knowEn: [
+      'What digital innovation is and why it matters',
+      '3 types of digital disruption (sustaining, low-end, new-market)',
+      'How to identify innovation opportunities in any industry',
+    ],
+    knowBg: [
+      'Какво е дигитална иновация и защо е важна',
+      '3 вида дигитална дисрупция (поддържаща, нискобюджетна, нов пазар)',
+      'Как да идентифицирате иновационни възможности във всяка индустрия',
+    ],
+    doEn: [
+      'Analyze an industry for digital opportunities',
+      'Complete your first case study',
+    ],
+    doBg: [
+      'Анализирайте индустрия за дигитални възможности',
+      'Завършете първия си казус',
+    ],
+    estMinutes: 45,
+    xpAvailable: 130,
+  },
+  {
+    knowEn: [
+      'How to map a competitive landscape',
+      'What makes a digital business model defensible',
+    ],
+    knowBg: [
+      'Как да картографирате конкурентната среда',
+      'Какво прави дигиталния бизнес модел защитим',
+    ],
+    doEn: [
+      'Identify 3 competitors and analyze their strengths and weaknesses',
+      'Apply an analytical framework to a real industry',
+    ],
+    doBg: [
+      'Идентифицирайте 3 конкурента и анализирайте силните и слабите им страни',
+      'Приложете аналитична рамка към реална индустрия',
+    ],
+    estMinutes: 60,
+    xpAvailable: 140,
+  },
+  {
+    knowEn: [
+      'What a value proposition is and how to craft one',
+      'How to define customer segments precisely',
+    ],
+    knowBg: [
+      'Какво е стойностно предложение и как да го създадете',
+      'Как да дефинирате клиентски сегменти прецизно',
+    ],
+    doEn: [
+      'Write a clear problem statement',
+      'Define your target customer with specific demographics and needs',
+    ],
+    doBg: [
+      'Напишете ясна формулировка на проблема',
+      'Дефинирайте целевия клиент с конкретни демографски данни и нужди',
+    ],
+    estMinutes: 50,
+    xpAvailable: 120,
+  },
+  {
+    knowEn: [
+      'The 9 blocks of the Business Model Canvas',
+      'How to design a revenue model for a digital product',
+    ],
+    knowBg: [
+      'Деветте блока на Business Model Canvas',
+      'Как да проектирате модел за приходи за дигитален продукт',
+    ],
+    doEn: [
+      'Complete a full BMC for your startup idea',
+      'Define your MVP concept with key features',
+    ],
+    doBg: [
+      'Попълнете пълен BMC за вашата стартъп идея',
+      'Дефинирайте MVP концепцията с ключови функции',
+    ],
+    estMinutes: 90,
+    xpAvailable: 200,
+  },
+  {
+    knowEn: [
+      'What KPIs matter for a startup (users, revenue, satisfaction)',
+      'How strategic decisions affect growth vs risk',
+    ],
+    knowBg: [
+      'Кои KPI-та са важни за стартъп (потребители, приходи, удовлетвореност)',
+      'Как стратегическите решения влияят на растежа спрямо риска',
+    ],
+    doEn: [
+      'Run a complete simulator scenario',
+      'Interpret your startup performance score',
+    ],
+    doBg: [
+      'Проведете пълен симулаторен сценарий',
+      'Интерпретирайте резултата от представянето на стартъпа',
+    ],
+    estMinutes: 40,
+    xpAvailable: 100,
+  },
+  {
+    knowEn: [
+      'What investors look for in a startup pitch',
+      'How to structure a compelling 3-minute presentation',
+    ],
+    knowBg: [
+      'Какво търсят инвеститорите в стартъп представяне',
+      'Как да структурирате убедителна 3-минутна презентация',
+    ],
+    doEn: [
+      'Deliver a complete startup pitch',
+      'Receive and give constructive peer feedback',
+    ],
+    doBg: [
+      'Представете пълно стартъп представяне',
+      'Получете и дайте конструктивна партньорска обратна връзка',
+    ],
+    estMinutes: 60,
+    xpAvailable: 170,
+  },
+];
 
 /* ------------------------------------------------------------------ */
 /* Stage definitions                                                   */
@@ -28,7 +167,6 @@ interface Stage {
   learnPath: string;
   casePath: string;
   simPath: string;
-  /** Which startup-project section maps to this stage */
   startupKey?: string;
 }
 
@@ -103,9 +241,9 @@ function getStatusBadge(status: StageStatus, lang: 'en' | 'bg') {
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
   switch (status) {
     case 'completed':
-      return <Badge className="bg-sim-success/15 text-sim-success border-0 text-xs"><CheckCircle2 className="h-3 w-3 mr-1" />{t('Completed', 'Завършено')}</Badge>;
+      return <Badge className="bg-success/15 text-success border-0 text-xs"><CheckCircle2 className="h-3 w-3 mr-1" />{t('Completed', 'Завършено')}</Badge>;
     case 'in_progress':
-      return <Badge className="bg-sim-warning/15 text-sim-warning border-0 text-xs"><Play className="h-3 w-3 mr-1" />{t('In Progress', 'В процес')}</Badge>;
+      return <Badge className="bg-warning/15 text-warning border-0 text-xs"><Play className="h-3 w-3 mr-1" />{t('In Progress', 'В процес')}</Badge>;
     default:
       return <Badge variant="outline" className="text-xs text-muted-foreground">{t('Not Started', 'Незапочнато')}</Badge>;
   }
@@ -118,6 +256,7 @@ export default function LearningJourney() {
   const { user, loading: authLoading } = useAuth();
   const { lang } = useLang();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
 
   const [casesCompleted, setCasesCompleted] = useState(0);
@@ -125,11 +264,23 @@ export default function LearningJourney() {
   const [startupProject, setStartupProject] = useState<any>(null);
   const [simProgress, setSimProgress] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  // Track which stage cards are expanded; default: all expanded on desktop, all collapsed on mobile
+  const [expanded, setExpanded] = useState<Set<number>>(new Set());
+  const [initializedExpanded, setInitializedExpanded] = useState(false);
+
+  useEffect(() => {
+    if (!initializedExpanded) {
+      if (!isMobile) {
+        setExpanded(new Set(STAGES.map(s => s.id)));
+      }
+      setInitializedExpanded(true);
+    }
+  }, [isMobile, initializedExpanded]);
 
   useEffect(() => {
     if (authLoading) return;
     if (!user) { navigate('/auth?redirect=/journey'); return; }
-    const fetch = async () => {
+    const fetchData = async () => {
       const [casesRes, subsRes, projRes, simRes] = await Promise.all([
         supabase.from('case_studies').select('id').eq('published', true),
         supabase.from('submissions').select('case_study_id, is_draft').eq('user_id', user.id).eq('is_draft', false),
@@ -142,11 +293,18 @@ export default function LearningJourney() {
       setSimProgress(simRes.data || null);
       setLoading(false);
     };
-    fetch();
+    fetchData();
   }, [user, authLoading, navigate]);
 
+  const toggleExpand = (id: number) => {
+    setExpanded(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  };
+
   /* ---- derive stage statuses ---- */
-  const startupSections = ['problem', 'customer', 'value_proposition', 'digital_product', 'business_model', 'growth_strategy', 'final_pitch'];
   const sectionFilled = (key: string) => startupProject ? ((startupProject as any)[key] || '').trim().length > 20 : false;
 
   function stageStatus(stage: Stage): StageStatus {
@@ -155,9 +313,7 @@ export default function LearningJourney() {
       return casesTotal > 0 ? 'in_progress' : 'not_started';
     }
     if (stage.startupKey) {
-      const filled = sectionFilled(stage.startupKey);
       if (stage.id === 5) {
-        // business model + growth strategy
         if (sectionFilled('business_model') && sectionFilled('growth_strategy')) return 'completed';
         if (sectionFilled('business_model') || sectionFilled('growth_strategy')) return 'in_progress';
         return 'not_started';
@@ -167,8 +323,8 @@ export default function LearningJourney() {
         if (sectionFilled('final_pitch')) return 'in_progress';
         return 'not_started';
       }
+      const filled = sectionFilled(stage.startupKey);
       if (filled) return 'completed';
-      // check if any earlier related section is filled → in_progress
       if (stage.id === 2 && (sectionFilled('problem') || sectionFilled('customer'))) return 'in_progress';
       if (stage.id === 3 && sectionFilled('customer')) return 'in_progress';
       if (stage.id === 4 && sectionFilled('digital_product')) return 'in_progress';
@@ -179,11 +335,8 @@ export default function LearningJourney() {
   const statuses = STAGES.map(s => stageStatus(s));
   const completedCount = statuses.filter(s => s === 'completed').length;
   const overallPct = Math.round((completedCount / STAGES.length) * 100);
-
-  // Recommended = first non-completed stage
   const recommendedIdx = statuses.findIndex(s => s !== 'completed');
 
-  // Can submit milestone? Previous stage must be completed (stage 1 has no prereq)
   function canSubmit(stageIdx: number): boolean {
     if (stageIdx === 0) return true;
     return statuses[stageIdx - 1] === 'completed';
@@ -194,7 +347,6 @@ export default function LearningJourney() {
       toast.error(t('Complete the previous step first.', 'Завършете предишната стъпка първо.'));
       return;
     }
-    // Navigate to startup project for submission
     navigate('/my-startup');
   }
 
@@ -215,7 +367,7 @@ export default function LearningJourney() {
       <main className="container mx-auto px-4 py-8 max-w-4xl space-y-8">
         {/* Header */}
         <div>
-           <h1 className="typo-h1">
+          <h1 className="typo-h1">
             {t('Startup Journey', 'Стартъп пътешествие')}
           </h1>
           <p className="text-muted-foreground text-sm mt-1">
@@ -239,7 +391,6 @@ export default function LearningJourney() {
 
         {/* Stages */}
         <div className="relative space-y-0">
-          {/* Connecting line */}
           <div className="absolute left-6 top-8 bottom-8 w-0.5 bg-border hidden md:block" />
 
           {STAGES.map((stage, idx) => {
@@ -247,6 +398,8 @@ export default function LearningJourney() {
             const status = statuses[idx];
             const isRecommended = idx === recommendedIdx;
             const submittable = canSubmit(idx);
+            const outcomes = STAGE_OUTCOMES[idx];
+            const isExpanded = expanded.has(stage.id);
 
             return (
               <div
@@ -257,7 +410,7 @@ export default function LearningJourney() {
               >
                 {/* Icon circle */}
                 <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full z-10
-                  ${status === 'completed' ? 'bg-sim-success text-primary-foreground'
+                  ${status === 'completed' ? 'bg-success text-primary-foreground'
                     : isRecommended ? 'sim-gradient text-primary-foreground'
                     : 'bg-muted text-muted-foreground'}`}
                 >
@@ -267,7 +420,7 @@ export default function LearningJourney() {
                 {/* Content */}
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 flex-wrap mb-1">
-                    <span className="text-xs font-medium text-muted-foreground">
+                    <span className="typo-stage">
                       {t(`Stage ${stage.id}`, `Етап ${stage.id}`)}
                     </span>
                     {getStatusBadge(status, lang)}
@@ -278,12 +431,64 @@ export default function LearningJourney() {
                     )}
                   </div>
 
-                  <h3 className="text-base md:text-lg font-display font-semibold text-foreground mb-1">
-                    {lang === 'bg' ? stage.bg : stage.en}
-                  </h3>
-                  <p className="text-sm text-muted-foreground mb-3">
+                  {/* Title — clickable to toggle */}
+                  <button
+                    onClick={() => toggleExpand(stage.id)}
+                    className="flex items-center gap-2 w-full text-left group"
+                  >
+                    <h3 className="typo-card-title text-base md:text-lg text-foreground group-hover:text-primary transition-colors">
+                      {lang === 'bg' ? stage.bg : stage.en}
+                    </h3>
+                    {isExpanded
+                      ? <ChevronUp className="h-4 w-4 text-muted-foreground shrink-0" />
+                      : <ChevronDown className="h-4 w-4 text-muted-foreground shrink-0" />}
+                  </button>
+                  <p className="typo-helper mb-2">
                     {lang === 'bg' ? stage.descBg : stage.descEn}
                   </p>
+
+                  {/* ═══ Expandable learning outcomes ═══ */}
+                  {isExpanded && (
+                    <div className="rounded-lg bg-muted/40 border border-border/50 p-4 mb-3 space-y-3 animate-in fade-in slide-in-from-top-1 duration-200">
+                      {/* Meta row: time + XP */}
+                      <div className="flex flex-wrap gap-4 text-xs">
+                        <span className="flex items-center gap-1 text-muted-foreground">
+                          <Clock className="h-3.5 w-3.5" />
+                          ~{outcomes.estMinutes} {t('minutes', 'минути')}
+                        </span>
+                        <span className="flex items-center gap-1 text-xp-gold font-bold">
+                          <Zap className="h-3.5 w-3.5" />
+                          {outcomes.xpAvailable} XP {t('available', 'налични')}
+                        </span>
+                      </div>
+
+                      {/* KNOW */}
+                      <div>
+                        <h4 className="flex items-center gap-1.5 text-xs font-semibold text-foreground mb-1.5">
+                          <GraduationCap className="h-3.5 w-3.5 text-primary" />
+                          {t('What you will KNOW', 'Какво ще ЗНАЕТЕ')}
+                        </h4>
+                        <ul className="space-y-1 pl-5">
+                          {(lang === 'bg' ? outcomes.knowBg : outcomes.knowEn).map((item, i) => (
+                            <li key={i} className="typo-helper list-disc">{item}</li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {/* DO */}
+                      <div>
+                        <h4 className="flex items-center gap-1.5 text-xs font-semibold text-foreground mb-1.5">
+                          <Target className="h-3.5 w-3.5 text-success" />
+                          {t('What you will BE ABLE TO DO', 'Какво ще МОЖЕТЕ да правите')}
+                        </h4>
+                        <ul className="space-y-1 pl-5">
+                          {(lang === 'bg' ? outcomes.doBg : outcomes.doEn).map((item, i) => (
+                            <li key={i} className="typo-helper list-disc">{item}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  )}
 
                   {/* Learn / Case / Simulator buttons */}
                   <div className="flex flex-wrap gap-2 mb-3">
@@ -315,11 +520,8 @@ export default function LearningJourney() {
                           <Button
                             size="sm"
                             variant="ghost"
-                            className="text-sim-warning"
-                            onClick={() => {
-                              // Navigate to previous stage's startup section
-                              navigate('/my-startup');
-                            }}
+                            className="text-warning"
+                            onClick={() => navigate('/my-startup')}
                           >
                             <AlertCircle className="h-3.5 w-3.5 mr-1" />
                             {t('Complete previous step', 'Завършете предишната стъпка')}
@@ -329,7 +531,6 @@ export default function LearningJourney() {
                     </div>
                   )}
 
-                  {/* Stage 1 milestone = complete a case */}
                   {idx === 0 && status !== 'completed' && (
                     <div className="pt-2 border-t border-border">
                       <Button size="sm" onClick={() => navigate('/cases')}>
