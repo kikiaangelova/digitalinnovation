@@ -56,7 +56,7 @@ export default function LeaderboardPage() {
       <main className="container mx-auto px-4 py-8 max-w-4xl">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-2">
-            <Trophy className="h-6 w-6 text-[hsl(var(--sim-warning))]" />
+            <Trophy className="h-6 w-6 text-rank-gold" />
             <h1 className="text-3xl font-display font-bold text-foreground">
               {t('Leaderboard', 'Класация')}
             </h1>
