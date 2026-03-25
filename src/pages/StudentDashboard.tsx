@@ -10,6 +10,7 @@ import AchievementBadges from '@/components/dashboard/AchievementBadges';
 import AIMentorWidget from '@/components/dashboard/AIMentorWidget';
 import LearningOutcomes, { calcOutcomeScores } from '@/components/dashboard/LearningOutcomes';
 import Leaderboard from '@/components/dashboard/Leaderboard';
+import WelcomeOnboarding from '@/components/onboarding/WelcomeOnboarding';
 import { Button } from '@/components/ui/button';
 import { Zap, BookOpen, Rocket, BarChart3, FileText, Users, Star } from 'lucide-react';
 
