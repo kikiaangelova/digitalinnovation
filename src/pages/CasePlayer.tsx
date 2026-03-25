@@ -19,6 +19,7 @@ import {
   Lightbulb, Target, Zap, HelpCircle,
 } from 'lucide-react';
 import type { Json } from '@/integrations/supabase/types';
+import CaseAnswerMentor from '@/components/case/CaseAnswerMentor';
 
 /* ── Types ── */
 interface CaseStudy {
