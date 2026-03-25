@@ -34,6 +34,18 @@ export default function LevelCard({ xp, lang }: LevelCardProps) {
   const current = getCurrentLevel(xp);
   const next = getNextLevel(xp);
   const Icon = current.icon;
+  const prevXp = useRef(xp);
+  const [pulse, setPulse] = useState(false);
+
+  useEffect(() => {
+    if (xp !== prevXp.current && prevXp.current !== undefined) {
+      setPulse(true);
+      const timer = setTimeout(() => setPulse(false), 800);
+      prevXp.current = xp;
+      return () => clearTimeout(timer);
+    }
+    prevXp.current = xp;
+  }, [xp]);
 
   const progressToNext = next
     ? ((xp - current.xpNeeded) / (next.xpNeeded - current.xpNeeded)) * 100
