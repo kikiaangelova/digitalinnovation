@@ -14,8 +14,8 @@ import WelcomeOnboarding from '@/components/onboarding/WelcomeOnboarding';
 import { Button } from '@/components/ui/button';
 import { Zap, BookOpen, Rocket, BarChart3, FileText, Users, Star } from 'lucide-react';
 
-interface CaseRow { id: string; title: string; difficulty: string; est_minutes: number | null; }
-interface SubRow { case_study_id: string; is_draft: boolean; }
+interface CaseRow { id: string; title: string; difficulty: string; est_minutes: number | null; topic?: string | null; }
+interface SubRow { case_study_id: string; is_draft: boolean; total_score?: number | null; max_score?: number | null; }
 
 export default function StudentDashboard() {
   const { user, loading: authLoading } = useAuth();
