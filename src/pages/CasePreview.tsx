@@ -176,7 +176,7 @@ export default function CasePreview() {
               <p className="text-xs text-muted-foreground mt-0.5">
                 {tl(
                   'Review your analysis or explore another case.',
-                  'Прегледайте анализа си или разгледайте друг казус.'
+                  'Прегледай анализа си или разгледай друг казус.'
                 )}
               </p>
             </div>
