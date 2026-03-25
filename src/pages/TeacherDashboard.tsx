@@ -286,7 +286,7 @@ export default function TeacherDashboard() {
       target_id: feedbackTarget.id,
       comment: feedbackText.trim(),
     });
-    if (error) { toast.error('Failed to save feedback'); return; }
+    if (error) { toast.error(t('Failed to save feedback', 'Грешка при запазване на обратна връзка')); return; }
     const newFb: FeedbackRow = {
       id: crypto.randomUUID(),
       teacher_id: user.id,

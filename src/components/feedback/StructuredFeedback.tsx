@@ -72,7 +72,7 @@ export default function StructuredFeedback({ context, lang, autoLoad = false, cl
       }
       setFeedback(result.feedback);
     } catch (e: any) {
-      const msg = e?.message || 'Failed to get feedback';
+      const msg = e?.message || t('Failed to get feedback', 'Грешка при получаване на обратна връзка');
       setError(msg);
       toast.error(msg);
     } finally {

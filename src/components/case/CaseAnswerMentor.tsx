@@ -62,7 +62,7 @@ export default function CaseAnswerMentor({
       setFeedback(result.feedback);
       if (result.remaining !== undefined) setRemaining(result.remaining);
     } catch (e: any) {
-      const msg = e?.message || 'Failed to get feedback';
+      const msg = e?.message || t('Failed to get feedback', 'Грешка при получаване на обратна връзка');
       setError(msg);
       toast.error(msg);
     } finally {
