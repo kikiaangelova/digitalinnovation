@@ -38,6 +38,7 @@ export default function StudentDashboard() {
   const [quizTestsCompleted, setQuizTestsCompleted] = useState(0);
   const [quizCategoriesTested, setQuizCategoriesTested] = useState(0);
   const [quizConsecutiveImprovements, setQuizConsecutiveImprovements] = useState(0);
+  const [quizHighScores80, setQuizHighScores80] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
