@@ -193,7 +193,7 @@ export default function PeerReview() {
             )}
             {activeReview.target_type === 'case_submission' && targetContent && (
               <div className="space-y-2">
-                <p className="text-sm font-medium text-foreground">{targetContent.case_title || 'Case Study'}</p>
+                <p className="text-sm font-medium text-foreground">{targetContent.case_title || t('Case Study', 'Казус')}</p>
                 <p className="text-xs text-muted-foreground">
                   {t('Score', 'Резултат')}: {targetContent.score ?? '?'}/{targetContent.max_score ?? '?'}
                 </p>

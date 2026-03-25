@@ -271,7 +271,7 @@ export default function MyStartupIdea() {
         }
       }
     } catch {
-      toast.error('Failed to save');
+      toast.error(t('Failed to save', 'Грешка при запазване'));
     } finally {
       setSaving(false);
     }

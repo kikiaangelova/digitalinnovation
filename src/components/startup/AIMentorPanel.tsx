@@ -68,7 +68,7 @@ export default function AIMentorPanel({ data, lang }: Props) {
       if (rem !== undefined) setRemaining(rem);
       setCached(!!isCached);
     } catch (e: any) {
-      const msg = e?.message || 'Failed to get AI feedback';
+      const msg = e?.message || t('Failed to get AI feedback', 'Грешка при получаване на AI обратна връзка');
       setError(msg);
       toast.error(msg);
     } finally {

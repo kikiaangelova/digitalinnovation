@@ -98,7 +98,7 @@ export default function LearningModulePlayer() {
     return (
       <div className="min-h-screen bg-background">
         <AppHeader />
-        <div className="flex items-center justify-center py-20 text-muted-foreground">Module not found</div>
+        <div className="flex items-center justify-center py-20 text-muted-foreground">{t('Module not found', 'Модулът не е намерен')}</div>
       </div>
     );
   }
