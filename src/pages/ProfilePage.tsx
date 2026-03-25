@@ -74,6 +74,7 @@ export default function ProfilePage() {
     setSaving(true);
     const { error } = await supabase.from('profiles').update({
       full_name: fullName,
+      display_name: displayName,
       bio,
       skills_tags: skillsTags,
       interests,
