@@ -568,6 +568,18 @@ export default function QuickTest() {
           </p>
         </div>
 
+        {/* Badge unlocks */}
+        {unlockedBadges.length > 0 && (
+          <div className="rounded-lg border border-primary/20 bg-primary/5 p-3 space-y-1.5">
+            <p className="text-xs font-semibold text-primary uppercase tracking-wider">{t('Badges Unlocked', 'Отключени значки')}</p>
+            <div className="flex flex-wrap gap-1.5">
+              {unlockedBadges.map(b => (
+                <Badge key={b} variant="outline" className="border-primary/30 text-primary">{b}</Badge>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Strong areas */}
         {strong.length > 0 && (
           <div className="space-y-2">
