@@ -395,6 +395,38 @@ The best approach is to **start higher** than you think. It's easier to lower pr
     case_transition_bg: 'Научихте за ценообразуване и приходи. Сега анализирайте как платформените бизнеси монетизират мрежите си.',
     sim_transition_en: 'Test different pricing strategies in the startup simulator to see their impact on growth and revenue.',
     sim_transition_bg: 'Тествайте различни ценови стратегии в стартъп симулатора, за да видите въздействието им върху растежа и приходите.',
+    embedded_case: {
+      title_en: 'Bird Scooters: When Unit Economics Don\'t Add Up',
+      title_bg: 'Bird Scooters: Когато unit economics не работят',
+      learning_goal_en: 'Understand why pricing and unit economics must be validated before scaling, even with massive demand.',
+      learning_goal_bg: 'Разбери защо ценообразуването и unit economics трябва да се валидират преди мащабиране, дори при огромно търсене.',
+      context_en: `Bird launched in 2017 as the first electric scooter-sharing company. The idea was simple: drop scooters around cities, let people unlock them with an app, charge $1 to start + $0.15 per minute. Within 12 months, Bird raised $415 million and was valued at $2 billion — the fastest company in history to reach "unicorn" status.
+
+The growth was explosive. Scooters appeared in over 100 cities. Riders loved the convenience. Cities struggled to regulate them. Bird's revenue grew from $0 to $100+ million in a single year.
+
+But underneath the impressive top-line numbers, a critical problem was brewing: each scooter cost $500+, lasted only 3-4 months on the street (due to vandalism, weather, and abuse), and generated about $3-5 per day in revenue. Bird also had to pay "chargers" — gig workers who collected, charged, and redistributed scooters every night — adding $3-5 per scooter per day in operational costs.
+
+The math was devastating: **Revenue per scooter lifetime ≈ $300-450. Cost per scooter lifetime (hardware + operations) ≈ $600-900.** Bird was losing money on every single ride.`,
+      context_bg: `Bird стартира през 2017 г. като първата компания за споделяне на електрически тротинетки. Идеята беше проста: оставяш тротинетки из градовете, хората ги отключват с приложение, таксуваш $1 за старт + $0.15 на минута. В рамките на 12 месеца Bird привлече $415 милиона и беше оценена на $2 милиарда — най-бързата компания в историята, достигнала статус на "еднорог".
+
+Растежът беше експлозивен. Тротинетки се появиха в над 100 града. Потребителите обожаваха удобството. Приходите нараснаха от $0 до $100+ милиона за една година.
+
+Но под впечатляващите числа се криеше критичен проблем: всяка тротинетка струваше $500+, издържаше само 3-4 месеца на улицата (заради вандализъм и злоупотреба) и генерираше около $3-5 на ден приходи. Bird също трябваше да плаща на "зарядчици" — gig работници, които събираха, зареждаха и преразпределяха тротинетките всяка нощ — добавяйки $3-5 на тротинетка на ден оперативни разходи.
+
+Математиката беше опустошителна: **Приход за живот на тротинетка ≈ $300-450. Разходи за живот (хардуер + операции) ≈ $600-900.** Bird губеше пари от всяко едно пътуване.`,
+      problem_en: 'Can a company with negative unit economics survive by scaling, or does scaling only make the losses worse? How should Bird have structured its pricing?',
+      problem_bg: 'Може ли компания с негативен unit economics да оцелее чрез мащабиране, или мащабирането само влошава загубите? Как Bird трябваше да структурира ценообразуването си?',
+      key_decision_en: 'Bird chose to prioritize growth over profitability. They raised billions in venture capital to subsidize operations, hoping that scale would eventually reduce costs. They kept prices low to maximize rides and market share. They also tried switching to cheaper scooters, which broke down even faster.',
+      key_decision_bg: 'Bird избра да приоритизира растежа пред рентабилността. Привлякоха милиарди рисков капитал за субсидиране на операциите, надявайки се, че мащабът ще намали разходите. Поддържаха ниски цени за максимизиране на пътуванията. Също така опитаха по-евтини тротинетки, които се чупеха още по-бързо.',
+      outcome_en: 'Bird went public in 2021 at a $2.5B valuation but its stock crashed 99%. By 2023, Bird filed for bankruptcy. The core lesson: **no amount of growth fixes broken unit economics.** If you lose money on every transaction, more transactions = more losses. Bird needed to either charge higher prices, build more durable scooters, or find a fundamentally different cost structure before scaling.',
+      outcome_bg: 'Bird стана публична през 2021 г. при оценка от $2.5 млрд., но акциите паднаха с 99%. До 2023 г. Bird обяви фалит. Основният урок: **никакъв растеж не поправя счупен unit economics.** Ако губиш пари от всяка транзакция, повече транзакции = повече загуби. Bird трябваше или да вдигне цените, или да построи по-издръжливи тротинетки, или да намери фундаментално различна разходна структура преди мащабирането.',
+      outcome_type: 'failure',
+      analytical_questions: [
+        { id: 'bc1', question_en: 'What was the real problem at Bird — was it pricing too low, scooter durability, operational costs, or all three? Which factor was most critical and why?', question_bg: 'Какъв беше истинският проблем на Bird — прекалено ниски цени, издръжливост на тротинетките, оперативни разходи, или и трите? Кой фактор беше най-критичен?' },
+        { id: 'bc2', question_en: 'Evaluate Bird\'s decision to prioritize growth over profitability. In what situations is this a valid strategy, and when does it become dangerous? Use the LTV:CAC framework.', question_bg: 'Оценете решението на Bird да приоритизира растежа пред рентабилността. В кои ситуации това е валидна стратегия и кога става опасно? Използвайте LTV:CAC рамката.' },
+        { id: 'bc3', question_en: 'Redesign Bird\'s pricing model to achieve profitability. Consider subscription plans, surge pricing, premium tiers, or partnership models. What would you change?', question_bg: 'Редизайнирайте ценовия модел на Bird за постигане на рентабилност. Помислете за абонаментни планове, динамично ценообразуване, премиум нива или партньорски модели.' },
+      ],
+    },
   },
   /* ── Level 2: Team & Roles ── */
   {
