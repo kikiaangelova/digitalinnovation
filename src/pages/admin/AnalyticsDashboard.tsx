@@ -303,6 +303,215 @@ export default function AnalyticsDashboard() {
           </Card>
         )}
 
+        {/* Quiz Test Analytics */}
+        {quizResults.length > 0 && (() => {
+          // Average score by category
+          const catStats: Record<string, { total: number; count: number }> = {};
+          quizResults.forEach(r => {
+            const cat = r.category || 'General';
+            if (!catStats[cat]) catStats[cat] = { total: 0, count: 0 };
+            catStats[cat].total += r.score;
+            catStats[cat].count++;
+          });
+          const catChartData = Object.entries(catStats)
+            .map(([name, { total, count }]) => ({ name: name.substring(0, 16), avg: Math.round(total / count), tests: count }))
+            .sort((a, b) => b.tests - a.tests);
+
+          // Weakest categories (avg < 60)
+          const weakCats = catChartData.filter(c => c.avg < 60);
+
+          // Top quiz performers
+          const userQuizStats: Record<string, { scores: number[]; name: string }> = {};
+          quizResults.forEach(r => {
+            if (!userQuizStats[r.user_id]) userQuizStats[r.user_id] = { scores: [], name: '' };
+            userQuizStats[r.user_id].scores.push(r.score);
+          });
+          profiles.forEach(p => {
+            if (userQuizStats[p.user_id]) userQuizStats[p.user_id].name = p.full_name || t('Unknown', 'Неизвестен');
+          });
+          const topQuizStudents = Object.entries(userQuizStats)
+            .map(([id, { scores, name }]) => ({
+              id, name,
+              tests: scores.length,
+              avg: Math.round(scores.reduce((a, b) => a + b, 0) / scores.length),
+              best: Math.max(...scores),
+            }))
+            .sort((a, b) => b.avg - a.avg)
+            .slice(0, 8);
+
+          // Students needing support (avg < 50, at least 2 tests)
+          const needSupport = Object.entries(userQuizStats)
+            .map(([id, { scores, name }]) => ({
+              id, name,
+              tests: scores.length,
+              avg: Math.round(scores.reduce((a, b) => a + b, 0) / scores.length),
+            }))
+            .filter(s => s.avg < 50 && s.tests >= 2)
+            .sort((a, b) => a.avg - b.avg);
+
+          const totalTests = quizResults.length;
+          const overallAvg = Math.round(quizResults.reduce((a, r) => a + r.score, 0) / totalTests);
+
+          return (
+            <>
+              {/* Quiz summary metrics */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <Card>
+                  <CardContent className="pt-5 pb-4 px-4">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/50">
+                        <HelpCircle className="h-5 w-5 text-primary" />
+                      </div>
+                      <div>
+                        <p className="text-2xl font-bold text-foreground">{totalTests}</p>
+                        <p className="text-xs text-muted-foreground">{t('Total Tests Taken', 'Общо тестове')}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="pt-5 pb-4 px-4">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/50">
+                        <Brain className="h-5 w-5 text-primary" />
+                      </div>
+                      <div>
+                        <p className="text-2xl font-bold text-foreground">{overallAvg}%</p>
+                        <p className="text-xs text-muted-foreground">{t('Avg Quiz Score', 'Среден резултат')}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="pt-5 pb-4 px-4">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/50">
+                        <Users className="h-5 w-5 text-primary" />
+                      </div>
+                      <div>
+                        <p className="text-2xl font-bold text-foreground">{Object.keys(userQuizStats).length}</p>
+                        <p className="text-xs text-muted-foreground">{t('Students Tested', 'Тествани ученици')}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardContent className="pt-5 pb-4 px-4">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent/50">
+                        <AlertTriangle className={`h-5 w-5 ${needSupport.length > 0 ? 'text-amber-500' : 'text-primary'}`} />
+                      </div>
+                      <div>
+                        <p className="text-2xl font-bold text-foreground">{needSupport.length}</p>
+                        <p className="text-xs text-muted-foreground">{t('Need Support', 'Нуждаят се от помощ')}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Avg Score by Category */}
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <Brain className="h-5 w-5 text-primary" />
+                    {t('Quiz Scores by Category', 'Резултати по категория')}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ResponsiveContainer width="100%" height={280}>
+                    <BarChart data={catChartData}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                      <XAxis dataKey="name" tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }} />
+                      <YAxis domain={[0, 100]} tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }} />
+                      <Tooltip {...tooltipStyle} formatter={(v: number, name: string) => [name === 'avg' ? `${v}%` : v, name === 'avg' ? t('Avg Score', 'Среден') : t('Tests', 'Тестове')]} />
+                      <Bar dataKey="avg" fill={COLORS.primary} radius={[4, 4, 0, 0]} name="avg" />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </CardContent>
+              </Card>
+
+              <div className="grid lg:grid-cols-2 gap-6">
+                {/* Top Quiz Performers */}
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-base flex items-center gap-2">
+                      <Trophy className="h-5 w-5 text-primary" />
+                      {t('Top Quiz Performers', 'Най-добри на тестове')}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="overflow-x-auto">
+                      <table className="w-full">
+                        <thead>
+                          <tr className="border-b border-border">
+                            <th className="px-2 py-2 text-left text-xs font-medium text-muted-foreground">{t('Student', 'Ученик')}</th>
+                            <th className="px-2 py-2 text-center text-xs font-medium text-muted-foreground">{t('Tests', 'Тестове')}</th>
+                            <th className="px-2 py-2 text-center text-xs font-medium text-muted-foreground">{t('Avg', 'Ср.')}</th>
+                            <th className="px-2 py-2 text-center text-xs font-medium text-muted-foreground">{t('Best', 'Най-добър')}</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {topQuizStudents.map((s, i) => (
+                            <tr key={s.id} className="border-b border-border/50 last:border-0">
+                              <td className="px-2 py-2 text-sm font-medium text-foreground">{s.name}</td>
+                              <td className="px-2 py-2 text-center text-sm text-muted-foreground">{s.tests}</td>
+                              <td className="px-2 py-2 text-center">
+                                <Badge variant={s.avg >= 70 ? 'default' : 'secondary'} className="text-xs">{s.avg}%</Badge>
+                              </td>
+                              <td className="px-2 py-2 text-center text-sm text-muted-foreground">{s.best}%</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                {/* Students Needing Support + Weak Areas */}
+                <Card>
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-base flex items-center gap-2">
+                      <TrendingDown className="h-5 w-5 text-amber-500" />
+                      {t('Weak Areas & At-Risk Students', 'Слаби области и ученици в риск')}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    {weakCats.length > 0 && (
+                      <div>
+                        <p className="text-xs font-semibold text-muted-foreground uppercase mb-2">{t('Common Weak Areas', 'Често срещани слаби области')}</p>
+                        <div className="space-y-1.5">
+                          {weakCats.map(c => (
+                            <div key={c.name} className="flex items-center justify-between text-xs rounded-md bg-amber-500/5 border border-amber-500/10 p-2">
+                              <span className="text-foreground font-medium">{c.name}</span>
+                              <span className="text-amber-600 font-bold">{c.avg}%</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {needSupport.length > 0 ? (
+                      <div>
+                        <p className="text-xs font-semibold text-muted-foreground uppercase mb-2">{t('Students Needing Support', 'Ученици, нуждаещи се от помощ')}</p>
+                        <div className="space-y-1.5">
+                          {needSupport.slice(0, 6).map(s => (
+                            <div key={s.id} className="flex items-center justify-between text-xs rounded-md bg-destructive/5 border border-destructive/10 p-2">
+                              <span className="text-foreground font-medium">{s.name}</span>
+                              <span className="text-destructive font-bold">{s.avg}% ({s.tests} {t('tests', 'тестa')})</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <p className="text-sm text-muted-foreground text-center py-4">{t('All students performing well!', 'Всички ученици се справят добре!')}</p>
+                    )}
+                  </CardContent>
+                </Card>
+              </div>
+            </>
+          );
+        })()}
+
         {/* Top Students Leaderboard */}
         <Card>
           <CardHeader className="pb-2">
