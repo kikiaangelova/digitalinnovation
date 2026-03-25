@@ -81,7 +81,7 @@ export default function FinalExam() {
         toast.info(t('Exam graded. Review your feedback below.', 'Изпитът е оценен. Вижте обратната връзка по-долу.'));
       }
     } catch (err: any) {
-      toast.error(err.message || 'Error grading exam');
+      toast.error(err.message || t('Error grading exam', 'Грешка при оценяване на изпита'));
     } finally {
       setSubmitting(false);
     }
