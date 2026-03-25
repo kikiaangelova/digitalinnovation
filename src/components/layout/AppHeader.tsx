@@ -64,8 +64,11 @@ export default function AppHeader() {
         { to: '/journey', icon: Map, label: lang === 'bg' ? 'Пътешествие' : 'Journey' },
         { to: '/cases', icon: BookOpen, label: t.cases },
         { to: '/simulator', icon: Play, label: t.simulator },
+        { to: '/dictionary', icon: Book, label: t.dictionary },
       ]
-    : [];
+    : [
+        { to: '/dictionary', icon: Book, label: t.dictionary },
+      ];
 
   // ─── Dropdown menu items ───
   const dropdownItems = [
