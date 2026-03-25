@@ -121,6 +121,19 @@ export default function RoundView() {
           <OutcomeReportView report={outcomeReport} lang={lang} />
         )}
 
+        {isSubmitted && outcomeReport && currentState && (
+          <StructuredFeedback
+            context={{
+              type: 'simulator',
+              currentWeek: weekNumber,
+              kpis: currentState.kpis,
+              grade: undefined,
+              decisions: submission?.answers,
+            }}
+            lang={lang as 'en' | 'bg'}
+          />
+        )}
+
         <div>
           <h2 className="text-lg font-semibold text-foreground mb-3">
             {isSubmitted ? t('Your Decisions (Submitted)', 'Вашите решения (Изпратени)') : t('Make Your Decisions', 'Вземете решения')}
