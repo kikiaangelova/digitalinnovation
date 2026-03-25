@@ -7,6 +7,7 @@ import NarrativeBriefing from '@/components/simulator/NarrativeBriefing';
 import DecisionForm from '@/components/simulator/DecisionForm';
 import OutcomeReportView from '@/components/simulator/OutcomeReportView';
 import StructuredFeedback from '@/components/feedback/StructuredFeedback';
+import SkillsImproved from '@/components/learning/SkillsImproved';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, ChevronLeft, ChevronRight } from 'lucide-react';
 import { toast } from 'sonner';
@@ -119,6 +120,10 @@ export default function RoundView() {
 
         {isSubmitted && outcomeReport && (
           <OutcomeReportView report={outcomeReport} lang={lang} />
+        )}
+
+        {isSubmitted && (
+          <SkillsImproved activityType="simulator" scorePercent={70 + weekNumber * 5} lang={lang as 'en' | 'bg'} />
         )}
 
         {isSubmitted && outcomeReport && currentState && (

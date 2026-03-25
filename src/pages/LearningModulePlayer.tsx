@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { LearningPhaseBar, WhatYouWillLearn, THEORY_MODULE_OUTCOMES } from '@/components/learning/LearningStructure';
 import StructuredFeedback from '@/components/feedback/StructuredFeedback';
+import SkillsImproved from '@/components/learning/SkillsImproved';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
@@ -422,6 +423,13 @@ export default function LearningModulePlayer() {
                 <p className="text-xs text-foreground bg-accent/50 rounded-lg p-3">{applicationAnswer || '—'}</p>
               </div>
             </div>
+
+            {/* Skills improved */}
+            <SkillsImproved
+              activityType="theory_module"
+              scorePercent={Math.round((quizScore / Math.max(quizMax, 1)) * 100)}
+              lang={lang as 'en' | 'bg'}
+            />
 
             {/* AI Structured Feedback */}
             {mod && (

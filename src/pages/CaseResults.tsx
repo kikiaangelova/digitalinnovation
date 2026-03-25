@@ -11,6 +11,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { CheckCircle2, XCircle, ArrowLeft, Trophy, BookOpen, Award, Rocket, Star, Brain, TrendingUp, Lightbulb, Target, MessageSquare } from 'lucide-react';
 import StructuredFeedback from '@/components/feedback/StructuredFeedback';
+import SkillsImproved from '@/components/learning/SkillsImproved';
 import type { Json } from '@/integrations/supabase/types';
 
 interface QuestionResult {
@@ -200,6 +201,9 @@ export default function CaseResults() {
             </div>
           </div>
         )}
+
+        {/* Skills improved */}
+        <SkillsImproved activityType="case_study" scorePercent={scorePercent} lang={lang as 'en' | 'bg'} />
 
         {/* AI Structured Feedback */}
         {maxScore > 0 && (
