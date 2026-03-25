@@ -202,6 +202,9 @@ export default function CaseResults() {
           </div>
         )}
 
+        {/* Skills improved */}
+        <SkillsImproved activityType="case_study" scorePercent={scorePercent} lang={lang as 'en' | 'bg'} />
+
         {/* AI Structured Feedback */}
         {maxScore > 0 && (
           <StructuredFeedback
