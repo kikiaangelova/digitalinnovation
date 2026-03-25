@@ -46,7 +46,7 @@ export default function StudentDashboard() {
           supabase.from('simulator_progress').select('current_week, is_complete').eq('user_id', user.id).maybeSingle(),
           supabase.from('peer_review_assignments').select('id').eq('reviewer_user_id', user.id).eq('status', 'pending'),
           supabase.from('peer_reviews').select('average_score').eq('reviewee_user_id', user.id),
-          supabase.from('profiles').select('total_xp').eq('user_id', user.id).maybeSingle(),
+          supabase.from('profiles').select('total_xp, onboarding_completed').eq('user_id', user.id).maybeSingle(),
         ]);
         setCases(casesRes.data || []);
         setSubmissions(subsRes.data || []);
@@ -55,7 +55,11 @@ export default function StudentDashboard() {
         setPendingReviews((prAssignRes.data || []).length);
         const prScores = (prReceivedRes.data || []) as { average_score: number | null }[];
         setAvgPeerScore(prScores.length > 0 ? prScores.reduce((a, r) => a + Number(r.average_score || 0), 0) / prScores.length : null);
-        setTotalXp((profileRes.data as any)?.total_xp || 0);
+        const profileData = profileRes.data as any;
+        setTotalXp(profileData?.total_xp || 0);
+        if (profileData && !profileData.onboarding_completed && (profileData.total_xp || 0) === 0) {
+          setShowOnboarding(true);
+        }
       } catch (err) {
         console.error('Dashboard fetch error:', err);
       } finally {
