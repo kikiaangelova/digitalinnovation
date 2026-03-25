@@ -535,7 +535,7 @@ export default function LearningJourney() {
                     <div className="pt-2 border-t border-border">
                       <Button size="sm" onClick={() => navigate('/cases')}>
                         <BookOpen className="h-3.5 w-3.5 mr-1" />
-                        {t('Complete a Case Study', 'Завършете казус')}
+                        {t('Complete a Case Study', 'Завърши казус')}
                       </Button>
                     </div>
                   )}
