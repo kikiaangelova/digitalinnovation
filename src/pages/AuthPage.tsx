@@ -39,6 +39,7 @@ export default function AuthPage() {
   const [studentClass, setStudentClass] = useState('');
   const [school, setSchool] = useState('');
   const [country, setCountry] = useState('');
+  const [displayName, setDisplayName] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -59,6 +60,7 @@ export default function AuthPage() {
     setStudentClass('');
     setSchool('');
     setCountry('');
+    setDisplayName('');
     setShowPassword(false);
     setShowConfirm(false);
   }, [isLogin]);
@@ -159,8 +161,14 @@ export default function AuthPage() {
         setLoading(false);
         return;
       }
-      const displayName = `${trimmedName} ${trimmedLastName}`;
-      const { error } = await signUp(trimmedEmail, password, displayName);
+      const trimmedDisplayName = displayName.trim();
+      if (!trimmedDisplayName || trimmedDisplayName.length < 2) {
+        toast.error(tx('Display name must be at least 2 characters', 'Псевдонимът трябва да бъде поне 2 символа'));
+        setLoading(false);
+        return;
+      }
+      const fullDisplayName = `${trimmedName} ${trimmedLastName}`;
+      const { error } = await signUp(trimmedEmail, password, fullDisplayName, trimmedDisplayName);
       if (error) {
         toast.error(error.message);
       } else {
@@ -222,6 +230,13 @@ export default function AuthPage() {
                 <div>
                   <Label htmlFor="school">{tx('School (optional)', 'Училище (незадължително)')}</Label>
                   <Input id="school" value={school} onChange={e => setSchool(e.target.value)} placeholder={tx('e.g. Sofia High School', 'напр. СМГ')} />
+                </div>
+                <div>
+                  <Label htmlFor="displayName">{tx('Username / Display Name', 'Псевдоним')}</Label>
+                  <Input id="displayName" value={displayName} onChange={e => setDisplayName(e.target.value)} placeholder={tx('e.g. CoolInnovator', 'напр. ИноваторБГ')} required={!isLogin} />
+                  <p className="text-[10px] text-muted-foreground mt-1">
+                    {tx('Choose a display name for the leaderboard', 'Избери псевдоним за класацията')}
+                  </p>
                 </div>
               </>
             )}

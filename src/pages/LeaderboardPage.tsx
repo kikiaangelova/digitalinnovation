@@ -67,6 +67,9 @@ export default function LeaderboardPage() {
               'Спечели XP като решаваш казуси, създаваш стартъп и използваш симулатора.'
             )}
           </p>
+          <p className="text-xs text-muted-foreground/70 mt-2 italic">
+            {t('The leaderboard shows display names only to protect privacy', 'Класацията показва само псевдоними за защита на личните данни')}
+          </p>
         </div>
 
         {loading ? (

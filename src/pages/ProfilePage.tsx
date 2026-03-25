@@ -21,6 +21,7 @@ export default function ProfilePage() {
   const { t, lang } = useLang();
   const navigate = useNavigate();
   const [fullName, setFullName] = useState('');
+  const [displayName, setDisplayName] = useState('');
   const [bio, setBio] = useState('');
   const [skillsTags, setSkillsTags] = useState<string[]>([]);
   const [interests, setInterests] = useState<string[]>([]);
@@ -44,6 +45,7 @@ export default function ProfilePage() {
       const { data: p } = await supabase.from('profiles').select('*').eq('user_id', user.id).maybeSingle();
       if (p) {
         setFullName(p.full_name || '');
+        setDisplayName((p as any).display_name || '');
         setBio((p as any).bio || '');
         setSkillsTags((p as any).skills_tags || []);
         setInterests((p as any).interests || []);
@@ -72,6 +74,7 @@ export default function ProfilePage() {
     setSaving(true);
     const { error } = await supabase.from('profiles').update({
       full_name: fullName,
+      display_name: displayName,
       bio,
       skills_tags: skillsTags,
       interests,
@@ -175,8 +178,13 @@ export default function ProfilePage() {
           <h3 className="font-display font-semibold text-foreground">{t.editProfile}</h3>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <Label>{t.fullName}</Label>
+              <Label>{t.fullName} <span className="text-[10px] text-muted-foreground">({lang === 'bg' ? 'видимо само за теб и учителя' : 'visible only to you and the teacher'})</span></Label>
               <Input value={fullName} onChange={e => setFullName(e.target.value)} />
+            </div>
+            <div>
+              <Label>{lang === 'bg' ? 'Псевдоним (за класацията)' : 'Display Name (for leaderboard)'}</Label>
+              <Input value={displayName} onChange={e => setDisplayName(e.target.value)} placeholder={lang === 'bg' ? 'напр. ИноваторБГ' : 'e.g. CoolInnovator'} />
+              <p className="text-[10px] text-muted-foreground mt-1">{lang === 'bg' ? 'Това име се показва публично в класацията' : 'This name is shown publicly on the leaderboard'}</p>
             </div>
             <div>
               <Label>{lang === 'bg' ? 'Училище / Университет' : 'School / University'} <span className="text-xs text-muted-foreground">({lang === 'bg' ? 'по избор' : 'optional'})</span></Label>
