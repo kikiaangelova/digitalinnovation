@@ -86,6 +86,23 @@ function getProgress(id: string, lang: 'en' | 'bg', props: AchievementBadgesProp
       const v = props.loginStreakDays || 0;
       return { label: bg ? `${Math.min(v, 5)} / 5 дни подред` : `${Math.min(v, 5)} / 5 days in a row`, current: Math.min(v, 5), max: 5 };
     }
+    // Test badges
+    case 'quiz_starter': {
+      const v = props.quizTestsCompleted || 0;
+      return { label: bg ? `${Math.min(v, 1)} / 1 тест` : `${Math.min(v, 1)} / 1 test`, current: Math.min(v, 1), max: 1 };
+    }
+    case 'knowledge_builder': {
+      const v = props.quizTestsCompleted || 0;
+      return { label: bg ? `${Math.min(v, 5)} / 5 тестa` : `${Math.min(v, 5)} / 5 tests`, current: Math.min(v, 5), max: 5 };
+    }
+    case 'test_explorer': {
+      const v = props.quizCategoriesTested || 0;
+      return { label: bg ? `${Math.min(v, 3)} / 3 категории` : `${Math.min(v, 3)} / 3 categories`, current: Math.min(v, 3), max: 3 };
+    }
+    case 'consistency_master': {
+      const v = props.quizConsecutiveImprovements || 0;
+      return { label: bg ? `${Math.min(v, 3)} / 3 подобрения` : `${Math.min(v, 3)} / 3 improvements`, current: Math.min(v, 3), max: 3 };
+    }
     default:
       return null;
   }
