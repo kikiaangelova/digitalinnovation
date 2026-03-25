@@ -25,8 +25,104 @@ const translations = {
     // Landing
     heroTitle: 'DigiInnov Case Lab',
     heroSubtitle: 'Learn digital innovation and startup thinking through hands-on case studies, business simulation, and gamification.',
+    heroAudience: 'Built for business students, entrepreneurship educators, and future founders.',
     getStarted: 'Get Started',
     goToDashboard: 'Go to Dashboard',
+    startJourney: 'Start Your Innovation Journey',
+    explorePlatform: 'Explore the Platform',
+    socialProof: '150+ students already using the platform',
+    useInClassroom: 'Use in Your Classroom',
+    requestDemo: 'Request Demo',
+    accessClarity: 'Free for students. Contact us for schools and institutions.',
+    gamifiedPlatform: 'Gamified Learning Platform',
+
+    // Landing sections
+    skillsCount: '5 Skills',
+    whatYouLearn: 'What You Will Learn',
+    whatYouLearnDesc: 'Master the skills every digital innovator needs.',
+    stepsCount: '4 Steps',
+    whatYouBuild: 'What You Will Build',
+    whatYouBuildDesc: 'From problem discovery to pitching a real startup concept.',
+    step: 'Step',
+    stagesCount: '6 Stages',
+    yourJourney: 'Your Innovation Journey',
+    yourJourneyDesc: 'A gamified roadmap from beginner to startup founder.',
+    stage: 'Stage',
+    weeksCount: '6 Weeks',
+    learningPath: 'Your 6-Week Learning Path',
+    learningPathDesc: 'A structured curriculum from basics to pitching your startup.',
+    week: 'Week',
+    readyToInnovate: 'Ready to Innovate?',
+    readyToInnovateDesc: 'Join the Digital Innovation Lab and start building your future today.',
+
+    // Learn cards
+    learnDigitalInnovation: 'Digital Innovation',
+    learnDigitalInnovationDesc: 'Understand how technology transforms industries.',
+    learnStartupThinking: 'Startup Thinking',
+    learnStartupThinkingDesc: 'Learn to identify problems and create solutions.',
+    learnBusinessModels: 'Business Models',
+    learnBusinessModelsDesc: 'Design how your startup generates revenue.',
+    learnProductDesign: 'Product Design',
+    learnProductDesignDesc: 'Create a minimum viable product concept.',
+    learnGrowthStrategy: 'Growth Strategy',
+    learnGrowthStrategyDesc: 'Choose marketing and scaling strategies.',
+
+    // Build steps
+    buildIdentifyProblem: 'Identify a Problem',
+    buildCreateIdea: 'Create a Startup Idea',
+    buildBusinessModel: 'Build a Business Model',
+    buildPitchStartup: 'Pitch Your Startup',
+
+    // Journey stages
+    journeyExplore: 'Explore Digital Innovation',
+    journeyExploreDesc: 'Learn core concepts and frameworks',
+    journeyAnalyze: 'Analyze Business Cases',
+    journeyAnalyzeDesc: 'Study real-world digital transformations',
+    journeyBuild: 'Build Your Startup Idea',
+    journeyBuildDesc: 'Define your problem, customer, and solution',
+    journeyDesign: 'Design Your Product',
+    journeyDesignDesc: 'Create your MVP and value proposition',
+    journeyTest: 'Test Strategy in the Simulator',
+    journeyTestDesc: 'Make decisions that affect your KPIs',
+    journeyPitch: 'Pitch Your Startup',
+    journeyPitchDesc: 'Present your startup to virtual investors',
+
+    // Course weeks
+    courseWeek1: 'Digital Innovation Basics',
+    courseWeek1Desc: 'Core concepts, digital disruption, and technology trends',
+    courseWeek2: 'Industry Analysis',
+    courseWeek2Desc: 'Explore 10 industries and identify innovation opportunities',
+    courseWeek3: 'Business Model',
+    courseWeek3Desc: 'Design revenue models and value propositions',
+    courseWeek4: 'Product Design',
+    courseWeek4Desc: 'Build your minimum viable product concept',
+    courseWeek5: 'Growth Strategy',
+    courseWeek5Desc: 'Choose marketing channels and growth tactics',
+    courseWeek6: 'Startup Pitch',
+    courseWeek6Desc: 'Present your startup and review final results',
+
+    // Quick stats
+    statWeeks: 'Weeks',
+    statIndustries: 'Industries',
+    statLevels: 'Levels',
+    statIdeas: 'Ideas',
+
+    // Innovation Showcase
+    innovationShowcase: 'Innovation Showcase',
+    topInnovatorsTitle: 'Top Innovators',
+    topInnovatorsDesc: 'Earn XP by solving cases, building your startup, and completing the simulator.',
+    viewFullLeaderboard: 'View Full Leaderboard',
+    noInnovatorsYet: 'No innovators yet. Be the first to earn XP and appear on the leaderboard.',
+    startLearning: 'Start Learning',
+    xpPointsLabel: 'XP Points',
+    demoDayBadge: 'Demo Day',
+    topStartupIdeas: 'Top Startup Ideas',
+    topStartupIdeasDesc: 'The best startup projects created by our students.',
+    startupProject: 'Startup Project',
+    founder: 'Founder',
+    anonymous: 'Anonymous',
+    technology: 'Technology',
+
     caseStudies: 'Case Studies',
     caseStudiesDesc: 'Analyze real digital innovation scenarios, review market data, and propose strategic recommendations.',
     browseCases: 'Browse Cases',
@@ -217,6 +313,18 @@ const translations = {
     filter: 'Filter',
     noData: 'No data available',
     topInnovators: 'Top Innovators',
+
+    // Simulator student landing
+    yourSimulations: 'Your Simulations',
+    yourSimulationsDesc: 'Run a virtual startup and make strategic decisions that shape your company\'s future.',
+    weeks: 'weeks',
+    continueSimulator: 'Continue Simulator',
+    notStartedYet: "You haven't started the simulator yet. Start now to begin Week 1.",
+    week1PreviewTitle: "What you'll do in Week 1:",
+    startIndividualSimulator: 'Start Individual Simulator',
+    week1DefineMarket: 'Define your target market',
+    week1ChooseStrategy: 'Choose your product strategy',
+    week1SetPriorities: 'Set growth priorities',
   },
   bg: {
     // Header
@@ -240,8 +348,104 @@ const translations = {
     // Landing
     heroTitle: 'DigiInnov Case Lab',
     heroSubtitle: 'Научете дигитални иновации и стартъп мислене чрез практически казуси, бизнес симулация и геймификация.',
+    heroAudience: 'Създадено за ученици по бизнес, преподаватели по предприемачество и бъдещи основатели.',
     getStarted: 'Започнете',
     goToDashboard: 'Към таблото',
+    startJourney: 'Започни своето иновационно пътешествие',
+    explorePlatform: 'Разгледай платформата',
+    socialProof: '150+ ученици вече използват платформата',
+    useInClassroom: 'Използвай в клас',
+    requestDemo: 'Заяви демо',
+    accessClarity: 'Безплатно за ученици. Свържете се с нас за училища и организации.',
+    gamifiedPlatform: 'Геймифицирана учебна платформа',
+
+    // Landing sections
+    skillsCount: '5 Умения',
+    whatYouLearn: 'Какво ще научиш',
+    whatYouLearnDesc: 'Овладей уменията, от които всеки дигитален иноватор се нуждае.',
+    stepsCount: '4 Стъпки',
+    whatYouBuild: 'Какво ще създадеш',
+    whatYouBuildDesc: 'От откриването на проблем до представянето на реална стартъп концепция.',
+    step: 'Стъпка',
+    stagesCount: '6 Етапа',
+    yourJourney: 'Твоето иновационно пътешествие',
+    yourJourneyDesc: 'Геймифицирана пътна карта от начинаещ до стартъп основател.',
+    stage: 'Етап',
+    weeksCount: '6 Седмици',
+    learningPath: 'Вашият 6-седмичен учебен път',
+    learningPathDesc: 'Структурирана програма от основите до представянето на стартъп.',
+    week: 'Седмица',
+    readyToInnovate: 'Готови ли сте да иновирате?',
+    readyToInnovateDesc: 'Присъединете се към лабораторията за дигитални иновации и започнете да строите бъдещето си днес.',
+
+    // Learn cards
+    learnDigitalInnovation: 'Дигитални иновации',
+    learnDigitalInnovationDesc: 'Разбери как технологиите трансформират индустриите.',
+    learnStartupThinking: 'Стартиращо предприемачество',
+    learnStartupThinkingDesc: 'Научи се да откривш проблеми и да създаваш решения.',
+    learnBusinessModels: 'Бизнес модели',
+    learnBusinessModelsDesc: 'Проектирай как стартъпът ти генерира приходи.',
+    learnProductDesign: 'Дизайн на дигитален продукт',
+    learnProductDesignDesc: 'Създай концепция за минимално жизнеспособен продукт.',
+    learnGrowthStrategy: 'Стратегии за растеж',
+    learnGrowthStrategyDesc: 'Избери маркетинг и стратегии за мащабиране.',
+
+    // Build steps
+    buildIdentifyProblem: 'Открий проблем',
+    buildCreateIdea: 'Създай стартъп идея',
+    buildBusinessModel: 'Изгради бизнес модел',
+    buildPitchStartup: 'Представи своя стартъп',
+
+    // Journey stages
+    journeyExplore: 'Открий дигиталните иновации',
+    journeyExploreDesc: 'Научи основни концепции и рамки',
+    journeyAnalyze: 'Анализирай бизнес казуси',
+    journeyAnalyzeDesc: 'Изучи реални дигитални трансформации',
+    journeyBuild: 'Изгради стартъп идея',
+    journeyBuildDesc: 'Определи проблем, клиент и решение',
+    journeyDesign: 'Създай своя продукт',
+    journeyDesignDesc: 'Създай MVP и стойностно предложение',
+    journeyTest: 'Тествай стратегията в симулатора',
+    journeyTestDesc: 'Вземи решения, които влияят на KPI',
+    journeyPitch: 'Представи своя стартъп',
+    journeyPitchDesc: 'Представи стартъпа си пред инвеститори',
+
+    // Course weeks
+    courseWeek1: 'Основи на дигиталната иновация',
+    courseWeek1Desc: 'Основни концепции, дигитално прекъсване и технологични тенденции',
+    courseWeek2: 'Анализ на индустрията',
+    courseWeek2Desc: 'Проучи 10 индустрии и открий иновационни възможности',
+    courseWeek3: 'Бизнес модел',
+    courseWeek3Desc: 'Проектирай модели на приходи и стойностни предложения',
+    courseWeek4: 'Дизайн на продукт',
+    courseWeek4Desc: 'Създай концепция за минимално жизнеспособен продукт',
+    courseWeek5: 'Стратегия за растеж',
+    courseWeek5Desc: 'Избери маркетинг канали и тактики за растеж',
+    courseWeek6: 'Стартъп представяне',
+    courseWeek6Desc: 'Представи стартъпа си и прегледай финалните резултати',
+
+    // Quick stats
+    statWeeks: 'Седмици',
+    statIndustries: 'Индустрии',
+    statLevels: 'Нива',
+    statIdeas: 'Идеи',
+
+    // Innovation Showcase
+    innovationShowcase: 'Витрина на иновациите',
+    topInnovatorsTitle: 'Най-добрите иноватори',
+    topInnovatorsDesc: 'Спечели XP като решаваш казуси, създаваш стартъп и използваш симулатора.',
+    viewFullLeaderboard: 'Виж цялата класация',
+    noInnovatorsYet: 'Все още няма класирани иноватори. Бъди първият.',
+    startLearning: 'Започни да учиш',
+    xpPointsLabel: 'XP точки',
+    demoDayBadge: 'Ден на демонстрацията',
+    topStartupIdeas: 'Най-добрите стартъп идеи',
+    topStartupIdeasDesc: 'Най-добрите стартъп проекти, създадени от нашите студенти.',
+    startupProject: 'Стартъп проект',
+    founder: 'Основател',
+    anonymous: 'Анонимен',
+    technology: 'Технологии',
+
     caseStudies: 'Казуси',
     caseStudiesDesc: 'Анализирайте реални сценарии за дигитални иновации, преглеждайте пазарни данни и предлагайте стратегически препоръки.',
     browseCases: 'Разгледай казуси',
@@ -432,6 +636,18 @@ const translations = {
     filter: 'Филтър',
     noData: 'Няма налични данни',
     topInnovators: 'Топ иноватори',
+
+    // Simulator student landing
+    yourSimulations: 'Вашите симулации',
+    yourSimulationsDesc: 'Управлявайте виртуален стартъп и вземайте стратегически решения, които оформят бъдещето на компанията ви.',
+    weeks: 'седмици',
+    continueSimulator: 'Продължи симулатора',
+    notStartedYet: 'Още не си стартирал симулатора. Започни сега, за да започнеш Седмица 1.',
+    week1PreviewTitle: 'Какво ще правиш в Седмица 1:',
+    startIndividualSimulator: 'Започни индивидуален симулатор',
+    week1DefineMarket: 'Определете целевия пазар',
+    week1ChooseStrategy: 'Изберете продуктова стратегия',
+    week1SetPriorities: 'Задайте приоритети за растеж',
   },
 } as const;
 
@@ -470,3 +686,6 @@ export function LangProvider({ children }: { children: ReactNode }) {
 export function useLang() {
   return useContext(LangContext);
 }
+
+/** Alias for useLang — provides the same { lang, t, setLang } */
+export const useTranslation = useLang;
