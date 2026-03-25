@@ -656,13 +656,13 @@ export default function QuickTest() {
         )}
 
         {/* Next recommended step */}
-        {weak.length > 0 && (
+        {(nextStep || weak.length > 0) && (
           <div className="rounded-lg border-2 border-primary/20 bg-primary/5 p-3">
             <p className="text-xs font-semibold text-primary mb-1">
               {t('Recommended Next Step', 'Препоръчана следваща стъпка')}
             </p>
             <p className="text-xs text-foreground/80">
-              {t(
+              {nextStep || t(
                 `Focus on ${weak[0].category} — review the related dictionary terms and try another test.`,
                 `Фокусирай се върху ${categoryTranslations[weak[0].category] || weak[0].category} — прегледай свързаните термини и опитай отново.`
               )}
