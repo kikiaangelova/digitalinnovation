@@ -27,6 +27,8 @@ const XP_CONFIG: Record<string, { xp: number; daily_cap?: number }> = {
   // Dictionary
   dict_view_term: { xp: 2, daily_cap: 20 },
   dict_quiz_correct: { xp: 10, daily_cap: 50 },
+  dict_quiz_complete: { xp: 10 }, // overridden by validated metadata.xp_override
+  dict_quiz_bonus: { xp: 10 },
   dict_weekly_challenge: { xp: 15, daily_cap: 15 },
   // Startup notes from case
   case_startup_notes: { xp: 50 },
