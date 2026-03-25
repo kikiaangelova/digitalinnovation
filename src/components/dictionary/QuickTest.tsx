@@ -191,7 +191,7 @@ export default function QuickTest() {
   const [pastAvg, setPastAvg] = useState<number | null>(null);
   const [recentWeakAreas, setRecentWeakAreas] = useState<string[]>([]);
 
-  // Load past performance to determine adaptive difficulty
+  // Load past performance to determine adaptive difficulty + weak area reinforcement
   useEffect(() => {
     if (!user) return;
     (async () => {
@@ -202,6 +202,7 @@ export default function QuickTest() {
         .eq('quiz_type', 'dictionary')
         .order('created_at', { ascending: false })
         .limit(5);
+
       if (data && data.length > 0) {
         const avg = data.reduce((s, r) => s + r.score, 0) / data.length;
         setPastAvg(avg);
@@ -209,6 +210,18 @@ export default function QuickTest() {
         else if (avg >= 55) setStartDifficulty('intermediate');
         else setStartDifficulty('beginner');
       }
+
+      const { data: latestAdaptive } = await supabase
+        .from('xp_ledger')
+        .select('metadata')
+        .eq('user_id', user.id)
+        .eq('action', 'dict_quiz_complete')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      const weak = (latestAdaptive?.metadata as { weak_areas?: string[] } | null)?.weak_areas;
+      if (Array.isArray(weak)) setRecentWeakAreas(weak.filter(Boolean));
     })();
   }, [user]);
 
