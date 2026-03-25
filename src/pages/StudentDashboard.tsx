@@ -192,6 +192,7 @@ export default function StudentDashboard() {
           outcomeScores={outcomeScores}
         />
         <DailyChallenge lang={lang} userId={user?.id} />
+        <TestInsights lang={lang} userId={user?.id} />
 
         {/* ═══ SECTION 2: Learning & Competition ═══ */}
         <div>

@@ -125,6 +125,11 @@ export default function AchievementBadges(props: AchievementBadgesProps) {
   if (props.returnedAfterAbsence) earned.add('comeback_kid');
   if ((props.industriesExplored || 0) >= 3) earned.add('industry_expert');
   if ((props.loginStreakDays || 0) >= 5) earned.add('perfect_week');
+  // Test badges
+  if ((props.quizTestsCompleted || 0) >= 1) earned.add('quiz_starter');
+  if ((props.quizTestsCompleted || 0) >= 5) earned.add('knowledge_builder');
+  if ((props.quizCategoriesTested || 0) >= 3) earned.add('test_explorer');
+  if ((props.quizConsecutiveImprovements || 0) >= 3) earned.add('consistency_master');
 
   return (
     <div className="rounded-xl border border-border bg-card p-5">
