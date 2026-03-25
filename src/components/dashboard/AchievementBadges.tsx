@@ -1,4 +1,4 @@
-import { Award, Search, Lightbulb, TrendingUp, Brain, Shield, Check, LayoutGrid, Mic, MessageSquare, RotateCcw, Briefcase, Calendar } from 'lucide-react';
+import { Award, Search, Lightbulb, TrendingUp, Brain, Shield, Check, LayoutGrid, Mic, MessageSquare, RotateCcw, Briefcase, Calendar, HelpCircle, BookOpen, Target, Repeat } from 'lucide-react';
 import { type LucideIcon } from 'lucide-react';
 
 interface BadgeDef {
@@ -23,6 +23,11 @@ const ALL_BADGES: BadgeDef[] = [
   { id: 'comeback_kid', icon: RotateCcw, nameEn: 'Comeback', nameBg: 'Завръщането', descEn: 'Returned after 3 days away', descBg: 'Върна се след 3 дни отсъствие' },
   { id: 'industry_expert', icon: Briefcase, nameEn: 'Industry Expert', nameBg: 'Индустриален Експерт', descEn: 'Completed cases in 3 different industries', descBg: 'Завършени казуси в 3 различни индустрии' },
   { id: 'perfect_week', icon: Calendar, nameEn: 'Perfect Week', nameBg: 'Перфектна Седмица', descEn: 'Logged in 5 days in a row', descBg: 'Влизал 5 дни подред' },
+  // Test-related badges
+  { id: 'quiz_starter', icon: HelpCircle, nameEn: 'Quiz Starter', nameBg: 'Начало на теста', descEn: 'Completed first quiz test', descBg: 'Завършен първи тест' },
+  { id: 'knowledge_builder', icon: BookOpen, nameEn: 'Knowledge Builder', nameBg: 'Строител на знания', descEn: 'Completed 5 quiz tests', descBg: 'Завършени 5 тестa' },
+  { id: 'test_explorer', icon: Target, nameEn: 'Test Explorer', nameBg: 'Изследовател на тестове', descEn: 'Tested in 3 different categories', descBg: 'Тестван в 3 различни категории' },
+  { id: 'consistency_master', icon: Repeat, nameEn: 'Consistency Master', nameBg: 'Майстор на постоянството', descEn: 'Improved score 3 times in a row', descBg: 'Подобрен резултат 3 пъти подред' },
 ];
 
 export interface AchievementBadgesProps {
