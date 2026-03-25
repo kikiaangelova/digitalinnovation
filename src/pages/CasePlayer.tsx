@@ -842,7 +842,7 @@ export default function CasePlayer() {
                 <h3 className="font-display font-semibold text-foreground">
                   {tl('Apply This Case to Your Startup', 'Приложи казуса към стартъпа си')}
                 </h3>
-                <Badge variant="outline" className="text-[10px] px-2 py-0.5 font-semibold text-muted-foreground border-border mt-1 w-fit">
+                 <Badge variant="outline" className="text-xs px-2 py-0.5 font-semibold text-muted-foreground border-border mt-1 w-fit">
                   {tl('Optional', 'По избор')}
                 </Badge>
                 <p className="text-xs text-muted-foreground mt-1">
