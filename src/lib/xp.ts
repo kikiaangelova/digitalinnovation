@@ -65,7 +65,15 @@ export async function awardXp(
       return { xp_awarded: 0 };
     }
 
-    return data as AwardXpResult;
+    const result = data as AwardXpResult;
+
+    // Auto-show celebration toast
+    if (result.xp_awarded > 0) {
+      const lang = (localStorage.getItem('digiinnov-lang') || 'en') as 'en' | 'bg';
+      showXpToast(action, result.xp_awarded, lang);
+    }
+
+    return result;
   } catch (err) {
     console.error('award-xp call failed:', err);
     return { xp_awarded: 0 };
