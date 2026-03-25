@@ -114,8 +114,41 @@ Structure your response with these sections:
 - **${lang === "bg" ? "Следващи стъпки" : "Next Steps"}**: Concrete actions to take (2-3 points)`;
 
     let userPrompt = "";
+    let mentorSystemPrompt = systemPrompt;
 
-    if (feedbackType === "startup_project") {
+    if (feedbackType === "case_answer") {
+      // Mentor-style Socratic feedback for individual case answers
+      const difficulty = data.difficulty || "intermediate";
+      const difficultyInstructions = difficulty === "beginner"
+        ? "The student is a beginner. Provide more guidance, simpler language, and concrete examples. Be encouraging."
+        : difficulty === "advanced"
+        ? "The student is advanced. Use more strategic, probing questions. Challenge assumptions. Push for deeper analysis."
+        : "The student is at intermediate level. Balance guidance with strategic questioning.";
+
+      mentorSystemPrompt = `You are a Socratic mentor for a university-level digital innovation course, using the MIT/Harvard case method.
+
+CRITICAL RULES:
+- NEVER give direct answers, solutions, or solve the case
+- NEVER provide ready-made solutions
+- Guide thinking through questions and hints
+- Respond ENTIRELY in ${langLabel}
+
+${difficultyInstructions}
+
+Structure your response with EXACTLY these 4 sections:
+- **${lang === "bg" ? "Силни страни" : "Strengths"}**: What is good in the student's thinking (2-3 points)
+- **${lang === "bg" ? "Пропуски" : "Gaps"}**: What is missing, unclear, or needs deeper analysis (2-3 points)
+- **${lang === "bg" ? "Стратегическа насока" : "Strategic Hint"}**: A thought-provoking question or direction to improve thinking (NOT an answer)
+- **${lang === "bg" ? "Следваща стъпка" : "Next Step"}**: One concrete action the student should do next
+
+Keep response UNDER 200 words. Be a thinking partner, not a solution generator.`;
+
+      userPrompt = `Case: ${data.case_title || "Digital Innovation Case"}
+Question: ${data.question_prompt || "(no question)"}
+Question type: ${data.question_type || "long_answer"}
+Student's answer: ${data.student_answer || "(empty)"}
+${data.question_context ? `\nContext/Exhibits provided: ${data.question_context}` : ""}`;
+    } else if (feedbackType === "startup_project") {
       userPrompt = `Review this student's startup project:\n\nProblem: ${data.problem || "(empty)"}\nCustomer: ${data.customer || "(empty)"}\nValue Proposition: ${data.value_proposition || "(empty)"}\nBusiness Model: ${data.business_model || "(empty)"}\nGrowth Strategy: ${data.growth_strategy || "(empty)"}\nFinal Pitch: ${data.final_pitch || "(empty)"}`;
     } else if (feedbackType === "simulator") {
       userPrompt = `Review this student's simulator performance:\n\nWeek reached: ${data.current_week}/6\nUsers: ${data.kpis?.users}\nRevenue: $${data.kpis?.revenue}\nSatisfaction: ${data.kpis?.satisfaction}%\nGrowth Rate: ${data.kpis?.growthRate}%\nGrade: ${data.grade || "In progress"}\n\nDecisions made: ${JSON.stringify(data.decisions || [])}`;
