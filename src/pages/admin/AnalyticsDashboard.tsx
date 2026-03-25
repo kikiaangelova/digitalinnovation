@@ -453,6 +453,27 @@ export default function AnalyticsDashboard() {
                 </CardContent>
               </Card>
 
+              {/* Quiz improvement over time */}
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <TrendingUp className="h-5 w-5 text-primary" />
+                    {t('Quiz Improvement Over Time', 'Подобрение на тестовете във времето')}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ResponsiveContainer width="100%" height={260}>
+                    <LineChart data={quizImprovementData}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                      <XAxis dataKey="date" tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }} />
+                      <YAxis domain={[0, 100]} tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }} />
+                      <Tooltip {...tooltipStyle} formatter={(v: number | null, name: string) => [name === 'avgScore' ? `${v ?? 0}%` : v ?? 0, name === 'avgScore' ? t('Avg Score', 'Среден') : t('Tests', 'Тестове')]} />
+                      <Line type="monotone" dataKey="avgScore" stroke={COLORS.secondary} strokeWidth={2} connectNulls name="avgScore" />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </CardContent>
+              </Card>
+
               <div className="grid lg:grid-cols-2 gap-6">
                 {/* Top Quiz Performers */}
                 <Card>
