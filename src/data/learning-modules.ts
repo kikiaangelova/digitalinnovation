@@ -12,6 +12,29 @@ export interface QuizQuestion {
   options: QuizOption[];
 }
 
+export interface CaseAnalyticalQuestion {
+  id: string;
+  question_en: string;
+  question_bg: string;
+}
+
+export interface EmbeddedCaseStudy {
+  title_en: string;
+  title_bg: string;
+  learning_goal_en: string;
+  learning_goal_bg: string;
+  context_en: string;
+  context_bg: string;
+  problem_en: string;
+  problem_bg: string;
+  key_decision_en: string;
+  key_decision_bg: string;
+  outcome_en: string;
+  outcome_bg: string;
+  outcome_type: 'success' | 'failure' | 'mixed';
+  analytical_questions: CaseAnalyticalQuestion[];
+}
+
 export interface LearningModule {
   slug: string;
   title_en: string;
@@ -28,6 +51,8 @@ export interface LearningModule {
   level?: number;
   /** Which startup_projects field to update with the application answer */
   startup_field?: string;
+  /** Embedded real-world case study for Level 2+ modules */
+  embedded_case?: EmbeddedCaseStudy;
   // Theory-to-Case mapping
   related_case_topic?: string;
   case_transition_en?: string;
