@@ -122,6 +122,10 @@ export default function RoundView() {
           <OutcomeReportView report={outcomeReport} lang={lang} />
         )}
 
+        {isSubmitted && (
+          <SkillsImproved activityType="simulator" scorePercent={70 + weekNumber * 5} lang={lang as 'en' | 'bg'} />
+        )}
+
         {isSubmitted && outcomeReport && currentState && (
           <StructuredFeedback
             context={{
