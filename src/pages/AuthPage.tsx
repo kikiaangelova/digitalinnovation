@@ -60,6 +60,7 @@ export default function AuthPage() {
     setStudentClass('');
     setSchool('');
     setCountry('');
+    setDisplayName('');
     setShowPassword(false);
     setShowConfirm(false);
   }, [isLogin]);
