@@ -16,6 +16,8 @@ export type XpAction =
   | 'sim_high_performance'
   | 'dict_view_term'
   | 'dict_quiz_correct'
+  | 'dict_quiz_complete'
+  | 'dict_quiz_bonus'
   | 'dict_weekly_challenge'
   | 'case_startup_notes'
   | 'theory_complete'
