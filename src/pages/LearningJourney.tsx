@@ -214,7 +214,7 @@ const STAGES: Stage[] = [
     id: 5, icon: TrendingUp,
     en: 'Business Model & Marketing Strategy', bg: 'Бизнес модел и маркетинг стратегия',
     descEn: 'Build your business model and plan marketing channels.',
-    descBg: 'Изградете бизнес модел и планирайте маркетинг канали.',
+    descBg: 'Изгради бизнес модел и планирай маркетинг канали.',
     milestoneEn: 'Submit Business Model & Marketing',
     milestoneBg: 'Подай бизнес модел и маркетинг',
     learnPath: '/my-startup?section=business_model', casePath: '/cases', simPath: '/simulator',
