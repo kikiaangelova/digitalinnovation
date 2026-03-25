@@ -194,7 +194,7 @@ const STAGES: Stage[] = [
     id: 3, icon: Lightbulb,
     en: 'Startup Idea & Value Proposition', bg: 'Стартъп идея и стойностно предложение',
     descEn: 'Define your startup problem, customer, and value proposition.',
-    descBg: 'Дефинирайте проблема, клиента и стойностното предложение.',
+    descBg: 'Дефинирай проблема, клиента и стойностното предложение.',
     milestoneEn: 'Submit Value Proposition',
     milestoneBg: 'Подай стойностно предложение',
     learnPath: '/my-startup?section=problem', casePath: '/cases', simPath: '/simulator',
