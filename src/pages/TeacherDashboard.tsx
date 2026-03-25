@@ -863,7 +863,7 @@ export default function TeacherDashboard() {
                       </div>
                       <div className="text-right shrink-0">
                         <span className="text-lg font-bold text-destructive">{s.progress}%</span>
-                        <p className="text-[10px] text-muted-foreground">{t('progress', 'прогрес')}</p>
+                        <p className="text-xs text-muted-foreground">{t('progress', 'прогрес')}</p>
                       </div>
                       <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
                     </button>
