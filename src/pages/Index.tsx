@@ -213,7 +213,7 @@ const Index = () => {
                   <step.icon className="h-5 w-5 text-primary-foreground" />
                 </div>
                 <div className="flex-1">
-                  <span className="text-xs font-bold text-primary uppercase tracking-wider">{t.step} {step.step}</span>
+                  <span className="typo-stage-label">{t.step} {step.step}</span>
                   <p className="text-sm font-medium text-foreground">{step.title}</p>
                 </div>
                 {i < buildSteps.length - 1 && <ChevronRight className="h-4 w-4 text-muted-foreground" />}
