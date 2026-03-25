@@ -117,6 +117,26 @@ export default function FinalExam() {
           )}
         </div>
 
+        {/* Scoring criteria */}
+        {!result && (
+          <div className="rounded-lg border border-border bg-accent/50 p-4">
+            <p className="text-xs font-semibold text-foreground mb-2">
+              {t('You will be evaluated on:', 'Ще бъдеш оценен по:')}
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {[
+                t('Problem Understanding', 'Разбиране на проблема'),
+                t('Strategic Thinking', 'Стратегическо мислене'),
+                t('Innovation', 'Иновативност'),
+                t('Clarity', 'Яснота'),
+                t('Business Logic', 'Бизнес логика'),
+              ].map(c => (
+                <Badge key={c} variant="secondary" className="text-xs">{c}</Badge>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Progress */}
         <div className="space-y-2">
           <div className="flex justify-between text-xs text-muted-foreground">

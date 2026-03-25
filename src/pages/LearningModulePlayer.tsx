@@ -352,7 +352,7 @@ export default function LearningModulePlayer() {
               className="min-h-[120px]"
               disabled={!!existingResponse?.completed_at}
             />
-            <p className="text-xs text-muted-foreground">{applicationAnswer.length} {t('characters', 'знака')} (min 20)</p>
+            <p className="text-xs text-muted-foreground">{applicationAnswer.length} {t('characters', 'знака')} ({t('min 20', 'мин. 20')})</p>
             {!existingResponse?.completed_at && (
               <div className="flex justify-end">
                 <Button onClick={handleSubmitAll} disabled={saving}>

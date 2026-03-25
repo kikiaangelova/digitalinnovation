@@ -371,8 +371,8 @@ export default function LearningJourney() {
             {t('Startup Journey', 'Стартъп пътешествие')}
           </h1>
           <p className="text-muted-foreground text-sm mt-1">
-            {t('Follow the guided path to build your digital startup — explore freely, submit when ready.',
-               'Следвайте ръководения път за изграждане на вашия дигитален стартъп — разглеждайте свободно, подавайте когато сте готови.')}
+            {t('Build your startup step by step. Complete each stage before moving to the next.',
+               'Изгради стартъпа си стъпка по стъпка. Завърши всеки етап, преди да преминеш към следващия.')}
           </p>
         </div>
 

@@ -61,14 +61,14 @@ const SECTION_LABELS_BG: Record<number, string> = {
 
 /* ── Section descriptions for students ── */
 const SECTION_HINTS_EN: Record<number, string> = {
-  0: 'Read the required material and take research notes.',
-  1: 'Understand the industry landscape, market data, and key trends.',
-  2: 'Analyze how digital technologies are disrupting this industry.',
-  3: 'Study the strategic scenario, exhibits, and data tables provided.',
-  4: 'Identify the key strategic decision and answer analytical questions.',
-  5: 'Apply critical thinking to analyze the situation using the data.',
+  0: 'Read the material and take notes before moving on.',
+  1: 'Explore the industry landscape, market data, and key trends.',
+  2: 'Examine how digital technologies are reshaping this industry.',
+  3: 'Review the strategic scenario and data tables carefully.',
+  4: 'Answer the analytical questions using the data provided.',
+  5: 'Use critical thinking to build your analysis step by step.',
   6: 'Design your strategic recommendation with supporting evidence.',
-  7: 'Write your final recommendation as a professional brief.',
+  7: 'Write your final recommendation as a concise professional brief.',
 };
 const SECTION_HINTS_BG: Record<number, string> = {
   0: 'Прочети материала и направи бележки.',
