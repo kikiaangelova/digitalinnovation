@@ -257,28 +257,72 @@ export default function QuickTest() {
     const correctCount = answers.reduce((acc, ans, i) => acc + (ans === questions[i]?.correctIndex ? 1 : 0), 0);
     const score = Math.round((correctCount / questions.length) * 100);
     const tier = getXpTier(score);
+    const { strong, weak } = detectWeakAreas(questions, answers);
+    const weakAreaNames = weak.map(a => a.category);
+    const strongAreaNames = strong.map(a => a.category);
 
     let bonusXp = 0;
+    let unlockedBadges: string[] = [];
 
     if (user) {
-      // Check for bonus XP: first high score or improvement
+      const testId = `quick_test_${Date.now()}`;
+
+      // Check bonus XP + badge unlocks from historical results
       try {
         const { data: pastResults } = await supabase
           .from('quiz_results')
-          .select('score')
+          .select('score, category, created_at')
           .eq('user_id', user.id)
           .eq('quiz_type', 'dictionary')
-          .order('created_at', { ascending: false })
-          .limit(5);
+          .order('created_at', { ascending: true });
 
-        if (pastResults) {
-          if (pastResults.length === 0 && score >= 80) bonusXp += 10; // First attempt high score
-          if (pastResults.length > 0 && score > pastResults[0].score) bonusXp += 10; // Improvement
+        const history = pastResults || [];
+        const prevScore = history.length > 0 ? history[history.length - 1].score : null;
+
+        if (history.length === 0 && score >= 86) {
+          bonusXp += 10;
+          await awardXp('dict_quiz_bonus', `${testId}_first_high`, { bonus_type: 'first_high_score', score });
         }
-      } catch { /* best effort */ }
 
-      await awardXp('dict_quiz_correct', `quick_test_${Date.now()}`, {
-        score, correct: correctCount, total: questions.length, category, bonusXp,
+        if (history.length > 0 && prevScore !== null && score > prevScore) {
+          bonusXp += 10;
+          await awardXp('dict_quiz_bonus', `${testId}_improved`, { bonus_type: 'improved_retry', previous_score: prevScore, score });
+        }
+
+        const projectedCount = history.length + 1;
+        const projectedCategories = new Set([...history.map(r => r.category).filter(Boolean), category === 'All' ? null : category].filter(Boolean)).size;
+        const projectedHighScores = history.filter(r => r.score >= 80).length + (score >= 80 ? 1 : 0);
+
+        let projectedConsecutiveImprovements = 0;
+        const scoreSeries = [...history.map(r => r.score), score];
+        let consec = 0;
+        for (let i = 1; i < scoreSeries.length; i++) {
+          if (scoreSeries[i] > scoreSeries[i - 1]) {
+            consec++;
+            projectedConsecutiveImprovements = Math.max(projectedConsecutiveImprovements, consec);
+          } else {
+            consec = 0;
+          }
+        }
+
+        if (history.length === 0) unlockedBadges.push(t('Quiz Starter', 'Начало на теста'));
+        if (projectedCount >= 5 && history.length < 5) unlockedBadges.push(t('Knowledge Builder', 'Строител на знания'));
+        if (projectedHighScores >= 3 && history.filter(r => r.score >= 80).length < 3) unlockedBadges.push(t('Sharp Analyst', 'Остър Анализатор'));
+        if (projectedCategories >= 3 && new Set(history.map(r => r.category).filter(Boolean)).size < 3) unlockedBadges.push(t('Test Explorer', 'Изследовател на тестове'));
+        if (projectedConsecutiveImprovements >= 3) unlockedBadges.push(t('Consistency Master', 'Майстор на постоянството'));
+      } catch {
+        // best-effort bonuses and badge calculation
+      }
+
+      await awardXp('dict_quiz_complete', testId, {
+        xp_override: tier.xp,
+        score,
+        correct: correctCount,
+        total: questions.length,
+        category,
+        weak_areas: weakAreaNames,
+        strong_areas: strongAreaNames,
+        start_difficulty: startDifficulty,
       });
 
       try {
@@ -297,7 +341,13 @@ export default function QuickTest() {
       }
     }
 
-    setSavedResult({ score, xp: tier.xp, bonusXp });
+    const weakest = weak[0]?.category;
+    const recommendation = weakest ? CATEGORY_RECOMMENDATIONS[weakest] : null;
+    const nextStep = recommendation
+      ? `${t('Complete', 'Завърши')} ${lang === 'bg' ? recommendation.moduleBg : recommendation.moduleEn}`
+      : null;
+
+    setSavedResult({ score, xp: tier.xp, bonusXp, unlockedBadges, nextStep });
     setSaving(false);
     setPhase('results');
   };
