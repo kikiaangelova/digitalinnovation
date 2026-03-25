@@ -117,7 +117,7 @@ export default function SimulatorPreview() {
         <section className="mb-8">
           <div className="flex items-center gap-2 mb-3">
             <BarChart3 className="h-5 w-5 text-primary" />
-            <h2 className="text-lg font-display font-semibold text-foreground">{t.simPrevKpiTitle}</h2>
+            <h2 className="typo-h2">{t.simPrevKpiTitle}</h2>
           </div>
           <Card className="p-5 border-border">
             <p className="text-sm text-foreground/80 mb-4">{t.simKpiTitle}</p>
