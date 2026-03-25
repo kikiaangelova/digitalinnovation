@@ -424,6 +424,13 @@ export default function LearningModulePlayer() {
               </div>
             </div>
 
+            {/* Skills improved */}
+            <SkillsImproved
+              activityType="theory_module"
+              scorePercent={Math.round((quizScore / Math.max(quizMax, 1)) * 100)}
+              lang={lang as 'en' | 'bg'}
+            />
+
             {/* AI Structured Feedback */}
             {mod && (
               <StructuredFeedback
