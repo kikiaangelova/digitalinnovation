@@ -115,7 +115,7 @@ export default function LearningModules() {
                 <div key={cat.key} className="rounded-lg bg-accent/50 p-3 text-center">
                   <cat.icon className="h-4 w-4 text-primary mx-auto mb-1" />
                   <p className="text-lg font-bold text-foreground">{cat.score}%</p>
-                  <p className="text-[10px] text-muted-foreground">{t(cat.en, cat.bg)}</p>
+                  <p className="text-xs text-muted-foreground">{t(cat.en, cat.bg)}</p>
                 </div>
               ))}
             </div>
