@@ -76,8 +76,8 @@ const STAGE_OUTCOMES: StageOutcomes[] = [
       'How to define customer segments precisely',
     ],
     knowBg: [
-      'Какво е стойностно предложение и как да го създадете',
-      'Как да дефинирате клиентски сегменти прецизно',
+      'Какво е стойностно предложение и как да го създадеш',
+      'Как да дефинираш клиентски сегменти прецизно',
     ],
     doEn: [
       'Write a clear problem statement',
