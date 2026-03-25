@@ -84,8 +84,8 @@ const STAGE_OUTCOMES: StageOutcomes[] = [
       'Define your target customer with specific demographics and needs',
     ],
     doBg: [
-      'Напишете ясна формулировка на проблема',
-      'Дефинирайте целевия клиент с конкретни демографски данни и нужди',
+      'Напиши ясна формулировка на проблема',
+      'Дефинирай целевия клиент с конкретни демографски данни и нужди',
     ],
     estMinutes: 50,
     xpAvailable: 120,
