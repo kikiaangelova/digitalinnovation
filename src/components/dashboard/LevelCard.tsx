@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import { Zap, Star, Shield, Rocket, Crown } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 
