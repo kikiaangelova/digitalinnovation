@@ -59,23 +59,6 @@ function getTermOfTheWeek(): DictionaryTerm {
   return TERMS[weekNum % TERMS.length];
 }
 
-// Generate a quiz question from a random term (language-aware)
-function generateQuiz(lang: string, exclude?: string): { term: DictionaryTerm; options: string[]; correctIndex: number } {
-  const isBg = lang === 'bg';
-  const pool = TERMS.filter(t => t.term !== exclude);
-  const term = pool[Math.floor(Math.random() * pool.length)];
-  const wrongPool = TERMS.filter(t => t.term !== term.term);
-  const wrongs: string[] = [];
-  while (wrongs.length < 3 && wrongPool.length > 0) {
-    const idx = Math.floor(Math.random() * wrongPool.length);
-    wrongs.push(isBg ? wrongPool[idx].definitionBg : wrongPool[idx].definition);
-    wrongPool.splice(idx, 1);
-  }
-  const correctIndex = Math.floor(Math.random() * 4);
-  const options = [...wrongs];
-  options.splice(correctIndex, 0, isBg ? term.definitionBg : term.definition);
-  return { term, options, correctIndex };
-}
 
 export default function Dictionary() {
   const { lang } = useLang();
