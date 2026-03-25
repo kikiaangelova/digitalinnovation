@@ -226,7 +226,7 @@ const STAGES: Stage[] = [
     descEn: 'Prepare and submit your final startup pitch.',
     descBg: 'Подгответе и подайте финалното стартъп представяне.',
     milestoneEn: 'Submit Final Startup Pitch',
-    milestoneBg: 'Подайте финално стартъп представяне',
+    milestoneBg: 'Подай финално стартъп представяне',
     learnPath: '/my-startup?section=final_pitch', casePath: '/cases', simPath: '/simulator',
     startupKey: 'final_pitch',
   },
