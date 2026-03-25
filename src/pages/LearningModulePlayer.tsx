@@ -164,6 +164,23 @@ export default function LearningModulePlayer() {
       await supabase.from('learning_module_responses').insert(payload as any);
     }
 
+    // Sync application answer to startup project if Level 2 module has a startup_field mapping
+    if (mod.startup_field && applicationAnswer.trim().length >= 20) {
+      const { data: project } = await supabase.from('startup_projects')
+        .select('id')
+        .eq('user_id', user.id)
+        .maybeSingle();
+      
+      if (project) {
+        await supabase.from('startup_projects')
+          .update({ [mod.startup_field]: applicationAnswer.trim() } as any)
+          .eq('id', project.id);
+      } else {
+        await supabase.from('startup_projects')
+          .insert({ user_id: user.id, [mod.startup_field]: applicationAnswer.trim() } as any);
+      }
+    }
+
     // Award XP for theory completion
     const xpResult = await awardXp('theory_complete', mod.slug);
     let totalXp = xpResult.xp_awarded;
