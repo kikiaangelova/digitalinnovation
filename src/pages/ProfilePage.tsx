@@ -21,6 +21,7 @@ export default function ProfilePage() {
   const { t, lang } = useLang();
   const navigate = useNavigate();
   const [fullName, setFullName] = useState('');
+  const [displayName, setDisplayName] = useState('');
   const [bio, setBio] = useState('');
   const [skillsTags, setSkillsTags] = useState<string[]>([]);
   const [interests, setInterests] = useState<string[]>([]);
