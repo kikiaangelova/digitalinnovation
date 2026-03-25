@@ -243,7 +243,7 @@ const Index = () => {
                   </div>
                   <div className="flex-1 rounded-2xl border border-border bg-card p-4 sm:p-5 group-hover:border-primary/30 group-hover:shadow-md transition-all duration-300">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="inline-flex items-center gap-1 text-xs font-bold text-primary uppercase tracking-wider">{t.stage} {i + 1}</span>
+                      <span className="inline-flex items-center gap-1 typo-stage-label">{t.stage} {i + 1}</span>
                     </div>
                     <h3 className="font-display font-bold text-foreground text-sm mb-1">{stage.title}</h3>
                     <p className="text-xs text-muted-foreground">{stage.desc}</p>
