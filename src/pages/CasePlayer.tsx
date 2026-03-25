@@ -947,6 +947,37 @@ export default function CasePlayer() {
           </div>
         )}
 
+        {/* ── Learning Outcome Summary (last step) ── */}
+        {isLastStep && (
+          <div className="rounded-xl border border-primary/20 bg-primary/5 p-5 space-y-3">
+            <div className="flex items-center gap-2">
+              <Award className="h-5 w-5 text-primary" />
+              <h3 className="text-base font-display font-semibold text-foreground">
+                {tl('What you practiced in this case:', 'Какво упражнихте в този казус:')}
+              </h3>
+            </div>
+            <div className="grid sm:grid-cols-2 gap-2">
+              {[
+                { icon: Brain, en: 'Analytical thinking & problem decomposition', bg: 'Аналитично мислене и разлагане на проблеми' },
+                { icon: TrendingUp, en: 'Market & industry data interpretation', bg: 'Интерпретация на пазарни и индустриални данни' },
+                { icon: Target, en: 'Evidence-based strategic decisions', bg: 'Стратегически решения, базирани на доказателства' },
+                { icon: Lightbulb, en: 'Innovation proposal & recommendation', bg: 'Иновационно предложение и препоръка' },
+              ].map((item, i) => (
+                <div key={i} className="flex items-center gap-2 rounded-lg bg-card/80 border border-border/50 p-2.5">
+                  <item.icon className="h-4 w-4 text-primary shrink-0" />
+                  <span className="text-xs text-foreground">{tl(item.en, item.bg)}</span>
+                </div>
+              ))}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {tl(
+                'Submit your case to receive AI feedback, a detailed score breakdown, and skills improvement analysis.',
+                'Изпратете казуса, за да получите AI обратна връзка, подробна разбивка на резултата и анализ на подобрените умения.'
+              )}
+            </p>
+          </div>
+        )}
+
         {/* Navigation */}
         <div className="flex items-center justify-between pt-4 pb-10 border-t border-border">
           <Button
