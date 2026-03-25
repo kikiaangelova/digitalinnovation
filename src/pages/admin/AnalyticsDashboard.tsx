@@ -36,13 +36,14 @@ export default function AnalyticsDashboard() {
   useEffect(() => {
     if (!isAdmin) return;
     const fetchAll = async () => {
-      const [p, s, c, st, sim, cp] = await Promise.all([
+      const [p, s, c, st, sim, cp, qr] = await Promise.all([
         supabase.from('profiles').select('user_id, full_name, created_at'),
         supabase.from('submissions').select('id, case_study_id, user_id, is_draft, total_score, max_score, submitted_at, created_at').eq('is_draft', false),
         supabase.from('case_studies').select('id, title, published'),
         supabase.from('startup_projects').select('id, user_id, created_at, is_submitted, submitted_at'),
         supabase.from('simulator_progress').select('id, user_id, is_complete, current_week, created_at, grade'),
         supabase.from('course_progress').select('id, user_id, module, status, completed_at, score, created_at'),
+        supabase.from('quiz_results').select('id, user_id, score, category, xp_earned, created_at').eq('quiz_type', 'dictionary'),
       ]);
       setProfiles(p.data || []);
       setSubmissions(s.data || []);
@@ -50,6 +51,7 @@ export default function AnalyticsDashboard() {
       setStartups(st.data || []);
       setSimProgress(sim.data || []);
       setCourseProgress(cp.data || []);
+      setQuizResults(qr.data || []);
       setLoading(false);
     };
     fetchAll();
