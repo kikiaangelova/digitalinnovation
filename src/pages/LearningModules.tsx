@@ -149,8 +149,8 @@ export default function LearningModules() {
                     </p>
                     {isCompleted && resp && (
                       <div className="flex gap-2 mt-1">
-                        <Badge variant="outline" className="text-[10px]">{t('Quiz', 'Тест')}: {resp.quiz_score}/{resp.quiz_max}</Badge>
-                        <Badge variant="outline" className="text-[10px]">{t('Concept', 'Концепция')}: {resp.concept_score}%</Badge>
+                         <Badge variant="outline" className="text-xs">{t('Quiz', 'Тест')}: {resp.quiz_score}/{resp.quiz_max}</Badge>
+                        <Badge variant="outline" className="text-xs">{t('Concept', 'Концепция')}: {resp.concept_score}%</Badge>
                       </div>
                     )}
                   </div>
