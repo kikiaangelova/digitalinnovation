@@ -39,6 +39,8 @@ export const XP_VALUES: Record<XpAction, number> = {
   sim_high_performance: 50,
   dict_view_term: 2,
   dict_quiz_correct: 10,
+  dict_quiz_complete: 10,
+  dict_quiz_bonus: 10,
   dict_weekly_challenge: 15,
   case_startup_notes: 50,
   theory_complete: 10,
