@@ -612,6 +612,63 @@ export type Database = {
         }
         Relationships: []
       }
+      final_exam_results: {
+        Row: {
+          ai_feedback: Json | null
+          case_analysis_answer: string
+          case_analysis_score: number
+          created_at: string
+          id: string
+          max_score: number
+          passed: boolean
+          reflection_answer: string
+          reflection_score: number
+          startup_concept_answer: string
+          startup_concept_score: number
+          strategic_decision_answer: string
+          strategic_decision_score: number
+          total_score: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ai_feedback?: Json | null
+          case_analysis_answer?: string
+          case_analysis_score?: number
+          created_at?: string
+          id?: string
+          max_score?: number
+          passed?: boolean
+          reflection_answer?: string
+          reflection_score?: number
+          startup_concept_answer?: string
+          startup_concept_score?: number
+          strategic_decision_answer?: string
+          strategic_decision_score?: number
+          total_score?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ai_feedback?: Json | null
+          case_analysis_answer?: string
+          case_analysis_score?: number
+          created_at?: string
+          id?: string
+          max_score?: number
+          passed?: boolean
+          reflection_answer?: string
+          reflection_score?: number
+          startup_concept_answer?: string
+          startup_concept_score?: number
+          strategic_decision_answer?: string
+          strategic_decision_score?: number
+          total_score?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       learning_module_responses: {
         Row: {
           analytical_answer: string

@@ -46,6 +46,8 @@ import PeerReviewAdmin from "./pages/admin/PeerReviewAdmin";
 import LearningJourney from "./pages/LearningJourney";
 import LearningModules from "./pages/LearningModules";
 import LearningModulePlayer from "./pages/LearningModulePlayer";
+import FinalExam from "./pages/FinalExam";
+import Certificate from "./pages/Certificate";
 
 const queryClient = new QueryClient();
 
@@ -98,6 +100,8 @@ const App = () => (
                   <Route path="/learn" element={<LearningModules />} />
                   <Route path="/learn/:slug" element={<LearningModulePlayer />} />
                   <Route path="/leaderboard" element={<LeaderboardPage />} />
+                  <Route path="/final-exam" element={<FinalExam />} />
+                  <Route path="/certificate" element={<Certificate />} />
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </ProfileGate>
