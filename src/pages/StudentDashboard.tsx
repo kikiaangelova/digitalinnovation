@@ -252,6 +252,7 @@ export default function StudentDashboard() {
               quizTestsCompleted={quizTestsCompleted}
               quizCategoriesTested={quizCategoriesTested}
               quizConsecutiveImprovements={quizConsecutiveImprovements}
+              quizHighScores80={quizHighScores80}
             />
 
             {/* Peer Review + XP Actions — side by side */}
