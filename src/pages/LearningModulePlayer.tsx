@@ -16,6 +16,7 @@ import { Card } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { awardXp } from '@/lib/xp';
 import ReactMarkdown from 'react-markdown';
+import { AutoTermTooltips } from '@/components/ui/term-tooltip';
 import {
   ArrowLeft, BookOpen, CheckCircle2, XCircle, Brain, Target,
   Lightbulb, Rocket, Send, ChevronRight, FileText, Zap,
