@@ -1,5 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
+import { LearningPhaseBar, WhatYouWillLearn, CASE_STUDY_OUTCOMES } from '@/components/learning/LearningStructure';
+import type { LearningPhase } from '@/components/learning/LearningStructure';
 import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
 import { supabase } from '@/integrations/supabase/client';
