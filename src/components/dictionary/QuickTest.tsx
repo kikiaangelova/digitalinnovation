@@ -226,14 +226,14 @@ export default function QuickTest() {
   }, [user]);
 
   const startTest = useCallback(() => {
-    const qs = generateAdaptiveQuestions(lang, category, startDifficulty);
+    const qs = generateAdaptiveQuestions(lang, category, startDifficulty, recentWeakAreas, pastAvg);
     setQuestions(qs);
     setCurrentQ(0);
     setAnswers(new Array(qs.length).fill(null));
     setSelectedAnswer(null);
     setSavedResult(null);
     setPhase('active');
-  }, [lang, category, startDifficulty]);
+  }, [lang, category, startDifficulty, recentWeakAreas, pastAvg]);
 
   const handleAnswer = (idx: number) => {
     if (selectedAnswer !== null) return;
