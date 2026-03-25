@@ -127,7 +127,7 @@ export default function AchievementBadges(props: AchievementBadgesProps) {
                 )}
               </div>
               <p className="text-xs font-semibold text-foreground">{lang === 'bg' ? b.nameBg : b.nameEn}</p>
-              <p className="text-[10px] text-muted-foreground mt-0.5">{lang === 'bg' ? b.descBg : b.descEn}</p>
+              <p className="text-xs text-muted-foreground mt-0.5">{lang === 'bg' ? b.descBg : b.descEn}</p>
               {progress && (
                 <div className="w-full mt-1.5 space-y-0.5">
                   <div className="w-full h-1 rounded-full bg-muted overflow-hidden">
