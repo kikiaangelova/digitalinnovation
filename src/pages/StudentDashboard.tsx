@@ -42,8 +42,8 @@ export default function StudentDashboard() {
     const fetchData = async () => {
       try {
         const [casesRes, subsRes, projRes, simRes, prAssignRes, prReceivedRes, profileRes] = await Promise.all([
-          supabase.from('case_studies').select('id, title, difficulty, est_minutes').eq('published', true),
-          supabase.from('submissions').select('case_study_id, is_draft').eq('user_id', user.id),
+          supabase.from('case_studies').select('id, title, difficulty, est_minutes, topic').eq('published', true),
+          supabase.from('submissions').select('case_study_id, is_draft, total_score, max_score').eq('user_id', user.id),
           supabase.from('startup_projects').select('problem, customer, value_proposition, digital_product, business_model, growth_strategy, final_pitch, is_submitted').eq('user_id', user.id).maybeSingle(),
           supabase.from('simulator_progress').select('current_week, is_complete').eq('user_id', user.id).maybeSingle(),
           supabase.from('peer_review_assignments').select('id').eq('reviewer_user_id', user.id).eq('status', 'pending'),
