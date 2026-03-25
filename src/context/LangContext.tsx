@@ -314,6 +314,28 @@ const translations = {
     noData: 'No data available',
     topInnovators: 'Top Innovators',
 
+    // Onboarding
+    welcomeTitle: 'Welcome to DigiInnov! 🎉',
+    welcomeSubtitle: 'Complete 3 quick steps to earn your first 20 XP',
+    onboardingStep1Title: 'Complete Your Profile',
+    onboardingStep1Desc: 'Tell us your class and school so we can personalize your experience.',
+    onboardingStep1Class: 'Class / Grade',
+    onboardingStep1School: 'School / Institution',
+    onboardingStep1ClassPlaceholder: 'e.g. 11A',
+    onboardingStep1SchoolPlaceholder: 'e.g. Sofia High School',
+    onboardingStep1Btn: 'Save & Continue',
+    onboardingStep2Title: 'Learn Your First Term',
+    onboardingStep2Desc: 'Here\'s a key digital innovation concept:',
+    onboardingStep2Btn: 'Got it!',
+    onboardingStep3Title: 'Start Your Journey',
+    onboardingStep3Desc: 'Stage 1: Foundations of Digital Innovation. You\'ll explore what makes digital products successful, learn about business models, and discover how startups solve real problems.',
+    onboardingStep3Btn: 'Let\'s go!',
+    onboardingXpEarned: 'XP earned!',
+    onboardingComplete: 'You\'re all set! 🚀',
+    onboardingCompleteDesc: 'You earned 20 XP. Let\'s start your innovation journey!',
+    onboardingGoToDashboard: 'Go to Dashboard',
+    stepOf: 'Step {current} of {total}',
+
     // Simulator student landing
     yourSimulations: 'Your Simulations',
     yourSimulationsDesc: 'Run a virtual startup and make strategic decisions that shape your company\'s future.',
