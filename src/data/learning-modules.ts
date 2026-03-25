@@ -401,6 +401,7 @@ Key principle: **Hire slow, fire fast.** A wrong hire at an early stage can dest
     title_en: 'Operations & Processes',
     title_bg: 'Операции и процеси',
     level: 2,
+    startup_field: 'bmc_key_resources',
     theory_en: `Operations is how a startup delivers its promise to customers — repeatedly, reliably, and at scale. A great idea with broken operations will lose to an average idea with excellent execution.
 
 **The value chain** maps every step from raw input to delivered value: sourcing → building → delivering → supporting. Each link must be efficient. Bottlenecks in one area slow down everything.
