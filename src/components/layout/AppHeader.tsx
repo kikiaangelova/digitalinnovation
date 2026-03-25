@@ -2,7 +2,9 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
+import { useJourneyProgress } from '@/hooks/useJourneyProgress';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import {
   GraduationCap, LogOut, LayoutDashboard, Play, Shield, User,
   BarChart3, Users, BookOpen, Book, Menu, Globe, Lightbulb,
@@ -17,6 +19,7 @@ export default function AppHeader() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const journeyPct = useJourneyProgress();
 
   const handleSignOut = async () => {
     setDropdownOpen(false);
@@ -29,11 +32,12 @@ export default function AppHeader() {
 
   const isActive = (path: string) => location.pathname === path;
 
+  // Desktop nav: underline-based active style (no pill)
   const navLinkClass = (path: string) =>
-    `flex items-center gap-1.5 px-3 py-2 rounded-md text-sm font-medium transition-colors whitespace-nowrap ${
+    `relative flex items-center gap-1.5 px-3 py-2 text-sm transition-colors whitespace-nowrap ${
       isActive(path)
-        ? 'bg-accent text-accent-foreground'
-        : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+        ? 'text-foreground font-bold after:absolute after:bottom-0 after:left-2 after:right-2 after:h-[2px] after:bg-primary after:rounded-full'
+        : 'text-muted-foreground font-medium hover:text-foreground hover:bg-accent/50 rounded-md'
     }`;
 
   // Close dropdown on outside click
@@ -82,7 +86,7 @@ export default function AppHeader() {
   const mobileLinks = user
     ? [
         { to: '/dashboard', icon: LayoutDashboard, label: t.dashboard },
-        { to: '/journey', icon: Map, label: lang === 'bg' ? 'Пътешествие' : 'Journey' },
+        { to: '/journey', icon: Map, label: lang === 'bg' ? 'Пътешествие' : 'Journey', showProgress: true },
         { to: '/cases', icon: BookOpen, label: t.cases },
         { to: '/simulator', icon: Play, label: t.simulator },
         { to: '/my-startup', icon: Rocket, label: t.startup },
@@ -129,12 +133,9 @@ export default function AppHeader() {
 
           {/* ═══ Right side ═══ */}
           <div className="flex items-center gap-2 ml-auto">
-            {/* My Startup — desktop only, before lang toggle */}
+            {/* My Startup — desktop only */}
             {user && (
-              <Link
-                to="/my-startup"
-                className={`hidden md:flex ${navLinkClass('/my-startup')}`}
-              >
+              <Link to="/my-startup" className={`hidden md:flex ${navLinkClass('/my-startup')}`}>
                 <Rocket className="h-4 w-4" />
                 {t.startup}
               </Link>
@@ -216,6 +217,16 @@ export default function AppHeader() {
             </button>
           </div>
         </div>
+
+        {/* ═══ Journey progress bar (desktop, logged-in only) ═══ */}
+        {user && (
+          <div className="h-[3px] w-full bg-muted">
+            <div
+              className="h-full sim-gradient transition-all duration-700 ease-out"
+              style={{ width: `${journeyPct}%` }}
+            />
+          </div>
+        )}
       </header>
 
       {/* ═══ Mobile drawer overlay ═══ */}
@@ -268,7 +279,13 @@ export default function AppHeader() {
               style={{ minHeight: 48 }}
             >
               <l.icon className="h-4 w-4 text-muted-foreground shrink-0" />
-              {l.label}
+              <span className="flex-1">{l.label}</span>
+              {/* Journey progress badge on mobile */}
+              {'showProgress' in l && l.showProgress && user && (
+                <Badge variant="secondary" className="text-xs font-bold tabular-nums">
+                  {journeyPct}%
+                </Badge>
+              )}
             </Link>
           ))}
 
