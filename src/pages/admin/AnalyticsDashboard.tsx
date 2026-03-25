@@ -114,6 +114,28 @@ export default function AnalyticsDashboard() {
     }));
   }, [submissions, simProgress, startups]);
 
+  const quizImprovementData = useMemo(() => {
+    const days: Record<string, { date: string; total: number; count: number }> = {};
+    for (let i = 13; i >= 0; i--) {
+      const d = format(subDays(new Date(), i), 'yyyy-MM-dd');
+      days[d] = { date: d, total: 0, count: 0 };
+    }
+
+    quizResults.forEach(r => {
+      const d = format(startOfDay(parseISO(r.created_at)), 'yyyy-MM-dd');
+      if (days[d]) {
+        days[d].total += r.score;
+        days[d].count += 1;
+      }
+    });
+
+    return Object.values(days).map(d => ({
+      date: format(parseISO(d.date), 'MMM dd'),
+      avgScore: d.count > 0 ? Math.round(d.total / d.count) : null,
+      tests: d.count,
+    }));
+  }, [quizResults]);
+
   // Top students
   const topStudents = useMemo(() => {
     const studentMap: Record<string, { name: string; cases: number; score: number; sims: number }> = {};
@@ -427,6 +449,27 @@ export default function AnalyticsDashboard() {
                       <Tooltip {...tooltipStyle} formatter={(v: number, name: string) => [name === 'avg' ? `${v}%` : v, name === 'avg' ? t('Avg Score', 'Среден') : t('Tests', 'Тестове')]} />
                       <Bar dataKey="avg" fill={COLORS.primary} radius={[4, 4, 0, 0]} name="avg" />
                     </BarChart>
+                  </ResponsiveContainer>
+                </CardContent>
+              </Card>
+
+              {/* Quiz improvement over time */}
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-base flex items-center gap-2">
+                    <TrendingUp className="h-5 w-5 text-primary" />
+                    {t('Quiz Improvement Over Time', 'Подобрение на тестовете във времето')}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ResponsiveContainer width="100%" height={260}>
+                    <LineChart data={quizImprovementData}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                      <XAxis dataKey="date" tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }} />
+                      <YAxis domain={[0, 100]} tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }} />
+                      <Tooltip {...tooltipStyle} formatter={(v: number | null, name: string) => [name === 'avgScore' ? `${v ?? 0}%` : v ?? 0, name === 'avgScore' ? t('Avg Score', 'Среден') : t('Tests', 'Тестове')]} />
+                      <Line type="monotone" dataKey="avgScore" stroke={COLORS.secondary} strokeWidth={2} connectNulls name="avgScore" />
+                    </LineChart>
                   </ResponsiveContainer>
                 </CardContent>
               </Card>

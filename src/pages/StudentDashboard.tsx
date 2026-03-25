@@ -38,6 +38,7 @@ export default function StudentDashboard() {
   const [quizTestsCompleted, setQuizTestsCompleted] = useState(0);
   const [quizCategoriesTested, setQuizCategoriesTested] = useState(0);
   const [quizConsecutiveImprovements, setQuizConsecutiveImprovements] = useState(0);
+  const [quizHighScores80, setQuizHighScores80] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -88,6 +89,7 @@ export default function StudentDashboard() {
         if (quizData && quizData.length > 0) {
           setQuizTestsCompleted(quizData.length);
           setQuizCategoriesTested(new Set(quizData.map(r => r.category).filter(Boolean)).size);
+          setQuizHighScores80(quizData.filter(r => r.score >= 80).length);
           // Count consecutive improvements
           let consec = 0, maxConsec = 0;
           for (let i = 1; i < quizData.length; i++) {
@@ -250,6 +252,7 @@ export default function StudentDashboard() {
               quizTestsCompleted={quizTestsCompleted}
               quizCategoriesTested={quizCategoriesTested}
               quizConsecutiveImprovements={quizConsecutiveImprovements}
+              quizHighScores80={quizHighScores80}
             />
 
             {/* Peer Review + XP Actions — side by side */}

@@ -26,6 +26,7 @@ const ALL_BADGES: BadgeDef[] = [
   // Test-related badges
   { id: 'quiz_starter', icon: HelpCircle, nameEn: 'Quiz Starter', nameBg: 'Начало на теста', descEn: 'Completed first quiz test', descBg: 'Завършен първи тест' },
   { id: 'knowledge_builder', icon: BookOpen, nameEn: 'Knowledge Builder', nameBg: 'Строител на знания', descEn: 'Completed 5 quiz tests', descBg: 'Завършени 5 тестa' },
+  { id: 'test_sharp_analyst', icon: TrendingUp, nameEn: 'Sharp Analyst', nameBg: 'Остър Анализатор', descEn: 'Scored above 80% on 3 tests', descBg: 'Резултат над 80% на 3 теста' },
   { id: 'test_explorer', icon: Target, nameEn: 'Test Explorer', nameBg: 'Изследовател на тестове', descEn: 'Tested in 3 different categories', descBg: 'Тестван в 3 различни категории' },
   { id: 'consistency_master', icon: Repeat, nameEn: 'Consistency Master', nameBg: 'Майстор на постоянството', descEn: 'Improved score 3 times in a row', descBg: 'Подобрен резултат 3 пъти подред' },
 ];
@@ -47,6 +48,7 @@ export interface AchievementBadgesProps {
   quizTestsCompleted?: number;
   quizCategoriesTested?: number;
   quizConsecutiveImprovements?: number;
+  quizHighScores80?: number;
 }
 
 function getProgress(id: string, lang: 'en' | 'bg', props: AchievementBadgesProps): { label: string; current: number; max: number } | null {
@@ -99,6 +101,10 @@ function getProgress(id: string, lang: 'en' | 'bg', props: AchievementBadgesProp
       const v = props.quizCategoriesTested || 0;
       return { label: bg ? `${Math.min(v, 3)} / 3 категории` : `${Math.min(v, 3)} / 3 categories`, current: Math.min(v, 3), max: 3 };
     }
+    case 'test_sharp_analyst': {
+      const v = props.quizHighScores80 || 0;
+      return { label: bg ? `${Math.min(v, 3)} / 3 теста над 80%` : `${Math.min(v, 3)} / 3 tests above 80%`, current: Math.min(v, 3), max: 3 };
+    }
     case 'consistency_master': {
       const v = props.quizConsecutiveImprovements || 0;
       return { label: bg ? `${Math.min(v, 3)} / 3 подобрения` : `${Math.min(v, 3)} / 3 improvements`, current: Math.min(v, 3), max: 3 };
@@ -128,6 +134,7 @@ export default function AchievementBadges(props: AchievementBadgesProps) {
   // Test badges
   if ((props.quizTestsCompleted || 0) >= 1) earned.add('quiz_starter');
   if ((props.quizTestsCompleted || 0) >= 5) earned.add('knowledge_builder');
+  if ((props.quizHighScores80 || 0) >= 3) earned.add('test_sharp_analyst');
   if ((props.quizCategoriesTested || 0) >= 3) earned.add('test_explorer');
   if ((props.quizConsecutiveImprovements || 0) >= 3) earned.add('consistency_master');
 

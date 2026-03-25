@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { Brain, TrendingUp, TrendingDown, Target, BarChart3 } from 'lucide-react';
+import { Brain, TrendingUp, TrendingDown, Target } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 
@@ -17,6 +17,7 @@ interface Stats {
   strongCategory: string | null;
   weakCategory: string | null;
   improving: boolean;
+  recommendedNextTest: string | null;
 }
 
 export default function TestInsights({ lang, userId }: TestInsightsProps) {
@@ -41,7 +42,6 @@ export default function TestInsights({ lang, userId }: TestInsightsProps) {
       const best = Math.max(...data.map(r => r.score));
       const lastScore = data[0]?.score ?? null;
 
-      // Category analysis
       const catScores: Record<string, { total: number; count: number }> = {};
       data.forEach(r => {
         const cat = r.category || 'All';
@@ -57,11 +57,16 @@ export default function TestInsights({ lang, userId }: TestInsightsProps) {
       Object.entries(catScores).forEach(([cat, { total, count }]) => {
         if (cat === 'All') return;
         const catAvg = total / count;
-        if (catAvg > highAvg) { highAvg = catAvg; strongCategory = cat; }
-        if (catAvg < lowAvg) { lowAvg = catAvg; weakCategory = cat; }
+        if (catAvg > highAvg) {
+          highAvg = catAvg;
+          strongCategory = cat;
+        }
+        if (catAvg < lowAvg) {
+          lowAvg = catAvg;
+          weakCategory = cat;
+        }
       });
 
-      // Check improvement trend (last 3 vs previous 3)
       let improving = false;
       if (data.length >= 4) {
         const recent = data.slice(0, 3).reduce((s, r) => s + r.score, 0) / 3;
@@ -69,7 +74,8 @@ export default function TestInsights({ lang, userId }: TestInsightsProps) {
         improving = recent > older;
       }
 
-      setStats({ count: data.length, avg, best, lastScore, strongCategory, weakCategory, improving });
+      const recommendedNextTest = weakCategory || null;
+      setStats({ count: data.length, avg, best, lastScore, strongCategory, weakCategory, improving, recommendedNextTest });
     })();
   }, [userId]);
 
@@ -147,6 +153,15 @@ export default function TestInsights({ lang, userId }: TestInsightsProps) {
           </div>
         )}
       </div>
+
+      {stats.recommendedNextTest && (
+        <div className="mt-2 rounded-lg bg-primary/5 border border-primary/10 p-2">
+          <p className="text-[10px] text-muted-foreground uppercase">{t('Recommended Next Test', 'Препоръчан следващ тест')}</p>
+          <p className="text-xs font-semibold text-foreground">
+            {lang === 'bg' ? (catTranslations[stats.recommendedNextTest] || stats.recommendedNextTest) : stats.recommendedNextTest}
+          </p>
+        </div>
+      )}
     </div>
   );
 }

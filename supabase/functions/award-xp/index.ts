@@ -27,6 +27,8 @@ const XP_CONFIG: Record<string, { xp: number; daily_cap?: number }> = {
   // Dictionary
   dict_view_term: { xp: 2, daily_cap: 20 },
   dict_quiz_correct: { xp: 10, daily_cap: 50 },
+  dict_quiz_complete: { xp: 10 }, // overridden by validated metadata.xp_override
+  dict_quiz_bonus: { xp: 10 },
   dict_weekly_challenge: { xp: 15, daily_cap: 15 },
   // Startup notes from case
   case_startup_notes: { xp: 50 },
@@ -73,8 +75,33 @@ serve(async (req) => {
     }
 
     const config = XP_CONFIG[action];
+    let xpToAward = config.xp;
 
-    // Check daily cap for dictionary actions
+    // Allow only validated XP overrides for adaptive dictionary quizzes
+    if (action === 'dict_quiz_complete') {
+      const override = Number(metadata?.xp_override);
+      const allowed = new Set([10, 20, 30, 50]);
+      if (!allowed.has(override)) {
+        return new Response(JSON.stringify({ error: 'Invalid xp_override for dict_quiz_complete' }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      xpToAward = override;
+    }
+
+    if (action === 'dict_quiz_bonus') {
+      const bonusType = String(metadata?.bonus_type || '');
+      if (!['first_high_score', 'improved_retry'].includes(bonusType)) {
+        return new Response(JSON.stringify({ error: 'Invalid bonus_type for dict_quiz_bonus' }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      xpToAward = 10;
+    }
+
+    // Check daily cap for capped actions
     if (config.daily_cap) {
       const today = new Date().toISOString().split('T')[0];
       const { count } = await adminClient
@@ -84,7 +111,7 @@ serve(async (req) => {
         .eq('action', action)
         .gte('created_at', `${today}T00:00:00Z`);
 
-      const dailyXpUsed = (count || 0) * config.xp;
+      const dailyXpUsed = (count || 0) * xpToAward;
       if (dailyXpUsed >= config.daily_cap) {
         return new Response(JSON.stringify({ 
           xp_awarded: 0, 
@@ -108,6 +135,7 @@ serve(async (req) => {
     // context_id-scoped dedup: actions that require a context_id and deduplicate per context
     const contextDedupActions = [
       'case_question_answer', 'sim_scenario_complete', 'sim_high_performance',
+      'dict_quiz_complete', 'dict_quiz_bonus',
     ];
 
     // Require context_id for all dedup and context-scoped actions
@@ -141,21 +169,21 @@ serve(async (req) => {
     await adminClient.from('xp_ledger').insert({
       user_id: userId,
       action,
-      xp: config.xp,
+      xp: xpToAward,
       context_id: context_id || null,
       metadata: metadata || null,
     });
 
     // Award XP to profile
-    const { error: xpError } = await adminClient.rpc("add_user_xp", { _user_id: userId, _xp: config.xp });
+    const { error: xpError } = await adminClient.rpc("add_user_xp", { _user_id: userId, _xp: xpToAward });
     if (xpError) {
       console.error("XP award error:", xpError.message);
     }
 
-    console.log(`Awarded ${config.xp} XP to ${userId} for ${action} (context: ${context_id || 'none'})`);
+    console.log(`Awarded ${xpToAward} XP to ${userId} for ${action} (context: ${context_id || 'none'})`);
 
     return new Response(JSON.stringify({ 
-      xp_awarded: config.xp, 
+      xp_awarded: xpToAward, 
       action,
       context_id 
     }), {

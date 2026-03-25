@@ -32,16 +32,15 @@ function generateAdaptiveQuestions(
   lang: string,
   category: string,
   startDifficulty: TermDifficulty,
+  weakAreas: string[] = [],
+  pastAvg?: number | null,
 ): QuizQuestion[] {
   const isBg = lang === 'bg';
   const pool = category === 'All' ? [...TERMS] : TERMS.filter(t => t.category === category);
 
-  // Sort by difficulty for adaptive selection
-  const difficultyOrder: Record<TermDifficulty, number> = { beginner: 0, intermediate: 1, advanced: 2 };
   const byDifficulty: Record<TermDifficulty, DictionaryTerm[]> = { beginner: [], intermediate: [], advanced: [] };
   pool.forEach(t => byDifficulty[getTermDifficulty(t)].push(t));
 
-  // Shuffle each bucket
   Object.values(byDifficulty).forEach(arr => {
     for (let i = arr.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -49,28 +48,42 @@ function generateAdaptiveQuestions(
     }
   });
 
-  // Build question sequence: start at given difficulty, mix in harder/easier
   const selected: DictionaryTerm[] = [];
-  let currentDiff = startDifficulty;
   const diffLevels: TermDifficulty[] = ['beginner', 'intermediate', 'advanced'];
   const pointers: Record<TermDifficulty, number> = { beginner: 0, intermediate: 0, advanced: 0 };
 
-  for (let i = 0; i < Math.min(QUESTIONS_PER_TEST, pool.length); i++) {
-    // Try current difficulty, then adjacent
+  // Reinforcement first: if weak areas exist, start with easier clarifying terms from weak categories
+  if (weakAreas.length > 0) {
+    const weakPool = pool
+      .filter(t => weakAreas.includes(t.category))
+      .sort((a, b) => (getTermDifficulty(a) === 'beginner' ? -1 : 1) - (getTermDifficulty(b) === 'beginner' ? -1 : 1));
+
+    for (const term of weakPool.slice(0, 3)) {
+      if (!selected.some(s => s.term === term.term)) selected.push(term);
+    }
+  }
+
+  let currentDiff = startDifficulty;
+  for (let i = selected.length; i < Math.min(QUESTIONS_PER_TEST, pool.length); i++) {
+    // adaptive ramp from historical performance
+    if ((pastAvg ?? 0) >= 80 && i >= 2) currentDiff = 'advanced';
+    else if ((pastAvg ?? 0) >= 60 && i >= 3) currentDiff = 'intermediate';
+    else if (i >= 6) currentDiff = 'intermediate';
+    else currentDiff = 'beginner';
+
     let picked = false;
     for (const tryDiff of [currentDiff, ...diffLevels.filter(d => d !== currentDiff)]) {
-      if (pointers[tryDiff] < byDifficulty[tryDiff].length) {
-        selected.push(byDifficulty[tryDiff][pointers[tryDiff]]);
-        pointers[tryDiff]++;
-        picked = true;
-        break;
+      while (pointers[tryDiff] < byDifficulty[tryDiff].length) {
+        const candidate = byDifficulty[tryDiff][pointers[tryDiff]++];
+        if (!selected.some(s => s.term === candidate.term)) {
+          selected.push(candidate);
+          picked = true;
+          break;
+        }
       }
+      if (picked) break;
     }
     if (!picked) break;
-
-    // Gradually increase difficulty through the test
-    if (i >= 3 && i < 6) currentDiff = 'intermediate';
-    if (i >= 6) currentDiff = 'advanced';
   }
 
   return selected.map(term => {
@@ -173,11 +186,12 @@ export default function QuickTest() {
   const [answers, setAnswers] = useState<(number | null)[]>([]);
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [saving, setSaving] = useState(false);
-  const [savedResult, setSavedResult] = useState<{ score: number; xp: number; bonusXp: number } | null>(null);
+  const [savedResult, setSavedResult] = useState<{ score: number; xp: number; bonusXp: number; unlockedBadges: string[]; nextStep: string | null } | null>(null);
   const [startDifficulty, setStartDifficulty] = useState<TermDifficulty>('beginner');
   const [pastAvg, setPastAvg] = useState<number | null>(null);
+  const [recentWeakAreas, setRecentWeakAreas] = useState<string[]>([]);
 
-  // Load past performance to determine adaptive difficulty
+  // Load past performance to determine adaptive difficulty + weak area reinforcement
   useEffect(() => {
     if (!user) return;
     (async () => {
@@ -188,6 +202,7 @@ export default function QuickTest() {
         .eq('quiz_type', 'dictionary')
         .order('created_at', { ascending: false })
         .limit(5);
+
       if (data && data.length > 0) {
         const avg = data.reduce((s, r) => s + r.score, 0) / data.length;
         setPastAvg(avg);
@@ -195,18 +210,30 @@ export default function QuickTest() {
         else if (avg >= 55) setStartDifficulty('intermediate');
         else setStartDifficulty('beginner');
       }
+
+      const { data: latestAdaptive } = await supabase
+        .from('xp_ledger')
+        .select('metadata')
+        .eq('user_id', user.id)
+        .eq('action', 'dict_quiz_complete')
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      const weak = (latestAdaptive?.metadata as { weak_areas?: string[] } | null)?.weak_areas;
+      if (Array.isArray(weak)) setRecentWeakAreas(weak.filter(Boolean));
     })();
   }, [user]);
 
   const startTest = useCallback(() => {
-    const qs = generateAdaptiveQuestions(lang, category, startDifficulty);
+    const qs = generateAdaptiveQuestions(lang, category, startDifficulty, recentWeakAreas, pastAvg);
     setQuestions(qs);
     setCurrentQ(0);
     setAnswers(new Array(qs.length).fill(null));
     setSelectedAnswer(null);
     setSavedResult(null);
     setPhase('active');
-  }, [lang, category, startDifficulty]);
+  }, [lang, category, startDifficulty, recentWeakAreas, pastAvg]);
 
   const handleAnswer = (idx: number) => {
     if (selectedAnswer !== null) return;
@@ -230,28 +257,72 @@ export default function QuickTest() {
     const correctCount = answers.reduce((acc, ans, i) => acc + (ans === questions[i]?.correctIndex ? 1 : 0), 0);
     const score = Math.round((correctCount / questions.length) * 100);
     const tier = getXpTier(score);
+    const { strong, weak } = detectWeakAreas(questions, answers);
+    const weakAreaNames = weak.map(a => a.category);
+    const strongAreaNames = strong.map(a => a.category);
 
     let bonusXp = 0;
+    let unlockedBadges: string[] = [];
 
     if (user) {
-      // Check for bonus XP: first high score or improvement
+      const testId = `quick_test_${Date.now()}`;
+
+      // Check bonus XP + badge unlocks from historical results
       try {
         const { data: pastResults } = await supabase
           .from('quiz_results')
-          .select('score')
+          .select('score, category, created_at')
           .eq('user_id', user.id)
           .eq('quiz_type', 'dictionary')
-          .order('created_at', { ascending: false })
-          .limit(5);
+          .order('created_at', { ascending: true });
 
-        if (pastResults) {
-          if (pastResults.length === 0 && score >= 80) bonusXp += 10; // First attempt high score
-          if (pastResults.length > 0 && score > pastResults[0].score) bonusXp += 10; // Improvement
+        const history = pastResults || [];
+        const prevScore = history.length > 0 ? history[history.length - 1].score : null;
+
+        if (history.length === 0 && score >= 86) {
+          bonusXp += 10;
+          await awardXp('dict_quiz_bonus', `${testId}_first_high`, { bonus_type: 'first_high_score', score });
         }
-      } catch { /* best effort */ }
 
-      await awardXp('dict_quiz_correct', `quick_test_${Date.now()}`, {
-        score, correct: correctCount, total: questions.length, category, bonusXp,
+        if (history.length > 0 && prevScore !== null && score > prevScore) {
+          bonusXp += 10;
+          await awardXp('dict_quiz_bonus', `${testId}_improved`, { bonus_type: 'improved_retry', previous_score: prevScore, score });
+        }
+
+        const projectedCount = history.length + 1;
+        const projectedCategories = new Set([...history.map(r => r.category).filter(Boolean), category === 'All' ? null : category].filter(Boolean)).size;
+        const projectedHighScores = history.filter(r => r.score >= 80).length + (score >= 80 ? 1 : 0);
+
+        let projectedConsecutiveImprovements = 0;
+        const scoreSeries = [...history.map(r => r.score), score];
+        let consec = 0;
+        for (let i = 1; i < scoreSeries.length; i++) {
+          if (scoreSeries[i] > scoreSeries[i - 1]) {
+            consec++;
+            projectedConsecutiveImprovements = Math.max(projectedConsecutiveImprovements, consec);
+          } else {
+            consec = 0;
+          }
+        }
+
+        if (history.length === 0) unlockedBadges.push(t('Quiz Starter', 'Начало на теста'));
+        if (projectedCount >= 5 && history.length < 5) unlockedBadges.push(t('Knowledge Builder', 'Строител на знания'));
+        if (projectedHighScores >= 3 && history.filter(r => r.score >= 80).length < 3) unlockedBadges.push(t('Sharp Analyst', 'Остър Анализатор'));
+        if (projectedCategories >= 3 && new Set(history.map(r => r.category).filter(Boolean)).size < 3) unlockedBadges.push(t('Test Explorer', 'Изследовател на тестове'));
+        if (projectedConsecutiveImprovements >= 3) unlockedBadges.push(t('Consistency Master', 'Майстор на постоянството'));
+      } catch {
+        // best-effort bonuses and badge calculation
+      }
+
+      await awardXp('dict_quiz_complete', testId, {
+        xp_override: tier.xp,
+        score,
+        correct: correctCount,
+        total: questions.length,
+        category,
+        weak_areas: weakAreaNames,
+        strong_areas: strongAreaNames,
+        start_difficulty: startDifficulty,
       });
 
       try {
@@ -270,7 +341,13 @@ export default function QuickTest() {
       }
     }
 
-    setSavedResult({ score, xp: tier.xp, bonusXp });
+    const weakest = weak[0]?.category;
+    const recommendation = weakest ? CATEGORY_RECOMMENDATIONS[weakest] : null;
+    const nextStep = recommendation
+      ? `${t('Complete', 'Завърши')} ${lang === 'bg' ? recommendation.moduleBg : recommendation.moduleEn}`
+      : null;
+
+    setSavedResult({ score, xp: tier.xp, bonusXp, unlockedBadges, nextStep });
     setSaving(false);
     setPhase('results');
   };
@@ -450,7 +527,7 @@ export default function QuickTest() {
 
   // ─── RESULTS PHASE ───
   if (phase === 'results' && savedResult) {
-    const { score, xp, bonusXp } = savedResult;
+    const { score, xp, bonusXp, unlockedBadges, nextStep } = savedResult;
     const correctCount = answers.filter((a, i) => a === questions[i]?.correctIndex).length;
     const tier = getXpTier(score);
     const { strong, weak } = detectWeakAreas(questions, answers);
@@ -490,6 +567,18 @@ export default function QuickTest() {
             {getFeedback(score, lang)}
           </p>
         </div>
+
+        {/* Badge unlocks */}
+        {unlockedBadges.length > 0 && (
+          <div className="rounded-lg border border-primary/20 bg-primary/5 p-3 space-y-1.5">
+            <p className="text-xs font-semibold text-primary uppercase tracking-wider">{t('Badges Unlocked', 'Отключени значки')}</p>
+            <div className="flex flex-wrap gap-1.5">
+              {unlockedBadges.map(b => (
+                <Badge key={b} variant="outline" className="border-primary/30 text-primary">{b}</Badge>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Strong areas */}
         {strong.length > 0 && (
@@ -567,13 +656,13 @@ export default function QuickTest() {
         )}
 
         {/* Next recommended step */}
-        {weak.length > 0 && (
+        {(nextStep || weak.length > 0) && (
           <div className="rounded-lg border-2 border-primary/20 bg-primary/5 p-3">
             <p className="text-xs font-semibold text-primary mb-1">
               {t('Recommended Next Step', 'Препоръчана следваща стъпка')}
             </p>
             <p className="text-xs text-foreground/80">
-              {t(
+              {nextStep || t(
                 `Focus on ${weak[0].category} — review the related dictionary terms and try another test.`,
                 `Фокусирай се върху ${categoryTranslations[weak[0].category] || weak[0].category} — прегледай свързаните термини и опитай отново.`
               )}
