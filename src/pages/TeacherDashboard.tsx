@@ -699,7 +699,7 @@ export default function TeacherDashboard() {
             <TabsTrigger value="support" className="relative">
               {t('Needs Support', 'Нуждае се от помощ')}
               {studentsNeedingSupport.length > 0 && (
-                <span className="ml-1.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold">
+                <span className="ml-1.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-destructive-foreground text-xs font-bold">
                   {studentsNeedingSupport.length}
                 </span>
               )}
@@ -857,13 +857,13 @@ export default function TeacherDashboard() {
                         <p className="text-sm font-medium text-foreground">{s.full_name || 'Unknown'}</p>
                         <div className="flex flex-wrap gap-1.5 mt-1">
                           {s.reasons.map((r, i) => (
-                            <Badge key={i} variant="outline" className="text-[10px] border-destructive/30 text-destructive">{r}</Badge>
+                            <Badge key={i} variant="outline" className="text-xs border-destructive/30 text-destructive">{r}</Badge>
                           ))}
                         </div>
                       </div>
                       <div className="text-right shrink-0">
                         <span className="text-lg font-bold text-destructive">{s.progress}%</span>
-                        <p className="text-[10px] text-muted-foreground">{t('progress', 'прогрес')}</p>
+                        <p className="text-xs text-muted-foreground">{t('progress', 'прогрес')}</p>
                       </div>
                       <ChevronRight className="h-4 w-4 text-muted-foreground shrink-0" />
                     </button>

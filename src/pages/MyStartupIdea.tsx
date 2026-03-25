@@ -362,10 +362,10 @@ export default function MyStartupIdea() {
               <Rocket className="h-6 w-6" />
             </div>
             <div>
-              <h1 className="text-2xl font-display font-bold text-foreground">
+               <h1 className="typo-h1">
                 {t('My Startup Project', 'Моят стартъп проект')}
               </h1>
-              <p className="text-sm text-muted-foreground">
+              <p className="typo-helper">
                 {t('Build your startup idea step by step', 'Изградете стартъп идеята си стъпка по стъпка')}
               </p>
             </div>

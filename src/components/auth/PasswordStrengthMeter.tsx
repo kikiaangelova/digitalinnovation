@@ -110,7 +110,7 @@ export default function PasswordStrengthMeter({ password, nameOrEmail, lang }: P
           return (
             <div key={r.key} className="flex items-center gap-1.5">
               {met ? <Check className="h-3 w-3 text-sim-success" /> : <X className="h-3 w-3 text-muted-foreground" />}
-              <span className={`text-[11px] ${met ? 'text-sim-success' : 'text-muted-foreground'}`}>
+              <span className={`text-xs ${met ? 'text-sim-success' : 'text-muted-foreground'}`}>
                 {t(r.en, r.bg)}
               </span>
             </div>

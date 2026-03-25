@@ -199,7 +199,7 @@ const Index = () => {
                   <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-card border-2 border-primary/20 shadow-md mb-3 group-hover:border-primary group-hover:scale-110 transition-all duration-300">
                     <step.icon className="h-7 w-7 text-primary" />
                   </div>
-                  <div className="flex h-6 w-6 items-center justify-center rounded-full sim-gradient text-[11px] font-bold text-primary-foreground mb-2 shadow-sm">{step.step}</div>
+                  <div className="flex h-6 w-6 items-center justify-center rounded-full sim-gradient text-xs font-bold text-primary-foreground mb-2 shadow-sm">{step.step}</div>
                   <p className="text-xs font-semibold text-foreground leading-snug">{step.title}</p>
                 </div>
                 {i < buildSteps.length - 1 && <ChevronRight className="h-5 w-5 text-primary/40 mx-2 shrink-0" />}
@@ -213,7 +213,7 @@ const Index = () => {
                   <step.icon className="h-5 w-5 text-primary-foreground" />
                 </div>
                 <div className="flex-1">
-                  <span className="text-[10px] font-bold text-primary uppercase tracking-wider">{t.step} {step.step}</span>
+                  <span className="typo-stage-label">{t.step} {step.step}</span>
                   <p className="text-sm font-medium text-foreground">{step.title}</p>
                 </div>
                 {i < buildSteps.length - 1 && <ChevronRight className="h-4 w-4 text-muted-foreground" />}
@@ -243,7 +243,7 @@ const Index = () => {
                   </div>
                   <div className="flex-1 rounded-2xl border border-border bg-card p-4 sm:p-5 group-hover:border-primary/30 group-hover:shadow-md transition-all duration-300">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="inline-flex items-center gap-1 text-[10px] font-bold text-primary uppercase tracking-wider">{t.stage} {i + 1}</span>
+                      <span className="inline-flex items-center gap-1 typo-stage-label">{t.stage} {i + 1}</span>
                     </div>
                     <h3 className="font-display font-bold text-foreground text-sm mb-1">{stage.title}</h3>
                     <p className="text-xs text-muted-foreground">{stage.desc}</p>
@@ -272,7 +272,7 @@ const Index = () => {
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
                     <Calendar className="h-3 w-3 text-primary" />
-                    <span className="text-[10px] font-bold text-primary uppercase tracking-wider">{t.week} {week.week}</span>
+                     <span className="typo-stage-label">{t.week} {week.week}</span>
                   </div>
                   <h3 className="font-display font-bold text-foreground text-sm">{week.title}</h3>
                   <p className="text-xs text-muted-foreground mt-1">{week.desc}</p>
@@ -287,7 +287,7 @@ const Index = () => {
                   <week.icon className="h-5 w-5" />
                 </div>
                 <div className="flex-1">
-                  <span className="text-[10px] font-bold text-primary uppercase tracking-wider">{t.week} {week.week}</span>
+                  <span className="typo-stage-label">{t.week} {week.week}</span>
                   <p className="text-sm font-semibold text-foreground">{week.title}</p>
                 </div>
               </div>
@@ -326,7 +326,7 @@ const Index = () => {
 const SectionBadge = forwardRef<HTMLDivElement, { label: string }>(({ label }, ref) => (
   <div ref={ref} className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-accent px-3 py-1">
     <Zap className="h-3 w-3 text-primary" />
-    <span className="text-[11px] font-semibold text-primary uppercase tracking-wider">{label}</span>
+    <span className="text-xs font-semibold text-primary uppercase tracking-wider">{label}</span>
   </div>
 ));
 SectionBadge.displayName = 'SectionBadge';

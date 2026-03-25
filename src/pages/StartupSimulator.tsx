@@ -214,7 +214,7 @@ export default function StartupSimulator() {
 
           <div className="text-center py-10">
             <span className="text-6xl mb-4 block">🚀</span>
-            <h1 className="text-3xl font-display font-bold text-foreground mb-3">
+             <h1 className="typo-h1 mb-3">
               {t('Startup Simulator', 'Стартъп симулатор')}
             </h1>
             <p className="text-muted-foreground max-w-lg mx-auto mb-6">
@@ -572,7 +572,7 @@ export default function StartupSimulator() {
             <div key={m.key} className="rounded-lg border border-border bg-card px-2 py-2 text-center">
               <m.icon className="h-3.5 w-3.5 mx-auto mb-0.5" style={{ color: m.color }} />
               <div className="text-sm font-bold text-foreground">{kpis[m.key]}</div>
-              <div className="text-[10px] text-muted-foreground truncate">{lang === 'bg' ? m.bg : m.en}</div>
+              <div className="text-xs text-muted-foreground truncate">{lang === 'bg' ? m.bg : m.en}</div>
             </div>
           ))}
         </div>

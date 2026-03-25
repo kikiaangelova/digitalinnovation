@@ -149,7 +149,7 @@ export default function CommunityStats({ lang, isAdmin = false }: Props) {
                         <p className="text-sm font-semibold text-foreground truncate">
                           {entry.display_name}
                         </p>
-                        <p className="text-[10px] text-muted-foreground">
+                        <p className="text-xs text-muted-foreground">
                           {t('Level', 'Ниво')} {entry.level.level}
                         </p>
                       </div>

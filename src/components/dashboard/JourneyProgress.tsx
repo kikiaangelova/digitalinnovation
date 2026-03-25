@@ -142,12 +142,12 @@ export default function JourneyProgress(props: JourneyProgressProps) {
                     {lang === 'bg' ? step.bg : step.en}
                   </span>
                   {isRecommended && status !== 'completed' && (
-                    <Badge className="bg-primary/15 text-primary border-0 text-[10px] px-1.5 py-0">
+                    <Badge className="bg-primary/15 text-primary border-0 text-xs px-1.5 py-0">
                       {t('Next', 'Следваща')}
                     </Badge>
                   )}
                   {status === 'in_progress' && !isRecommended && (
-                    <Badge className="bg-primary/10 text-primary border-0 text-[10px] px-1.5 py-0">
+                    <Badge className="bg-primary/10 text-primary border-0 text-xs px-1.5 py-0">
                       <Play className="h-2.5 w-2.5 mr-0.5" />{t('Started', 'Започнато')}
                     </Badge>
                   )}

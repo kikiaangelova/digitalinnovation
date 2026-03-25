@@ -141,7 +141,7 @@ export default function AboutDigitalInnovation() {
         <div className="container mx-auto max-w-4xl text-center">
           <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-accent px-3 py-1 mb-5">
             <GraduationCap className="h-3 w-3 text-primary" />
-            <span className="text-[11px] font-semibold text-primary uppercase tracking-wider">
+            <span className="text-xs font-semibold text-primary uppercase tracking-wider">
               {tx('Educational Reference', 'Образователен справочник')}
             </span>
           </div>

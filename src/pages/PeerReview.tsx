@@ -294,7 +294,7 @@ export default function PeerReview() {
             <TabsTrigger value="pending" className="relative">
               {t('To Review', 'За рецензия')}
               {pendingCount > 0 && (
-                <span className="ml-1.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-destructive-foreground text-[10px] font-bold">{pendingCount}</span>
+                <span className="ml-1.5 inline-flex h-5 w-5 items-center justify-center rounded-full bg-destructive text-destructive-foreground text-xs font-bold">{pendingCount}</span>
               )}
             </TabsTrigger>
             <TabsTrigger value="completed">{t('Completed', 'Завършени')}</TabsTrigger>
@@ -372,7 +372,7 @@ export default function PeerReview() {
                   {RUBRIC_CRITERIA.map(c => (
                     <div key={c.key} className="text-center">
                       <p className="text-lg font-bold text-foreground">{(r as any)[c.key]}</p>
-                      <p className="text-[10px] text-muted-foreground leading-tight">{lang === 'bg' ? c.bg : c.en}</p>
+                      <p className="text-xs text-muted-foreground leading-tight">{lang === 'bg' ? c.bg : c.en}</p>
                     </div>
                   ))}
                 </div>

@@ -61,10 +61,10 @@ export default function LevelCard({ xp, lang }: LevelCardProps) {
           <Icon className="h-7 w-7 text-primary-foreground" />
         </div>
         <div>
-          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
+          <p className="typo-stage-label">
             {lang === 'bg' ? 'Ниво' : 'Level'} {current.level}
           </p>
-          <h2 className="text-xl font-display font-bold text-foreground">
+          <h2 className="text-xl font-display font-bold sim-gradient-text">
             {current.name[lang]}
           </h2>
         </div>

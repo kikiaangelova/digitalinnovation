@@ -148,10 +148,10 @@ export default function StudentDashboard() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl md:text-3xl font-display font-bold text-foreground">
+            <h1 className="typo-h1">
               {t('Your Innovation Dashboard', 'Твоето иновационно табло')}
             </h1>
-            <p className="text-muted-foreground text-sm mt-1">
+            <p className="typo-helper mt-1">
               {t('Track your progress, earn XP, and build your startup', 'Проследи напредъка си, спечели XP и изгради своя стартъп')}
             </p>
           </div>
@@ -175,18 +175,18 @@ export default function StudentDashboard() {
           <div className="space-y-4">
             <LevelCard xp={xp} lang={lang} />
             <div className="rounded-xl border border-border bg-card p-5">
-              <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+              <h3 className="typo-card-title mb-3 flex items-center gap-2">
                 <Zap className="h-4 w-4 text-xp-gold" />
                 {t('Earn XP', 'Спечели XP')}
               </h3>
               <div className="space-y-2">
                 {xpActions.map((a, i) => (
                   <div key={i} className="flex items-center justify-between py-1.5">
-                    <div className="flex items-center gap-2 text-sm text-foreground">
+                    <div className="flex items-center gap-2 typo-body">
                       <a.icon className="h-3.5 w-3.5 text-muted-foreground" />
-                      <span className="text-xs">{a.action}</span>
+                      <span className="text-[13px]">{a.action}</span>
                     </div>
-                    <span className="text-xs font-bold text-xp-gold">{a.xp}</span>
+                    <span className="text-[13px] typo-xp">{a.xp}</span>
                   </div>
                 ))}
               </div>
@@ -218,7 +218,7 @@ export default function StudentDashboard() {
         {/* ═══ Peer Review ═══ */}
         <div className="rounded-xl border border-border bg-card p-5">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+            <h3 className="typo-card-title flex items-center gap-2">
               <Users className="h-4 w-4 text-primary" />
               {t('Peer Review', 'Партньорска рецензия')}
             </h3>

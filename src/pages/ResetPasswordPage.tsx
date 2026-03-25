@@ -157,7 +157,7 @@ export default function ResetPasswordPage() {
               </button>
             </div>
             {confirmPassword && password !== confirmPassword && (
-              <p className="text-[11px] text-destructive mt-1">{t('Passwords do not match', 'Паролите не съвпадат')}</p>
+              <p className="text-xs text-destructive mt-1">{t('Passwords do not match', 'Паролите не съвпадат')}</p>
             )}
           </div>
 

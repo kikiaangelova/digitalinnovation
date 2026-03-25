@@ -112,7 +112,7 @@ const InnovationShowcase = forwardRef<HTMLDivElement, Props>(function Innovation
           <div className="text-center mb-10">
             <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-accent px-3 py-1">
               <Trophy className="h-3 w-3 text-primary" />
-              <span className="text-[11px] font-semibold text-primary uppercase tracking-wider">{t.innovationShowcase}</span>
+              <span className="text-xs font-semibold text-primary uppercase tracking-wider">{t.innovationShowcase}</span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-display font-bold text-foreground mt-4 mb-3">{t.topInnovatorsTitle}</h2>
             <p className="text-muted-foreground max-w-lg mx-auto">{t.topInnovatorsDesc}</p>
@@ -170,7 +170,7 @@ const InnovationShowcase = forwardRef<HTMLDivElement, Props>(function Innovation
             <div className="text-center mb-10">
               <div className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-accent px-3 py-1">
                 <Rocket className="h-3 w-3 text-primary" />
-                <span className="text-[11px] font-semibold text-primary uppercase tracking-wider">{t.demoDayBadge}</span>
+                <span className="text-xs font-semibold text-primary uppercase tracking-wider">{t.demoDayBadge}</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-display font-bold text-foreground mt-4 mb-3">{t.topStartupIdeas}</h2>
               <p className="text-muted-foreground max-w-lg mx-auto">{t.topStartupIdeasDesc}</p>
@@ -182,7 +182,7 @@ const InnovationShowcase = forwardRef<HTMLDivElement, Props>(function Innovation
                   <div className="absolute top-3 right-3">
                     <div className="flex items-center gap-1 rounded-full bg-accent px-2 py-0.5">
                       <Sparkles className="h-3 w-3 text-primary" />
-                      <span className="text-[10px] font-bold text-primary">{s.score}%</span>
+                      <span className="text-xs font-bold text-primary">{s.score}%</span>
                     </div>
                   </div>
                   <div className="flex h-12 w-12 items-center justify-center rounded-xl sim-gradient shadow-md mb-4 group-hover:scale-110 transition-transform duration-300">
@@ -194,7 +194,7 @@ const InnovationShowcase = forwardRef<HTMLDivElement, Props>(function Innovation
                   <p className="text-xs text-muted-foreground mb-2">{t.founder}: {s.founder_name}</p>
                   <div className="inline-flex items-center gap-1 rounded-full border border-border px-2 py-0.5 mb-3">
                     <Factory className="h-3 w-3 text-muted-foreground" />
-                    <span className="text-[10px] text-muted-foreground">{s.industry}</span>
+                    <span className="text-xs text-muted-foreground">{s.industry}</span>
                   </div>
                   {s.problem && <p className="text-xs text-muted-foreground line-clamp-2">{s.problem.slice(0, 100)}</p>}
                 </div>

@@ -57,7 +57,7 @@ export default function LeaderboardPage() {
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-2">
             <Trophy className="h-6 w-6 text-rank-gold" />
-            <h1 className="text-3xl font-display font-bold text-foreground">
+             <h1 className="typo-h1">
               {t('Leaderboard', 'Класация')}
             </h1>
           </div>

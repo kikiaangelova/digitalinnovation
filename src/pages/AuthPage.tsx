@@ -234,7 +234,7 @@ export default function AuthPage() {
                 <div>
                   <Label htmlFor="displayName">{tx('Username / Display Name', 'Псевдоним')}</Label>
                   <Input id="displayName" value={displayName} onChange={e => setDisplayName(e.target.value)} placeholder={tx('e.g. CoolInnovator', 'напр. ИноваторБГ')} required={!isLogin} />
-                  <p className="text-[10px] text-muted-foreground mt-1">
+                  <p className="text-xs text-muted-foreground mt-1">
                     {tx('Choose a display name for the leaderboard', 'Избери псевдоним за класацията')}
                   </p>
                 </div>
@@ -294,7 +294,7 @@ export default function AuthPage() {
                   </button>
                 </div>
                 {confirmPassword && password !== confirmPassword && (
-                  <p className="text-[11px] text-destructive mt-1">{tx('Passwords do not match', 'Паролите не съвпадат')}</p>
+                  <p className="text-xs text-destructive mt-1">{tx('Passwords do not match', 'Паролите не съвпадат')}</p>
                 )}
               </div>
             )}
@@ -307,7 +307,7 @@ export default function AuthPage() {
             </Button>
 
             {!isLogin && (
-              <p className="text-[11px] text-muted-foreground text-center mt-2">
+              <p className="text-xs text-muted-foreground text-center mt-2">
                 {tx('We collect only minimal information to create your account.', 'Събираме само минимална информация за създаване на акаунта ви.')}
               </p>
             )}

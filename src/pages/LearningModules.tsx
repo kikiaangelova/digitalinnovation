@@ -91,11 +91,11 @@ export default function LearningModules() {
       <main className="container mx-auto max-w-4xl px-4 py-8 space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
+           <h1 className="typo-h1 flex items-center gap-2">
             <BookOpen className="h-6 w-6 text-primary" />
             {t('Learning Modules', 'Учебни модули')}
           </h1>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p className="typo-helper mt-1">
             {t('Master key concepts in digital innovation and entrepreneurship', 'Овладейте ключови концепции в дигиталните иновации и предприемачеството')}
           </p>
         </div>
@@ -115,7 +115,7 @@ export default function LearningModules() {
                 <div key={cat.key} className="rounded-lg bg-accent/50 p-3 text-center">
                   <cat.icon className="h-4 w-4 text-primary mx-auto mb-1" />
                   <p className="text-lg font-bold text-foreground">{cat.score}%</p>
-                  <p className="text-[10px] text-muted-foreground">{t(cat.en, cat.bg)}</p>
+                  <p className="text-xs text-muted-foreground">{t(cat.en, cat.bg)}</p>
                 </div>
               ))}
             </div>
@@ -149,8 +149,8 @@ export default function LearningModules() {
                     </p>
                     {isCompleted && resp && (
                       <div className="flex gap-2 mt-1">
-                        <Badge variant="outline" className="text-[10px]">{t('Quiz', 'Тест')}: {resp.quiz_score}/{resp.quiz_max}</Badge>
-                        <Badge variant="outline" className="text-[10px]">{t('Concept', 'Концепция')}: {resp.concept_score}%</Badge>
+                         <Badge variant="outline" className="text-xs">{t('Quiz', 'Тест')}: {resp.quiz_score}/{resp.quiz_max}</Badge>
+                        <Badge variant="outline" className="text-xs">{t('Concept', 'Концепция')}: {resp.concept_score}%</Badge>
                       </div>
                     )}
                   </div>

@@ -67,7 +67,7 @@ export default function Leaderboard({ lang, currentUserId, limit = 10, showTitle
       {showTitle && (
         <div className="flex items-center gap-2 mb-3">
           <Trophy className="h-5 w-5 text-sim-warning" />
-          <h2 className="text-lg font-display font-semibold text-foreground">{t('Leaderboard', 'Класация')}</h2>
+          <h2 className="typo-h2 text-lg">{t('Leaderboard', 'Класация')}</h2>
         </div>
       )}
 
@@ -95,7 +95,7 @@ export default function Leaderboard({ lang, currentUserId, limit = 10, showTitle
         </button>
       </div>
 
-      <p className="text-[10px] text-muted-foreground mb-3 italic">
+      <p className="text-xs text-muted-foreground mb-3 italic">
         {t('The leaderboard shows display names only to protect privacy', 'Класацията показва само псевдоними за защита на личните данни')}
       </p>
 

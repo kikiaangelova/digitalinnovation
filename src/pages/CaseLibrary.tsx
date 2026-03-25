@@ -110,10 +110,10 @@ export default function CaseLibrary() {
               <Icon className="h-7 w-7" style={{ color: selectedDomain.color }} />
             </div>
             <div>
-              <h1 className="text-2xl font-display font-bold text-foreground">
+              <h1 className="typo-h1">
                 {lang === 'bg' ? selectedDomain.nameBg : selectedDomain.nameEn}
               </h1>
-              <p className="text-sm text-muted-foreground mt-1">
+              <p className="typo-helper mt-1">
                 {domainCases.length} {tl('case studies', 'казуса')}
               </p>
             </div>
@@ -192,8 +192,8 @@ export default function CaseLibrary() {
       <AppHeader />
       <div className="container mx-auto max-w-5xl px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-display font-bold text-foreground mb-2">{t.caseLibrary}</h1>
-          <p className="text-muted-foreground">
+          <h1 className="typo-h1 mb-2">{t.caseLibrary}</h1>
+          <p className="typo-helper">
             {tl(
               'Explore case studies organized by industry domain. Select an industry to understand its context and analyze related cases.',
               'Разгледайте казуси, организирани по индустриални области. Изберете индустрия, за да разберете контекста и анализирате свързаните казуси.'
@@ -231,7 +231,7 @@ export default function CaseLibrary() {
                 >
                   {count === 0 && (
                     <div className="absolute top-3 right-3">
-                      <Badge variant="secondary" className="text-[10px] bg-muted text-muted-foreground">
+                      <Badge variant="secondary" className="text-xs bg-muted text-muted-foreground">
                         {tl('Coming Soon', 'Очаквайте скоро')}
                       </Badge>
                     </div>
@@ -254,7 +254,7 @@ export default function CaseLibrary() {
                   </p>
                   <div className="flex flex-wrap gap-1">
                     {(lang === 'bg' ? domain.trendsBg : domain.trendsEn).slice(0, 2).map(tr => (
-                      <Badge key={tr} variant="secondary" className="text-[10px] px-1.5 py-0">{tr}</Badge>
+                      <Badge key={tr} variant="secondary" className="text-xs px-1.5 py-0">{tr}</Badge>
                     ))}
                   </div>
                 </button>

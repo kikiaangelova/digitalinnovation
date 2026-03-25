@@ -215,7 +215,7 @@ export default function LearningJourney() {
       <main className="container mx-auto px-4 py-8 max-w-4xl space-y-8">
         {/* Header */}
         <div>
-          <h1 className="text-2xl md:text-3xl font-display font-bold text-foreground">
+           <h1 className="typo-h1">
             {t('Startup Journey', 'Стартъп пътешествие')}
           </h1>
           <p className="text-muted-foreground text-sm mt-1">

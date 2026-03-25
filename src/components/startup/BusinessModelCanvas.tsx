@@ -157,10 +157,10 @@ export default function BusinessModelCanvas({ data, lang, disabled, onChange }: 
                   {t(block.en, block.bg)}
                 </span>
                 {filled && (
-                  <span className="ml-auto text-[10px] text-[hsl(var(--sim-success))]">✓</span>
+                  <span className="ml-auto text-xs text-[hsl(var(--sim-success))]">✓</span>
                 )}
               </div>
-              <p className="text-[11px] text-muted-foreground mb-2 leading-tight">
+              <p className="text-xs text-muted-foreground mb-2 leading-tight">
                 {t(block.descEn, block.descBg)}
               </p>
               <Textarea

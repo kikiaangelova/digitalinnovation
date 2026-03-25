@@ -111,16 +111,16 @@ export default function ProfilePage() {
     <div className="min-h-screen bg-background">
       <AppHeader />
       <main className="container mx-auto px-4 py-8 max-w-3xl space-y-8">
-        <h1 className="text-2xl font-display font-bold text-foreground">{t.myProfile}</h1>
+        <h1 className="typo-h1">{t.myProfile}</h1>
 
         {/* Stats row */}
         <div className="grid grid-cols-3 gap-4">
           <div className="rounded-lg border border-border bg-card p-4 text-center">
             <BookOpen className="h-5 w-5 text-primary mx-auto mb-1" />
             <p className="text-2xl font-bold text-foreground">{completedCount}</p>
-            <p className="text-xs text-muted-foreground">{t.casesDone}</p>
+             <p className="text-xs text-muted-foreground">{t.casesDone}</p>
             {completedCount === 0 && (
-              <p className="text-[10px] text-primary mt-1">{lang === 'bg' ? 'Започни от Пътешествието →' : 'Start from the Journey →'}</p>
+              <p className="text-xs text-primary mt-1">{lang === 'bg' ? 'Започни от Пътешествието →' : 'Start from the Journey →'}</p>
             )}
           </div>
           <div className="rounded-lg border border-border bg-card p-4 text-center">
@@ -128,7 +128,7 @@ export default function ProfilePage() {
             <p className="text-2xl font-bold text-foreground">{avgScore}%</p>
             <p className="text-xs text-muted-foreground">{t.avgScore}</p>
             {avgScore === 0 && (
-              <p className="text-[10px] text-muted-foreground mt-1">{lang === 'bg' ? 'Завърши казус, за да видиш резултат' : 'Complete a case to see your score'}</p>
+              <p className="text-xs text-muted-foreground mt-1">{lang === 'bg' ? 'Завърши казус, за да видиш резултат' : 'Complete a case to see your score'}</p>
             )}
           </div>
           <div className="rounded-lg border border-border bg-card p-4 text-center">
@@ -136,7 +136,7 @@ export default function ProfilePage() {
             <p className="text-2xl font-bold text-foreground">{badges.length}</p>
             <p className="text-xs text-muted-foreground">{t.badges}</p>
             {badges.length === 0 && (
-              <p className="text-[10px] text-sim-warning mt-1">{lang === 'bg' ? 'Спечели първата си значка днес' : 'Earn your first badge today'}</p>
+              <p className="text-xs text-xp-gold mt-1">{lang === 'bg' ? 'Спечели първата си значка днес' : 'Earn your first badge today'}</p>
             )}
           </div>
         </div>
@@ -178,13 +178,13 @@ export default function ProfilePage() {
           <h3 className="font-display font-semibold text-foreground">{t.editProfile}</h3>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <Label>{t.fullName} <span className="text-[10px] text-muted-foreground">({lang === 'bg' ? 'видимо само за теб и учителя' : 'visible only to you and the teacher'})</span></Label>
+              <Label>{t.fullName} <span className="text-xs text-muted-foreground">({lang === 'bg' ? 'видимо само за теб и учителя' : 'visible only to you and the teacher'})</span></Label>
               <Input value={fullName} onChange={e => setFullName(e.target.value)} />
             </div>
             <div>
               <Label>{lang === 'bg' ? 'Псевдоним (за класацията)' : 'Display Name (for leaderboard)'}</Label>
               <Input value={displayName} onChange={e => setDisplayName(e.target.value)} placeholder={lang === 'bg' ? 'напр. ИноваторБГ' : 'e.g. CoolInnovator'} />
-              <p className="text-[10px] text-muted-foreground mt-1">{lang === 'bg' ? 'Това име се показва публично в класацията' : 'This name is shown publicly on the leaderboard'}</p>
+              <p className="text-xs text-muted-foreground mt-1">{lang === 'bg' ? 'Това име се показва публично в класацията' : 'This name is shown publicly on the leaderboard'}</p>
             </div>
             <div>
               <Label>{lang === 'bg' ? 'Училище / Университет' : 'School / University'} <span className="text-xs text-muted-foreground">({lang === 'bg' ? 'по избор' : 'optional'})</span></Label>

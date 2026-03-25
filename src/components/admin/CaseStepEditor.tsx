@@ -139,7 +139,7 @@ export default function CaseStepEditor({ caseId, caseTopic }: CaseStepEditorProp
           )}
           {t('Quality Checklist', 'Списък за качество')}
           {totalIssues > 0 && (
-            <Badge variant="destructive" className="text-[10px]">{totalIssues} {t('issues', 'проблема')}</Badge>
+            <Badge variant="destructive" className="text-xs">{totalIssues} {t('issues', 'проблема')}</Badge>
           )}
         </h4>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
@@ -175,10 +175,10 @@ export default function CaseStepEditor({ caseId, caseTopic }: CaseStepEditorProp
                 <div>
                   <p className="text-sm font-medium text-foreground">{step.title || STEP_LABELS[idx]}</p>
                   <div className="flex gap-1 mt-0.5">
-                    {hasNarrative && <Badge variant="outline" className="text-[10px] text-primary">✓ {t('Narrative', 'Наратив')}</Badge>}
-                    {hasExhibit && <Badge variant="outline" className="text-[10px] text-primary">✓ {t('Exhibits', 'Приложения')}</Badge>}
-                    {!hasNarrative && <Badge variant="outline" className="text-[10px] text-muted-foreground">— {t('Narrative', 'Наратив')}</Badge>}
-                    {idx >= 1 && idx <= 3 && !hasExhibit && <Badge variant="outline" className="text-[10px] text-destructive">⚠ {t('Exhibits', 'Приложения')}</Badge>}
+                    {hasNarrative && <Badge variant="outline" className="text-xs text-primary">✓ {t('Narrative', 'Наратив')}</Badge>}
+                    {hasExhibit && <Badge variant="outline" className="text-xs text-primary">✓ {t('Exhibits', 'Приложения')}</Badge>}
+                    {!hasNarrative && <Badge variant="outline" className="text-xs text-muted-foreground">— {t('Narrative', 'Наратив')}</Badge>}
+                    {idx >= 1 && idx <= 3 && !hasExhibit && <Badge variant="outline" className="text-xs text-destructive">⚠ {t('Exhibits', 'Приложения')}</Badge>}
                   </div>
                 </div>
               </div>

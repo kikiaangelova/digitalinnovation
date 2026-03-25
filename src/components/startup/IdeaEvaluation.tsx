@@ -283,7 +283,7 @@ export default function IdeaEvaluation({ lang, startupData }: Props) {
           {MATURITY_STAGES.map((stage, i) => (
             <div key={i} className="flex-1 flex flex-col items-center">
               <div className={`w-full h-2 rounded-full ${i <= maturityStage ? 'bg-primary' : 'bg-muted'}`} />
-              <span className={`text-[10px] mt-1 text-center leading-tight ${i <= maturityStage ? 'text-primary font-medium' : 'text-muted-foreground'}`}>
+              <span className={`text-xs mt-1 text-center leading-tight ${i <= maturityStage ? 'text-primary font-medium' : 'text-muted-foreground'}`}>
                 {lang === 'bg' ? stage.bg : stage.en}
               </span>
             </div>
@@ -354,7 +354,7 @@ export default function IdeaEvaluation({ lang, startupData }: Props) {
                         <div className={`h-full rounded-full transition-all duration-500 ${barColor(pct)}`} style={{ width: `${pct}%` }} />
                       </div>
                     </div>
-                    <Badge variant="outline" className="text-[10px] shrink-0">{s.weight}%</Badge>
+                    <Badge variant="outline" className="text-xs shrink-0">{s.weight}%</Badge>
                   </div>
                 );
               })}
@@ -427,8 +427,8 @@ export default function IdeaEvaluation({ lang, startupData }: Props) {
               {/* Axes */}
               <div className="absolute bottom-4 left-4 right-4 h-px bg-border" />
               <div className="absolute top-4 bottom-4 left-4 w-px bg-border" />
-              <span className="absolute bottom-0 right-4 text-[10px] text-muted-foreground">{t('Innovation →', 'Иновация →')}</span>
-              <span className="absolute top-0 left-6 text-[10px] text-muted-foreground">{t('↑ Market Size', '↑ Размер на пазара')}</span>
+              <span className="absolute bottom-0 right-4 text-xs text-muted-foreground">{t('Innovation →', 'Иновация →')}</span>
+              <span className="absolute top-0 left-6 text-xs text-muted-foreground">{t('↑ Market Size', '↑ Размер на пазара')}</span>
 
               {/* Competitors */}
               {competitors.map((c, i) => {
@@ -440,10 +440,10 @@ export default function IdeaEvaluation({ lang, startupData }: Props) {
                 const pos = positions[i % positions.length];
                 return (
                   <div key={i} className="absolute flex flex-col items-center" style={{ left: pos.left, top: pos.top }}>
-                    <div className="w-8 h-8 rounded-full bg-muted border-2 border-border flex items-center justify-center text-[10px] font-bold text-muted-foreground">
+                    <div className="w-8 h-8 rounded-full bg-muted border-2 border-border flex items-center justify-center text-xs font-bold text-muted-foreground">
                       {c.name.charAt(0)}
                     </div>
-                    <span className="text-[10px] text-muted-foreground mt-0.5">{c.name}</span>
+                    <span className="text-xs text-muted-foreground mt-0.5">{c.name}</span>
                   </div>
                 );
               })}
@@ -453,12 +453,12 @@ export default function IdeaEvaluation({ lang, startupData }: Props) {
                 <div className="w-10 h-10 rounded-full bg-primary border-2 border-primary flex items-center justify-center">
                   <Rocket className="h-4 w-4 text-primary-foreground" />
                 </div>
-                <span className="text-[10px] text-primary font-bold mt-0.5">{t('Your Idea', 'Вашата идея')}</span>
+                <span className="text-xs text-primary font-bold mt-0.5">{t('Your Idea', 'Вашата идея')}</span>
               </div>
 
               {/* Problem label */}
               <div className="absolute bottom-8 left-8 rounded bg-destructive/10 px-2 py-1">
-                <span className="text-[10px] font-medium text-destructive">{t('Problem Space', 'Пространство на проблема')}</span>
+                <span className="text-xs font-medium text-destructive">{t('Problem Space', 'Пространство на проблема')}</span>
               </div>
             </div>
             <p className="text-xs text-muted-foreground mt-2 italic">

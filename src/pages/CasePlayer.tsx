@@ -618,7 +618,7 @@ export default function CasePlayer() {
           <div className="flex items-center gap-2 rounded-lg border border-muted bg-muted/30 px-4 py-2">
             <AlertTriangle className="h-4 w-4 text-muted-foreground shrink-0" />
             <p className="text-xs text-muted-foreground">
-              {tl('Missing:', 'Липсва:')} {missingSections.join(', ')} <Badge variant="outline" className="ml-2 text-[10px]">Admin only</Badge>
+              {tl('Missing:', 'Липсва:')} {missingSections.join(', ')} <Badge variant="outline" className="ml-2 text-xs">Admin only</Badge>
             </p>
           </div>
         )}
@@ -688,7 +688,7 @@ export default function CasePlayer() {
                     : tl('Data & Evidence', 'Данни и доказателства')}
                 </h3>
                 {!hasExhibit && isAdmin && (
-                  <Badge variant="outline" className="text-[10px] ml-auto">{tl('Default template', 'Шаблон по подразбиране')}</Badge>
+                  <Badge variant="outline" className="text-xs ml-auto">{tl('Default template', 'Шаблон по подразбиране')}</Badge>
                 )}
               </div>
               <p className="text-xs text-muted-foreground mb-3">
@@ -842,7 +842,7 @@ export default function CasePlayer() {
                 <h3 className="font-display font-semibold text-foreground">
                   {tl('Apply This Case to Your Startup', 'Приложи казуса към стартъпа си')}
                 </h3>
-                <Badge variant="outline" className="text-[10px] px-2 py-0.5 font-semibold text-muted-foreground border-border mt-1 w-fit">
+                 <Badge variant="outline" className="text-xs px-2 py-0.5 font-semibold text-muted-foreground border-border mt-1 w-fit">
                   {tl('Optional', 'По избор')}
                 </Badge>
                 <p className="text-xs text-muted-foreground mt-1">
@@ -868,7 +868,7 @@ export default function CasePlayer() {
                       <span className="text-sm font-semibold text-foreground">
                         {lang === 'bg' ? field.labelBg : field.labelEn}
                       </span>
-                      <Badge variant="outline" className="text-[10px] px-1.5 py-0 font-bold text-sim-warning border-sim-warning/30">
+                       <Badge variant="outline" className="text-xs px-1.5 py-0 typo-xp border-xp-gold/30">
                         +{field.xp} XP
                       </Badge>
                     </div>

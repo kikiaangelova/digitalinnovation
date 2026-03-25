@@ -104,7 +104,7 @@ export default function AchievementBadges(props: AchievementBadgesProps) {
     <div className="rounded-xl border border-border bg-card p-5">
       <div className="flex items-center gap-2 mb-4">
         <Award className="h-5 w-5 text-xp-gold" />
-        <h2 className="text-lg font-display font-semibold text-foreground">{t('Achievement Badges', 'Постижения')}</h2>
+        <h2 className="typo-h2 text-lg">{t('Achievement Badges', 'Постижения')}</h2>
         <span className="ml-auto text-xs text-muted-foreground">{earned.size} / {ALL_BADGES.length}</span>
       </div>
       <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
@@ -127,7 +127,7 @@ export default function AchievementBadges(props: AchievementBadgesProps) {
                 )}
               </div>
               <p className="text-xs font-semibold text-foreground">{lang === 'bg' ? b.nameBg : b.nameEn}</p>
-              <p className="text-[10px] text-muted-foreground mt-0.5">{lang === 'bg' ? b.descBg : b.descEn}</p>
+              <p className="text-xs text-muted-foreground mt-0.5">{lang === 'bg' ? b.descBg : b.descEn}</p>
               {progress && (
                 <div className="w-full mt-1.5 space-y-0.5">
                   <div className="w-full h-1 rounded-full bg-muted overflow-hidden">
@@ -136,7 +136,7 @@ export default function AchievementBadges(props: AchievementBadgesProps) {
                       style={{ width: `${pct}%` }}
                     />
                   </div>
-                  <p className="text-[9px] text-muted-foreground">{progress.label}</p>
+                  <p className="text-xs text-muted-foreground">{progress.label}</p>
                 </div>
               )}
             </div>
