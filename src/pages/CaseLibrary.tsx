@@ -192,8 +192,8 @@ export default function CaseLibrary() {
       <AppHeader />
       <div className="container mx-auto max-w-5xl px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-display font-bold text-foreground mb-2">{t.caseLibrary}</h1>
-          <p className="text-muted-foreground">
+          <h1 className="typo-h1 mb-2">{t.caseLibrary}</h1>
+          <p className="typo-helper">
             {tl(
               'Explore case studies organized by industry domain. Select an industry to understand its context and analyze related cases.',
               'Разгледайте казуси, организирани по индустриални области. Изберете индустрия, за да разберете контекста и анализирате свързаните казуси.'

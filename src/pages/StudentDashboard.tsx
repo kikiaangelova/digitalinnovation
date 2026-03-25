@@ -218,7 +218,7 @@ export default function StudentDashboard() {
         {/* ═══ Peer Review ═══ */}
         <div className="rounded-xl border border-border bg-card p-5">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+            <h3 className="typo-card-title flex items-center gap-2">
               <Users className="h-4 w-4 text-primary" />
               {t('Peer Review', 'Партньорска рецензия')}
             </h3>

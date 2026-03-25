@@ -136,7 +136,7 @@ export default function ProfilePage() {
             <p className="text-2xl font-bold text-foreground">{badges.length}</p>
             <p className="text-xs text-muted-foreground">{t.badges}</p>
             {badges.length === 0 && (
-              <p className="text-[10px] text-sim-warning mt-1">{lang === 'bg' ? 'Спечели първата си значка днес' : 'Earn your first badge today'}</p>
+              <p className="text-xs text-xp-gold mt-1">{lang === 'bg' ? 'Спечели първата си значка днес' : 'Earn your first badge today'}</p>
             )}
           </div>
         </div>
