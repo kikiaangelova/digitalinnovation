@@ -171,11 +171,11 @@ export default function FinalExam() {
                   )}
                   {currentSection < SECTIONS.length - 1 ? (
                     <Button size="sm" onClick={() => setCurrentSection(currentSection + 1)} className="gap-1">
-                      {t('Next', 'Напред')} <ArrowRight className="h-3.5 w-3.5" />
+                      {t(`Continue to ${SECTIONS[currentSection + 1]?.enTitle || 'Next'}`, `Продължи към ${SECTIONS[currentSection + 1]?.bgTitle || 'Напред'}`)} <ArrowRight className="h-3.5 w-3.5" />
                     </Button>
                   ) : (
                     <Button size="sm" onClick={handleSubmit} disabled={submitting} className="gap-1">
-                      {submitting ? t('Grading...', 'Оценяване...') : t('Submit Exam', 'Подай изпита')}
+                      {submitting ? t('Grading...', 'Оценяване...') : t('Submit for Grading', 'Изпрати за оценяване')}
                     </Button>
                   )}
                 </div>
