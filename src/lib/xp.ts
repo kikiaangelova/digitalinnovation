@@ -1,5 +1,5 @@
 import { supabase } from '@/integrations/supabase/client';
-import { showXpToast } from '@/lib/xp-toast';
+import { showXpToast, checkLevelUp } from '@/lib/xp-toast';
 export type XpAction =
   | 'case_open'
   | 'case_question_answer'
