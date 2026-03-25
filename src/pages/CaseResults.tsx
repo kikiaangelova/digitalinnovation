@@ -309,7 +309,7 @@ export default function CaseResults() {
                     </>
                   ) : (
                     <Badge variant="outline" className="text-muted-foreground font-sans">
-                      {tx('Pending', 'Очаква оценка')} · {r.points} pts
+                      {tx('Pending', 'Очаква оценка')} · {r.points} {tx('pts', 'т.')}
                     </Badge>
                   )}
                 </div>
