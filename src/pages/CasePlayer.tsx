@@ -688,7 +688,7 @@ export default function CasePlayer() {
                     : tl('Data & Evidence', 'Данни и доказателства')}
                 </h3>
                 {!hasExhibit && isAdmin && (
-                  <Badge variant="outline" className="text-[10px] ml-auto">{tl('Default template', 'Шаблон по подразбиране')}</Badge>
+                  <Badge variant="outline" className="text-xs ml-auto">{tl('Default template', 'Шаблон по подразбиране')}</Badge>
                 )}
               </div>
               <p className="text-xs text-muted-foreground mb-3">
