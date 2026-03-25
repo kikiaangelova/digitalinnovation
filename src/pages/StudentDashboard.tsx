@@ -207,6 +207,12 @@ export default function StudentDashboard() {
           startupSubmitted={startupProject?.is_submitted || false}
           simulatorComplete={simComplete}
           usedAIMentor={usedAIMentor}
+          casesAbove80Percent={casesAbove80Percent}
+          bmcSectionsCompleted={bmcSectionsCompleted}
+          finalPitchSubmitted={finalPitchSubmitted}
+          peerReviewsGiven={peerReviewsGiven}
+          industriesExplored={industriesExplored}
+          loginStreakDays={loginStreakDays}
         />
 
         {/* ═══ Peer Review ═══ */}
