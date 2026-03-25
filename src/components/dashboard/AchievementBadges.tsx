@@ -1,47 +1,105 @@
-import { Award, Search, Lightbulb, TrendingUp, Brain, Shield, Check } from 'lucide-react';
+import { Award, Search, Lightbulb, TrendingUp, Brain, Shield, Check, LayoutGrid, Mic, MessageSquare, RotateCcw, Briefcase, Calendar } from 'lucide-react';
+import { type LucideIcon } from 'lucide-react';
 
-const ALL_BADGES = [
+interface BadgeDef {
+  id: string;
+  icon: LucideIcon;
+  nameEn: string;
+  nameBg: string;
+  descEn: string;
+  descBg: string;
+  gradient: string;
+}
+
+const ALL_BADGES: BadgeDef[] = [
   { id: 'innovation_explorer', icon: Search, nameEn: 'Innovation Explorer', nameBg: 'Иновативен изследовател', descEn: 'Completed first case study', descBg: 'Завършен първи казус', gradient: 'gradient-explorer' },
   { id: 'case_solver', icon: Lightbulb, nameEn: 'Case Solver', nameBg: 'Решител на казуси', descEn: 'Completed 3 case studies', descBg: 'Завършени 3 казуса', gradient: 'gradient-strategist' },
+  { id: 'sharp_analyst', icon: TrendingUp, nameEn: 'Sharp Analyst', nameBg: 'Остър Анализатор', descEn: 'Scored above 80% on a case', descBg: 'Резултат над 80% на казус', gradient: 'gradient-explorer' },
   { id: 'startup_builder', icon: Shield, nameEn: 'Startup Builder', nameBg: 'Стартъп строител', descEn: 'Submitted startup idea', descBg: 'Подадена стартъп идея', gradient: 'gradient-builder' },
+  { id: 'full_canvas', icon: LayoutGrid, nameEn: 'Canvas Master', nameBg: 'Майстор на Канваса', descEn: 'Completed all 9 BMC sections', descBg: 'Завършени всички 9 секции на BMC', gradient: 'gradient-strategist' },
+  { id: 'pitch_master', icon: Mic, nameEn: 'Pitch Master', nameBg: 'Майстор на Представянето', descEn: 'Submitted final startup pitch', descBg: 'Подадено финално представяне', gradient: 'gradient-designer' },
   { id: 'growth_hacker', icon: TrendingUp, nameEn: 'Growth Hacker', nameBg: 'Growth Hacker', descEn: 'Completed simulator', descBg: 'Завършен симулатор', gradient: 'gradient-designer' },
+  { id: 'first_reviewer', icon: MessageSquare, nameEn: 'First Feedback', nameBg: 'Първа Рецензия', descEn: 'Completed a peer review', descBg: 'Завършена партньорска рецензия', gradient: 'gradient-builder' },
   { id: 'ai_innovator', icon: Brain, nameEn: 'AI Innovator', nameBg: 'AI Иноватор', descEn: 'Used AI mentor feedback', descBg: 'Използвана AI обратна връзка', gradient: 'gradient-founder' },
+  { id: 'comeback_kid', icon: RotateCcw, nameEn: 'Comeback', nameBg: 'Завръщането', descEn: 'Returned after 3 days away', descBg: 'Върна се след 3 дни отсъствие', gradient: 'gradient-explorer' },
+  { id: 'industry_expert', icon: Briefcase, nameEn: 'Industry Expert', nameBg: 'Индустриален Експерт', descEn: 'Completed cases in 3 different industries', descBg: 'Завършени казуси в 3 различни индустрии', gradient: 'gradient-strategist' },
+  { id: 'perfect_week', icon: Calendar, nameEn: 'Perfect Week', nameBg: 'Перфектна Седмица', descEn: 'Logged in 5 days in a row', descBg: 'Влизал 5 дни подред', gradient: 'gradient-founder' },
 ];
 
-interface AchievementBadgesProps {
+export interface AchievementBadgesProps {
   lang: 'en' | 'bg';
   casesCompleted: number;
   startupSubmitted: boolean;
   simulatorComplete: boolean;
   usedAIMentor: boolean;
+  casesAbove80Percent?: number;
+  bmcSectionsCompleted?: number;
+  finalPitchSubmitted?: boolean;
+  peerReviewsGiven?: number;
+  returnedAfterAbsence?: boolean;
+  industriesExplored?: number;
+  loginStreakDays?: number;
 }
 
-function getProgress(id: string, lang: 'en' | 'bg', casesCompleted: number, startupSubmitted: boolean, simulatorComplete: boolean, usedAIMentor: boolean): { label: string; current: number; max: number } | null {
+function getProgress(id: string, lang: 'en' | 'bg', props: AchievementBadgesProps): { label: string; current: number; max: number } | null {
+  const bg = lang === 'bg';
   switch (id) {
     case 'innovation_explorer':
-      return { label: lang === 'bg' ? `${casesCompleted} / 1 казус` : `${casesCompleted} / 1 case`, current: casesCompleted, max: 1 };
+      return { label: bg ? `${props.casesCompleted} / 1 казус` : `${props.casesCompleted} / 1 case`, current: props.casesCompleted, max: 1 };
     case 'case_solver':
-      return { label: lang === 'bg' ? `${Math.min(casesCompleted, 3)} / 3 завършени казуса` : `${Math.min(casesCompleted, 3)} / 3 cases completed`, current: Math.min(casesCompleted, 3), max: 3 };
+      return { label: bg ? `${Math.min(props.casesCompleted, 3)} / 3 завършени казуса` : `${Math.min(props.casesCompleted, 3)} / 3 cases completed`, current: Math.min(props.casesCompleted, 3), max: 3 };
+    case 'sharp_analyst': {
+      const v = props.casesAbove80Percent || 0;
+      return { label: bg ? `${v} / 1 казус над 80%` : `${v} / 1 case above 80%`, current: v, max: 1 };
+    }
     case 'startup_builder':
-      return { label: lang === 'bg' ? 'Стартъпът не е подаден още' : 'Startup not submitted yet', current: 0, max: 1 };
+      return { label: bg ? 'Стартъпът не е подаден още' : 'Startup not submitted yet', current: 0, max: 1 };
+    case 'full_canvas': {
+      const v = props.bmcSectionsCompleted || 0;
+      return { label: bg ? `${v} / 9 секции на BMC` : `${v} / 9 BMC sections`, current: v, max: 9 };
+    }
+    case 'pitch_master':
+      return { label: bg ? 'Представянето не е подадено' : 'Pitch not submitted yet', current: 0, max: 1 };
     case 'growth_hacker':
-      return { label: lang === 'bg' ? 'Симулаторът не е завършен' : 'Simulator not completed', current: 0, max: 1 };
+      return { label: bg ? 'Симулаторът не е завършен' : 'Simulator not completed', current: 0, max: 1 };
+    case 'first_reviewer': {
+      const v = props.peerReviewsGiven || 0;
+      return { label: bg ? `${v} / 1 рецензия` : `${v} / 1 review`, current: v, max: 1 };
+    }
     case 'ai_innovator':
-      return { label: lang === 'bg' ? 'AI менторът не е използван' : 'AI mentor not used yet', current: 0, max: 1 };
+      return { label: bg ? 'AI менторът не е използван' : 'AI mentor not used yet', current: 0, max: 1 };
+    case 'comeback_kid':
+      return { label: bg ? 'Няма дълго отсъствие' : 'No long absence yet', current: 0, max: 1 };
+    case 'industry_expert': {
+      const v = props.industriesExplored || 0;
+      return { label: bg ? `${Math.min(v, 3)} / 3 индустрии` : `${Math.min(v, 3)} / 3 industries`, current: Math.min(v, 3), max: 3 };
+    }
+    case 'perfect_week': {
+      const v = props.loginStreakDays || 0;
+      return { label: bg ? `${Math.min(v, 5)} / 5 дни подред` : `${Math.min(v, 5)} / 5 days in a row`, current: Math.min(v, 5), max: 5 };
+    }
     default:
       return null;
   }
 }
 
-export default function AchievementBadges({ lang, casesCompleted, startupSubmitted, simulatorComplete, usedAIMentor }: AchievementBadgesProps) {
+export default function AchievementBadges(props: AchievementBadgesProps) {
+  const { lang } = props;
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
 
   const earned = new Set<string>();
-  if (casesCompleted >= 1) earned.add('innovation_explorer');
-  if (casesCompleted >= 3) earned.add('case_solver');
-  if (startupSubmitted) earned.add('startup_builder');
-  if (simulatorComplete) earned.add('growth_hacker');
-  if (usedAIMentor) earned.add('ai_innovator');
+  if (props.casesCompleted >= 1) earned.add('innovation_explorer');
+  if (props.casesCompleted >= 3) earned.add('case_solver');
+  if ((props.casesAbove80Percent || 0) >= 1) earned.add('sharp_analyst');
+  if (props.startupSubmitted) earned.add('startup_builder');
+  if ((props.bmcSectionsCompleted || 0) >= 9) earned.add('full_canvas');
+  if (props.finalPitchSubmitted) earned.add('pitch_master');
+  if (props.simulatorComplete) earned.add('growth_hacker');
+  if ((props.peerReviewsGiven || 0) >= 1) earned.add('first_reviewer');
+  if (props.usedAIMentor) earned.add('ai_innovator');
+  if (props.returnedAfterAbsence) earned.add('comeback_kid');
+  if ((props.industriesExplored || 0) >= 3) earned.add('industry_expert');
+  if ((props.loginStreakDays || 0) >= 5) earned.add('perfect_week');
 
   return (
     <div className="rounded-xl border border-border bg-card p-5">
@@ -50,11 +108,11 @@ export default function AchievementBadges({ lang, casesCompleted, startupSubmitt
         <h2 className="text-lg font-display font-semibold text-foreground">{t('Achievement Badges', 'Постижения')}</h2>
         <span className="ml-auto text-xs text-muted-foreground">{earned.size} / {ALL_BADGES.length}</span>
       </div>
-      <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
         {ALL_BADGES.map(b => {
           const isEarned = earned.has(b.id);
           const Icon = b.icon;
-          const progress = !isEarned ? getProgress(b.id, lang, casesCompleted, startupSubmitted, simulatorComplete, usedAIMentor) : null;
+          const progress = !isEarned ? getProgress(b.id, lang, props) : null;
           const pct = progress ? (progress.current / progress.max) * 100 : 0;
 
           return (
