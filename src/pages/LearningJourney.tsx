@@ -56,7 +56,7 @@ const STAGE_OUTCOMES: StageOutcomes[] = [
       'What makes a digital business model defensible',
     ],
     knowBg: [
-      'Как да картографирате конкурентната среда',
+      'Как да картографираш конкурентната среда',
       'Какво прави дигиталния бизнес модел защитим',
     ],
     doEn: [
