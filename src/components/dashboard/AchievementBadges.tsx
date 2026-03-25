@@ -43,6 +43,10 @@ export interface AchievementBadgesProps {
   returnedAfterAbsence?: boolean;
   industriesExplored?: number;
   loginStreakDays?: number;
+  // Test badges
+  quizTestsCompleted?: number;
+  quizCategoriesTested?: number;
+  quizConsecutiveImprovements?: number;
 }
 
 function getProgress(id: string, lang: 'en' | 'bg', props: AchievementBadgesProps): { label: string; current: number; max: number } | null {
