@@ -12,7 +12,7 @@ import LearningOutcomes, { calcOutcomeScores } from '@/components/dashboard/Lear
 import Leaderboard from '@/components/dashboard/Leaderboard';
 import WelcomeOnboarding from '@/components/onboarding/WelcomeOnboarding';
 import { Button } from '@/components/ui/button';
-import { Zap, BookOpen, Rocket, BarChart3, FileText, Users, Star, Award } from 'lucide-react';
+import { Zap, BookOpen, Rocket, BarChart3, FileText, Users, Star, Award, ArrowRight } from 'lucide-react';
 import DailyChallenge from '@/components/dashboard/DailyChallenge';
 
 interface CaseRow { id: string; title: string; difficulty: string; est_minutes: number | null; topic?: string | null; }
@@ -65,7 +65,6 @@ export default function StudentDashboard() {
         if (profileData && !profileData.onboarding_completed && (profileData.total_xp || 0) === 0) {
           setShowOnboarding(true);
         }
-        // Login streak from xp_ledger
         const { data: ledgerDates } = await supabase.from('xp_ledger').select('created_at').eq('user_id', user.id).order('created_at', { ascending: false }).limit(100);
         if (ledgerDates && ledgerDates.length > 0) {
           const uniqueDays = [...new Set(ledgerDates.map(r => r.created_at.slice(0, 10)))].sort().reverse();
@@ -101,13 +100,11 @@ export default function StudentDashboard() {
   const bmcSectionsCompleted = startupProject ? bmcFields.filter(f => ((startupProject as any)[f] || '').trim().length > 10).length : 0;
   const finalPitchSubmitted = startupProject ? ((startupProject as any).final_pitch || '').trim().length > 20 : false;
 
-  // Industries explored: count distinct topics from completed cases
   const completedCaseIds = new Set(completedSubs.map(s => s.case_study_id));
   const industriesExplored = new Set(cases.filter(c => completedCaseIds.has(c.id) && c.topic).map(c => c.topic)).size;
 
   const xp = totalXp;
 
-  // Learning outcomes
   const outcomeScores = calcOutcomeScores({
     casesCompleted,
     casesTotal: cases.length,
@@ -141,13 +138,25 @@ export default function StudentDashboard() {
     setTotalXp(20);
   };
 
+  // Determine next action for the student
+  const getNextAction = () => {
+    if (casesCompleted === 0) return { label: t('Start your first case study', 'Започни първия си казус'), path: '/cases', icon: BookOpen };
+    const startupFilled = Object.values(startupSectionMap).filter(Boolean).length;
+    if (startupFilled < 3) return { label: t('Build your startup idea', 'Изгради стартъп идеята си'), path: '/my-startup', icon: Rocket };
+    if (!simComplete && simWeek <= 3) return { label: t('Test your strategy in the simulator', 'Тествай стратегията в симулатора'), path: '/simulator', icon: BarChart3 };
+    if (!finalPitchSubmitted) return { label: t('Submit your final pitch', 'Подай финалното си представяне'), path: '/my-startup', icon: Rocket };
+    return { label: t('Take the final exam', 'Започни финалния изпит'), path: '/final-exam', icon: Award };
+  };
+
+  const nextAction = getNextAction();
+
   return (
     <div className="min-h-screen bg-background">
       <AppHeader />
       {showOnboarding && <WelcomeOnboarding onComplete={handleOnboardingComplete} />}
-      <main className="container mx-auto px-4 py-8 space-y-6 max-w-6xl">
-        {/* Header */}
-        <div className="flex items-center justify-between">
+      <main className="container mx-auto px-4 py-8 space-y-8 max-w-6xl">
+        {/* ═══ Header + Next Action ═══ */}
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 className="typo-h1">
               {t('Your Innovation Dashboard', 'Твоето иновационно табло')}
@@ -156,12 +165,22 @@ export default function StudentDashboard() {
               {t('Track your progress, earn XP, and build your startup', 'Проследи напредъка си, спечели XP и изгради своя стартъп')}
             </p>
           </div>
-          <Button variant="outline" size="sm" className="print:hidden" onClick={() => navigate('/my-report')}>
-            <FileText className="h-4 w-4 mr-1" /> {t('My Report', 'Моят доклад')}
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              className="sim-gradient border-0 gap-2"
+              onClick={() => navigate(nextAction.path)}
+            >
+              <nextAction.icon className="h-4 w-4" />
+              {nextAction.label}
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+            <Button variant="outline" size="sm" className="print:hidden" onClick={() => navigate('/my-report')}>
+              <FileText className="h-4 w-4 mr-1" /> {t('Report', 'Доклад')}
+            </Button>
+          </div>
         </div>
 
-        {/* ═══ PRIMARY: Journey Progress + XP ═══ */}
+        {/* ═══ SECTION 1: Progress & XP ═══ */}
         <div className="grid gap-4 md:grid-cols-3">
           <div className="md:col-span-2">
             <JourneyProgress
@@ -175,88 +194,106 @@ export default function StudentDashboard() {
           </div>
           <div className="space-y-4">
             <LevelCard xp={xp} lang={lang} />
-            <div className="rounded-xl border border-border bg-card p-5">
-              <h3 className="typo-card-title mb-3 flex items-center gap-2">
-                <Zap className="h-4 w-4 text-xp-gold" />
-                {t('Earn XP', 'Спечели XP')}
-              </h3>
-              <div className="space-y-2">
-                {xpActions.map((a, i) => (
-                  <div key={i} className="flex items-center justify-between py-1.5">
-                    <div className="flex items-center gap-2 typo-body">
-                      <a.icon className="h-3.5 w-3.5 text-muted-foreground" />
-                      <span className="text-[13px]">{a.action}</span>
-                    </div>
-                    <span className="text-[13px] typo-xp">{a.xp}</span>
+            <DailyChallenge lang={lang} userId={user?.id} />
+          </div>
+        </div>
+
+        {/* ═══ SECTION 2: Learning & Competition ═══ */}
+        <div>
+          <h2 className="typo-h2 mb-4 flex items-center gap-2">
+            <BarChart3 className="h-5 w-5 text-primary" />
+            {t('Your Learning & Ranking', 'Твоят напредък и класиране')}
+          </h2>
+          <div className="grid gap-4 md:grid-cols-2">
+            <LearningOutcomes lang={lang} scores={outcomeScores} />
+            <Leaderboard lang={lang} currentUserId={user?.id} limit={5} />
+          </div>
+        </div>
+
+        {/* ═══ SECTION 3: Achievements & Social ═══ */}
+        <div>
+          <h2 className="typo-h2 mb-4 flex items-center gap-2">
+            <Star className="h-5 w-5 text-xp-gold" />
+            {t('Achievements & Community', 'Постижения и общност')}
+          </h2>
+
+          <div className="space-y-4">
+            <AchievementBadges
+              lang={lang}
+              casesCompleted={casesCompleted}
+              startupSubmitted={startupProject?.is_submitted || false}
+              simulatorComplete={simComplete}
+              usedAIMentor={usedAIMentor}
+              casesAbove80Percent={casesAbove80Percent}
+              bmcSectionsCompleted={bmcSectionsCompleted}
+              finalPitchSubmitted={finalPitchSubmitted}
+              peerReviewsGiven={peerReviewsGiven}
+              industriesExplored={industriesExplored}
+              loginStreakDays={loginStreakDays}
+            />
+
+            {/* Peer Review + XP Actions — side by side */}
+            <div className="grid gap-4 md:grid-cols-2">
+              {/* Peer Review */}
+              <div className="dash-section">
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="typo-card-title flex items-center gap-2">
+                    <Users className="h-4 w-4 text-primary" />
+                    {t('Peer Review', 'Партньорска рецензия')}
+                  </h3>
+                  <Button variant="outline" size="sm" onClick={() => navigate('/peer-review')}>
+                    {t('Open', 'Отвори')}
+                  </Button>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="rounded-xl bg-accent/50 p-3 text-center">
+                    {pendingReviews > 0 ? (
+                      <>
+                        <p className="text-xl font-bold text-foreground">{pendingReviews}</p>
+                        <p className="text-xs text-muted-foreground">{t('Pending Reviews', 'Чакащи рецензии')}</p>
+                      </>
+                    ) : (
+                      <p className="text-xs text-muted-foreground leading-relaxed py-1">
+                        {t(
+                          "No reviews yet — submit a case first",
+                          'Все още няма — подай казус първо'
+                        )}
+                      </p>
+                    )}
                   </div>
-                ))}
+                  <div className="rounded-xl bg-accent/50 p-3 text-center">
+                    <p className="text-xl font-bold text-primary flex items-center justify-center gap-1">
+                      {avgPeerScore !== null ? <><Star className="h-4 w-4" /> {avgPeerScore.toFixed(1)}/4</> : '—'}
+                    </p>
+                    <p className="text-xs text-muted-foreground">{t('Your Avg Score', 'Средна оценка')}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* XP Actions */}
+              <div className="dash-section">
+                <h3 className="typo-card-title mb-3 flex items-center gap-2">
+                  <Zap className="h-4 w-4 text-xp-gold" />
+                  {t('Earn XP', 'Спечели XP')}
+                </h3>
+                <div className="space-y-1.5">
+                  {xpActions.map((a, i) => (
+                    <div key={i} className="flex items-center justify-between py-1">
+                      <div className="flex items-center gap-2">
+                        <a.icon className="h-3.5 w-3.5 text-muted-foreground" />
+                        <span className="text-xs text-foreground">{a.action}</span>
+                      </div>
+                      <span className="text-xs typo-xp">{a.xp}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* ═══ Daily Challenge ═══ */}
-        <DailyChallenge lang={lang} userId={user?.id} />
-
-        {/* ═══ Learning Outcomes + Leaderboard ═══ */}
-        <div className="grid gap-4 md:grid-cols-2">
-          <LearningOutcomes lang={lang} scores={outcomeScores} />
-          <Leaderboard lang={lang} currentUserId={user?.id} limit={5} />
-        </div>
-
-        {/* ═══ Badges ═══ */}
-        <AchievementBadges
-          lang={lang}
-          casesCompleted={casesCompleted}
-          startupSubmitted={startupProject?.is_submitted || false}
-          simulatorComplete={simComplete}
-          usedAIMentor={usedAIMentor}
-          casesAbove80Percent={casesAbove80Percent}
-          bmcSectionsCompleted={bmcSectionsCompleted}
-          finalPitchSubmitted={finalPitchSubmitted}
-          peerReviewsGiven={peerReviewsGiven}
-          industriesExplored={industriesExplored}
-          loginStreakDays={loginStreakDays}
-        />
-
-        {/* ═══ Peer Review ═══ */}
-        <div className="rounded-xl border border-border bg-card p-5">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="typo-card-title flex items-center gap-2">
-              <Users className="h-4 w-4 text-primary" />
-              {t('Peer Review', 'Партньорска рецензия')}
-            </h3>
-            <Button variant="outline" size="sm" onClick={() => navigate('/peer-review')}>
-              {t('Open', 'Отвори')}
-            </Button>
-          </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div className="rounded-lg bg-accent/50 p-3 text-center">
-              {pendingReviews > 0 ? (
-                <>
-                  <p className="text-xl font-bold text-foreground">{pendingReviews}</p>
-                  <p className="text-xs text-muted-foreground">{t('Pending Reviews', 'Чакащи рецензии')}</p>
-                </>
-              ) : (
-                <p className="text-xs text-muted-foreground leading-relaxed py-1">
-                  {t(
-                    "No reviews yet — you'll receive feedback after submitting your first case",
-                    'Все още няма рецензии — ще получиш обратна връзка, след като подадеш първия си казус'
-                  )}
-                </p>
-              )}
-            </div>
-            <div className="rounded-lg bg-accent/50 p-3 text-center">
-              <p className="text-xl font-bold text-primary flex items-center justify-center gap-1">
-                {avgPeerScore !== null ? <><Star className="h-4 w-4" /> {avgPeerScore.toFixed(1)}/4</> : '—'}
-              </p>
-              <p className="text-xs text-muted-foreground">{t('Your Avg Score', 'Вашата средна оценка')}</p>
-            </div>
-          </div>
-        </div>
-
-        {/* ═══ Final Exam ═══ */}
-        <div className="rounded-xl border border-primary/30 bg-primary/5 p-5">
+        {/* ═══ SECTION 4: Final Exam ═══ */}
+        <div className="dash-section-accent">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
