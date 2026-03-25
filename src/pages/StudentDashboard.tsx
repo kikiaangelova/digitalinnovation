@@ -78,6 +78,24 @@ export default function StudentDashboard() {
           }
           setLoginStreakDays(streak);
         }
+        // Quiz stats for badges
+        const { data: quizData } = await supabase
+          .from('quiz_results')
+          .select('score, category, created_at')
+          .eq('user_id', user.id)
+          .eq('quiz_type', 'dictionary')
+          .order('created_at', { ascending: true });
+        if (quizData && quizData.length > 0) {
+          setQuizTestsCompleted(quizData.length);
+          setQuizCategoriesTested(new Set(quizData.map(r => r.category).filter(Boolean)).size);
+          // Count consecutive improvements
+          let consec = 0, maxConsec = 0;
+          for (let i = 1; i < quizData.length; i++) {
+            if (quizData[i].score > quizData[i - 1].score) { consec++; maxConsec = Math.max(maxConsec, consec); }
+            else consec = 0;
+          }
+          setQuizConsecutiveImprovements(maxConsec);
+        }
       } catch (err) {
         console.error('Dashboard fetch error:', err);
       } finally {
