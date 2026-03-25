@@ -231,7 +231,7 @@ export default function CaseLibrary() {
                 >
                   {count === 0 && (
                     <div className="absolute top-3 right-3">
-                      <Badge variant="secondary" className="text-[10px] bg-muted text-muted-foreground">
+                      <Badge variant="secondary" className="text-xs bg-muted text-muted-foreground">
                         {tl('Coming Soon', 'Очаквайте скоро')}
                       </Badge>
                     </div>
@@ -254,7 +254,7 @@ export default function CaseLibrary() {
                   </p>
                   <div className="flex flex-wrap gap-1">
                     {(lang === 'bg' ? domain.trendsBg : domain.trendsEn).slice(0, 2).map(tr => (
-                      <Badge key={tr} variant="secondary" className="text-[10px] px-1.5 py-0">{tr}</Badge>
+                      <Badge key={tr} variant="secondary" className="text-xs px-1.5 py-0">{tr}</Badge>
                     ))}
                   </div>
                 </button>

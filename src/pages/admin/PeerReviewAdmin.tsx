@@ -219,7 +219,7 @@ export default function PeerReviewAdmin() {
                   ].map((c, i) => (
                     <div key={i}>
                       <p className="text-sm font-bold text-foreground">{c.val}</p>
-                      <p className="text-[10px] text-muted-foreground">{c.label}</p>
+                      <p className="text-xs text-muted-foreground">{c.label}</p>
                     </div>
                   ))}
                 </div>

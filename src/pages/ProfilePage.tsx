@@ -178,13 +178,13 @@ export default function ProfilePage() {
           <h3 className="font-display font-semibold text-foreground">{t.editProfile}</h3>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <Label>{t.fullName} <span className="text-[10px] text-muted-foreground">({lang === 'bg' ? 'видимо само за теб и учителя' : 'visible only to you and the teacher'})</span></Label>
+              <Label>{t.fullName} <span className="text-xs text-muted-foreground">({lang === 'bg' ? 'видимо само за теб и учителя' : 'visible only to you and the teacher'})</span></Label>
               <Input value={fullName} onChange={e => setFullName(e.target.value)} />
             </div>
             <div>
               <Label>{lang === 'bg' ? 'Псевдоним (за класацията)' : 'Display Name (for leaderboard)'}</Label>
               <Input value={displayName} onChange={e => setDisplayName(e.target.value)} placeholder={lang === 'bg' ? 'напр. ИноваторБГ' : 'e.g. CoolInnovator'} />
-              <p className="text-[10px] text-muted-foreground mt-1">{lang === 'bg' ? 'Това име се показва публично в класацията' : 'This name is shown publicly on the leaderboard'}</p>
+              <p className="text-xs text-muted-foreground mt-1">{lang === 'bg' ? 'Това име се показва публично в класацията' : 'This name is shown publicly on the leaderboard'}</p>
             </div>
             <div>
               <Label>{lang === 'bg' ? 'Училище / Университет' : 'School / University'} <span className="text-xs text-muted-foreground">({lang === 'bg' ? 'по избор' : 'optional'})</span></Label>

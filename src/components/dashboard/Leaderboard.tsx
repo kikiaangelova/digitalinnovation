@@ -95,7 +95,7 @@ export default function Leaderboard({ lang, currentUserId, limit = 10, showTitle
         </button>
       </div>
 
-      <p className="text-[10px] text-muted-foreground mb-3 italic">
+      <p className="text-xs text-muted-foreground mb-3 italic">
         {t('The leaderboard shows display names only to protect privacy', 'Класацията показва само псевдоними за защита на личните данни')}
       </p>
 

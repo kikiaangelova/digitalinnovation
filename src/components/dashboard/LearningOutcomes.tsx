@@ -95,11 +95,11 @@ export default function LearningOutcomes({ lang, scores, compact }: LearningOutc
               <div className="flex items-center justify-between mb-1">
                 <div className="flex items-center gap-2">
                   <Icon className="h-3.5 w-3.5 text-muted-foreground" />
-                  <span className={`${compact ? 'text-[11px]' : 'text-xs'} font-medium text-foreground`}>
+                  <span className={`${compact ? 'text-xs' : 'text-xs'} font-medium text-foreground`}>
                     {lang === 'bg' ? lo.bg : lo.en}
                   </span>
                 </div>
-                <span className={`${compact ? 'text-[10px]' : 'text-xs'} font-bold ${score >= 70 ? 'text-sim-success' : score >= 40 ? 'text-sim-warning' : 'text-muted-foreground'}`}>
+                <span className={`${compact ? 'text-xs' : 'text-xs'} font-bold ${score >= 70 ? 'text-sim-success' : score >= 40 ? 'text-sim-warning' : 'text-muted-foreground'}`}>
                   {score}%
                 </span>
               </div>

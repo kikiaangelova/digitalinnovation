@@ -151,7 +151,7 @@ export default function LearningReport() {
                 <div key={i} className="rounded-lg bg-accent/50 p-3 text-center">
                   <s.icon className="h-4 w-4 text-primary mx-auto mb-1" />
                   <p className="text-lg font-bold text-foreground">{s.value}</p>
-                  <p className="text-[11px] text-muted-foreground">{s.label}</p>
+                  <p className="text-xs text-muted-foreground">{s.label}</p>
                 </div>
               ))}
             </div>
@@ -202,7 +202,7 @@ export default function LearningReport() {
                   {strengths.map(s => (
                     <div key={s.id} className="flex items-center justify-between">
                       <span className="text-xs text-foreground">{lang === 'bg' ? s.bg : s.en}</span>
-                      <Badge variant="outline" className="text-[10px] text-sim-success">{s.score}%</Badge>
+                      <Badge variant="outline" className="text-xs text-sim-success">{s.score}%</Badge>
                     </div>
                   ))}
                 </div>
@@ -220,7 +220,7 @@ export default function LearningReport() {
                   {weaknesses.map(s => (
                     <div key={s.id} className="flex items-center justify-between">
                       <span className="text-xs text-foreground">{lang === 'bg' ? s.bg : s.en}</span>
-                      <Badge variant="outline" className="text-[10px] text-destructive">{s.score}%</Badge>
+                      <Badge variant="outline" className="text-xs text-destructive">{s.score}%</Badge>
                     </div>
                   ))}
                 </div>
