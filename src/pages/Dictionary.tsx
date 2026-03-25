@@ -1,13 +1,15 @@
-import { useState, useMemo, useCallback, useRef } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import AppHeader from '@/components/layout/AppHeader';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Search, Book, Lightbulb, ChevronDown, ChevronUp, Star, HelpCircle, CheckCircle2, XCircle, Shuffle } from 'lucide-react';
+import { Search, Book, Lightbulb, ChevronDown, ChevronUp, Star, Trophy, BarChart3 } from 'lucide-react';
 import { useLang } from '@/context/LangContext';
 import { useAuth } from '@/context/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 import { TERMS, type DictionaryTerm } from '@/data/dictionary-terms';
 import { awardXp } from '@/lib/xp';
+import QuickTest from '@/components/dictionary/QuickTest';
 
 const CATEGORY_COLORS: Record<string, string> = {
   Innovation: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20',
@@ -57,23 +59,6 @@ function getTermOfTheWeek(): DictionaryTerm {
   return TERMS[weekNum % TERMS.length];
 }
 
-// Generate a quiz question from a random term (language-aware)
-function generateQuiz(lang: string, exclude?: string): { term: DictionaryTerm; options: string[]; correctIndex: number } {
-  const isBg = lang === 'bg';
-  const pool = TERMS.filter(t => t.term !== exclude);
-  const term = pool[Math.floor(Math.random() * pool.length)];
-  const wrongPool = TERMS.filter(t => t.term !== term.term);
-  const wrongs: string[] = [];
-  while (wrongs.length < 3 && wrongPool.length > 0) {
-    const idx = Math.floor(Math.random() * wrongPool.length);
-    wrongs.push(isBg ? wrongPool[idx].definitionBg : wrongPool[idx].definition);
-    wrongPool.splice(idx, 1);
-  }
-  const correctIndex = Math.floor(Math.random() * 4);
-  const options = [...wrongs];
-  options.splice(correctIndex, 0, isBg ? term.definitionBg : term.definition);
-  return { term, options, correctIndex };
-}
 
 export default function Dictionary() {
   const { lang } = useLang();
@@ -81,13 +66,28 @@ export default function Dictionary() {
   const [search, setSearch] = useState('');
   const [catFilter, setCatFilter] = useState('all');
   const [letterFilter, setLetterFilter] = useState('');
-  const [showQuiz, setShowQuiz] = useState(false);
-  const [quiz, setQuiz] = useState(() => generateQuiz('en'));
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const viewedTermsRef = useRef<Set<string>>(new Set());
+  const [quizStats, setQuizStats] = useState<{ count: number; avg: number; last: number | null } | null>(null);
 
   const termOfTheWeek = useMemo(() => getTermOfTheWeek(), []);
   const categories = useMemo(() => [...new Set(TERMS.map(t => t.category))].sort(), []);
+
+  // Load quiz stats
+  useEffect(() => {
+    if (!user) return;
+    (async () => {
+      const { data } = await supabase
+        .from('quiz_results')
+        .select('score, created_at')
+        .eq('user_id', user.id)
+        .eq('quiz_type', 'dictionary')
+        .order('created_at', { ascending: false });
+      if (data && data.length > 0) {
+        const avg = Math.round(data.reduce((s, r) => s + r.score, 0) / data.length);
+        setQuizStats({ count: data.length, avg, last: data[0].score });
+      }
+    })();
+  }, [user]);
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase();
@@ -105,19 +105,6 @@ export default function Dictionary() {
   }, []);
 
   const catColor = (c: string) => CATEGORY_COLORS[c] || 'bg-muted text-muted-foreground';
-
-  const nextQuiz = useCallback(() => {
-    setQuiz(generateQuiz(lang, quiz.term.term));
-    setSelectedAnswer(null);
-  }, [quiz.term.term, lang]);
-
-  // Regenerate quiz when language changes
-  const [prevLang, setPrevLang] = useState(lang);
-  if (lang !== prevLang) {
-    setPrevLang(lang);
-    setQuiz(generateQuiz(lang));
-    setSelectedAnswer(null);
-  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -138,7 +125,34 @@ export default function Dictionary() {
             : `${TERMS.length} key terms for digital innovation, startups, and business strategy.`}
         </p>
 
-        {/* Term of the Week + Quick Quiz cards */}
+        {/* Quiz Stats */}
+        {quizStats && (
+          <div className="grid grid-cols-3 gap-3 mb-4">
+            <div className="rounded-lg border border-border bg-card p-3 text-center">
+              <Trophy className="h-4 w-4 text-primary mx-auto mb-1" />
+              <p className="text-lg font-bold text-foreground">{quizStats.count}</p>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
+                {lang === 'bg' ? 'Тестове' : 'Tests'}
+              </p>
+            </div>
+            <div className="rounded-lg border border-border bg-card p-3 text-center">
+              <BarChart3 className="h-4 w-4 text-primary mx-auto mb-1" />
+              <p className="text-lg font-bold text-foreground">{quizStats.avg}%</p>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
+                {lang === 'bg' ? 'Среден резултат' : 'Avg Score'}
+              </p>
+            </div>
+            <div className="rounded-lg border border-border bg-card p-3 text-center">
+              <Star className="h-4 w-4 text-primary mx-auto mb-1" />
+              <p className="text-lg font-bold text-foreground">{quizStats.last}%</p>
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider">
+                {lang === 'bg' ? 'Последен' : 'Last Test'}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Term of the Week + Quick Test */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
           {/* Term of the Week */}
           <div className="rounded-lg border-2 border-primary/20 bg-accent/30 p-5">
@@ -163,78 +177,8 @@ export default function Dictionary() {
             )}
           </div>
 
-          {/* Quick Quiz */}
-          <div className="rounded-lg border-2 border-primary/20 bg-accent/30 p-5">
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <HelpCircle className="h-4 w-4 text-primary" />
-                <span className="text-xs font-bold text-primary uppercase tracking-wider">
-                  {lang === 'bg' ? 'Бърз тест' : 'Quick Quiz'}
-                </span>
-              </div>
-              <Button variant="ghost" size="sm" onClick={nextQuiz} className="h-7 px-2">
-                <Shuffle className="h-3.5 w-3.5" />
-              </Button>
-            </div>
-            {!showQuiz ? (
-              <div className="text-center py-4">
-                <p className="text-sm text-muted-foreground mb-3">
-                  {lang === 'bg' ? 'Тествайте знанията си за дигитални иновации!' : 'Test your digital innovation knowledge!'}
-                </p>
-                <Button size="sm" onClick={() => setShowQuiz(true)}>
-                  {lang === 'bg' ? 'Започнете' : 'Start Quiz'}
-                </Button>
-              </div>
-            ) : (
-              <div>
-                <p className="text-sm font-semibold text-foreground mb-3">
-                  {lang === 'bg' ? 'Какво е' : 'What is'} <span className="text-primary">{lang === 'bg' ? quiz.term.termBg : quiz.term.term}</span>?
-                </p>
-                <div className="space-y-2">
-                  {quiz.options.map((opt, i) => {
-                    const isCorrect = i === quiz.correctIndex;
-                    const isSelected = selectedAnswer === i;
-                    const showResult = selectedAnswer !== null;
-                    let borderClass = 'border-border';
-                    if (showResult && isCorrect) borderClass = 'border-emerald-500 bg-emerald-500/5';
-                    else if (showResult && isSelected && !isCorrect) borderClass = 'border-destructive bg-destructive/5';
-
-                    return (
-                      <button
-                        key={i}
-                        onClick={() => {
-                          if (selectedAnswer !== null) return;
-                          setSelectedAnswer(i);
-                          // Award XP for correct quiz answer
-                          if (i === quiz.correctIndex && user) {
-                            awardXp('dict_quiz_correct', quiz.term.term);
-                          }
-                        }}
-                        disabled={selectedAnswer !== null}
-                        className={`w-full text-left rounded-md border p-2.5 text-xs leading-relaxed transition-all ${borderClass} ${
-                          selectedAnswer === null ? 'hover:border-primary/40 cursor-pointer' : ''
-                        }`}
-                      >
-                        <div className="flex items-start gap-2">
-                          <span className="shrink-0 mt-0.5">
-                            {showResult && isCorrect && <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500" />}
-                            {showResult && isSelected && !isCorrect && <XCircle className="h-3.5 w-3.5 text-destructive" />}
-                            {!showResult && <span className="inline-block w-3.5 h-3.5 rounded-full border border-border" />}
-                          </span>
-                          <span className="text-foreground/80 line-clamp-2">{opt}</span>
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-                {selectedAnswer !== null && (
-                  <Button size="sm" variant="outline" onClick={nextQuiz} className="mt-3 w-full">
-                    {lang === 'bg' ? 'Следващ въпрос' : 'Next Question'} →
-                  </Button>
-                )}
-              </div>
-            )}
-          </div>
+          {/* Quick Test */}
+          <QuickTest />
         </div>
 
         {/* Search */}

@@ -1022,6 +1022,45 @@ export type Database = {
           },
         ]
       }
+      quiz_results: {
+        Row: {
+          category: string | null
+          correct_count: number
+          created_at: string
+          id: string
+          max_score: number
+          questions_count: number
+          quiz_type: string
+          score: number
+          user_id: string
+          xp_earned: number
+        }
+        Insert: {
+          category?: string | null
+          correct_count?: number
+          created_at?: string
+          id?: string
+          max_score?: number
+          questions_count?: number
+          quiz_type?: string
+          score?: number
+          user_id: string
+          xp_earned?: number
+        }
+        Update: {
+          category?: string | null
+          correct_count?: number
+          created_at?: string
+          id?: string
+          max_score?: number
+          questions_count?: number
+          quiz_type?: string
+          score?: number
+          user_id?: string
+          xp_earned?: number
+        }
+        Relationships: []
+      }
       responses: {
         Row: {
           answer: Json | null
