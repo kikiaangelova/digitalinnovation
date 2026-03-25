@@ -308,7 +308,7 @@ export default function LearningModulePlayer() {
                   <p className="text-xs text-muted-foreground">{Math.round((quizScore / quizMax) * 100)}%</p>
                 </div>
                 <Button onClick={() => setPhase('analytical')}>
-                  {t('Continue', 'Продължи')} <ChevronRight className="h-4 w-4 ml-1" />
+                  {t('Continue to Analysis', 'Продължи към анализа')} <ChevronRight className="h-4 w-4 ml-1" />
                 </Button>
               </div>
             )}
