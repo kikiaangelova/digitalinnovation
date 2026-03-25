@@ -479,7 +479,7 @@ export default function LearningJourney() {
                       <div>
                         <h4 className="flex items-center gap-1.5 text-xs font-semibold text-foreground mb-1.5">
                           <Target className="h-3.5 w-3.5 text-success" />
-                          {t('What you will BE ABLE TO DO', 'Какво ще МОЖЕТЕ да правите')}
+                          {t('What you will BE ABLE TO DO', 'Какво ще МОЖЕШ да правиш')}
                         </h4>
                         <ul className="space-y-1 pl-5">
                           {(lang === 'bg' ? outcomes.doBg : outcomes.doEn).map((item, i) => (
