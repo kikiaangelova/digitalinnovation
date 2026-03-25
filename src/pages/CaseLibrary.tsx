@@ -110,7 +110,7 @@ export default function CaseLibrary() {
               <Icon className="h-7 w-7" style={{ color: selectedDomain.color }} />
             </div>
             <div>
-              <h1 className="text-2xl font-display font-bold text-foreground">
+              <h1 className="typo-h1">
                 {lang === 'bg' ? selectedDomain.nameBg : selectedDomain.nameEn}
               </h1>
               <p className="text-sm text-muted-foreground mt-1">
