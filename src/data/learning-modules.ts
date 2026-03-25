@@ -292,6 +292,7 @@ Key metrics to track: **CAC** (cost to acquire), **LTV** (lifetime value), **con
     title_en: 'Pricing & Revenue Models',
     title_bg: 'Ценообразуване и приходни модели',
     level: 2,
+    startup_field: 'business_model',
     theory_en: `Pricing is one of the most powerful levers for startup success — and one of the most neglected. A 1% improvement in pricing can boost profits by 11%, more than any other business lever.
 
 **Cost-based pricing** sets prices by adding a margin to costs. It's simple but ignores what customers are willing to pay. **Value-based pricing** sets prices based on perceived customer value — this is the gold standard for startups because it captures more of the value you create.
