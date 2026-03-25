@@ -161,8 +161,14 @@ export default function AuthPage() {
         setLoading(false);
         return;
       }
-      const displayName = `${trimmedName} ${trimmedLastName}`;
-      const { error } = await signUp(trimmedEmail, password, displayName);
+      const trimmedDisplayName = displayName.trim();
+      if (!trimmedDisplayName || trimmedDisplayName.length < 2) {
+        toast.error(tx('Display name must be at least 2 characters', 'Псевдонимът трябва да бъде поне 2 символа'));
+        setLoading(false);
+        return;
+      }
+      const fullDisplayName = `${trimmedName} ${trimmedLastName}`;
+      const { error } = await signUp(trimmedEmail, password, fullDisplayName, trimmedDisplayName);
       if (error) {
         toast.error(error.message);
       } else {
