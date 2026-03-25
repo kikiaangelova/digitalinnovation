@@ -104,7 +104,10 @@ export default function FinalExam() {
               {t('Final Exam', 'Финален изпит')}
             </h1>
             <p className="typo-helper mt-1">
-              {t('Certificate in Digital Innovation & Startup Thinking', 'Сертификат по дигитални иновации и предприемаческо мислене')}
+              {t(
+                'Demonstrate your skills across 4 sections. Score 70+ to earn your certificate.',
+                'Демонстрирай уменията си в 4 секции. Вземи 70+ точки, за да получиш сертификат.'
+              )}
             </p>
           </div>
           {result?.passed && (
