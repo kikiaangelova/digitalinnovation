@@ -659,6 +659,28 @@ const translations = {
     noData: 'Няма налични данни',
     topInnovators: 'Топ иноватори',
 
+    // Onboarding
+    welcomeTitle: 'Добре дошъл в DigiInnov! 🎉',
+    welcomeSubtitle: 'Изпълни 3 бързи стъпки, за да спечелиш първите си 20 XP',
+    onboardingStep1Title: 'Попълни профила си',
+    onboardingStep1Desc: 'Кажи ни в кой клас и училище си, за да персонализираме изживяването ти.',
+    onboardingStep1Class: 'Клас',
+    onboardingStep1School: 'Училище / Институция',
+    onboardingStep1ClassPlaceholder: 'напр. 11А',
+    onboardingStep1SchoolPlaceholder: 'напр. СМГ',
+    onboardingStep1Btn: 'Запази и продължи',
+    onboardingStep2Title: 'Научи първия си термин',
+    onboardingStep2Desc: 'Ето един ключов концепт от дигиталните иновации:',
+    onboardingStep2Btn: 'Разбрах!',
+    onboardingStep3Title: 'Започни пътешествието си',
+    onboardingStep3Desc: 'Етап 1: Основи на дигиталните иновации. Ще научиш какво прави дигиталните продукти успешни, ще разбереш бизнес моделите и ще откриеш как стартъпите решават реални проблеми.',
+    onboardingStep3Btn: 'Да започнем!',
+    onboardingXpEarned: 'XP спечелени!',
+    onboardingComplete: 'Готов си! 🚀',
+    onboardingCompleteDesc: 'Спечели 20 XP. Да започнем иновационното ти пътешествие!',
+    onboardingGoToDashboard: 'Към таблото',
+    stepOf: 'Стъпка {current} от {total}',
+
     // Simulator student landing
     yourSimulations: 'Вашите симулации',
     yourSimulationsDesc: 'Управлявайте виртуален стартъп и вземайте стратегически решения, които оформят бъдещето на компанията ви.',
