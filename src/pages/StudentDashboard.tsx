@@ -186,7 +186,7 @@ export default function StudentDashboard() {
                       <a.icon className="h-3.5 w-3.5 text-muted-foreground" />
                       <span className="text-xs">{a.action}</span>
                     </div>
-                    <span className="text-xs font-bold text-sim-warning">{a.xp}</span>
+                    <span className="text-xs font-bold text-xp-gold">{a.xp}</span>
                   </div>
                 ))}
               </div>
