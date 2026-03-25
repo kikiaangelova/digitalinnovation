@@ -231,6 +231,13 @@ export default function AuthPage() {
                   <Label htmlFor="school">{tx('School (optional)', 'Училище (незадължително)')}</Label>
                   <Input id="school" value={school} onChange={e => setSchool(e.target.value)} placeholder={tx('e.g. Sofia High School', 'напр. СМГ')} />
                 </div>
+                <div>
+                  <Label htmlFor="displayName">{tx('Username / Display Name', 'Псевдоним')}</Label>
+                  <Input id="displayName" value={displayName} onChange={e => setDisplayName(e.target.value)} placeholder={tx('e.g. CoolInnovator', 'напр. ИноваторБГ')} required={!isLogin} />
+                  <p className="text-[10px] text-muted-foreground mt-1">
+                    {tx('Choose a display name for the leaderboard', 'Избери псевдоним за класацията')}
+                  </p>
+                </div>
               </>
             )}
             <div>
