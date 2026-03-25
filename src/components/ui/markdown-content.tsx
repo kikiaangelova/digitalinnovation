@@ -7,6 +7,34 @@ import { TermTooltip } from '@/components/ui/term-tooltip';
 interface MarkdownContentProps {
   content: string;
   className?: string;
+  /** Disable automatic term tooltip highlighting */
+  disableTermTooltips?: boolean;
+}
+
+// Build regex once at module level for perf
+const termNames = TERMS.map(t => t.term).sort((a, b) => b.length - a.length);
+const escapedTerms = termNames.map(n => n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
+const termRegex = escapedTerms.length > 0
+  ? new RegExp(`\\b(${escapedTerms.join('|')})\\b`, 'gi')
+  : null;
+
+/** Splits a plain text string into segments, wrapping known dictionary terms in TermTooltip */
+function injectTermTooltips(text: string): React.ReactNode[] {
+  if (!termRegex) return [text];
+  const parts: React.ReactNode[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+  termRegex.lastIndex = 0;
+  let key = 0;
+  while ((match = termRegex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index));
+    }
+    parts.push(<TermTooltip key={key++} term={match[0]}>{match[0]}</TermTooltip>);
+    lastIndex = termRegex.lastIndex;
+  }
+  if (lastIndex < text.length) parts.push(text.slice(lastIndex));
+  return parts;
 }
 
 /**
