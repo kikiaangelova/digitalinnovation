@@ -1,4 +1,5 @@
-import { toast } from 'sonner';
+import { fireXpToast, fireLevelUpToast } from '@/components/ui/xp-celebration-toast';
+import { getCurrentLevel } from '@/components/dashboard/LevelCard';
 
 type Lang = 'en' | 'bg';
 
@@ -28,10 +29,22 @@ export function showXpToast(action: string, xpAwarded: number, lang: Lang) {
   if (xpAwarded <= 0) return;
 
   const label = ACTION_LABELS[action]?.[lang] || (lang === 'bg' ? 'XP спечелени' : 'XP earned');
+  fireXpToast(xpAwarded, label);
+}
 
-  toast(`⚡ +${xpAwarded} XP — ${label}`, {
-    duration: 3000,
-    position: 'top-right',
-    className: 'xp-toast',
-  });
+/**
+ * Call after XP is awarded to check if a level-up occurred.
+ * Pass the XP total BEFORE and AFTER the award.
+ */
+export function checkLevelUp(xpBefore: number, xpAfter: number, lang: Lang) {
+  const levelBefore = getCurrentLevel(xpBefore);
+  const levelAfter = getCurrentLevel(xpAfter);
+
+  if (levelAfter.level > levelBefore.level) {
+    const prefix = lang === 'bg' ? 'НИВО' : 'LEVEL';
+    fireLevelUpToast(
+      levelAfter.level,
+      `${prefix} ${levelAfter.level} — ${levelAfter.name[lang]}!`
+    );
+  }
 }
