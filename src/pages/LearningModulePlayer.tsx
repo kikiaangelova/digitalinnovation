@@ -209,6 +209,14 @@ export default function LearningModulePlayer() {
           </h1>
         </div>
 
+        {/* Learning Structure Bar */}
+        <LearningPhaseBar
+          currentPhase={phase === 'theory' ? 'learn' : phase === 'quiz' ? 'practice' : phase === 'analytical' ? 'feedback' : phase === 'application' ? 'reflect' : 'next'}
+          lang={lang as 'en' | 'bg'}
+          completedPhases={phase === 'results' ? ['learn', 'practice', 'feedback', 'reflect', 'next'] : []}
+        />
+        <WhatYouWillLearn outcomes={THEORY_MODULE_OUTCOMES} lang={lang as 'en' | 'bg'} activityType={{ en: 'Theory Module', bg: 'Теоретичен модул' }} />
+
         {/* Phase Progress */}
         <div className="flex items-center gap-1">
           {phases.map((p, i) => (
