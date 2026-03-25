@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import AppHeader from '@/components/layout/AppHeader';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
