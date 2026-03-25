@@ -122,7 +122,7 @@ export default function Dictionary() {
             {lang === 'bg' ? 'Речник на дигиталните иновации' : 'Digital Innovation Dictionary'}
           </h1>
         </div>
-        <p className="text-muted-foreground mb-6 ml-[52px]">
+        <p className="typo-helper mb-6 ml-[52px]">
           {lang === 'bg'
             ? `${TERMS.length} ключови термина за дигитални иновации, стартъпи и бизнес стратегия.`
             : `${TERMS.length} key terms for digital innovation, startups, and business strategy.`}

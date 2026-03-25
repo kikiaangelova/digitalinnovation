@@ -117,7 +117,7 @@ export default function LearningReport() {
             <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard')}>
               <ArrowLeft className="h-4 w-4 mr-1" /> {t('Dashboard', 'Табло')}
             </Button>
-            <h1 className="text-2xl font-bold text-foreground">{t('My Learning Report', 'Моят учебен доклад')}</h1>
+            <h1 className="typo-h1">{t('My Learning Report', 'Моят учебен доклад')}</h1>
           </div>
           <div className="flex gap-2 print:hidden">
             <Button variant="outline" size="sm" onClick={handleCSV}>

@@ -214,7 +214,7 @@ export default function StartupSimulator() {
 
           <div className="text-center py-10">
             <span className="text-6xl mb-4 block">🚀</span>
-            <h1 className="text-3xl font-display font-bold text-foreground mb-3">
+             <h1 className="typo-h1 mb-3">
               {t('Startup Simulator', 'Стартъп симулатор')}
             </h1>
             <p className="text-muted-foreground max-w-lg mx-auto mb-6">

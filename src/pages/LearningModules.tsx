@@ -91,11 +91,11 @@ export default function LearningModules() {
       <main className="container mx-auto max-w-4xl px-4 py-8 space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
+           <h1 className="typo-h1 flex items-center gap-2">
             <BookOpen className="h-6 w-6 text-primary" />
             {t('Learning Modules', 'Учебни модули')}
           </h1>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p className="typo-helper mt-1">
             {t('Master key concepts in digital innovation and entrepreneurship', 'Овладейте ключови концепции в дигиталните иновации и предприемачеството')}
           </p>
         </div>
