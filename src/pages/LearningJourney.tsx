@@ -184,7 +184,7 @@ const STAGES: Stage[] = [
     id: 2, icon: Search,
     en: 'Industry & Competitor Analysis', bg: 'Анализ на индустрията и конкуренцията',
     descEn: 'Analyze industries and identify digital opportunities.',
-    descBg: 'Анализирайте индустрии и идентифицирайте дигитални възможности.',
+    descBg: 'Анализирай индустрии и идентифицирай дигитални възможности.',
     milestoneEn: 'Submit Opportunity Analysis',
     milestoneBg: 'Подай анализ на възможностите',
     learnPath: '/cases', casePath: '/cases', simPath: '/simulator',
