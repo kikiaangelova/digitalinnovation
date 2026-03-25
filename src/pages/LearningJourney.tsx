@@ -466,7 +466,7 @@ export default function LearningJourney() {
                       <div>
                         <h4 className="flex items-center gap-1.5 text-xs font-semibold text-foreground mb-1.5">
                           <GraduationCap className="h-3.5 w-3.5 text-primary" />
-                          {t('What you will KNOW', 'Какво ще ЗНАЕТЕ')}
+                          {t('What you will KNOW', 'Какво ще ЗНАЕШ')}
                         </h4>
                         <ul className="space-y-1 pl-5">
                           {(lang === 'bg' ? outcomes.knowBg : outcomes.knowEn).map((item, i) => (
