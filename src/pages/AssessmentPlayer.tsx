@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { LearningPhaseBar, WhatYouWillLearn, ASSESSMENT_OUTCOMES } from '@/components/learning/LearningStructure';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
@@ -157,20 +158,24 @@ export default function AssessmentPlayer() {
     return (
       <div className="min-h-screen bg-background">
         <AppHeader />
-        <main className="container mx-auto px-4 py-12 max-w-xl text-center space-y-6">
-          <h1 className="text-3xl font-display font-bold text-foreground">{assessment.title}</h1>
-          <div className="flex justify-center gap-4">
-            {settings.timed && <Badge variant="outline"><Clock className="h-3 w-3 mr-1" /> {settings.time_limit_minutes} {t('min', 'мин')}</Badge>}
-            <Badge variant="outline">{questions.length} {t('questions', 'въпроса')}</Badge>
-            <Badge variant="outline">{questions.reduce((s: number, q: AssessmentQ) => s + q.points, 0)} {t('points', 'точки')}</Badge>
-          </div>
-          {settings.timed && (
-            <div className="flex items-center gap-2 justify-center text-sm text-sim-warning">
-              <AlertTriangle className="h-4 w-4" /> {t('This is a timed assessment. The timer starts when you begin.', 'Това е оценка с времево ограничение. Таймерът започва, когато започнете.')}
+        <main className="container mx-auto px-4 py-12 max-w-xl space-y-6">
+          <LearningPhaseBar currentPhase="practice" lang={lang as 'en' | 'bg'} completedPhases={['learn']} />
+          <WhatYouWillLearn outcomes={ASSESSMENT_OUTCOMES} lang={lang as 'en' | 'bg'} activityType={{ en: 'Assessment', bg: 'Оценка' }} />
+          <div className="text-center space-y-6">
+            <h1 className="text-3xl font-display font-bold text-foreground">{assessment.title}</h1>
+            <div className="flex justify-center gap-4">
+              {settings.timed && <Badge variant="outline"><Clock className="h-3 w-3 mr-1" /> {settings.time_limit_minutes} {t('min', 'мин')}</Badge>}
+              <Badge variant="outline">{questions.length} {t('questions', 'въпроса')}</Badge>
+              <Badge variant="outline">{questions.reduce((s: number, q: AssessmentQ) => s + q.points, 0)} {t('points', 'точки')}</Badge>
             </div>
-          )}
-          <Button onClick={startAssessment} size="lg" className="sim-gradient border-0">{t('Begin Assessment', 'Започнете оценката')}</Button>
-          <Button variant="ghost" size="sm" asChild><Link to="/dashboard"><ArrowLeft className="h-4 w-4 mr-1" /> {t('Back', 'Назад')}</Link></Button>
+            {settings.timed && (
+              <div className="flex items-center gap-2 justify-center text-sm text-sim-warning">
+                <AlertTriangle className="h-4 w-4" /> {t('This is a timed assessment. The timer starts when you begin.', 'Това е оценка с времево ограничение. Таймерът започва, когато започнете.')}
+              </div>
+            )}
+            <Button onClick={startAssessment} size="lg" className="sim-gradient border-0">{t('Begin Assessment', 'Започнете оценката')}</Button>
+            <Button variant="ghost" size="sm" asChild><Link to="/dashboard"><ArrowLeft className="h-4 w-4 mr-1" /> {t('Back', 'Назад')}</Link></Button>
+          </div>
         </main>
       </div>
     );

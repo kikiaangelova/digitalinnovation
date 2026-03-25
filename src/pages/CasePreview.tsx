@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { LearningPhaseBar, WhatYouWillLearn, CASE_STUDY_OUTCOMES } from '@/components/learning/LearningStructure';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/context/AuthContext';
@@ -241,24 +242,31 @@ export default function CasePreview() {
           </div>
         </div>
 
-        {outcomes && outcomes.length > 0 && (
-          <section className="mb-8">
-            <div className="flex items-center gap-2 mb-3">
-              <Target className="h-5 w-5 text-primary" />
-              <h2 className="text-lg font-display font-semibold text-foreground">{t.prevObjectives}</h2>
-            </div>
-            <Card className="p-5 border-border">
-              <p className="text-sm font-medium text-foreground/80 mb-3">{t.prevObjectivesIntro}</p>
-              <ul className="space-y-2">
-                {outcomes.map((o, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
-                    <CheckSquare className="h-4 w-4 text-primary shrink-0 mt-0.5" /><span>{o}</span>
-                  </li>
-                ))}
-              </ul>
-            </Card>
-          </section>
-        )}
+        {/* Learning Structure: What You Will Learn */}
+        <section className="mb-8 space-y-4">
+          <LearningPhaseBar currentPhase="learn" lang={lang as 'en' | 'bg'} />
+          {outcomes && outcomes.length > 0 && (
+            <>
+              <div className="flex items-center gap-2 mb-3">
+                <Target className="h-5 w-5 text-primary" />
+                <h2 className="text-lg font-display font-semibold text-foreground">{t.prevObjectives}</h2>
+              </div>
+              <Card className="p-5 border-border">
+                <p className="text-sm font-medium text-foreground/80 mb-3">{t.prevObjectivesIntro}</p>
+                <ul className="space-y-2">
+                  {outcomes.map((o, i) => (
+                    <li key={i} className="flex items-start gap-2 text-sm text-muted-foreground">
+                      <CheckSquare className="h-4 w-4 text-primary shrink-0 mt-0.5" /><span>{o}</span>
+                    </li>
+                  ))}
+                </ul>
+              </Card>
+            </>
+          )}
+          {(!outcomes || outcomes.length === 0) && (
+            <WhatYouWillLearn outcomes={CASE_STUDY_OUTCOMES} lang={lang as 'en' | 'bg'} activityType={{ en: 'Case Study', bg: 'Казус' }} />
+          )}
+        </section>
 
         <section className="mb-8">
           <div className="flex items-center gap-2 mb-3">

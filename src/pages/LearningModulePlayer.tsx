@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
+import { LearningPhaseBar, WhatYouWillLearn, THEORY_MODULE_OUTCOMES } from '@/components/learning/LearningStructure';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
@@ -208,6 +209,14 @@ export default function LearningModulePlayer() {
             {lang === 'bg' ? mod.title_bg : mod.title_en}
           </h1>
         </div>
+
+        {/* Learning Structure Bar */}
+        <LearningPhaseBar
+          currentPhase={phase === 'theory' ? 'learn' : phase === 'quiz' ? 'practice' : phase === 'analytical' ? 'feedback' : phase === 'application' ? 'reflect' : 'next'}
+          lang={lang as 'en' | 'bg'}
+          completedPhases={phase === 'results' ? ['learn', 'practice', 'feedback', 'reflect', 'next'] : []}
+        />
+        <WhatYouWillLearn outcomes={THEORY_MODULE_OUTCOMES} lang={lang as 'en' | 'bg'} activityType={{ en: 'Theory Module', bg: 'Теоретичен модул' }} />
 
         {/* Phase Progress */}
         <div className="flex items-center gap-1">

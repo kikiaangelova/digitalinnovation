@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
+import { LearningPhaseBar, WhatYouWillLearn, STARTUP_BUILDER_OUTCOMES } from '@/components/learning/LearningStructure';
 import { Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
@@ -354,6 +355,12 @@ export default function MyStartupIdea() {
             {t('My Startup Project', 'Моят стартъп проект')}
           </span>
         </nav>
+
+        {/* Learning Structure */}
+        <div className="mb-4 space-y-3">
+          <LearningPhaseBar currentPhase="practice" lang={lang as 'en' | 'bg'} completedPhases={['learn']} />
+          <WhatYouWillLearn outcomes={STARTUP_BUILDER_OUTCOMES} lang={lang as 'en' | 'bg'} activityType={{ en: 'Startup Builder', bg: 'Стартъп' }} />
+        </div>
 
         {/* Header */}
         <div className="mb-6">

@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
+import { LearningPhaseBar, WhatYouWillLearn, SIMULATOR_OUTCOMES } from '@/components/learning/LearningStructure';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
@@ -212,17 +213,21 @@ export default function StartupSimulator() {
             <span className="text-foreground font-medium">{t('Startup Simulator', 'Стартъп симулатор')}</span>
           </nav>
 
-          <div className="text-center py-10">
-            <span className="text-6xl mb-4 block">🚀</span>
-             <h1 className="typo-h1 mb-3">
-              {t('Startup Simulator', 'Стартъп симулатор')}
-            </h1>
-            <p className="text-muted-foreground max-w-lg mx-auto mb-6">
-              {t(
-                'Build a startup step by step. Every decision affects your innovation score, market potential, scalability, risk level, and growth potential. Think strategically — like a real founder.',
-                'Изградете стартъп стъпка по стъпка. Всяко решение влияе на вашата иновация, пазарен потенциал, мащабируемост, ниво на риск и потенциал за растеж.'
-              )}
-            </p>
+          <div className="space-y-4 py-6">
+            <LearningPhaseBar currentPhase="learn" lang={lang as 'en' | 'bg'} />
+            <WhatYouWillLearn outcomes={SIMULATOR_OUTCOMES} lang={lang as 'en' | 'bg'} activityType={{ en: 'Simulator', bg: 'Симулатор' }} />
+
+            <div className="text-center pt-4">
+              <span className="text-6xl mb-4 block">🚀</span>
+              <h1 className="typo-h1 mb-3">
+                {t('Startup Simulator', 'Стартъп симулатор')}
+              </h1>
+              <p className="text-muted-foreground max-w-lg mx-auto mb-6">
+                {t(
+                  'Build a startup step by step. Every decision affects your innovation score, market potential, scalability, risk level, and growth potential. Think strategically — like a real founder.',
+                  'Изградете стартъп стъпка по стъпка. Всяко решение влияе на вашата иновация, пазарен потенциал, мащабируемост, ниво на риск и потенциал за растеж.'
+                )}
+              </p>
 
             <div className="grid gap-3 sm:grid-cols-3 max-w-md mx-auto mb-8 text-left">
               {[
@@ -259,8 +264,9 @@ export default function StartupSimulator() {
               );
             })}
           </div>
+            </div>
+          </div>
         </div>
-      </div>
     );
   }
 
