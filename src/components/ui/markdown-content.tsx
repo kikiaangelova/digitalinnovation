@@ -1,5 +1,8 @@
+import React, { useMemo } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { TERMS } from '@/data/dictionary-terms';
+import { TermTooltip } from '@/components/ui/term-tooltip';
 
 interface MarkdownContentProps {
   content: string;
