@@ -17,6 +17,7 @@ interface Stats {
   strongCategory: string | null;
   weakCategory: string | null;
   improving: boolean;
+  recommendedNextTest: string | null;
 }
 
 export default function TestInsights({ lang, userId }: TestInsightsProps) {
