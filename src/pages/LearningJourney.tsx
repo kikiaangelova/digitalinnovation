@@ -344,7 +344,7 @@ export default function LearningJourney() {
 
   function handleSubmitAttempt(stageIdx: number) {
     if (!canSubmit(stageIdx)) {
-      toast.error(t('Complete the previous step first.', 'Завършете предишната стъпка първо.'));
+      toast.error(t('Complete the previous step first.', 'Завърши предишната стъпка първо.'));
       return;
     }
     navigate('/my-startup');
