@@ -175,7 +175,7 @@ const STAGES: Stage[] = [
     id: 1, icon: BookOpen,
     en: 'Digital Innovation Basics', bg: 'Основи на дигиталните иновации',
     descEn: 'Learn key concepts of digital transformation and innovation.',
-    descBg: 'Научете ключовите концепции за дигитална трансформация и иновации.',
+    descBg: 'Научи ключовите концепции за дигитална трансформация и иновации.',
     milestoneEn: 'Complete introductory case study',
     milestoneBg: 'Завърши уводния казус',
     learnPath: '/innovation-basics', casePath: '/cases', simPath: '/simulator',
