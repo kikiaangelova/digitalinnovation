@@ -26,6 +26,8 @@ export interface LearningModule {
   display_order: number;
   /** Which curriculum level this module belongs to (1 = Innovation Thinking, 2 = Business Fundamentals) */
   level?: number;
+  /** Which startup_projects field to update with the application answer */
+  startup_field?: string;
   // Theory-to-Case mapping
   related_case_topic?: string;
   case_transition_en?: string;
@@ -246,6 +248,7 @@ The future of competition is increasingly between ecosystems, not individual com
     title_en: 'Marketing Fundamentals',
     title_bg: 'Основи на маркетинга',
     level: 2,
+    startup_field: 'customer',
     theory_en: `Marketing is the process of creating, communicating, and delivering value to customers. For startups, marketing is not about big budgets — it's about deeply understanding your audience and crafting the right message.
 
 The **4Ps framework** (Product, Price, Place, Promotion) remains a useful lens. But modern digital marketing adds a critical fifth: **People**. Understanding your customer persona — their pain points, habits, and decision-making process — is the foundation of everything.
@@ -289,6 +292,7 @@ Key metrics to track: **CAC** (cost to acquire), **LTV** (lifetime value), **con
     title_en: 'Pricing & Revenue Models',
     title_bg: 'Ценообразуване и приходни модели',
     level: 2,
+    startup_field: 'business_model',
     theory_en: `Pricing is one of the most powerful levers for startup success — and one of the most neglected. A 1% improvement in pricing can boost profits by 11%, more than any other business lever.
 
 **Cost-based pricing** sets prices by adding a margin to costs. It's simple but ignores what customers are willing to pay. **Value-based pricing** sets prices based on perceived customer value — this is the gold standard for startups because it captures more of the value you create.
@@ -339,6 +343,172 @@ The best approach is to **start higher** than you think. It's easier to lower pr
     sim_transition_en: 'Test different pricing strategies in the startup simulator to see their impact on growth and revenue.',
     sim_transition_bg: 'Тествайте различни ценови стратегии в стартъп симулатора, за да видите въздействието им върху растежа и приходите.',
   },
+  /* ── Level 2: Team & Roles ── */
+  {
+    slug: 'team-and-roles',
+    title_en: 'Team & Roles',
+    title_bg: 'Екип и роли',
+    level: 2,
+    startup_field: 'bmc_key_activities',
+    theory_en: `A startup is only as strong as its founding team. Investors often say they bet on people first, ideas second. But building the right team is not just about talent — it's about **complementary skills** and **clear roles**.
+
+Every early-stage startup needs three core functions covered:
+
+1. **The Builder** (CTO / Technical Lead) — builds the product, makes technology decisions, manages development.
+2. **The Seller** (CEO / Business Lead) — talks to customers, closes deals, raises funding, sets vision.
+3. **The Designer** (CPO / Product Lead) — understands user needs, designs the experience, bridges tech and business.
+
+One person can cover multiple roles, but all three functions must exist. The most common startup failure pattern is **all-technical teams** (great product, no customers) or **all-business teams** (great pitch, no product).
+
+**Equity splits** should be discussed early. The 50/50 split sounds fair but often creates deadlocks. A better approach: give the person with the most commitment and risk a slight majority, and use **vesting schedules** (typically 4 years with a 1-year cliff) to protect against early departures.
+
+**Hiring your first employees** is a critical moment. Early hires shape company culture. Prioritize attitude and learning speed over experience. A motivated generalist is more valuable than an expensive specialist at this stage.
+
+**Remote vs. co-located** teams: Remote offers access to global talent and lower costs. Co-located teams iterate faster and build stronger culture. Many startups use a hybrid model — remote-first with regular in-person sprints.
+
+Key principle: **Hire slow, fire fast.** A wrong hire at an early stage can destroy team morale and waste months of runway.`,
+    theory_bg: `Стартъпът е толкова силен, колкото е основаващият му екип. Инвеститорите често казват, че залагат на хората, а не на идеите. Но изграждането на правилния екип не е само за талант — а за **допълващи се умения** и **ясни роли**.
+
+Всеки ранен стартъп се нуждае от три основни функции:
+
+1. **Строителят** (CTO / Технически лидер) — изгражда продукта, взема технологични решения.
+2. **Продавачът** (CEO / Бизнес лидер) — говори с клиенти, затваря сделки, привлича финансиране.
+3. **Дизайнерът** (CPO / Продуктов лидер) — разбира нуждите на потребителите, проектира преживяването.
+
+Един човек може да покрива няколко роли, но и трите функции трябва да съществуват. Най-честият модел на провал е **изцяло технически екип** (страхотен продукт, няма клиенти) или **изцяло бизнес екип** (страхотна презентация, няма продукт).
+
+**Разпределението на дялове** трябва да се обсъди рано. Разделянето 50/50 звучи справедливо, но често създава задънки. По-добрият подход: дайте лекно мнозинство на човека с най-голям ангажимент и използвайте **вестинг график** (обикновено 4 години с 1-годишен cliff).
+
+**Наемането на първите служители** оформя фирмената култура. Приоритизирайте нагласа и скорост на учене пред опит.
+
+Ключов принцип: **Наемай бавно, уволнявай бързо.** Грешен служител на ранен етап може да унищожи морала и да пропилее месеци.`,
+    quiz_questions: [
+      { id: 'tr1', question_en: 'What are the three core functions every startup needs?', question_bg: 'Кои са трите основни функции, от които всеки стартъп се нуждае?', options: [{ id: 'a', en: 'Builder, Seller, Designer', bg: 'Строител, Продавач, Дизайнер', correct: true }, { id: 'b', en: 'CEO, CFO, COO', bg: 'CEO, CFO, COO', correct: false }, { id: 'c', en: 'Marketing, Sales, Support', bg: 'Маркетинг, Продажби, Поддръжка', correct: false }] },
+      { id: 'tr2', question_en: 'What is a vesting schedule?', question_bg: 'Какво е вестинг график?', options: [{ id: 'a', en: 'A timeline for earning equity over time to prevent early departures', bg: 'График за придобиване на дялове с времето, за да се предотврати ранно напускане', correct: true }, { id: 'b', en: 'A schedule for team meetings', bg: 'График за екипни срещи', correct: false }, { id: 'c', en: 'A payment plan for investors', bg: 'План за плащане на инвеститори', correct: false }] },
+      { id: 'tr3', question_en: 'Why is "hire slow, fire fast" important for startups?', question_bg: 'Защо „наемай бавно, уволнявай бързо" е важно за стартъпи?', options: [{ id: 'a', en: 'A wrong early hire destroys morale and wastes runway', bg: 'Грешен ранен служител унищожава морала и пропилява ресурси', correct: true }, { id: 'b', en: 'It saves money on salaries', bg: 'Спестява пари от заплати', correct: false }, { id: 'c', en: 'It makes the company look more exclusive', bg: 'Прави компанията да изглежда по-ексклузивна', correct: false }] },
+    ],
+    analytical_question_en: 'Why do all-technical teams or all-business teams often fail? What makes a balanced founding team more likely to succeed?',
+    analytical_question_bg: 'Защо изцяло технически или изцяло бизнес екипи често се провалят? Какво прави балансирания основателски екип по-вероятно успешен?',
+    application_question_en: 'Define the key roles your startup needs in its first 6 months. Who would you hire first, and what skills would you prioritize? How would you split equity among co-founders?',
+    application_question_bg: 'Определете ключовите роли, от които вашият стартъп се нуждае през първите 6 месеца. Кого бихте наели първо и какви умения бихте приоритизирали? Как бихте разпределили дяловете между съоснователите?',
+    display_order: 8,
+    sim_transition_en: 'Apply your team-building insights in the startup simulator hiring decisions.',
+    sim_transition_bg: 'Приложете знанията си за изграждане на екип в решенията за наемане в стартъп симулатора.',
+  },
+  /* ── Level 2: Operations ── */
+  {
+    slug: 'operations-fundamentals',
+    title_en: 'Operations & Processes',
+    title_bg: 'Операции и процеси',
+    level: 2,
+    startup_field: 'bmc_key_resources',
+    theory_en: `Operations is how a startup delivers its promise to customers — repeatedly, reliably, and at scale. A great idea with broken operations will lose to an average idea with excellent execution.
+
+**The value chain** maps every step from raw input to delivered value: sourcing → building → delivering → supporting. Each link must be efficient. Bottlenecks in one area slow down everything.
+
+For digital startups, **key operational processes** include:
+
+1. **Product development cycle** — How fast can you ship features? Agile methodology (2-week sprints, daily standups, retrospectives) is the industry standard. The goal: ship small, learn fast, iterate.
+2. **Customer support** — How quickly do you resolve issues? Response time and resolution quality directly affect retention and NPS.
+3. **Quality assurance** — How do you prevent bugs and downtime? Automated testing, staging environments, and monitoring tools are essential.
+
+**Standard Operating Procedures (SOPs)** document how things should be done. They seem bureaucratic, but they enable scaling. Without SOPs, every new team member reinvents processes, creating inconsistency.
+
+**Automation** is the startup superpower. Automate repetitive tasks: email sequences, invoice generation, data entry, deployment. Tools like Zapier, n8n, and custom scripts free up human time for creative work.
+
+**Metrics that matter**: Lead time (idea to production), cycle time (start to finish of one task), error rate, customer support response time, and system uptime. What you don't measure, you can't improve.
+
+**Lean operations** means eliminating waste: unnecessary steps, overproduction, waiting time, and unused talent. The Toyota Production System principles apply perfectly to digital startups.`,
+    theory_bg: `Операциите са как стартъпът изпълнява обещанието си към клиентите — многократно, надеждно и в мащаб. Страхотна идея с лоши операции ще загуби срещу средна идея с отлично изпълнение.
+
+**Веригата на стойността** описва всяка стъпка от суровия вход до доставената стойност: снабдяване → изграждане → доставка → поддръжка. Всяко звено трябва да е ефективно.
+
+За дигитални стартъпи, **ключови оперативни процеси** включват:
+
+1. **Цикъл на разработка** — Колко бързо можете да пуснете функции? Agile методологията (2-седмични спринтове, ежедневни срещи) е стандартът.
+2. **Клиентска поддръжка** — Колко бързо решавате проблеми? Времето за отговор директно влияе на задържането.
+3. **Осигуряване на качество** — Как предотвратявате грешки? Автоматизирано тестване и мониторинг са основни.
+
+**Стандартни оперативни процедури (SOPs)** документират как нещата трябва да се правят. Изглеждат бюрократични, но позволяват мащабиране.
+
+**Автоматизацията** е суперсила на стартъпа. Автоматизирайте повтарящи се задачи: email последователности, фактуриране, деплоймънт.
+
+**Lean операции** означава елиминиране на разхищение: ненужни стъпки, свръхпроизводство, чакане и неизползван талант.`,
+    quiz_questions: [
+      { id: 'op1', question_en: 'What is the value chain?', question_bg: 'Какво е веригата на стойността?', options: [{ id: 'a', en: 'Every step from input to delivered value', bg: 'Всяка стъпка от вход до доставена стойност', correct: true }, { id: 'b', en: 'A blockchain technology', bg: 'Блокчейн технология', correct: false }, { id: 'c', en: 'The company org chart', bg: 'Организационната схема на компанията', correct: false }] },
+      { id: 'op2', question_en: 'Why are SOPs important for startups?', question_bg: 'Защо SOPs са важни за стартъпите?', options: [{ id: 'a', en: 'They enable consistent scaling and onboarding', bg: 'Позволяват последователно мащабиране и въвеждане на нови хора', correct: true }, { id: 'b', en: 'They are legally required', bg: 'Изискват се по закон', correct: false }, { id: 'c', en: 'They replace the need for management', bg: 'Заменят нуждата от управление', correct: false }] },
+      { id: 'op3', question_en: 'What is the main principle of lean operations?', question_bg: 'Какъв е основният принцип на lean операциите?', options: [{ id: 'a', en: 'Eliminate waste in every process', bg: 'Елиминирай разхищението във всеки процес', correct: true }, { id: 'b', en: 'Hire as few people as possible', bg: 'Наеми колкото може по-малко хора', correct: false }, { id: 'c', en: 'Use only free tools', bg: 'Използвай само безплатни инструменти', correct: false }] },
+    ],
+    analytical_question_en: 'Why does operational excellence matter more than a great idea for long-term startup success? Give examples of companies that won through execution rather than innovation.',
+    analytical_question_bg: 'Защо оперативното съвършенство е по-важно от страхотна идея за дългосрочния успех? Дайте примери на компании, които печелят чрез изпълнение, а не иновация.',
+    application_question_en: 'Map the key operational processes your startup needs to deliver its product. Identify one bottleneck and propose how to solve it through automation or process redesign.',
+    application_question_bg: 'Опишете ключовите оперативни процеси, от които вашият стартъп се нуждае. Идентифицирайте едно тесно място и предложете как да го решите чрез автоматизация или преструктуриране.',
+    display_order: 9,
+    sim_transition_en: 'Apply operational thinking in the simulator to optimize your startup execution.',
+    sim_transition_bg: 'Приложете оперативно мислене в симулатора, за да оптимизирате изпълнението на стартъпа.',
+  },
+  /* ── Level 2: Supply Chain ── */
+  {
+    slug: 'supply-chain-basics',
+    title_en: 'Supply Chain Basics',
+    title_bg: 'Основи на веригата за доставки',
+    level: 2,
+    startup_field: 'bmc_channels',
+    theory_en: `Even digital startups have a supply chain — the network of resources, processes, and partners needed to deliver your product to customers. Understanding supply chain basics helps founders make smarter decisions about partnerships, costs, and scalability.
+
+**Traditional supply chain**: Raw materials → Manufacturing → Distribution → Retail → Customer. Each step adds cost and time.
+
+**Digital supply chain**: Content/Data → Processing/Platform → Distribution (Internet) → User. The steps are compressed, but dependencies still exist: cloud hosting (AWS, GCP), payment processors (Stripe), API providers, and data sources.
+
+**Key concepts**:
+
+- **Upstream vs. Downstream**: Upstream = your suppliers and partners. Downstream = your distribution and customers. Control over both sides gives you power.
+- **Just-in-Time (JIT)**: Minimize inventory and produce on demand. Amazon's fulfillment network is a masterclass in JIT at scale.
+- **Single point of failure**: If one supplier or service goes down, can your business survive? Diversification reduces risk.
+
+**For digital startups**, supply chain thinking applies to:
+
+1. **Tech stack dependencies** — Which services are you dependent on? If Stripe goes down, can you still process payments?
+2. **Content pipeline** — Where does your content come from? User-generated, curated, or created? Each has different scalability.
+3. **Partnership dependencies** — Do you rely on one platform (e.g., Instagram algorithm) for distribution? That's supply chain risk.
+4. **Delivery logistics** — For startups with physical components (D2C, food delivery), last-mile delivery is the most expensive link.
+
+**Cost optimization**: Negotiate with suppliers as you scale. Volume discounts, long-term contracts, and strategic partnerships can reduce costs by 20-40%.
+
+The supply chain mindset helps you see your startup not as an isolated product, but as part of a larger ecosystem of dependencies and value flows.`,
+    theory_bg: `Дори дигиталните стартъпи имат верига за доставки — мрежата от ресурси, процеси и партньори, необходими за доставяне на продукта до клиентите.
+
+**Традиционна верига**: Суровини → Производство → Дистрибуция → Търговия → Клиент. Всяка стъпка добавя разход и време.
+
+**Дигитална верига**: Съдържание/Данни → Обработка/Платформа → Дистрибуция (Интернет) → Потребител. Стъпките са компресирани, но зависимости съществуват: облачен хостинг (AWS), платежни процесори (Stripe), API доставчици.
+
+**Ключови концепции**:
+
+- **Upstream vs. Downstream**: Upstream = вашите доставчици. Downstream = вашата дистрибуция и клиенти.
+- **Just-in-Time (JIT)**: Минимизирайте запасите и произвеждайте по заявка.
+- **Единична точка на отказ**: Ако един доставчик или услуга спре, може ли бизнесът ви да оцелее?
+
+**За дигитални стартъпи** веригата за доставки означава:
+
+1. **Зависимости от технологичния стак** — От кои услуги зависите?
+2. **Тръбопровод за съдържание** — Откъде идва съдържанието ви?
+3. **Партньорски зависимости** — Разчитате ли на една платформа за дистрибуция?
+4. **Логистика на доставка** — За стартъпи с физически компоненти, доставката на последната миля е най-скъпото звено.
+
+**Оптимизация на разходите**: Договаряйте с доставчици при мащабиране. Отстъпки за обем и стратегически партньорства могат да намалят разходите с 20-40%.`,
+    quiz_questions: [
+      { id: 'sc1', question_en: 'What is a digital supply chain?', question_bg: 'Какво е дигитална верига за доставки?', options: [{ id: 'a', en: 'The network of tech services, partners, and processes needed to deliver a digital product', bg: 'Мрежата от технологични услуги, партньори и процеси за доставяне на дигитален продукт', correct: true }, { id: 'b', en: 'A blockchain for tracking shipments', bg: 'Блокчейн за проследяване на пратки', correct: false }, { id: 'c', en: 'An online store inventory system', bg: 'Система за инвентар на онлайн магазин', correct: false }] },
+      { id: 'sc2', question_en: 'What is a "single point of failure" in a supply chain?', question_bg: 'Какво е „единична точка на отказ" във верига за доставки?', options: [{ id: 'a', en: 'A dependency that, if disrupted, stops the entire business', bg: 'Зависимост, която ако се наруши, спира целия бизнес', correct: true }, { id: 'b', en: 'The weakest team member', bg: 'Най-слабият член на екипа', correct: false }, { id: 'c', en: 'A bug in the software', bg: 'Бъг в софтуера', correct: false }] },
+      { id: 'sc3', question_en: 'Why is platform dependency a supply chain risk?', question_bg: 'Защо зависимостта от платформа е риск за веригата за доставки?', options: [{ id: 'a', en: 'Algorithm changes can cut your distribution overnight', bg: 'Промени в алгоритъма могат да отрежат дистрибуцията ви за една нощ', correct: true }, { id: 'b', en: 'Platforms always charge too much', bg: 'Платформите винаги таксуват прекалено', correct: false }, { id: 'c', en: 'Platforms are unreliable technically', bg: 'Платформите са технически ненадеждни', correct: false }] },
+    ],
+    analytical_question_en: 'How does supply chain thinking apply to digital startups differently from traditional businesses? Identify the key dependencies a SaaS startup has and explain the risks.',
+    analytical_question_bg: 'Как мисленето за верига за доставки се различава за дигитални стартъпи спрямо традиционни бизнеси? Идентифицирайте ключовите зависимости на SaaS стартъп.',
+    application_question_en: 'Map your startup\'s supply chain — what are your key dependencies (tech, content, distribution, partners)? Identify at least one single point of failure and propose a mitigation strategy.',
+    application_question_bg: 'Опишете веригата за доставки на вашия стартъп — какви са ключовите зависимости (технология, съдържание, дистрибуция, партньори)? Идентифицирайте поне една единична точка на отказ и предложете стратегия за смекчаване.',
+    display_order: 10,
+    sim_transition_en: 'Consider supply chain dependencies when making decisions in the startup simulator.',
+    sim_transition_bg: 'Помислете за зависимостите на веригата за доставки, когато вземате решения в стартъп симулатора.',
+  },
 ];
 
 // Reverse mapping: case topic keyword → module slug
@@ -369,7 +539,7 @@ export const LEVEL_INFO = {
   2: {
     en: 'Business Fundamentals',
     bg: 'Бизнес основи',
-    desc_en: 'Learn marketing, pricing, and revenue — the business skills every founder needs.',
-    desc_bg: 'Научете маркетинг, ценообразуване и приходи — бизнес уменията, от които всеки основател се нуждае.',
+    desc_en: 'Marketing, pricing, team building, operations, and supply chain — the business skills every founder needs.',
+    desc_bg: 'Маркетинг, ценообразуване, екип, операции и верига за доставки — бизнес уменията за всеки основател.',
   },
 } as const;

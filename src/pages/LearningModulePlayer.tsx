@@ -164,6 +164,23 @@ export default function LearningModulePlayer() {
       await supabase.from('learning_module_responses').insert(payload as any);
     }
 
+    // Sync application answer to startup project if Level 2 module has a startup_field mapping
+    if (mod.startup_field && applicationAnswer.trim().length >= 20) {
+      const { data: project } = await supabase.from('startup_projects')
+        .select('id')
+        .eq('user_id', user.id)
+        .maybeSingle();
+      
+      if (project) {
+        await supabase.from('startup_projects')
+          .update({ [mod.startup_field]: applicationAnswer.trim() } as any)
+          .eq('id', project.id);
+      } else {
+        await supabase.from('startup_projects')
+          .insert({ user_id: user.id, [mod.startup_field]: applicationAnswer.trim() } as any);
+      }
+    }
+
     // Award XP for theory completion
     const xpResult = await awardXp('theory_complete', mod.slug);
     let totalXp = xpResult.xp_awarded;
@@ -342,6 +359,17 @@ export default function LearningModulePlayer() {
         {phase === 'application' && (
           <div className="rounded-xl border border-border bg-card p-6 space-y-4">
             <Badge variant="outline">{t('🚀 Apply to Your Startup', '🚀 Приложи към твоя стартъп')}</Badge>
+            {mod.startup_field && (
+              <div className="rounded-lg bg-primary/5 border border-primary/20 p-3 flex items-start gap-2">
+                <Rocket className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                <p className="text-xs text-muted-foreground">
+                  {t(
+                    'Your answer will automatically update your startup project. Build your real business step by step!',
+                    'Отговорът ти автоматично ще обнови стартъп проекта ти. Изграждай реалния си бизнес стъпка по стъпка!'
+                  )}
+                </p>
+              </div>
+            )}
             <p className="text-sm font-semibold text-foreground">
               {lang === 'bg' ? mod.application_question_bg : mod.application_question_en}
             </p>
