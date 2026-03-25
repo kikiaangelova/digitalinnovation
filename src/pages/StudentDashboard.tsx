@@ -195,6 +195,9 @@ export default function StudentDashboard() {
           </div>
         </div>
 
+        {/* ═══ Daily Challenge ═══ */}
+        <DailyChallenge lang={lang} userId={user?.id} />
+
         {/* ═══ Learning Outcomes + Leaderboard ═══ */}
         <div className="grid gap-4 md:grid-cols-2">
           <LearningOutcomes lang={lang} scores={outcomeScores} />
