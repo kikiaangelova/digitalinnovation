@@ -136,7 +136,7 @@ export default function AchievementBadges(props: AchievementBadgesProps) {
                       style={{ width: `${pct}%` }}
                     />
                   </div>
-                  <p className="text-[9px] text-muted-foreground">{progress.label}</p>
+                  <p className="text-xs text-muted-foreground">{progress.label}</p>
                 </div>
               )}
             </div>
