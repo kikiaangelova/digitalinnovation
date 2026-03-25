@@ -349,6 +349,7 @@ The best approach is to **start higher** than you think. It's easier to lower pr
     title_en: 'Team & Roles',
     title_bg: 'Екип и роли',
     level: 2,
+    startup_field: 'bmc_key_activities',
     theory_en: `A startup is only as strong as its founding team. Investors often say they bet on people first, ideas second. But building the right team is not just about talent — it's about **complementary skills** and **clear roles**.
 
 Every early-stage startup needs three core functions covered:
