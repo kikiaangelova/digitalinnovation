@@ -228,8 +228,19 @@ export default function StudentDashboard() {
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="rounded-lg bg-accent/50 p-3 text-center">
-              <p className="text-xl font-bold text-foreground">{pendingReviews}</p>
-              <p className="text-xs text-muted-foreground">{t('Pending Reviews', 'Чакащи рецензии')}</p>
+              {pendingReviews > 0 ? (
+                <>
+                  <p className="text-xl font-bold text-foreground">{pendingReviews}</p>
+                  <p className="text-xs text-muted-foreground">{t('Pending Reviews', 'Чакащи рецензии')}</p>
+                </>
+              ) : (
+                <p className="text-xs text-muted-foreground leading-relaxed py-1">
+                  {t(
+                    "No reviews yet — you'll receive feedback after submitting your first case",
+                    'Все още няма рецензии — ще получиш обратна връзка, след като подадеш първия си казус'
+                  )}
+                </p>
+              )}
             </div>
             <div className="rounded-lg bg-accent/50 p-3 text-center">
               <p className="text-xl font-bold text-primary flex items-center justify-center gap-1">
