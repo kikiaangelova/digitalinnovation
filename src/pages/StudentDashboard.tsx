@@ -14,8 +14,8 @@ import WelcomeOnboarding from '@/components/onboarding/WelcomeOnboarding';
 import { Button } from '@/components/ui/button';
 import { Zap, BookOpen, Rocket, BarChart3, FileText, Users, Star } from 'lucide-react';
 
-interface CaseRow { id: string; title: string; difficulty: string; est_minutes: number | null; }
-interface SubRow { case_study_id: string; is_draft: boolean; }
+interface CaseRow { id: string; title: string; difficulty: string; est_minutes: number | null; topic?: string | null; }
+interface SubRow { case_study_id: string; is_draft: boolean; total_score?: number | null; max_score?: number | null; }
 
 export default function StudentDashboard() {
   const { user, loading: authLoading } = useAuth();
@@ -32,6 +32,8 @@ export default function StudentDashboard() {
   const [avgPeerScore, setAvgPeerScore] = useState<number | null>(null);
   const [totalXp, setTotalXp] = useState(0);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [peerReviewsGiven, setPeerReviewsGiven] = useState(0);
+  const [loginStreakDays, setLoginStreakDays] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -39,26 +41,39 @@ export default function StudentDashboard() {
     if (!user) { navigate('/auth?redirect=/dashboard'); return; }
     const fetchData = async () => {
       try {
-        const [casesRes, subsRes, projRes, simRes, prAssignRes, prReceivedRes, profileRes] = await Promise.all([
-          supabase.from('case_studies').select('id, title, difficulty, est_minutes').eq('published', true),
-          supabase.from('submissions').select('case_study_id, is_draft').eq('user_id', user.id),
-          supabase.from('startup_projects').select('problem, customer, value_proposition, digital_product, business_model, growth_strategy, final_pitch, is_submitted').eq('user_id', user.id).maybeSingle(),
+        const [casesRes, subsRes, projRes, simRes, prAssignRes, prReceivedRes, profileRes, prGivenRes] = await Promise.all([
+          supabase.from('case_studies').select('id, title, difficulty, est_minutes, topic').eq('published', true),
+          supabase.from('submissions').select('case_study_id, is_draft, total_score, max_score').eq('user_id', user.id),
+          supabase.from('startup_projects').select('problem, customer, value_proposition, digital_product, business_model, growth_strategy, final_pitch, is_submitted, bmc_customer_segments, bmc_value_proposition, bmc_channels, bmc_customer_relationships, bmc_revenue_streams, bmc_key_resources, bmc_key_activities, bmc_key_partners, bmc_cost_structure').eq('user_id', user.id).maybeSingle(),
           supabase.from('simulator_progress').select('current_week, is_complete').eq('user_id', user.id).maybeSingle(),
           supabase.from('peer_review_assignments').select('id').eq('reviewer_user_id', user.id).eq('status', 'pending'),
           supabase.from('peer_reviews').select('average_score').eq('reviewee_user_id', user.id),
           supabase.from('profiles').select('total_xp, onboarding_completed').eq('user_id', user.id).maybeSingle(),
+          supabase.from('peer_reviews').select('id').eq('reviewer_user_id', user.id),
         ]);
         setCases(casesRes.data || []);
         setSubmissions(subsRes.data || []);
         setStartupProject(projRes.data || null);
         setSimProgress(simRes.data || null);
         setPendingReviews((prAssignRes.data || []).length);
+        setPeerReviewsGiven((prGivenRes.data || []).length);
         const prScores = (prReceivedRes.data || []) as { average_score: number | null }[];
         setAvgPeerScore(prScores.length > 0 ? prScores.reduce((a, r) => a + Number(r.average_score || 0), 0) / prScores.length : null);
         const profileData = profileRes.data as any;
         setTotalXp(profileData?.total_xp || 0);
         if (profileData && !profileData.onboarding_completed && (profileData.total_xp || 0) === 0) {
           setShowOnboarding(true);
+        }
+        // Login streak from xp_ledger
+        const { data: ledgerDates } = await supabase.from('xp_ledger').select('created_at').eq('user_id', user.id).order('created_at', { ascending: false }).limit(100);
+        if (ledgerDates && ledgerDates.length > 0) {
+          const uniqueDays = [...new Set(ledgerDates.map(r => r.created_at.slice(0, 10)))].sort().reverse();
+          let streak = 1;
+          for (let i = 1; i < uniqueDays.length; i++) {
+            const diff = (new Date(uniqueDays[i - 1]).getTime() - new Date(uniqueDays[i]).getTime()) / 86400000;
+            if (diff <= 1.5) streak++; else break;
+          }
+          setLoginStreakDays(streak);
         }
       } catch (err) {
         console.error('Dashboard fetch error:', err);
@@ -69,7 +84,9 @@ export default function StudentDashboard() {
     fetchData();
   }, [user, authLoading, navigate]);
 
-  const casesCompleted = submissions.filter(s => !s.is_draft).length;
+  const completedSubs = submissions.filter(s => !s.is_draft);
+  const casesCompleted = completedSubs.length;
+  const casesAbove80Percent = completedSubs.filter(s => s.total_score && s.max_score && (s.total_score / s.max_score) >= 0.8).length;
   const simWeek = simProgress?.current_week || 1;
   const simComplete = simProgress?.is_complete || false;
 
@@ -78,6 +95,14 @@ export default function StudentDashboard() {
   startupSections.forEach(s => {
     startupSectionMap[s] = startupProject ? ((startupProject as any)[s] || '').trim().length > 20 : false;
   });
+
+  const bmcFields = ['bmc_customer_segments', 'bmc_value_proposition', 'bmc_channels', 'bmc_customer_relationships', 'bmc_revenue_streams', 'bmc_key_resources', 'bmc_key_activities', 'bmc_key_partners', 'bmc_cost_structure'];
+  const bmcSectionsCompleted = startupProject ? bmcFields.filter(f => ((startupProject as any)[f] || '').trim().length > 10).length : 0;
+  const finalPitchSubmitted = startupProject ? ((startupProject as any).final_pitch || '').trim().length > 20 : false;
+
+  // Industries explored: count distinct topics from completed cases
+  const completedCaseIds = new Set(completedSubs.map(s => s.case_study_id));
+  const industriesExplored = new Set(cases.filter(c => completedCaseIds.has(c.id) && c.topic).map(c => c.topic)).size;
 
   const xp = totalXp;
 
@@ -182,6 +207,12 @@ export default function StudentDashboard() {
           startupSubmitted={startupProject?.is_submitted || false}
           simulatorComplete={simComplete}
           usedAIMentor={usedAIMentor}
+          casesAbove80Percent={casesAbove80Percent}
+          bmcSectionsCompleted={bmcSectionsCompleted}
+          finalPitchSubmitted={finalPitchSubmitted}
+          peerReviewsGiven={peerReviewsGiven}
+          industriesExplored={industriesExplored}
+          loginStreakDays={loginStreakDays}
         />
 
         {/* ═══ Peer Review ═══ */}
