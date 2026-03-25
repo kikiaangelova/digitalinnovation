@@ -44,7 +44,7 @@ export default function StudentDashboard() {
         const [casesRes, subsRes, projRes, simRes, prAssignRes, prReceivedRes, profileRes] = await Promise.all([
           supabase.from('case_studies').select('id, title, difficulty, est_minutes, topic').eq('published', true),
           supabase.from('submissions').select('case_study_id, is_draft, total_score, max_score').eq('user_id', user.id),
-          supabase.from('startup_projects').select('problem, customer, value_proposition, digital_product, business_model, growth_strategy, final_pitch, is_submitted').eq('user_id', user.id).maybeSingle(),
+          supabase.from('startup_projects').select('problem, customer, value_proposition, digital_product, business_model, growth_strategy, final_pitch, is_submitted, bmc_customer_segments, bmc_value_proposition, bmc_channels, bmc_customer_relationships, bmc_revenue_streams, bmc_key_resources, bmc_key_activities, bmc_key_partners, bmc_cost_structure').eq('user_id', user.id).maybeSingle(),
           supabase.from('simulator_progress').select('current_week, is_complete').eq('user_id', user.id).maybeSingle(),
           supabase.from('peer_review_assignments').select('id').eq('reviewer_user_id', user.id).eq('status', 'pending'),
           supabase.from('peer_reviews').select('average_score').eq('reviewee_user_id', user.id),
