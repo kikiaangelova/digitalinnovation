@@ -9,7 +9,7 @@ import {
   GraduationCap, ArrowRight, Lightbulb, Search, Rocket,
   Presentation, Compass, Briefcase, Palette,
   Trophy, BookOpen, FlaskConical, TrendingUp, Mic,
-  Zap, Star, Calendar, ChevronRight,
+  Zap, Star, Calendar, ChevronRight, Book,
   Cpu, Eye, Users, Mail,
 } from 'lucide-react';
 
@@ -267,6 +267,51 @@ const Index = () => {
                 ))}
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════ BUSINESS DICTIONARY PREVIEW ═══════════════════ */}
+      <section className="py-16 px-4 border-t border-border">
+        <div className="container mx-auto max-w-4xl">
+          <div className="text-center mb-10">
+            <SectionBadge label={lang === 'bg' ? 'Бизнес речник' : 'Business Dictionary'} />
+            <h2 className="text-2xl sm:text-3xl font-display font-bold text-foreground mt-4 mb-3">
+              {lang === 'bg' ? 'Научи истинския бизнес език' : 'Learn real business language'}
+            </h2>
+            <p className="text-muted-foreground max-w-lg mx-auto">
+              {lang === 'bg'
+                ? 'Ключови термини от маркетинг, ценообразуване, операции и управление на екипи — на английски и български.'
+                : 'Key terms from marketing, pricing, operations, and team management — in English and Bulgarian.'}
+            </p>
+          </div>
+
+          <div className="grid gap-3 sm:grid-cols-2">
+            {[
+              { en: 'Target Audience', bg: 'Целева аудитория', cat: 'Marketing', catBg: 'Маркетинг', def: lang === 'bg' ? 'Конкретната група хора, които е най-вероятно да купят продукта ти.' : 'The specific group of people most likely to buy your product.' },
+              { en: 'Revenue Model', bg: 'Модел на приходите', cat: 'Pricing & Revenue', catBg: 'Ценообразуване', def: lang === 'bg' ? 'Стратегията за генериране на приходи от продукта или услугата.' : 'The strategy a business uses to generate income from its product.' },
+              { en: 'Bottleneck', bg: 'Тясно място', cat: 'Operations', catBg: 'Операции', def: lang === 'bg' ? 'Точка в процеса, която ограничава общата производителност.' : 'A point in a process where capacity is limited, restricting throughput.' },
+              { en: 'Founding Team', bg: 'Основателски екип', cat: 'Team & Roles', catBg: 'Екип и роли', def: lang === 'bg' ? 'Първоначалната група хора, които стартират компания заедно.' : 'The initial group of people who start a company together.' },
+            ].map((item, i) => (
+              <div key={i} className="group rounded-xl border border-border bg-card p-4 hover:border-primary/30 transition-all duration-300">
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="font-display font-bold text-foreground text-sm">{item.en}</h3>
+                  <span className="text-[10px] font-medium uppercase tracking-wider text-primary/70 bg-accent px-2 py-0.5 rounded-full">
+                    {lang === 'bg' ? item.catBg : item.cat}
+                  </span>
+                </div>
+                <p className="text-xs text-primary/60 font-medium mb-1.5">{item.bg}</p>
+                <p className="text-xs text-muted-foreground leading-relaxed">{item.def}</p>
+              </div>
+            ))}
+          </div>
+
+          <div className="text-center mt-8">
+            <Button variant="outline" size="lg" onClick={() => navigate('/dictionary')} className="gap-2">
+              <Book className="h-4 w-4" />
+              {lang === 'bg' ? 'Разгледай речника' : 'Explore Dictionary'}
+              <ArrowRight className="h-4 w-4" />
+            </Button>
           </div>
         </div>
       </section>
