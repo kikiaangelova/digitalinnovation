@@ -118,7 +118,7 @@ export default function Dictionary() {
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent">
             <Book className="h-5 w-5 text-primary" />
           </div>
-          <h1 className="text-3xl font-display font-bold text-foreground">
+           <h1 className="typo-h1">
             {lang === 'bg' ? 'Речник на дигиталните иновации' : 'Digital Innovation Dictionary'}
           </h1>
         </div>
