@@ -21,7 +21,7 @@ import {
   Lightbulb, Rocket, Send, ChevronRight, FileText, Zap,
 } from 'lucide-react';
 
-type Phase = 'theory' | 'quiz' | 'analytical' | 'application' | 'results';
+type Phase = 'theory' | 'quiz' | 'case_study' | 'analytical' | 'application' | 'results';
 
 export default function LearningModulePlayer() {
   const { slug } = useParams<{ slug: string }>();
