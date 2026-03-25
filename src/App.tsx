@@ -54,6 +54,7 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
+      <XpCelebrationToaster />
       <LangProvider>
         <AuthProvider>
           <SimulatorProvider>

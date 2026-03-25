@@ -67,10 +67,25 @@ export async function awardXp(
 
     const result = data as AwardXpResult;
 
-    // Auto-show celebration toast
+    // Auto-show celebration toast + level-up check
     if (result.xp_awarded > 0) {
       const lang = (localStorage.getItem('digiinnov-lang') || 'en') as 'en' | 'bg';
       showXpToast(action, result.xp_awarded, lang);
+
+      // Check for level-up by reading current profile XP
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('total_xp')
+            .eq('user_id', user.id)
+            .maybeSingle();
+          if (profile) {
+            checkLevelUp(profile.total_xp - result.xp_awarded, profile.total_xp, lang);
+          }
+        }
+      } catch (_) { /* level-up check is best-effort */ }
     }
 
     return result;
