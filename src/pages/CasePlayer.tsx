@@ -733,6 +733,8 @@ export default function CasePlayer() {
                 tx={tx}
                 tl={tl}
                 lang={lang}
+                caseTitle={tx(caseStudy.title, caseStudy.title_bg)}
+                difficulty={caseStudy.difficulty}
               />
             ))}
           </div>
