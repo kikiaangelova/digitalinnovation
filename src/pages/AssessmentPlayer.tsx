@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { LearningPhaseBar, WhatYouWillLearn, ASSESSMENT_OUTCOMES } from '@/components/learning/LearningStructure';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';

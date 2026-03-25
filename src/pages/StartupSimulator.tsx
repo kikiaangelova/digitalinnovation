@@ -264,8 +264,9 @@ export default function StartupSimulator() {
               );
             })}
           </div>
+            </div>
+          </div>
         </div>
-      </div>
     );
   }
 
