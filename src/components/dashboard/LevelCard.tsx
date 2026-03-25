@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react';
 import { Zap, Star, Shield, Rocket, Crown } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 
@@ -33,6 +34,18 @@ export default function LevelCard({ xp, lang }: LevelCardProps) {
   const current = getCurrentLevel(xp);
   const next = getNextLevel(xp);
   const Icon = current.icon;
+  const prevXp = useRef(xp);
+  const [pulse, setPulse] = useState(false);
+
+  useEffect(() => {
+    if (xp !== prevXp.current && prevXp.current !== undefined) {
+      setPulse(true);
+      const timer = setTimeout(() => setPulse(false), 800);
+      prevXp.current = xp;
+      return () => clearTimeout(timer);
+    }
+    prevXp.current = xp;
+  }, [xp]);
 
   const progressToNext = next
     ? ((xp - current.xpNeeded) / (next.xpNeeded - current.xpNeeded)) * 100
@@ -59,7 +72,7 @@ export default function LevelCard({ xp, lang }: LevelCardProps) {
 
       <div className="flex items-center gap-3 mb-2">
         <Zap className="h-4 w-4 text-sim-warning" />
-        <span className="text-2xl font-bold text-foreground">{xp}</span>
+        <span className={`text-2xl font-bold text-foreground transition-transform ${pulse ? 'xp-pulse' : ''}`}>{xp}</span>
         <span className="text-sm text-muted-foreground">XP</span>
       </div>
 
