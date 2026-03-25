@@ -182,11 +182,11 @@ export default function StudentDashboard() {
               <div className="space-y-2">
                 {xpActions.map((a, i) => (
                   <div key={i} className="flex items-center justify-between py-1.5">
-                    <div className="flex items-center gap-2 text-sm text-foreground">
+                    <div className="flex items-center gap-2 typo-body">
                       <a.icon className="h-3.5 w-3.5 text-muted-foreground" />
-                      <span className="text-xs">{a.action}</span>
+                      <span className="text-[13px]">{a.action}</span>
                     </div>
-                    <span className="text-xs font-bold text-xp-gold">{a.xp}</span>
+                    <span className="text-[13px] typo-xp">{a.xp}</span>
                   </div>
                 ))}
               </div>
