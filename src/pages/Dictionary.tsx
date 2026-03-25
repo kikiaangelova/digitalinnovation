@@ -3,7 +3,7 @@ import AppHeader from '@/components/layout/AppHeader';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Search, Book, Lightbulb, ChevronDown, ChevronUp, Star, HelpCircle, CheckCircle2, XCircle, Shuffle, Trophy, BarChart3 } from 'lucide-react';
+import { Search, Book, Lightbulb, ChevronDown, ChevronUp, Star, Trophy, BarChart3 } from 'lucide-react';
 import { useLang } from '@/context/LangContext';
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
