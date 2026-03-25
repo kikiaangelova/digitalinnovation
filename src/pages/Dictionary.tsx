@@ -1,13 +1,15 @@
-import { useState, useMemo, useCallback, useRef } from 'react';
+import { useState, useMemo, useCallback, useRef, useEffect } from 'react';
 import AppHeader from '@/components/layout/AppHeader';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Search, Book, Lightbulb, ChevronDown, ChevronUp, Star, HelpCircle, CheckCircle2, XCircle, Shuffle } from 'lucide-react';
+import { Search, Book, Lightbulb, ChevronDown, ChevronUp, Star, HelpCircle, CheckCircle2, XCircle, Shuffle, Trophy, BarChart3 } from 'lucide-react';
 import { useLang } from '@/context/LangContext';
 import { useAuth } from '@/context/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 import { TERMS, type DictionaryTerm } from '@/data/dictionary-terms';
 import { awardXp } from '@/lib/xp';
+import QuickTest from '@/components/dictionary/QuickTest';
 
 const CATEGORY_COLORS: Record<string, string> = {
   Innovation: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20',
