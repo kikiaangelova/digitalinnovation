@@ -41,7 +41,7 @@ export default function StudentDashboard() {
     if (!user) { navigate('/auth?redirect=/dashboard'); return; }
     const fetchData = async () => {
       try {
-        const [casesRes, subsRes, projRes, simRes, prAssignRes, prReceivedRes, profileRes] = await Promise.all([
+        const [casesRes, subsRes, projRes, simRes, prAssignRes, prReceivedRes, profileRes, prGivenRes] = await Promise.all([
           supabase.from('case_studies').select('id, title, difficulty, est_minutes, topic').eq('published', true),
           supabase.from('submissions').select('case_study_id, is_draft, total_score, max_score').eq('user_id', user.id),
           supabase.from('startup_projects').select('problem, customer, value_proposition, digital_product, business_model, growth_strategy, final_pitch, is_submitted, bmc_customer_segments, bmc_value_proposition, bmc_channels, bmc_customer_relationships, bmc_revenue_streams, bmc_key_resources, bmc_key_activities, bmc_key_partners, bmc_cost_structure').eq('user_id', user.id).maybeSingle(),
@@ -49,18 +49,31 @@ export default function StudentDashboard() {
           supabase.from('peer_review_assignments').select('id').eq('reviewer_user_id', user.id).eq('status', 'pending'),
           supabase.from('peer_reviews').select('average_score').eq('reviewee_user_id', user.id),
           supabase.from('profiles').select('total_xp, onboarding_completed').eq('user_id', user.id).maybeSingle(),
+          supabase.from('peer_reviews').select('id').eq('reviewer_user_id', user.id),
         ]);
         setCases(casesRes.data || []);
         setSubmissions(subsRes.data || []);
         setStartupProject(projRes.data || null);
         setSimProgress(simRes.data || null);
         setPendingReviews((prAssignRes.data || []).length);
+        setPeerReviewsGiven((prGivenRes.data || []).length);
         const prScores = (prReceivedRes.data || []) as { average_score: number | null }[];
         setAvgPeerScore(prScores.length > 0 ? prScores.reduce((a, r) => a + Number(r.average_score || 0), 0) / prScores.length : null);
         const profileData = profileRes.data as any;
         setTotalXp(profileData?.total_xp || 0);
         if (profileData && !profileData.onboarding_completed && (profileData.total_xp || 0) === 0) {
           setShowOnboarding(true);
+        }
+        // Login streak from xp_ledger
+        const { data: ledgerDates } = await supabase.from('xp_ledger').select('created_at').eq('user_id', user.id).order('created_at', { ascending: false }).limit(100);
+        if (ledgerDates && ledgerDates.length > 0) {
+          const uniqueDays = [...new Set(ledgerDates.map(r => r.created_at.slice(0, 10)))].sort().reverse();
+          let streak = 1;
+          for (let i = 1; i < uniqueDays.length; i++) {
+            const diff = (new Date(uniqueDays[i - 1]).getTime() - new Date(uniqueDays[i]).getTime()) / 86400000;
+            if (diff <= 1.5) streak++; else break;
+          }
+          setLoginStreakDays(streak);
         }
       } catch (err) {
         console.error('Dashboard fetch error:', err);
