@@ -29,6 +29,7 @@ export default function AnalyticsDashboard() {
   const [startups, setStartups] = useState<any[]>([]);
   const [simProgress, setSimProgress] = useState<any[]>([]);
   const [courseProgress, setCourseProgress] = useState<any[]>([]);
+  const [quizResults, setQuizResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [onlineCount, setOnlineCount] = useState(1);
 
