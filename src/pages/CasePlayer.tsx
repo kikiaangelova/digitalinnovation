@@ -19,6 +19,7 @@ import {
   Lightbulb, Target, Zap, HelpCircle,
 } from 'lucide-react';
 import type { Json } from '@/integrations/supabase/types';
+import CaseAnswerMentor from '@/components/case/CaseAnswerMentor';
 
 /* ── Types ── */
 interface CaseStudy {
@@ -732,6 +733,8 @@ export default function CasePlayer() {
                 tx={tx}
                 tl={tl}
                 lang={lang}
+                caseTitle={tx(caseStudy.title, caseStudy.title_bg)}
+                difficulty={caseStudy.difficulty}
               />
             ))}
           </div>
@@ -966,7 +969,7 @@ export default function CasePlayer() {
 }
 
 /* ── Question Card ── */
-function QuestionCard({ question: q, index: idx, answer, isSubmitted, isStep0, step0NotesId, step0WordCount, onAnswer, onBlur, tx, tl, lang }: {
+function QuestionCard({ question: q, index: idx, answer, isSubmitted, isStep0, step0NotesId, step0WordCount, onAnswer, onBlur, tx, tl, lang, caseTitle, difficulty }: {
   question: Question; index: number; answer: any; isSubmitted: boolean;
   isStep0: boolean; step0NotesId?: string; step0WordCount: number;
   onAnswer: (id: string, val: any) => void;
@@ -974,8 +977,11 @@ function QuestionCard({ question: q, index: idx, answer, isSubmitted, isStep0, s
   tx: (en: string | null | undefined, bg: string | null | undefined) => string;
   tl: (en: string, bg: string) => string;
   lang: string;
+  caseTitle?: string;
+  difficulty?: string;
 }) {
   const promptText = tx(q.prompt, q.prompt_bg);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   return (
     <div className="rounded-lg border border-border bg-card p-6">
       <div className="flex items-start justify-between mb-4">
@@ -1006,6 +1012,7 @@ function QuestionCard({ question: q, index: idx, answer, isSubmitted, isStep0, s
       {(q.type === 'short_answer' || q.type === 'long_answer') && (
         <div>
           <Textarea
+            ref={textareaRef}
             value={answer || ''}
             onChange={e => onAnswer(q.id, e.target.value)}
             onBlur={() => void onBlur(q.id, answer || '')}
@@ -1017,6 +1024,23 @@ function QuestionCard({ question: q, index: idx, answer, isSubmitted, isStep0, s
             <p className={`text-xs mt-2 font-sans ${wordCountColor(step0WordCount)}`}>
               {tl(`Words: ${step0WordCount} / 100 recommended`, `Думи: ${step0WordCount} / 100 препоръчителни`)}
             </p>
+          )}
+          {/* AI Mentor Feedback */}
+          {!isSubmitted && !isStep0 && (
+            <CaseAnswerMentor
+              questionId={q.id}
+              questionPrompt={promptText}
+              questionType={q.type}
+              studentAnswer={String(answer || '')}
+              caseTitle={caseTitle || ''}
+              difficulty={difficulty || 'intermediate'}
+              lang={lang as 'en' | 'bg'}
+              disabled={isSubmitted}
+              onImproveClick={() => {
+                textareaRef.current?.focus();
+                textareaRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              }}
+            />
           )}
         </div>
       )}
