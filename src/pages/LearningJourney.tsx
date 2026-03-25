@@ -186,7 +186,7 @@ const STAGES: Stage[] = [
     descEn: 'Analyze industries and identify digital opportunities.',
     descBg: 'Анализирайте индустрии и идентифицирайте дигитални възможности.',
     milestoneEn: 'Submit Opportunity Analysis',
-    milestoneBg: 'Подайте анализ на възможностите',
+    milestoneBg: 'Подай анализ на възможностите',
     learnPath: '/cases', casePath: '/cases', simPath: '/simulator',
     startupKey: 'problem',
   },
