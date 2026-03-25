@@ -145,8 +145,15 @@ export default function TestInsights({ lang, userId }: TestInsightsProps) {
               <p className="text-xs font-semibold text-foreground">
                 {lang === 'bg' ? (catTranslations[stats.weakCategory] || stats.weakCategory) : stats.weakCategory}
               </p>
-            </div>
-          </div>
+      {stats.recommendedNextTest && (
+        <div className="mt-2 rounded-lg bg-primary/5 border border-primary/10 p-2">
+          <p className="text-[10px] text-muted-foreground uppercase">{t('Recommended Next Test', 'Препоръчан следващ тест')}</p>
+          <p className="text-xs font-semibold text-foreground">
+            {lang === 'bg' ? (catTranslations[stats.recommendedNextTest] || stats.recommendedNextTest) : stats.recommendedNextTest}
+          </p>
+        </div>
+      )}
+    </div>
         )}
       </div>
     </div>
