@@ -75,6 +75,7 @@ serve(async (req) => {
     }
 
     const config = XP_CONFIG[action];
+    let xpToAward = config.xp;
 
     // Check daily cap for dictionary actions
     if (config.daily_cap) {
