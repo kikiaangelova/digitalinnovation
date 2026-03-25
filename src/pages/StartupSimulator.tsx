@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
+import { LearningPhaseBar, WhatYouWillLearn, SIMULATOR_OUTCOMES } from '@/components/learning/LearningStructure';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
