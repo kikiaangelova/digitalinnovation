@@ -857,7 +857,7 @@ export default function TeacherDashboard() {
                         <p className="text-sm font-medium text-foreground">{s.full_name || 'Unknown'}</p>
                         <div className="flex flex-wrap gap-1.5 mt-1">
                           {s.reasons.map((r, i) => (
-                            <Badge key={i} variant="outline" className="text-[10px] border-destructive/30 text-destructive">{r}</Badge>
+                            <Badge key={i} variant="outline" className="text-xs border-destructive/30 text-destructive">{r}</Badge>
                           ))}
                         </div>
                       </div>
