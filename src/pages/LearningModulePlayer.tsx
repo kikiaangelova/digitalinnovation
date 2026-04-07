@@ -298,22 +298,34 @@ export default function LearningModulePlayer() {
                     {q.options.map(opt => {
                       const selected = quizAnswers[q.id] === opt.id;
                       const isCorrect = opt.correct;
-                      let cls = 'border-border hover:border-primary/40';
+                      let cls = 'border-border hover:border-primary/40 hover:bg-accent/40';
                       if (quizSubmitted) {
-                        if (isCorrect) cls = 'border-primary bg-primary/10';
-                        else if (selected && !isCorrect) cls = 'border-destructive bg-destructive/10';
+                        if (isCorrect) cls = 'border-primary bg-primary/10 ring-2 ring-primary/30';
+                        else if (selected && !isCorrect) cls = 'border-destructive bg-destructive/10 ring-2 ring-destructive/30';
                       } else if (selected) {
-                        cls = 'border-primary bg-primary/5';
+                        cls = 'border-primary bg-primary/10 ring-2 ring-primary/30 shadow-sm';
                       }
                       return (
                         <button
                           key={opt.id}
                           disabled={quizSubmitted}
                           onClick={() => setQuizAnswers(prev => ({ ...prev, [q.id]: opt.id }))}
-                          className={`w-full text-left rounded-lg border p-3 text-sm transition-colors ${cls}`}
+                          className={`w-full text-left rounded-lg border-2 p-3 text-sm transition-all duration-150 ${cls}`}
                         >
-                          <div className="flex items-center justify-between">
-                            <span className="text-foreground">{lang === 'bg' ? opt.bg : opt.en}</span>
+                          <div className="flex items-center gap-3">
+                            <div className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 transition-all ${
+                              selected && !quizSubmitted ? 'border-primary bg-primary' :
+                              quizSubmitted && isCorrect ? 'border-primary bg-primary' :
+                              quizSubmitted && selected && !isCorrect ? 'border-destructive bg-destructive' :
+                              'border-muted-foreground/40'
+                            }`}>
+                              {(selected || (quizSubmitted && isCorrect)) && (
+                                <CheckCircle2 className="h-3.5 w-3.5 text-primary-foreground" />
+                              )}
+                            </div>
+                            <span className={`flex-1 ${selected && !quizSubmitted ? 'text-primary font-medium' : 'text-foreground'}`}>
+                              {lang === 'bg' ? opt.bg : opt.en}
+                            </span>
                             {quizSubmitted && isCorrect && <CheckCircle2 className="h-4 w-4 text-primary shrink-0" />}
                             {quizSubmitted && selected && !isCorrect && <XCircle className="h-4 w-4 text-destructive shrink-0" />}
                           </div>
@@ -327,8 +339,15 @@ export default function LearningModulePlayer() {
 
             {!quizSubmitted ? (
               <div className="flex justify-end">
-                <Button onClick={handleQuizSubmit}>
+                <Button
+                  onClick={handleQuizSubmit}
+                  disabled={Object.keys(quizAnswers).length < quizMax}
+                  className={Object.keys(quizAnswers).length < quizMax ? 'opacity-50' : ''}
+                >
                   {t('Check Answers', 'Провери отговорите')}
+                  {Object.keys(quizAnswers).length < quizMax && (
+                    <span className="ml-2 text-xs opacity-70">({Object.keys(quizAnswers).length}/{quizMax})</span>
+                  )}
                 </Button>
               </div>
             ) : (
