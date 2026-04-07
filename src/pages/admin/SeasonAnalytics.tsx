@@ -1,6 +1,7 @@
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { useLang } from '@/context/LangContext';
 import { useSimulator } from '@/context/SimulatorContext';
 import KPIDashboard from '@/components/simulator/KPIDashboard';
 import { Button } from '@/components/ui/button';
@@ -10,6 +11,8 @@ import { toast } from 'sonner';
 
 export default function SeasonAnalytics() {
   const { isAdmin, loading } = useAuth();
+  const { lang } = useLang();
+  const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const {
@@ -26,7 +29,7 @@ export default function SeasonAnalytics() {
 
   if (loading) return null;
   if (!isAdmin) return <Navigate to="/dashboard" replace />;
-  if (!season) return <div className="p-8 text-center text-muted-foreground">Season not found</div>;
+  if (!season) return <div className="p-8 text-center text-muted-foreground">{t('Season not found', 'Сезонът не е намерен')}</div>;
 
   const team = seasonTeams.find(t => t.id === selectedTeam);
   const latestState = team ? getLatestCompanyState(team.id) : null;
@@ -39,7 +42,7 @@ export default function SeasonAnalytics() {
     addInstructorComment(selectedTeam, commentRound, comment);
     setComment('');
     setCommentRound('');
-    toast.success('Comment added');
+    toast.success(t('Comment added', 'Коментарът е добавен'));
   };
 
   const exportCSV = () => {
@@ -57,7 +60,7 @@ export default function SeasonAnalytics() {
     a.download = `${team.name}_results.csv`;
     a.click();
     URL.revokeObjectURL(url);
-    toast.success('CSV exported');
+    toast.success(t('CSV exported', 'CSV файлът е експортиран'));
   };
 
   return (
@@ -70,12 +73,12 @@ export default function SeasonAnalytics() {
             </Button>
             <div>
               <h1 className="text-lg font-bold text-foreground">{season.theme}</h1>
-              <p className="text-sm text-muted-foreground">Season Analytics</p>
+              <p className="text-sm text-muted-foreground">{t('Season Analytics', 'Анализ на сезона')}</p>
             </div>
           </div>
           <Button variant="outline" size="sm" onClick={exportCSV} disabled={!team}>
             <Download className="h-4 w-4 mr-1" />
-            Export CSV
+            {t('Export CSV', 'Експортирай CSV')}
           </Button>
         </div>
       </header>
@@ -98,14 +101,14 @@ export default function SeasonAnalytics() {
         {/* Current State */}
         {latestState && (
           <div>
-            <h2 className="text-lg font-semibold text-foreground mb-3">Latest KPIs — {team?.name}</h2>
+            <h2 className="text-lg font-semibold text-foreground mb-3">{t('Latest KPIs', 'Последни KPI')} — {team?.name}</h2>
             <KPIDashboard kpis={latestState.kpis} />
           </div>
         )}
 
         {/* Submission Timeline */}
         <div>
-          <h2 className="text-lg font-semibold text-foreground mb-4">Decision Timeline</h2>
+          <h2 className="text-lg font-semibold text-foreground mb-4">{t('Decision Timeline', 'Хронология на решенията')}</h2>
           <div className="space-y-4">
             {teamSubmissions.map(sub => {
               const round = season.rounds.find(r => r.id === sub.round_id);
@@ -113,7 +116,7 @@ export default function SeasonAnalytics() {
               return (
                 <div key={sub.id} className="rounded-xl border border-border bg-card p-5">
                   <div className="flex items-center justify-between mb-3">
-                    <h4 className="font-semibold text-foreground">Week {round?.week_number}</h4>
+                    <h4 className="font-semibold text-foreground">{t('Week', 'Седмица')} {round?.week_number}</h4>
                     <span className="text-xs text-muted-foreground">
                       {new Date(sub.submitted_at).toLocaleDateString()}
                     </span>
@@ -135,7 +138,7 @@ export default function SeasonAnalytics() {
                   )}
                   {report?.instructor_comment && (
                     <div className="mt-3 rounded-lg border border-primary/20 bg-primary/5 p-3">
-                      <p className="text-xs font-medium text-primary mb-1">Instructor Comment</p>
+                      <p className="text-xs font-medium text-primary mb-1">{t('Instructor Comment', 'Коментар на преподавателя')}</p>
                       <p className="text-sm text-foreground">{report.instructor_comment}</p>
                     </div>
                   )}
@@ -150,27 +153,27 @@ export default function SeasonAnalytics() {
           <div className="rounded-xl border border-border bg-card p-5">
             <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
               <MessageSquare className="h-4 w-4" />
-              Add Instructor Comment
+              {t('Add Instructor Comment', 'Добави коментар на преподавателя')}
             </h3>
             <select
               className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm mb-3"
               value={commentRound}
               onChange={e => setCommentRound(e.target.value)}
             >
-              <option value="">Select round...</option>
+              <option value="">{t('Select round...', 'Избери рунд...')}</option>
               {teamSubmissions.map(sub => {
                 const round = season.rounds.find(r => r.id === sub.round_id);
-                return <option key={sub.round_id} value={sub.round_id}>Week {round?.week_number}</option>;
+                return <option key={sub.round_id} value={sub.round_id}>{t('Week', 'Седмица')} {round?.week_number}</option>;
               })}
             </select>
             <Textarea
               value={comment}
               onChange={e => setComment(e.target.value)}
-              placeholder="Write your feedback..."
+              placeholder={t('Write your feedback...', 'Напиши обратна връзка...')}
               className="mb-3"
             />
             <Button size="sm" onClick={handleAddComment} disabled={!comment.trim() || !commentRound}>
-              Add Comment
+              {t('Add Comment', 'Добави коментар')}
             </Button>
           </div>
         )}
