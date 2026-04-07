@@ -134,6 +134,16 @@ export default function SeasonView() {
             })}
           </div>
         </div>
+
+        {/* Journey Summary — shown when all rounds are submitted */}
+        {simComplete && participantId && (
+          <SimulatorJourneySummary
+            allWeekAnswers={journeySummary}
+            startKpis={startKpis}
+            finalKpis={finalKpis}
+            lang={lang as 'en' | 'bg'}
+          />
+        )}
       </main>
     </div>
   );
