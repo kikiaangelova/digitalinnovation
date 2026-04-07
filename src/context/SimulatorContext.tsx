@@ -140,6 +140,8 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       round_id: seasons.find(s => s.id === seasonId)?.rounds[0]?.id || '',
       week_number: 0,
       kpis: INITIAL_KPIS,
+      resources: { ...INITIAL_RESOURCES },
+      gameStatus: 'playing' as GameStatus,
     }]);
     return team;
   }, [currentUser.name, seasons]);
