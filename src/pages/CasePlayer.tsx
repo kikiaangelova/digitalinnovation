@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import type { Json } from '@/integrations/supabase/types';
 import CaseAnswerMentor from '@/components/case/CaseAnswerMentor';
+import UncertaintyBanner from '@/components/case/UncertaintyBanner';
 
 /* ── Types ── */
 interface CaseStudy {
