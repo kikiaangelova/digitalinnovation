@@ -630,6 +630,54 @@ export default function LearningJourney() {
           })}
         </div>
       </main>
+
+      {/* Stage Completion Celebration Modal */}
+      <Dialog open={celebrateStage !== null} onOpenChange={(open) => { if (!open) setCelebrateStage(null); }}>
+        <DialogContent className="max-w-sm text-center">
+          <DialogHeader>
+            <DialogTitle className="flex items-center justify-center gap-2 text-xl">
+              <PartyPopper className="h-6 w-6 text-xp-gold" />
+              {t(`Stage ${celebrateStage} Complete! 🎉`, `Етап ${celebrateStage} завършен! 🎉`)}
+            </DialogTitle>
+            <DialogDescription>
+              {t('Congratulations on completing this stage!', 'Поздравления за завършването на този етап!')}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4 space-y-4">
+            <div className="rounded-lg bg-xp-gold/10 border border-xp-gold/30 p-4">
+              <p className="text-lg font-bold text-xp-gold flex items-center justify-center gap-2">
+                <Zap className="h-5 w-5" />
+                +{celebrateStage && STAGE_OUTCOMES[celebrateStage - 1]
+                  ? STAGE_OUTCOMES[celebrateStage - 1].xpAvailable
+                  : 0} XP {t('earned this stage', 'спечелени в този етап')}
+              </p>
+            </div>
+            {celebrateStage && celebrateStage < STAGES.length && (
+              <Button
+                className="w-full"
+                onClick={() => {
+                  const nextStage = STAGES[celebrateStage];
+                  setCelebrateStage(null);
+                  if (nextStage?.moduleSlugs?.length > 0) {
+                    navigate(`/learn/${nextStage.moduleSlugs[0]}`);
+                  } else {
+                    navigate(nextStage?.learnPath || '/journey');
+                  }
+                }}
+              >
+                <ArrowRight className="h-4 w-4 mr-2" />
+                {t(`Start Stage ${celebrateStage + 1}`, `Започни Етап ${celebrateStage + 1}`)}
+              </Button>
+            )}
+            {celebrateStage === STAGES.length && (
+              <Button className="w-full" onClick={() => { setCelebrateStage(null); navigate('/certificate'); }}>
+                <GraduationCap className="h-4 w-4 mr-2" />
+                {t('View Certificate', 'Виж сертификата')}
+              </Button>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
