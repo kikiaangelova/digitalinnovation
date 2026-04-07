@@ -282,10 +282,10 @@ const Index = () => {
 
           <div className="grid gap-3 sm:grid-cols-2">
             {[
-              { en: 'Target Audience', bg: 'Целева аудитория', cat: 'Marketing', catBg: 'Маркетинг', def: lang === 'bg' ? 'Конкретната група хора, които е най-вероятно да купят продукта ти.' : 'The specific group of people most likely to buy your product.' },
-              { en: 'Revenue Model', bg: 'Модел на приходите', cat: 'Pricing & Revenue', catBg: 'Ценообразуване', def: lang === 'bg' ? 'Стратегията за генериране на приходи от продукта или услугата.' : 'The strategy a business uses to generate income from its product.' },
-              { en: 'Bottleneck', bg: 'Тясно място', cat: 'Operations', catBg: 'Операции', def: lang === 'bg' ? 'Точка в процеса, която ограничава общата производителност.' : 'A point in a process where capacity is limited, restricting throughput.' },
-              { en: 'Founding Team', bg: 'Основателски екип', cat: 'Team & Roles', catBg: 'Екип и роли', def: lang === 'bg' ? 'Първоначалната група хора, които стартират компания заедно.' : 'The initial group of people who start a company together.' },
+              { en: 'Target Audience', bg: 'Целева аудитория', cat: 'Marketing', catBg: 'Маркетинг', def: t.dictTermTargetAudience },
+              { en: 'Revenue Model', bg: 'Модел на приходите', cat: 'Pricing & Revenue', catBg: 'Ценообразуване', def: t.dictTermRevenueModel },
+              { en: 'Bottleneck', bg: 'Тясно място', cat: 'Operations', catBg: 'Операции', def: t.dictTermBottleneck },
+              { en: 'Founding Team', bg: 'Основателски екип', cat: 'Team & Roles', catBg: 'Екип и роли', def: t.dictTermFoundingTeam },
             ].map((item, i) => (
               <div key={i} className="group rounded-xl border border-border bg-card p-4 hover:border-primary/30 transition-all duration-300">
                 <div className="flex items-center justify-between mb-2">
