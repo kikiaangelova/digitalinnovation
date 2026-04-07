@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -132,7 +132,7 @@
   }
 
   h1, h2, h3 {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Inter', system-ui, sans-serif;
   }
 }
 
@@ -147,7 +147,8 @@
     background-clip: text;
   }
   .font-display {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 700;
   }
   .glow-primary {
     box-shadow: 0 0 20px hsl(210 78% 46% / 0.25), 0 0 60px hsl(210 78% 46% / 0.1);
