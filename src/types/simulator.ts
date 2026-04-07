@@ -45,6 +45,7 @@ export interface DecisionOption {
 export interface DecisionRule {
   option_id: string;
   deltas: Partial<KPIs>;
+  resource_deltas?: ResourceDelta;
   conditions?: { kpi: keyof KPIs; operator: '>' | '<' | '>=' | '<='; value: number }[];
   conditional_deltas?: Partial<KPIs>;
 }
