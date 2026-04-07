@@ -8,11 +8,12 @@ import KPIDashboard from '@/components/simulator/KPIDashboard';
 import NarrativeBriefing from '@/components/simulator/NarrativeBriefing';
 import DecisionForm from '@/components/simulator/DecisionForm';
 import OutcomeReportView from '@/components/simulator/OutcomeReportView';
+import TurbulenceMeter from '@/components/simulator/TurbulenceMeter';
 import StructuredFeedback from '@/components/feedback/StructuredFeedback';
 import SkillsImproved from '@/components/learning/SkillsImproved';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, ChevronLeft, ChevronRight, Zap, Target, TrendingUp, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight, Zap, Target, TrendingUp, AlertTriangle, Shield } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function RoundView() {
@@ -116,8 +117,22 @@ export default function RoundView() {
           narrative={round.narrative}
           weekNumber={round.week_number}
           shockEvent={round.shock_event}
+          turbulence={currentState?.turbulence}
           lang={lang}
         />
+
+        {/* TURBULENCE METER */}
+        {currentState?.turbulence && (
+          <div>
+            <div className="flex items-center gap-2 mb-3">
+              <Shield className="h-5 w-5 text-primary" />
+              <h2 className="text-lg font-semibold text-foreground">
+                {lang === 'bg' ? 'Пазарна турбулентност' : 'Market Turbulence'}
+              </h2>
+            </div>
+            <TurbulenceMeter turbulence={currentState.turbulence} lang={lang} />
+          </div>
+        )}
 
         {/* 2. CURRENT METRICS – context for decision-making */}
         {currentState && (

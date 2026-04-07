@@ -146,6 +146,15 @@ export const SEED_SEASON: SimulationSeason = {
       season_id: 'season-startup-lab',
       week_number: 2,
       narrative: `Week 2: You've identified your problem area and target customer. Now it's time to go deeper. What exactly is your value proposition? Why would customers choose YOUR solution over alternatives?\n\nRemember: a great value proposition answers three questions:\n1. What problem do you solve?\n2. How do you solve it differently?\n3. Why should the customer care?\n\nYour first users are starting to show interest. Keep them engaged!`,
+      shock_event: {
+        title: 'Economic Uncertainty Rising',
+        description: 'Global markets show signs of instability. Consumer confidence drops and early adopters become more cautious with new products.',
+        kpi_effects: { users_total: -10, cac: 5, brand_trust: -2 },
+        category: 'market_crash',
+        severity: 1,
+        concept_lesson: '💡 Chaotics Principle: Turbulence is the new normal. Early-stage startups must build resilience into their DNA from day one.',
+        concept_lesson_bg: '💡 Принцип Chaotics: Турбулентността е новата нормалност. Стартъпите в ранен етап трябва да вградят устойчивост от първия ден.',
+      },
       decisions: [
         {
           id: 'r2d1', round_id: 'round-2', title: 'Value Proposition', description: 'What is your key differentiator?',
@@ -328,6 +337,10 @@ export const SEED_SEASON: SimulationSeason = {
         title: 'Competitor Launches Similar App',
         description: 'A well-funded team launches an app solving a similar problem. They have a bigger budget but less focus.',
         kpi_effects: { nps: -3, churn_rate: 0.01, users_total: -15, brand_trust: -3 },
+        category: 'competitor_entry',
+        severity: 3,
+        concept_lesson: '💡 Adaptability: When competitors appear, your differentiation becomes critical. Focus on what makes you unique rather than reacting to their moves.',
+        concept_lesson_bg: '💡 Адаптивност: Когато се появят конкуренти, вашата диференциация става критична.',
       },
       decisions: [
         {
@@ -417,7 +430,16 @@ export const SEED_SEASON: SimulationSeason = {
       id: 'round-5',
       season_id: 'season-startup-lab',
       week_number: 5,
-      narrative: `Week 5: Your MVP is live and getting real user feedback! Now it's time to think about growth. How do you get from your first 100 users to 1,000? And then to 10,000?\n\nGrowth is not just about marketing — it's about creating a product people want to share. Think about:\n• Acquisition — how do new users find you?\n• Activation — do they have a great first experience?\n• Retention — do they come back?\n• Revenue — do they pay?\n• Referral — do they tell friends?`,
+      narrative: `Week 5: Your MVP is live and getting real user feedback! Now it's time to think about growth.\n\nBut first — TURBULENCE! New data privacy regulations have been announced. Your data collection practices need review, and compliance costs are rising.\n\nGrowth is not just about marketing — it's about creating a product people want to share while navigating an increasingly chaotic market.`,
+      shock_event: {
+        title: 'New Data Privacy Regulation',
+        description: 'The government announces strict data privacy laws effective immediately. Startups must invest in compliance or face penalties.',
+        kpi_effects: { compliance_risk: 15, burn_rate: 800, tech_debt: 5, product_quality: -2 },
+        category: 'regulation_change',
+        severity: 3,
+        concept_lesson: '💡 Regulatory Resilience: Kotler teaches that regulatory turbulence creates winners and losers. Companies that see compliance as a trust-building opportunity gain long-term advantage.',
+        concept_lesson_bg: '💡 Регулаторна устойчивост: Котлър учи, че регулаторната турбулентност създава победители и губещи.',
+      },
       decisions: [
         {
           id: 'r5d1', round_id: 'round-5', title: 'Growth Strategy', description: 'Which growth approach will you prioritize?',
@@ -511,6 +533,10 @@ export const SEED_SEASON: SimulationSeason = {
         title: 'Investment Offers',
         description: 'Two investment offers arrive: a large investor (€200K for 40%) or an accelerator (€50K for 8% + mentorship).',
         kpi_effects: { brand_trust: 5, nps: 3 },
+        category: 'market_crash',
+        severity: 2,
+        concept_lesson: '💡 Strategic Decision Under Pressure: In Kotler\'s Chaotics, the best leaders make bold but calculated moves during market turbulence. Evaluate long-term impact, not just short-term relief.',
+        concept_lesson_bg: '💡 Стратегическо решение под натиск: Най-добрите лидери правят смели, но калкулирани ходове по време на турбулентност.',
       },
       decisions: [
         {
