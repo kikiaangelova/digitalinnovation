@@ -85,15 +85,20 @@ export default function AppHeader() {
       : []),
   ];
 
-  // ─── Mobile drawer links ───
-  const mobileLinks = user
+  // ─── Bottom tab bar items (mobile, logged-in) ───
+  const bottomTabs = [
+    { to: '/dashboard', icon: LayoutDashboard, label: lang === 'bg' ? 'Начало' : 'Home' },
+    { to: '/cases', icon: BookOpen, label: t.cases },
+    { to: '/my-startup', icon: Rocket, label: lang === 'bg' ? 'Стартъп' : 'Startup' },
+    { to: '/simulator', icon: Play, label: t.simulator },
+    { to: '__more__', icon: Menu, label: lang === 'bg' ? 'Още' : 'More' },
+  ];
+
+  // ─── "More" drawer links (mobile bottom sheet) ───
+  const moreDrawerLinks = user
     ? [
-        { to: '/dashboard', icon: LayoutDashboard, label: t.dashboard },
         { to: '/journey', icon: Map, label: lang === 'bg' ? 'Пътешествие' : 'Journey', showProgress: true },
-        { to: '/cases', icon: BookOpen, label: t.cases },
         { to: '/learn', icon: GraduationCap, label: lang === 'bg' ? 'Теория' : 'Learn' },
-        { to: '/simulator', icon: Play, label: t.simulator },
-        { to: '/my-startup', icon: Rocket, label: t.startup },
         { to: '/dictionary', icon: Book, label: t.dictionary },
         { to: '/about', icon: Lightbulb, label: t.about },
         { to: '/profile', icon: User, label: t.profile },
@@ -110,17 +115,20 @@ export default function AppHeader() {
       ];
 
   const displayName = profile?.display_name || profile?.full_name || user?.email || '';
+  const initials = displayName
+    ? displayName.split(/[\s_]+/).map((w: string) => w[0]).join('').slice(0, 2).toUpperCase()
+    : 'U';
 
   return (
     <>
       <header className="border-b border-border bg-card/95 backdrop-blur-sm sticky top-0 z-30">
         <div className="container mx-auto flex items-center justify-between px-4 py-2.5">
-          {/* Logo */}
+          {/* Logo — always visible */}
           <Link to="/" className="flex items-center gap-2.5 shrink-0">
             <div className="flex h-8 w-8 items-center justify-center rounded-lg sim-gradient">
               <GraduationCap className="h-4 w-4 text-primary-foreground" />
             </div>
-            <span className="font-display font-bold text-foreground hidden sm:inline">
+            <span className="font-display font-bold text-foreground">
               {t.appName}
             </span>
           </Link>
@@ -145,13 +153,13 @@ export default function AppHeader() {
               </Link>
             )}
 
-            {/* Lang toggle */}
+            {/* Lang toggle — styled as pill */}
             <button
               onClick={toggleLang}
-              className="flex items-center gap-1 px-2 py-1.5 rounded-md text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+              className="flex items-center gap-1 px-2.5 py-1 rounded-full border border-border bg-muted/50 text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
               title={lang === 'en' ? 'Превключи на български' : 'Switch to English'}
             >
-              <Globe className="h-3.5 w-3.5" />
+              <Globe className="h-3 w-3" />
               {lang === 'en' ? 'BG' : 'EN'}
             </button>
 
@@ -163,7 +171,7 @@ export default function AppHeader() {
                   className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg hover:bg-muted transition-colors"
                 >
                   <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-primary text-xs font-bold uppercase">
-                    {(displayName[0] || 'U')}
+                    {initials}
                   </div>
                   <span className="text-sm text-foreground font-medium max-w-[120px] truncate">
                     {displayName}
@@ -211,18 +219,28 @@ export default function AppHeader() {
               </div>
             )}
 
-            {/* ─── Mobile hamburger ─── */}
-            <button
-              onClick={() => setDrawerOpen(true)}
-              className="md:hidden flex items-center justify-center h-9 w-9 rounded-md hover:bg-muted transition-colors"
-              aria-label="Menu"
-            >
-              <Menu className="h-5 w-5 text-foreground" />
-            </button>
+            {/* ─── Mobile: avatar circle (logged-in) or sign-in buttons (logged-out) ─── */}
+            {user ? (
+              <Link
+                to="/profile"
+                className="md:hidden flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary text-xs font-bold uppercase shrink-0"
+              >
+                {initials}
+              </Link>
+            ) : (
+              <div className="md:hidden flex items-center gap-1.5">
+                <Button variant="outline" size="sm" asChild>
+                  <Link to="/auth">{t.signIn}</Link>
+                </Button>
+                <Button size="sm" asChild className="sim-gradient border-0">
+                  <Link to="/auth?mode=signup">{t.signUp}</Link>
+                </Button>
+              </div>
+            )}
           </div>
         </div>
 
-        {/* ═══ Journey progress bar (desktop, logged-in only) ═══ */}
+        {/* ═══ Journey progress bar (below top header, logged-in only) ═══ */}
         {user && (
           <div className="h-[3px] w-full bg-muted">
             <div
@@ -233,7 +251,7 @@ export default function AppHeader() {
         )}
       </header>
 
-      {/* ═══ Mobile drawer overlay ═══ */}
+      {/* ═══ Mobile "More" drawer overlay ═══ */}
       {drawerOpen && (
         <div
           className="fixed inset-0 z-40 bg-black/40 md:hidden animate-fade-in"
@@ -241,7 +259,7 @@ export default function AppHeader() {
         />
       )}
 
-      {/* ═══ Mobile drawer ═══ */}
+      {/* ═══ Mobile "More" drawer ═══ */}
       <div
         className={`fixed top-0 right-0 z-50 h-full w-72 bg-card border-l border-border shadow-xl md:hidden transition-transform duration-300 ease-in-out ${
           drawerOpen ? 'translate-x-0' : 'translate-x-full'
@@ -252,7 +270,7 @@ export default function AppHeader() {
           {user && (
             <div className="flex items-center gap-2 min-w-0">
               <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary text-xs font-bold uppercase shrink-0">
-                {(displayName[0] || 'U')}
+                {initials}
               </div>
               <span className="text-sm font-medium text-foreground truncate">
                 {displayName}
@@ -270,7 +288,7 @@ export default function AppHeader() {
 
         {/* Drawer links */}
         <nav className="flex flex-col p-3 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 60px)' }}>
-          {mobileLinks.map(l => (
+          {moreDrawerLinks.map(l => (
             <Link
               key={l.to}
               to={l.to}
@@ -284,7 +302,6 @@ export default function AppHeader() {
             >
               <l.icon className="h-4 w-4 text-muted-foreground shrink-0" />
               <span className="flex-1">{l.label}</span>
-              {/* Journey progress badge on mobile */}
               {'showProgress' in l && l.showProgress && user && (
                 <Badge variant="secondary" className="text-xs font-bold tabular-nums">
                   {journeyPct}%
@@ -326,6 +343,55 @@ export default function AppHeader() {
           )}
         </nav>
       </div>
+
+      {/* ═══ Mobile bottom tab bar (logged-in only) ═══ */}
+      {user && (
+        <nav
+          className="fixed bottom-0 left-0 right-0 z-30 border-t border-border bg-card/95 backdrop-blur-sm md:hidden"
+          style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+        >
+          <div className="flex items-center justify-around">
+            {bottomTabs.map(tab => {
+              const isMore = tab.to === '__more__';
+              const active = isMore ? drawerOpen : isActive(tab.to);
+              const Icon = tab.icon;
+
+              const handleClick = () => {
+                if (isMore) {
+                  setDrawerOpen(prev => !prev);
+                } else {
+                  navigate(tab.to);
+                }
+              };
+
+              return (
+                <button
+                  key={tab.to}
+                  onClick={handleClick}
+                  className="flex flex-col items-center gap-1 flex-1 py-2 cursor-pointer"
+                >
+                  <span
+                    className={`flex items-center justify-center transition-colors ${
+                      active
+                        ? 'bg-primary/15 rounded-lg px-3 py-1'
+                        : 'px-3 py-1'
+                    }`}
+                  >
+                    <Icon className={`h-5 w-5 ${active ? 'text-primary' : 'text-muted-foreground'}`} />
+                  </span>
+                  <span
+                    className={`text-[11px] leading-none ${
+                      active ? 'text-primary font-medium' : 'text-muted-foreground'
+                    }`}
+                  >
+                    {tab.label}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </nav>
+      )}
     </>
   );
 }
