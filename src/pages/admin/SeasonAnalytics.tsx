@@ -60,7 +60,7 @@ export default function SeasonAnalytics() {
     a.download = `${team.name}_results.csv`;
     a.click();
     URL.revokeObjectURL(url);
-    toast.success('CSV exported');
+    toast.success(t('CSV exported', 'CSV файлът е експортиран'));
   };
 
   return (
