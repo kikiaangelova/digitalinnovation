@@ -46,6 +46,7 @@ import ResetPasswordPage from "./pages/ResetPasswordPage";
 import PeerReview from "./pages/PeerReview";
 import PeerReviewAdmin from "./pages/admin/PeerReviewAdmin";
 import LearningJourney from "./pages/LearningJourney";
+import StageLearn from "./pages/StageLearn";
 import LearningModules from "./pages/LearningModules";
 import LearningModulePlayer from "./pages/LearningModulePlayer";
 import FinalExam from "./pages/FinalExam";
