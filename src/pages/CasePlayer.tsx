@@ -621,6 +621,9 @@ export default function CasePlayer() {
           </div>
         </div>
 
+        {/* Uncertainty banner */}
+        <UncertaintyBanner stepIndex={currentStep} lang={lang as 'en' | 'bg'} />
+
         {/* Language fallback notice (students see BG fallback only) */}
         {bgFallbackActive && !showMissingSectionsWarning && (
           <div className="flex items-center gap-2 rounded-lg border border-sim-warning/30 bg-sim-warning/5 px-4 py-3">
