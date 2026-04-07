@@ -321,8 +321,9 @@ export default function LearningJourney() {
       <main className="container mx-auto px-4 py-8 max-w-4xl space-y-8">
         {/* Header */}
         <div>
-          <h1 className="typo-h1">
+          <h1 className="typo-h1 flex items-center gap-2">
             {t('Startup Journey', 'Стартъп пътешествие')}
+            <PhaseBadge phase="fun" lang={lang as 'en' | 'bg'} />
           </h1>
           <p className="text-muted-foreground text-sm mt-1">
             {t('Build your startup step by step. Complete each stage to unlock the next one.',
