@@ -42,7 +42,7 @@ export default function SeasonAnalytics() {
     addInstructorComment(selectedTeam, commentRound, comment);
     setComment('');
     setCommentRound('');
-    toast.success('Comment added');
+    toast.success(t('Comment added', 'Коментарът е добавен'));
   };
 
   const exportCSV = () => {
