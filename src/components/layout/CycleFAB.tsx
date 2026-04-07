@@ -5,10 +5,23 @@ import { Button } from '@/components/ui/button';
 
 type Phase = 'learn' | 'apply' | 'fun' | 'unknown';
 
+// Hub pages only — exclude detail/player pages where user is mid-task
+const HUB_PAGES: Record<Phase, string[]> = {
+  learn: ['/learn', '/dictionary'],
+  apply: ['/cases', '/my-startup', '/startup-simulator'],
+  fun: ['/dashboard', '/leaderboard', '/journey'],
+  unknown: [],
+};
+
 function getPagePhase(pathname: string): Phase {
-  if (['/learn', '/dictionary'].some(p => pathname.startsWith(p)) && pathname !== '/leaderboard') return 'learn';
-  if (['/cases', '/case/', '/simulator', '/my-startup', '/startup-simulator'].some(p => pathname.startsWith(p))) return 'apply';
-  if (['/dashboard', '/leaderboard', '/journey'].some(p => pathname.startsWith(p))) return 'fun';
+  // Exclude mid-task detail pages
+  if (/^\/case\//.test(pathname)) return 'unknown';        // inside a case study
+  if (/^\/learn\/[^/]+/.test(pathname)) return 'unknown';  // inside a learn module player
+  if (/^\/simulator\//.test(pathname)) return 'unknown';   // inside simulator round/season
+
+  if (HUB_PAGES.learn.some(p => pathname === p || pathname === p + '/')) return 'learn';
+  if (HUB_PAGES.apply.some(p => pathname === p || pathname.startsWith(p))) return 'apply';
+  if (HUB_PAGES.fun.some(p => pathname === p || pathname.startsWith(p))) return 'fun';
   return 'unknown';
 }
 
