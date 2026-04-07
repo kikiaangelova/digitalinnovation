@@ -268,9 +268,18 @@ export default function MyStartupIdea() {
         const isFilled = ((newData as any)[key] || '').trim().length > 20;
         const wasFilled = prevSectionsRef.current[key] || false;
         if (isFilled && !wasFilled) {
-          awardXp(action, user.id); // fire-and-forget
+          awardXp(action, user.id);
           prevSectionsRef.current[key] = true;
         }
+      }
+
+      // Check if all 9 sections just became complete
+      const allNowComplete = SECTIONS.every(s => ((newData as any)[s.key] || '').trim().length > 20);
+      const wasAllComplete = prevSectionsRef.current['__all_complete'] || false;
+      if (allNowComplete && !wasAllComplete) {
+        prevSectionsRef.current['__all_complete'] = true;
+        awardXp('startup_all_sections', user.id);
+        toast.success(t('All sections complete! +50 XP earned! 🎉', 'Всички секции са завършени! +50 XP спечелени! 🎉'));
       }
     } catch {
       toast.error(t('Failed to save', 'Грешка при запазване'));
