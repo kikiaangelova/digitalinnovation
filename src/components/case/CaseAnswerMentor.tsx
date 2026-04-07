@@ -2,9 +2,10 @@ import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Slider } from '@/components/ui/slider';
 import MarkdownContent from '@/components/ui/markdown-content';
 import { toast } from 'sonner';
-import { Bot, Sparkles, Loader2, PenTool, AlertCircle } from 'lucide-react';
+import { Bot, Sparkles, Loader2, PenTool, AlertCircle, Gauge } from 'lucide-react';
 
 interface Props {
   questionId: string;
