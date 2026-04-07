@@ -169,12 +169,14 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
     const latestState = getLatestCompanyState(participantId);
     if (!latestState) return null;
 
-    const { newKPIs, report } = processRound(
+    const { newKPIs, report, turbulence: newTurbulence, dynamicShock } = processRound(
       latestState.kpis,
       answers,
       round.decisions,
       round.shock_event,
-      season.volatility
+      season.volatility,
+      latestState.turbulence,
+      round.week_number,
     );
 
     const submission: DecisionSubmission = {
@@ -203,6 +205,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       round_id: roundId,
       week_number: round.week_number,
       kpis: newKPIs,
+      turbulence: newTurbulence,
     };
 
     setSubmissions(prev => [...prev, submission]);
