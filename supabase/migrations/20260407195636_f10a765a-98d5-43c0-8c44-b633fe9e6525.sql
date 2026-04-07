@@ -1,0 +1,1 @@
+ALTER TABLE public.profiles ADD COLUMN avatar_style text NOT NULL DEFAULT '';
