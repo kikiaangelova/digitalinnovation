@@ -344,6 +344,9 @@ export default function LearningJourney() {
             const isLocked = !unlocked;
             const outcomes = STAGE_OUTCOMES[idx];
             const isExpanded = expanded.has(stage.id) && unlocked;
+            const checklist = getStageChecklist(stage, idx);
+            const checkDone = checklist.filter(c => c.done).length;
+            const checkPct = Math.round((checkDone / checklist.length) * 100);
 
             return (
               <div
