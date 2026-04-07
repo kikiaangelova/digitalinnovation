@@ -27,7 +27,7 @@ interface SimulatorActions {
   createTeam: (seasonId: string, name: string) => Team;
   joinTeam: (code: string, userName: string) => Team | null;
   saveDraft: (roundId: string, participantId: string, answers: DecisionAnswer[], rationale: string, reflection: string) => void;
-  submitDecisions: (roundId: string, participantId: string) => OutcomeReport | null;
+  submitDecisions: (roundId: string, participantId: string, crisisAnswers?: Record<string, string>) => OutcomeReport | null;
   getTeamForSeason: (seasonId: string) => Team | null;
   getCompanyState: (participantId: string, roundId: string) => CompanyState | null;
   getLatestCompanyState: (participantId: string) => CompanyState | null;
