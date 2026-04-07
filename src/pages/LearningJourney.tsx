@@ -216,6 +216,8 @@ export default function LearningJourney() {
     });
   };
 
+  const sectionFilled = (key: string) => progress.startupSectionMap[key] || false;
+
   /* ---- per-stage checklist items ---- */
   interface ChecklistItem {
     labelEn: string;
