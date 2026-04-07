@@ -1,17 +1,21 @@
+import { useMemo } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useLang } from '@/context/LangContext';
 import { useSimulator } from '@/context/SimulatorContext';
 import KPIDashboard from '@/components/simulator/KPIDashboard';
+import SimulatorJourneySummary from '@/components/simulator/SimulatorJourneySummary';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Check, Lock, Clock, Users, Copy, Home } from 'lucide-react';
 import { toast } from 'sonner';
+import type { KPIs } from '@/types/simulator';
+import { KPI_DIRECTIONS } from '@/types/simulator';
 
 export default function SeasonView() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { lang } = useLang();
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
-  const { seasons, getParticipantId, getLatestCompanyState, getSubmission, getTeamForSeason, simulatorMode } = useSimulator();
+  const { seasons, getParticipantId, getLatestCompanyState, getSubmission, getOutcomeReport, getCompanyStateHistory, getTeamForSeason, simulatorMode } = useSimulator();
 
   const season = seasons.find(s => s.id === id);
   if (!season) return <div className="p-8 text-center text-muted-foreground">{t('Season not found', 'Сезонът не е намерен')}</div>;
