@@ -15,6 +15,22 @@ export interface KPIs {
   compliance_risk: number;
 }
 
+/** Core survival resources – layered on top of KPIs */
+export interface Resources {
+  money: number;       // € budget
+  team: number;        // people count
+  runway: number;      // months remaining
+}
+
+export type GameStatus = 'playing' | 'won' | 'lost_money' | 'lost_time';
+
+export interface ResourceDelta {
+  money?: number;
+  team?: number;
+  runway?: number;
+  label?: string;
+}
+
 export type DecisionType = 'strategy' | 'product' | 'growth' | 'data_ai' | 'ops_risk';
 export type QuestionFormat = 'multiple_choice' | 'ranking' | 'budget_allocation' | 'short_answer';
 export type TeamRole = 'lead' | 'member';
