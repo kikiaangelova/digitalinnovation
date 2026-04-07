@@ -8,11 +8,12 @@ import KPIDashboard from '@/components/simulator/KPIDashboard';
 import NarrativeBriefing from '@/components/simulator/NarrativeBriefing';
 import DecisionForm from '@/components/simulator/DecisionForm';
 import OutcomeReportView from '@/components/simulator/OutcomeReportView';
+import TurbulenceMeter from '@/components/simulator/TurbulenceMeter';
 import StructuredFeedback from '@/components/feedback/StructuredFeedback';
 import SkillsImproved from '@/components/learning/SkillsImproved';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, ChevronLeft, ChevronRight, Zap, Target, TrendingUp, AlertTriangle } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight, Zap, Target, TrendingUp, AlertTriangle, Shield } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function RoundView() {
