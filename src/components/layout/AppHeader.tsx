@@ -91,6 +91,7 @@ export default function AppHeader() {
         { to: '/dashboard', icon: LayoutDashboard, label: t.dashboard },
         { to: '/journey', icon: Map, label: lang === 'bg' ? 'Пътешествие' : 'Journey', showProgress: true },
         { to: '/cases', icon: BookOpen, label: t.cases },
+        { to: '/learn', icon: GraduationCap, label: lang === 'bg' ? 'Теория' : 'Learn' },
         { to: '/simulator', icon: Play, label: t.simulator },
         { to: '/my-startup', icon: Rocket, label: t.startup },
         { to: '/dictionary', icon: Book, label: t.dictionary },
