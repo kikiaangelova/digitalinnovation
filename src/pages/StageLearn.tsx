@@ -20,11 +20,17 @@ export default function StageLearn() {
   const { user, loading: authLoading } = useAuth();
   const { lang } = useLang();
   const navigate = useNavigate();
+  const progress = useProgress();
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
 
   const stageNum = parseInt(stageId || '1', 10);
   const stageData = STAGE_LEARN_CONTENT.find(s => s.stageId === stageNum);
   const Icon = STAGE_ICONS[stageNum - 1] || BookOpen;
+
+  // Stage locking: Stage N requires Stage N-1 completed
+  const isStageUnlocked = stageNum === 1 || (
+    progress.stageStatuses[stageNum - 2] === 'completed'
+  );
 
   useEffect(() => {
     if (!authLoading && !user) navigate('/auth?redirect=/journey/learn/' + stageNum);
