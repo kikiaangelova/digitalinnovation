@@ -1,6 +1,7 @@
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
+import { useProgress } from '@/context/ProgressContext';
 import { STAGE_LEARN_CONTENT } from '@/data/stage-learn-content';
 import AppHeader from '@/components/layout/AppHeader';
 import { Button } from '@/components/ui/button';
@@ -8,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import MarkdownContent from '@/components/ui/markdown-content';
 import {
   BookOpen, Search, Lightbulb, Palette, TrendingUp, Presentation,
-  ArrowLeft, ArrowRight, Clock, ChevronRight, Rocket,
+  ArrowLeft, ArrowRight, Clock, ChevronRight, Rocket, Lock,
 } from 'lucide-react';
 import { useEffect } from 'react';
 
@@ -19,11 +20,17 @@ export default function StageLearn() {
   const { user, loading: authLoading } = useAuth();
   const { lang } = useLang();
   const navigate = useNavigate();
+  const progress = useProgress();
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
 
   const stageNum = parseInt(stageId || '1', 10);
   const stageData = STAGE_LEARN_CONTENT.find(s => s.stageId === stageNum);
   const Icon = STAGE_ICONS[stageNum - 1] || BookOpen;
+
+  // Stage locking: Stage N requires Stage N-1 completed
+  const isStageUnlocked = stageNum === 1 || (
+    progress.stageStatuses[stageNum - 2] === 'completed'
+  );
 
   useEffect(() => {
     if (!authLoading && !user) navigate('/auth?redirect=/journey/learn/' + stageNum);
@@ -39,6 +46,32 @@ export default function StageLearn() {
         <AppHeader />
         <div className="flex flex-col items-center justify-center py-20 gap-4">
           <p className="text-muted-foreground">{t('Stage not found', 'Етапът не е намерен')}</p>
+          <Button variant="outline" onClick={() => navigate('/journey')}>
+            <ArrowLeft className="h-4 w-4 mr-1" /> {t('Back to Journey', 'Обратно към пътешествието')}
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  // If stage is locked, show a locked message
+  if (!progress.loading && !isStageUnlocked) {
+    return (
+      <div className="min-h-screen bg-background">
+        <AppHeader />
+        <div className="flex flex-col items-center justify-center py-20 gap-4">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted">
+            <Lock className="h-8 w-8 text-muted-foreground" />
+          </div>
+          <h2 className="text-lg font-semibold text-foreground">
+            {t('Stage Locked', 'Етапът е заключен')}
+          </h2>
+          <p className="text-muted-foreground text-center max-w-md">
+            {t(
+              `Complete Stage ${stageNum - 1} first to unlock this content.`,
+              `Завърши Етап ${stageNum - 1} първо, за да отключиш това съдържание.`
+            )}
+          </p>
           <Button variant="outline" onClick={() => navigate('/journey')}>
             <ArrowLeft className="h-4 w-4 mr-1" /> {t('Back to Journey', 'Обратно към пътешествието')}
           </Button>
