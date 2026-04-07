@@ -54,6 +54,32 @@ export default function StageLearn() {
     );
   }
 
+  // If stage is locked, show a locked message
+  if (!progress.loading && !isStageUnlocked) {
+    return (
+      <div className="min-h-screen bg-background">
+        <AppHeader />
+        <div className="flex flex-col items-center justify-center py-20 gap-4">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-muted">
+            <Lock className="h-8 w-8 text-muted-foreground" />
+          </div>
+          <h2 className="text-lg font-semibold text-foreground">
+            {t('Stage Locked', 'Етапът е заключен')}
+          </h2>
+          <p className="text-muted-foreground text-center max-w-md">
+            {t(
+              `Complete Stage ${stageNum - 1} first to unlock this content.`,
+              `Завърши Етап ${stageNum - 1} първо, за да отключиш това съдържание.`
+            )}
+          </p>
+          <Button variant="outline" onClick={() => navigate('/journey')}>
+            <ArrowLeft className="h-4 w-4 mr-1" /> {t('Back to Journey', 'Обратно към пътешествието')}
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   const hasNext = stageNum < 6;
   const hasPrev = stageNum > 1;
 
