@@ -73,9 +73,10 @@ export interface ShockEvent {
   title: string;
   description: string;
   kpi_effects: Partial<KPIs>;
+  resource_effects?: ResourceDelta;
   category?: TurbulenceCategory;
-  severity?: number; // 1-5
-  concept_lesson?: string; // Kotler concept taught
+  severity?: number;
+  concept_lesson?: string;
   concept_lesson_bg?: string;
 }
 
