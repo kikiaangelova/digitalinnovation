@@ -138,7 +138,7 @@ export default function SeasonAnalytics() {
                   )}
                   {report?.instructor_comment && (
                     <div className="mt-3 rounded-lg border border-primary/20 bg-primary/5 p-3">
-                      <p className="text-xs font-medium text-primary mb-1">Instructor Comment</p>
+                      <p className="text-xs font-medium text-primary mb-1">{t('Instructor Comment', 'Коментар на преподавателя')}</p>
                       <p className="text-sm text-foreground">{report.instructor_comment}</p>
                     </div>
                   )}
