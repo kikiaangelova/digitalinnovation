@@ -153,7 +153,7 @@ export default function SeasonAnalytics() {
           <div className="rounded-xl border border-border bg-card p-5">
             <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
               <MessageSquare className="h-4 w-4" />
-              Add Instructor Comment
+              {t('Add Instructor Comment', 'Добави коментар на преподавателя')}
             </h3>
             <select
               className="w-full rounded-lg border border-border bg-background px-3 py-2 text-sm mb-3"
