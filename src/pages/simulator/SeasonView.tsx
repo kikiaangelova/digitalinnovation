@@ -33,16 +33,11 @@ export default function SeasonView() {
     : (season?.rounds[0]?.baseline_kpis || {} as KPIs);
   const finalKpis: KPIs = latestState?.kpis || startKpis;
 
-  const journeySummary = useMemo(() => {
+  const weekSummaries = useMemo(() => {
     if (!participantId || !season) return [];
-    return season.rounds.map(round => {
+    return season.rounds.flatMap(round => {
       const sub = getSubmission(participantId, round.id);
       const report = getOutcomeReport(participantId, round.id);
-      const decisions = (sub?.answers || []).map(a => {
-        const tmpl = round.decisions.find(d => d.id === a.decision_template_id);
-        const chosen = tmpl?.options.find(o => o.id === a.answer);
-        return { title: tmpl?.title || '', chosenOption: chosen?.label || a.answer };
-      });
       const changes = report?.kpi_changes || {};
       let topPos = '';
       let topNeg = '';
@@ -55,12 +50,17 @@ export default function SeasonView() {
         if (effective > bestDelta) { bestDelta = effective; topPos = key; }
         if (effective < worstDelta) { worstDelta = effective; topNeg = key; }
       });
-      return {
-        weekNumber: round.week_number,
-        decisions,
-        topPositiveKpi: topPos || 'revenue',
-        topNegativeKpi: topNeg || 'burn_rate',
-      };
+      return (sub?.answers || []).map(a => {
+        const tmpl = round.decisions.find(d => d.id === a.decision_template_id);
+        const chosen = tmpl?.options.find(o => o.id === a.answer);
+        return {
+          weekNumber: round.week_number,
+          decisionTitle: tmpl?.title || '',
+          chosenOptionLabel: chosen?.label || a.answer,
+          topPositiveKpi: topPos || 'revenue',
+          topNegativeKpi: topNeg || 'burn_rate',
+        };
+      });
     });
   }, [participantId, season, getSubmission, getOutcomeReport]);
 
