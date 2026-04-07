@@ -35,6 +35,9 @@ export interface UnifiedProgress {
   simWeek: number;
   simComplete: boolean;
 
+  // Stage learn completion (which stages had their Learn section marked complete)
+  stageLearnCompleted: Set<number>;
+
   // Computed scores
   outcomeScores: Record<string, number>;
 
