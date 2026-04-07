@@ -146,6 +146,15 @@ export const SEED_SEASON: SimulationSeason = {
       season_id: 'season-startup-lab',
       week_number: 2,
       narrative: `Week 2: You've identified your problem area and target customer. Now it's time to go deeper. What exactly is your value proposition? Why would customers choose YOUR solution over alternatives?\n\nRemember: a great value proposition answers three questions:\n1. What problem do you solve?\n2. How do you solve it differently?\n3. Why should the customer care?\n\nYour first users are starting to show interest. Keep them engaged!`,
+      shock_event: {
+        title: 'Economic Uncertainty Rising',
+        description: 'Global markets show signs of instability. Consumer confidence drops and early adopters become more cautious with new products.',
+        kpi_effects: { users_total: -10, cac: 5, brand_trust: -2 },
+        category: 'market_crash',
+        severity: 1,
+        concept_lesson: '💡 Chaotics Principle: Turbulence is the new normal. Early-stage startups must build resilience into their DNA from day one.',
+        concept_lesson_bg: '💡 Принцип Chaotics: Турбулентността е новата нормалност. Стартъпите в ранен етап трябва да вградят устойчивост от първия ден.',
+      },
       decisions: [
         {
           id: 'r2d1', round_id: 'round-2', title: 'Value Proposition', description: 'What is your key differentiator?',
