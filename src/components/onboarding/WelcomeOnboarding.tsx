@@ -230,6 +230,7 @@ export default function WelcomeOnboarding({ onComplete }: Props) {
                 <label className="text-xs font-medium text-foreground mb-1 block">{t.onboardingStep1School || T(lang, 'School', 'Училище')}</label>
                 <Input value={schoolVal} onChange={e => setSchoolVal(e.target.value)} placeholder={t.onboardingStep1SchoolPlaceholder || ''} />
               </div>
+              <AvatarPicker selected={avatarStyle} onSelect={setAvatarStyle} xp={0} />
               <Button className="w-full" onClick={handleProfileSave} disabled={saving}>
                 {t.onboardingStep1Btn || T(lang, 'Save & Continue', 'Запази')} <span className="ml-1 text-xs opacity-80">+5 XP</span>
               </Button>
