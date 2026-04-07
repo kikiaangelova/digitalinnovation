@@ -3,7 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import MarkdownContent from '@/components/ui/markdown-content';
-import { Bot, Sparkles, Loader2, CheckCircle2, AlertTriangle, TrendingUp, ArrowRight } from 'lucide-react';
+import { Bot, Sparkles, Loader2, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
 
 export type FeedbackContext =
@@ -18,13 +18,6 @@ interface Props {
   autoLoad?: boolean;
   className?: string;
 }
-
-const SECTION_ICONS = {
-  strengths: CheckCircle2,
-  gaps: AlertTriangle,
-  improve: TrendingUp,
-  next: ArrowRight,
-};
 
 export default function StructuredFeedback({ context, lang, autoLoad = false, className = '' }: Props) {
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;

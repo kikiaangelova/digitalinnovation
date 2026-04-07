@@ -50,7 +50,7 @@ export default function WelcomeOnboarding({ onComplete }: Props) {
       if (Object.keys(profileUpdate).length > 0) {
         await supabase.from('profiles').update(profileUpdate).eq('user_id', user.id);
       }
-      await awardXp('case_open', 'onboarding_profile');
+      await awardXp('onboarding_profile', 'onboarding_step_2');
       showXp(5);
       setTimeout(() => setStep(3), 800);
     } finally {
@@ -65,7 +65,7 @@ export default function WelcomeOnboarding({ onComplete }: Props) {
   };
 
   const handleJourney = async () => {
-    await awardXp('case_open', 'onboarding_journey');
+    await awardXp('onboarding_journey', 'onboarding_step_4');
     showXp(10);
     setTimeout(() => setStep(5), 800);
   };
@@ -294,7 +294,7 @@ export default function WelcomeOnboarding({ onComplete }: Props) {
             <h2 className="text-xl font-display font-bold text-foreground">{t.onboardingComplete || T(lang, "You're all set!", 'Готов си!')}</h2>
             <p className="text-sm text-muted-foreground">{t.onboardingCompleteDesc || T(lang, 'Your dashboard will guide you through every step.', 'Таблото ти ще те води през всяка стъпка.')}</p>
             <div className="flex items-center justify-center gap-1 text-2xl font-bold text-xp-gold">
-              <Star className="h-6 w-6" /> 20 XP
+              <Star className="h-6 w-6" /> {totalXpEarned} XP
             </div>
             <Button className="w-full sim-gradient border-0" onClick={handleFinish}>
               {t.onboardingGoToDashboard || T(lang, 'Go to Dashboard', 'Към таблото')}
