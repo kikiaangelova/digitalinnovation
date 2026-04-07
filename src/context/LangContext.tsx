@@ -55,10 +55,16 @@ const translations = {
     readyToInnovate: 'Ready to Innovate?',
     readyToInnovateDesc: 'Join the Digital Innovation Lab and start building your future today.',
 
-    // Hero hardcoded
-    heroLine1: 'Build Your Startup While',
-    heroLine2: 'Learning Digital Innovation',
-    heroDescriptionLine: 'Analyze real business cases, build your startup idea, and test your strategy in a startup simulator.',
+    // Hero audience toggle
+    heroHeadlineStudent1: 'Build Your Startup While',
+    heroHeadlineStudent2: 'Learning Digital Innovation',
+    heroHeadlineTeacher1: 'Teach Innovation With',
+    heroHeadlineTeacher2: 'Real Business Simulations',
+    heroDescStudent: 'Analyze real business cases, build your startup idea, and test your strategy in a startup simulator.',
+    heroDescTeacher: 'Give your students hands-on experience with case studies, a business simulator, and gamified learning — all in one platform.',
+    heroCtaTeacher: 'Request a Demo',
+    iAmStudent: 'I\'m a Student',
+    iAmTeacher: 'I\'m a Teacher',
     areYouTeacher: 'Are you a teacher?',
 
     // Dictionary section on landing
