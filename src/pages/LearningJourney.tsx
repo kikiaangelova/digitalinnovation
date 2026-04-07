@@ -11,7 +11,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import {
   BookOpen, Search, Lightbulb, Palette, TrendingUp, Presentation,
   CheckCircle2, ArrowRight, Lock, Play, FileText, Rocket,
-  ChevronDown, ChevronUp, GraduationCap, Target, Clock, Zap, Circle,
+  ChevronDown, ChevronUp, GraduationCap, Target, Clock, Zap, Circle, Brain,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { LEARNING_MODULES } from '@/data/learning-modules';
