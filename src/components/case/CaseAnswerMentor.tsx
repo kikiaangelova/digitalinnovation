@@ -93,6 +93,41 @@ export default function CaseAnswerMentor({
 
   return (
     <div className="mt-3 space-y-3">
+      {/* Confidence Slider */}
+      {!feedback && (
+        <div className="rounded-lg border border-border bg-muted/30 p-4 space-y-3">
+          <div className="flex items-center gap-2">
+            <Gauge className="h-4 w-4 text-primary" />
+            <span className="text-sm font-semibold text-foreground">
+              {t('Decision Confidence', 'Увереност в решението')}
+            </span>
+            <Badge variant="outline" className={`text-xs ml-auto ${confidenceColor(confidence)}`}>
+              {confidence}/10 — {confidenceLabel(confidence)}
+            </Badge>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            {t(
+              'How confident are you in your answer? The AI mentor will calibrate feedback based on your self-assessment.',
+              'Колко сте уверени в отговора си? AI менторът ще калибрира обратната връзка спрямо вашата самооценка.'
+            )}
+          </p>
+          <div className="px-1">
+            <Slider
+              value={[confidence]}
+              onValueChange={(v) => setConfidence(v[0])}
+              min={1}
+              max={10}
+              step={1}
+              className="w-full"
+            />
+            <div className="flex justify-between text-[10px] text-muted-foreground mt-1 px-0.5">
+              <span>{t('Guessing', 'Гадая')}</span>
+              <span>{t('Certain', 'Сигурен')}</span>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Get Feedback button */}
       {!feedback && (
         <>
