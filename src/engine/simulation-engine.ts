@@ -131,9 +131,29 @@ export function processRound(
   if (newKPIs.nps < 10) risks.push('⚠️ NPS is low — user satisfaction needs improvement.');
   if (newKPIs.burn_rate > newKPIs.revenue * 5) risks.push('⚠️ Burn rate far exceeds revenue — path to sustainability unclear.');
 
-  let explanation = shockEvent
-    ? `This week saw a major event: ${shockEvent.title}. ${shockEvent.description}\n\n`
+  // Calculate turbulence
+  const hadShock = !!activeShock;
+  const newStability = calculateStability(prevTurbulence.stability_score, hadShock, activeShock?.severity || 0);
+  
+  // Resilience bonus: if they maintained KPIs above critical thresholds despite shock
+  let resilienceBonus = prevTurbulence.resilience_bonus;
+  if (hadShock && newKPIs.runway_months >= 3 && newKPIs.nps > 0 && newKPIs.brand_trust > 20) {
+    resilienceBonus += 5;
+  }
+
+  const newTurbulence: TurbulenceState = {
+    stability_score: newStability,
+    events_triggered: prevTurbulence.events_triggered + (hadShock ? 1 : 0),
+    resilience_bonus: resilienceBonus,
+  };
+
+  let explanation = activeShock
+    ? `⚡ TURBULENCE EVENT: ${activeShock.title}\n${activeShock.description}\n\n`
     : '';
+
+  if (activeShock?.concept_lesson) {
+    explanation += `${activeShock.concept_lesson}\n\n`;
+  }
 
   explanation += 'Your decisions this week led to the following changes:\n';
   for (const [key, change] of Object.entries(kpiChanges)) {
@@ -142,8 +162,17 @@ export function processRound(
     explanation += `• ${label}: ${direction} ${Math.abs(change!.delta).toFixed(1)}\n`;
   }
 
+  // Add stability status to explanation
+  if (newStability < 30) {
+    explanation += `\n🔥 MARKET STATUS: Chaotic — your business is under extreme pressure.\n`;
+  } else if (newStability < 55) {
+    explanation += `\n⚠️ MARKET STATUS: Turbulent — adapt your strategy to survive.\n`;
+  }
+
   return {
     newKPIs,
     report: { kpi_changes: kpiChanges, explanation, risks },
+    turbulence: newTurbulence,
+    dynamicShock,
   };
 }
