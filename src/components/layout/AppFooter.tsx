@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useLang } from '@/context/LangContext';
+import { useAuth } from '@/context/AuthContext';
 import { GraduationCap } from 'lucide-react';
 
 export default function AppFooter() {
