@@ -10,11 +10,13 @@ import DecisionForm from '@/components/simulator/DecisionForm';
 import OutcomeReportView from '@/components/simulator/OutcomeReportView';
 import TurbulenceMeter from '@/components/simulator/TurbulenceMeter';
 import CrisisResponsePanel from '@/components/simulator/CrisisResponsePanel';
+import ResourceDashboard from '@/components/simulator/ResourceDashboard';
+import GameOverScreen from '@/components/simulator/GameOverScreen';
 import StructuredFeedback from '@/components/feedback/StructuredFeedback';
 import SkillsImproved from '@/components/learning/SkillsImproved';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, ChevronLeft, ChevronRight, Zap, Target, TrendingUp, AlertTriangle, Shield } from 'lucide-react';
+import { ArrowLeft, ChevronLeft, ChevronRight, Zap, Target, TrendingUp, AlertTriangle, Shield, Wallet } from 'lucide-react';
 import { toast } from 'sonner';
 
 export default function RoundView() {
@@ -33,7 +35,6 @@ export default function RoundView() {
   const round = season?.rounds.find(r => r.week_number === weekNumber);
   const participantId = season ? getParticipantId(season.id) : null;
 
-  // Crisis response state
   const [crisisAnswers, setCrisisAnswers] = useState<Record<string, string>>({});
 
   const previousState = useMemo(() => {
@@ -50,6 +51,8 @@ export default function RoundView() {
   }, [participantId, round, getCompanyState, previousState]);
 
   const isInCrisis = (currentState?.turbulence?.stability_score ?? 100) < 30;
+  const isGameOver = currentState?.gameStatus === 'lost_money' || currentState?.gameStatus === 'lost_time';
+  const isWon = currentState?.gameStatus === 'won';
 
   const submission = participantId && round ? getSubmission(participantId, round.id) : null;
   const outcomeReport = participantId && round ? getOutcomeReport(participantId, round.id) : null;
@@ -81,10 +84,12 @@ export default function RoundView() {
   const hasPrev = weekNumber > 1;
   const hasNext = weekNumber < season.weeks;
 
-  /* Learning phase mapping */
   const currentPhase: LearningPhase = isSubmitted ? 'feedback' : 'practice';
   const completedPhases: LearningPhase[] = ['learn'];
   if (isSubmitted) completedPhases.push('practice');
+
+  // Get the submitted state for this round (to show post-decision resources)
+  const submittedState = participantId && round ? getCompanyState(participantId, round.id) : null;
 
   return (
     <div className="min-h-screen bg-background">
@@ -108,7 +113,7 @@ export default function RoundView() {
                 {t('Prev', 'Назад')}
               </Button>
             )}
-            {hasNext && isSubmitted && (
+            {hasNext && isSubmitted && !isGameOver && (
               <Button variant="outline" size="sm" onClick={() => navigate(`/simulator/season/${id}/round/${weekNumber + 1}`)}>
                 {t('Next', 'Напред')}
                 <ChevronRight className="h-4 w-4" />
@@ -119,20 +124,60 @@ export default function RoundView() {
       </header>
 
       <main className="container mx-auto px-4 py-6 max-w-4xl space-y-8">
-        {/* Learning phase bar */}
         <LearningPhaseBar currentPhase={currentPhase} lang={lang as 'en' | 'bg'} completedPhases={completedPhases} />
 
+        {/* GAME OVER / WIN SCREEN */}
+        {isSubmitted && (isGameOver || isWon) && submittedState && (
+          <GameOverScreen
+            gameStatus={submittedState.gameStatus}
+            resources={submittedState.resources}
+            kpis={submittedState.kpis}
+            weekNumber={weekNumber}
+            onBack={() => navigate(`/simulator/season/${id}`)}
+            lang={lang}
+          />
+        )}
+
+        {/* RESOURCE DASHBOARD – always visible */}
+        {currentState && (
+          <div>
+            <div className="flex items-center gap-2 mb-3">
+              <Wallet className="h-5 w-5 text-primary" />
+              <h2 className="text-lg font-semibold text-foreground">
+                {t('Startup Resources', 'Ресурси на стартъпа')}
+              </h2>
+              {currentState.resources.money < 2000 && (
+                <Badge variant="destructive" className="text-xs ml-auto animate-pulse">
+                  {t('⚠ LOW BUDGET', '⚠ НИСЪК БЮДЖЕТ')}
+                </Badge>
+              )}
+              {currentState.resources.runway <= 1 && (
+                <Badge variant="destructive" className="text-xs animate-pulse">
+                  {t('⚠ LOW RUNWAY', '⚠ НИСЪК РЕЗЕРВ')}
+                </Badge>
+              )}
+            </div>
+            <ResourceDashboard
+              resources={isSubmitted && submittedState ? submittedState.resources : currentState.resources}
+              previousResources={previousState?.resources}
+              lang={lang}
+            />
+          </div>
+        )}
+
         {/* 1. SCENARIO BRIEFING */}
-        <NarrativeBriefing
-          narrative={round.narrative}
-          weekNumber={round.week_number}
-          shockEvent={round.shock_event}
-          turbulence={currentState?.turbulence}
-          lang={lang}
-        />
+        {!isGameOver && !isWon && (
+          <NarrativeBriefing
+            narrative={round.narrative}
+            weekNumber={round.week_number}
+            shockEvent={round.shock_event}
+            turbulence={currentState?.turbulence}
+            lang={lang}
+          />
+        )}
 
         {/* TURBULENCE METER */}
-        {currentState?.turbulence && (
+        {currentState?.turbulence && !isGameOver && !isWon && (
           <div>
             <div className="flex items-center gap-2 mb-3">
               <Shield className="h-5 w-5 text-primary" />
@@ -144,8 +189,8 @@ export default function RoundView() {
           </div>
         )}
 
-        {/* CRISIS RESPONSE – only when stability < 30 */}
-        {isInCrisis && currentState?.turbulence && !isSubmitted && (
+        {/* CRISIS RESPONSE */}
+        {isInCrisis && currentState?.turbulence && !isSubmitted && !isGameOver && (
           <CrisisResponsePanel
             turbulence={currentState.turbulence}
             onCrisisDecision={handleCrisisDecision}
@@ -155,8 +200,8 @@ export default function RoundView() {
           />
         )}
 
-        {/* 2. CURRENT METRICS – context for decision-making */}
-        {currentState && (
+        {/* 2. CURRENT KPI METRICS */}
+        {currentState && !isGameOver && !isWon && (
           <div>
             <div className="flex items-center gap-2 mb-3">
               <Target className="h-5 w-5 text-primary" />
@@ -179,8 +224,8 @@ export default function RoundView() {
           </div>
         )}
 
-        {/* 3. CONSEQUENCE REPORT – shown after submission */}
-        {isSubmitted && outcomeReport && (
+        {/* 3. CONSEQUENCE REPORT */}
+        {isSubmitted && outcomeReport && !isGameOver && !isWon && (
           <div>
             <div className="flex items-center gap-2 mb-3">
               <Zap className="h-5 w-5 text-sim-warning" />
@@ -192,12 +237,12 @@ export default function RoundView() {
           </div>
         )}
 
-        {/* 4. SKILLS + AI FEEDBACK – after submission */}
-        {isSubmitted && (
+        {/* 4. SKILLS + AI FEEDBACK */}
+        {isSubmitted && !isGameOver && (
           <SkillsImproved activityType="simulator" scorePercent={70 + weekNumber * 5} lang={lang as 'en' | 'bg'} />
         )}
 
-        {isSubmitted && outcomeReport && currentState && (
+        {isSubmitted && outcomeReport && currentState && !isGameOver && (
           <StructuredFeedback
             context={{
               type: 'simulator',
@@ -210,39 +255,41 @@ export default function RoundView() {
           />
         )}
 
-        {/* 5. DECISION ENGINE */}
-        <div>
-          <div className="flex items-center gap-2 mb-3">
-            <TrendingUp className="h-5 w-5 text-primary" />
-            <h2 className="text-lg font-semibold text-foreground">
-              {isSubmitted ? t('Your Decisions (Submitted)', 'Вашите решения (Изпратени)') : t('Strategic Decisions', 'Стратегически решения')}
-            </h2>
-          </div>
-          {!isSubmitted && (
-            <div className="flex items-start gap-3 rounded-lg border border-sim-warning/30 bg-sim-warning/5 p-4 mb-4">
-              <AlertTriangle className="h-4 w-4 text-sim-warning shrink-0 mt-0.5" />
-              <p className="text-sm text-foreground/80">
-                {t(
-                  'Each option shows its impact on your metrics. Read the trade-offs carefully — your choices shape your startup\'s future. Once submitted, you cannot change your decisions.',
-                  'Всяка опция показва въздействието си върху показателите ви. Прочетете компромисите внимателно — изборите ви оформят бъдещето на стартъпа. След изпращане не можете да променяте решенията.'
-                )}
-              </p>
+        {/* 5. DECISION ENGINE – hidden on game over */}
+        {!isGameOver && !isWon && (
+          <div>
+            <div className="flex items-center gap-2 mb-3">
+              <TrendingUp className="h-5 w-5 text-primary" />
+              <h2 className="text-lg font-semibold text-foreground">
+                {isSubmitted ? t('Your Decisions (Submitted)', 'Вашите решения (Изпратени)') : t('Strategic Decisions', 'Стратегически решения')}
+              </h2>
             </div>
-          )}
-          <DecisionForm
-            decisions={round.decisions}
-            initialAnswers={isSubmitted ? submission?.answers : draftAnswers[draftKey]}
-            rationale={isSubmitted ? submission?.rationale : draftRationales[draftKey]}
-            reflection={isSubmitted ? submission?.reflection : draftReflections[draftKey]}
-            onSaveDraft={handleSaveDraft}
-            onSubmit={handleSubmit}
-            isSubmitted={isSubmitted}
-            lang={lang}
-          />
-        </div>
+            {!isSubmitted && (
+              <div className="flex items-start gap-3 rounded-lg border border-sim-warning/30 bg-sim-warning/5 p-4 mb-4">
+                <AlertTriangle className="h-4 w-4 text-sim-warning shrink-0 mt-0.5" />
+                <p className="text-sm text-foreground/80">
+                  {t(
+                    'Each option shows its impact on your metrics and resources. Read the trade-offs carefully — your choices shape your startup\'s survival. Once submitted, you cannot change your decisions.',
+                    'Всяка опция показва въздействието си върху показателите и ресурсите ви. Прочетете компромисите внимателно — изборите ви определят оцеляването на стартъпа. След изпращане не можете да променяте решенията.'
+                  )}
+                </p>
+              </div>
+            )}
+            <DecisionForm
+              decisions={round.decisions}
+              initialAnswers={isSubmitted ? submission?.answers : draftAnswers[draftKey]}
+              rationale={isSubmitted ? submission?.rationale : draftRationales[draftKey]}
+              reflection={isSubmitted ? submission?.reflection : draftReflections[draftKey]}
+              onSaveDraft={handleSaveDraft}
+              onSubmit={handleSubmit}
+              isSubmitted={isSubmitted}
+              lang={lang}
+            />
+          </div>
+        )}
 
         {/* Next week CTA */}
-        {isSubmitted && hasNext && (
+        {isSubmitted && hasNext && !isGameOver && !isWon && (
           <div className="flex justify-center pt-4">
             <Button
               size="lg"
