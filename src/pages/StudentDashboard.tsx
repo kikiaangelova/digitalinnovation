@@ -295,7 +295,7 @@ export default function StudentDashboard() {
           </div>
         </Card>
 
-        <DailyChallenge lang={lang} userId={user?.id} />
+        <ChallengeHub lang={lang} userId={user?.id} />
         <TestInsights lang={lang} userId={user?.id} />
 
         {/* ═══ SECTION 2: Learning & Competition ═══ */}
