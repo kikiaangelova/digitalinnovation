@@ -7,6 +7,7 @@ import {
   ArrowRight, BookOpen, Search, Lightbulb, Palette, TrendingUp, Presentation,
   CheckCircle2, Zap, Target, Award,
 } from 'lucide-react';
+import { deriveJourneyStatuses } from '@/lib/journey';
 
 /* ── Stage definitions (matches JourneyProgress) ── */
 const STAGES = [
