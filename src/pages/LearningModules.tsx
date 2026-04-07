@@ -233,51 +233,74 @@ function LevelSection({ levelNum, modules, responseBySlug, completedCount, total
       </div>
 
       {/* Module cards */}
-      {unlocked && (
-        <div className="px-5 pb-5 space-y-2">
-          {modules.map((mod, idx) => {
-            const resp = responseBySlug[mod.slug];
-            const isCompleted = resp?.completed_at;
-            const isInProgress = resp && !isCompleted;
-            const modStatus: ActivityStatus = isCompleted ? 'completed' : isInProgress ? 'in_progress' : 'not_started';
-            return (
-              <div
-                key={mod.slug}
-                className={`rounded-lg border bg-background p-4 flex items-center justify-between gap-4 transition-colors hover:border-primary/40 cursor-pointer ${isCompleted ? 'border-primary/30' : isInProgress ? 'border-amber-500/30' : 'border-border'}`}
-                onClick={() => navigate(`/learn/${mod.slug}`)}
-              >
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${isCompleted ? 'bg-primary/20' : isInProgress ? 'bg-amber-500/15' : 'bg-accent'}`}>
-                    {isCompleted ? (
-                      <CheckCircle2 className="h-4 w-4 text-primary" />
-                    ) : isInProgress ? (
-                      <Play className="h-4 w-4 text-amber-600" />
-                    ) : (
-                      <span className="text-xs font-bold text-muted-foreground">{idx + 1}</span>
-                    )}
-                  </div>
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-sm font-semibold text-foreground truncate">{lang === 'bg' ? mod.title_bg : mod.title_en}</h3>
-                      <StatusBadge status={modStatus} lang={lang as 'en' | 'bg'} />
-                    </div>
-                    <p className="text-xs text-muted-foreground">
-                      {mod.quiz_questions.length} {t('quiz questions', 'въпроса')} • {t('1 analytical', '1 аналитичен')} • {t('1 application', '1 приложение')}
-                    </p>
-                    {isCompleted && resp && (
-                      <div className="flex gap-2 mt-1">
-                        <Badge variant="outline" className="text-xs">{t('Quiz', 'Тест')}: {resp.quiz_score}/{resp.quiz_max}</Badge>
-                        <Badge variant="outline" className="text-xs">{t('Concept', 'Концепция')}: {resp.concept_score}%</Badge>
-                      </div>
-                    )}
-                  </div>
+      <div className="px-5 pb-5 space-y-2">
+        {modules.map((mod, idx) => {
+          const resp = unlocked ? responseBySlug[mod.slug] : null;
+          const isCompleted = resp?.completed_at;
+          const isInProgress = resp && !isCompleted;
+          const isLocked = !unlocked;
+          const modStatus: ActivityStatus = isLocked ? 'not_started' : isCompleted ? 'completed' : isInProgress ? 'in_progress' : 'not_started';
+          return (
+            <div
+              key={mod.slug}
+              className={`rounded-lg border bg-background p-4 flex items-center justify-between gap-4 transition-colors ${
+                isLocked
+                  ? 'border-border/50 opacity-60 cursor-default select-none'
+                  : `cursor-pointer hover:border-primary/40 ${isCompleted ? 'border-primary/30' : isInProgress ? 'border-amber-500/30' : 'border-border'}`
+              }`}
+              onClick={() => !isLocked && navigate(`/learn/${mod.slug}`)}
+            >
+              <div className="flex items-center gap-3 min-w-0">
+                <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${
+                  isLocked ? 'bg-muted'
+                  : isCompleted ? 'bg-primary/20'
+                  : isInProgress ? 'bg-amber-500/15'
+                  : 'bg-accent'
+                }`}>
+                  {isLocked ? (
+                    <Lock className="h-4 w-4 text-muted-foreground" />
+                  ) : isCompleted ? (
+                    <CheckCircle2 className="h-4 w-4 text-primary" />
+                  ) : isInProgress ? (
+                    <Play className="h-4 w-4 text-amber-600" />
+                  ) : (
+                    <span className="text-xs font-bold text-muted-foreground">{idx + 1}</span>
+                  )}
                 </div>
-                <ArrowRight className="h-4 w-4 text-muted-foreground shrink-0" />
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <h3 className={`text-sm font-semibold truncate ${isLocked ? 'text-muted-foreground' : 'text-foreground'}`}>
+                      {lang === 'bg' ? mod.title_bg : mod.title_en}
+                    </h3>
+                    {isLocked ? (
+                      <Badge variant="outline" className="text-xs border-border/50 text-muted-foreground gap-1">
+                        <Lock className="h-2.5 w-2.5" />
+                        {t('Locked', 'Заключен')}
+                      </Badge>
+                    ) : (
+                      <StatusBadge status={modStatus} lang={lang as 'en' | 'bg'} />
+                    )}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    {mod.quiz_questions.length} {t('quiz questions', 'въпроса')} • {t('1 analytical', '1 аналитичен')} • {t('1 application', '1 приложение')}
+                  </p>
+                  {isCompleted && resp && (
+                    <div className="flex gap-2 mt-1">
+                      <Badge variant="outline" className="text-xs">{t('Quiz', 'Тест')}: {resp.quiz_score}/{resp.quiz_max}</Badge>
+                      <Badge variant="outline" className="text-xs">{t('Concept', 'Концепция')}: {resp.concept_score}%</Badge>
+                    </div>
+                  )}
+                </div>
               </div>
-            );
-          })}
-        </div>
-      )}
+              {isLocked ? (
+                <Lock className="h-4 w-4 text-muted-foreground/40 shrink-0" />
+              ) : (
+                <ArrowRight className="h-4 w-4 text-muted-foreground shrink-0" />
+              )}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

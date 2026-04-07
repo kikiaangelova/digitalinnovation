@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   BookOpen, Search, Lightbulb, Palette, TrendingUp, Presentation,
-  CheckCircle2, ArrowRight, Play, ChevronRight,
+  CheckCircle2, ArrowRight, Play, ChevronRight, Lock,
 } from 'lucide-react';
 import { deriveJourneyStatuses, type StepStatus } from '@/lib/journey';
 
