@@ -357,15 +357,18 @@ export default function StartupSimulator() {
           <div className="space-y-2 mt-4">
             {SIM_WEEKS.map((w, i) => {
               const Icon = STEP_ICONS[i] || Target;
+              const isCompleted = hasInProgressSession && i < inProgressStep;
+              const isCurrent = hasInProgressSession && i === inProgressStep;
               return (
-                <div key={w.week} className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10">
-                    <Icon className="h-4 w-4 text-primary" />
+                <div key={w.week} className={`flex items-center gap-3 rounded-lg border px-4 py-3 ${isCompleted ? 'border-emerald-500/30 bg-emerald-500/5' : isCurrent ? 'border-primary/30 bg-primary/5' : 'border-border bg-card'}`}>
+                  <div className={`flex h-9 w-9 items-center justify-center rounded-full ${isCompleted ? 'bg-emerald-500/15' : 'bg-primary/10'}`}>
+                    {isCompleted ? <CheckCircle2 className="h-4 w-4 text-emerald-600" /> : <Icon className="h-4 w-4 text-primary" />}
                   </div>
                   <div className="flex-1">
                     <span className="text-xs text-muted-foreground">{t(`Step ${w.week}`, `Стъпка ${w.week}`)}</span>
                     <h3 className="text-sm font-medium text-foreground">{lang === 'bg' ? w.titleBg : w.titleEn}</h3>
                   </div>
+                  {isCurrent && <Badge variant="outline" className="text-[10px] bg-primary/10 text-primary border-primary/20">{t('Next', 'Следваща')}</Badge>}
                 </div>
               );
             })}
