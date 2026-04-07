@@ -10,7 +10,7 @@ import { LEARNING_MODULES, LEVEL_1_MODULES, LEVEL_2_MODULES, LEVEL_INFO } from '
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
-import { BookOpen, CheckCircle2, ArrowRight, Brain, Target, Lightbulb, Rocket, Lock, Unlock, TrendingUp } from 'lucide-react';
+import { BookOpen, CheckCircle2, ArrowRight, Brain, Target, Lightbulb, Rocket, Lock, Unlock, TrendingUp, Play } from 'lucide-react';
 
 export default function LearningModules() {
   const { user } = useAuth();
