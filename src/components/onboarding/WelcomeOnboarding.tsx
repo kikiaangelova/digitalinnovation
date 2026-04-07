@@ -27,6 +27,7 @@ export default function WelcomeOnboarding({ onComplete }: Props) {
   const [step, setStep] = useState(0);
   const [classVal, setClassVal] = useState('');
   const [schoolVal, setSchoolVal] = useState('');
+  const [avatarStyle, setAvatarStyle] = useState<AvatarStyle | ''>('');
   const [xpPulse, setXpPulse] = useState(false);
   const [totalXpEarned, setTotalXpEarned] = useState(0);
   const [saving, setSaving] = useState(false);
