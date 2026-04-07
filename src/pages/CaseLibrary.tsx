@@ -512,7 +512,7 @@ export default function CaseLibrary() {
               )}
             </div>
           ) : (
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
               {filteredDomains.map(domain => {
                 const DIcon = ICON_MAP[domain.icon] || BookOpen;
                 const domainCases = casesByDomain[domain.id] || [];

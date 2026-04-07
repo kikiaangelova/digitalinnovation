@@ -132,7 +132,7 @@ export default function LearningNavigator(props: LearningNavigatorProps) {
       </div>
 
       {/* ── Stage dots ── */}
-      <div className="px-5 pb-3">
+      <div className="px-4 sm:px-5 pb-3">
         <div className="flex items-center gap-1">
           {STAGES.map((stage, idx) => {
             const status = statuses[idx];
