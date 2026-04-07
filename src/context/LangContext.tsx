@@ -55,6 +55,22 @@ const translations = {
     readyToInnovate: 'Ready to Innovate?',
     readyToInnovateDesc: 'Join the Digital Innovation Lab and start building your future today.',
 
+    // Hero hardcoded
+    heroLine1: 'Build Your Startup While',
+    heroLine2: 'Learning Digital Innovation',
+    heroDescriptionLine: 'Analyze real business cases, build your startup idea, and test your strategy in a startup simulator.',
+    areYouTeacher: 'Are you a teacher?',
+
+    // Dictionary section on landing
+    dictBadge: 'Business Dictionary',
+    dictTitle: 'Learn real business language',
+    dictSubtitle: 'Key terms from marketing, pricing, operations, and team management — in English and Bulgarian.',
+    exploreDict: 'Explore Dictionary',
+    dictTermTargetAudience: 'The specific group of people most likely to buy your product.',
+    dictTermRevenueModel: 'The strategy a business uses to generate income from its product.',
+    dictTermBottleneck: 'A point in a process where capacity is limited, restricting throughput.',
+    dictTermFoundingTeam: 'The initial group of people who start a company together.',
+
     // Learn cards
     learnDigitalInnovation: 'Digital Innovation',
     learnDigitalInnovationDesc: 'Understand how technology transforms industries.',
