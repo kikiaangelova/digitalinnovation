@@ -23,7 +23,8 @@ export type XpAction =
   | 'theory_complete'
   | 'theory_quiz_pass'
   | 'onboarding_profile'
-  | 'onboarding_journey';
+  | 'onboarding_journey'
+  | 'startup_all_sections';
 
 export const XP_VALUES: Record<XpAction, number> = {
   case_open: 5,
