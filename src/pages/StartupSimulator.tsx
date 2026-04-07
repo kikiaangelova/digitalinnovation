@@ -212,6 +212,7 @@ export default function StartupSimulator() {
         saveProgress(newKpis, newHistory, currentStep + 2, false);
       } else {
         setPhase('results');
+        setLocalSimStatus('completed');
         saveProgress(newKpis, newHistory, currentStep + 1, true);
       }
     }
