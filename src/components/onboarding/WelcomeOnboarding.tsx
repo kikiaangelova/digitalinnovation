@@ -50,7 +50,7 @@ export default function WelcomeOnboarding({ onComplete }: Props) {
       if (Object.keys(profileUpdate).length > 0) {
         await supabase.from('profiles').update(profileUpdate).eq('user_id', user.id);
       }
-      await awardXp('onboarding_profile', 'onboarding_step_2');
+      await awardXp('onboarding_profile', 'onboarding_step_profile');
       showXp(5);
       setTimeout(() => setStep(3), 800);
     } finally {
@@ -65,7 +65,7 @@ export default function WelcomeOnboarding({ onComplete }: Props) {
   };
 
   const handleJourney = async () => {
-    await awardXp('onboarding_journey', 'onboarding_step_4');
+    await awardXp('onboarding_journey', 'onboarding_step_journey');
     showXp(10);
     setTimeout(() => setStep(5), 800);
   };

@@ -35,6 +35,9 @@ const XP_CONFIG: Record<string, { xp: number; daily_cap?: number }> = {
   // Theory modules
   theory_complete: { xp: 10 },
   theory_quiz_pass: { xp: 15 },
+  // Onboarding
+  onboarding_profile: { xp: 5 },
+  onboarding_journey: { xp: 10 },
 };
 
 serve(async (req) => {
@@ -130,6 +133,7 @@ serve(async (req) => {
       'startup_digital_product', 'startup_business_model', 'startup_growth_strategy',
       'startup_final_pitch', 'case_startup_notes',
       'theory_complete', 'theory_quiz_pass',
+      'onboarding_profile', 'onboarding_journey',
     ];
 
     // context_id-scoped dedup: actions that require a context_id and deduplicate per context

@@ -91,6 +91,8 @@ export default function DailyChallenge({ lang, userId }: Props) {
     yesterday.setDate(yesterday.getDate() - 1);
     const yesterdayKey = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`;
     
+    // Intentionally reset streak to 0 on wrong answer — the user must answer
+    // correctly on consecutive days to maintain a streak.
     let newStreak = 0;
     if (correct) {
       if (stored?.date === yesterdayKey && stored?.correct) {
@@ -151,6 +153,11 @@ export default function DailyChallenge({ lang, userId }: Props) {
                 </p>
               </div>
             </div>
+          )}
+          {answered && !wasCorrect && (
+            <p className="typo-helper text-center text-muted-foreground">
+              {t('Your streak has been reset. Come back tomorrow to start a new one!', 'Серията ти е нулирана. Върни се утре за нова!')}
+            </p>
           )}
         </div>
       ) : (
