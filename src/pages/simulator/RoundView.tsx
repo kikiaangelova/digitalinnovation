@@ -117,8 +117,22 @@ export default function RoundView() {
           narrative={round.narrative}
           weekNumber={round.week_number}
           shockEvent={round.shock_event}
+          turbulence={currentState?.turbulence}
           lang={lang}
         />
+
+        {/* TURBULENCE METER */}
+        {currentState?.turbulence && (
+          <div>
+            <div className="flex items-center gap-2 mb-3">
+              <Shield className="h-5 w-5 text-primary" />
+              <h2 className="text-lg font-semibold text-foreground">
+                {lang === 'bg' ? 'Пазарна турбулентност' : 'Market Turbulence'}
+              </h2>
+            </div>
+            <TurbulenceMeter turbulence={currentState.turbulence} lang={lang} />
+          </div>
+        )}
 
         {/* 2. CURRENT METRICS – context for decision-making */}
         {currentState && (
