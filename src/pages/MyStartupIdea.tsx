@@ -15,7 +15,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import {
   Lightbulb, Users, Zap, Monitor, DollarSign, TrendingUp,
-  Presentation, ChevronRight, Check, Save, Rocket, HelpCircle, Globe, LayoutGrid, ClipboardCheck, Search
+  Presentation, ChevronRight, Check, Save, Rocket, HelpCircle, Globe, LayoutGrid, ClipboardCheck, Search, Lock as LockIcon
 } from 'lucide-react';
 import { INDUSTRIES } from '@/data/industry-map-data';
 import BusinessModelCanvas, { BMC_KEYS, type BMCData } from '@/components/startup/BusinessModelCanvas';
@@ -268,9 +268,18 @@ export default function MyStartupIdea() {
         const isFilled = ((newData as any)[key] || '').trim().length > 20;
         const wasFilled = prevSectionsRef.current[key] || false;
         if (isFilled && !wasFilled) {
-          awardXp(action, user.id); // fire-and-forget
+          awardXp(action, user.id);
           prevSectionsRef.current[key] = true;
         }
+      }
+
+      // Check if all 9 sections just became complete
+      const allNowComplete = SECTIONS.every(s => ((newData as any)[s.key] || '').trim().length > 20);
+      const wasAllComplete = prevSectionsRef.current['__all_complete'] || false;
+      if (allNowComplete && !wasAllComplete) {
+        prevSectionsRef.current['__all_complete'] = true;
+        awardXp('startup_all_sections', user.id);
+        toast.success(t('All sections complete! +50 XP earned! 🎉', 'Всички секции са завършени! +50 XP спечелени! 🎉'));
       }
     } catch {
       toast.error(t('Failed to save', 'Грешка при запазване'));
@@ -328,8 +337,10 @@ export default function MyStartupIdea() {
     }
   };
 
-  const filledCount = SECTIONS.filter(s => ((data as any)[s.key] || '').trim().length > 20).length;
+  const sectionCompletion = SECTIONS.map(s => ((data as any)[s.key] || '').trim().length > 20);
+  const filledCount = sectionCompletion.filter(Boolean).length;
   const progressPercent = Math.round((filledCount / SECTIONS.length) * 100);
+  const allComplete = filledCount === SECTIONS.length;
 
   if (loading) {
     return (
@@ -413,9 +424,17 @@ export default function MyStartupIdea() {
               <span className="text-sm font-medium text-foreground">
                 {t('Project Progress', 'Прогрес на проекта')}
               </span>
-              <span className="text-sm font-bold text-primary">{progressPercent}%</span>
+              <span className="text-sm font-bold text-primary">{filledCount}/{SECTIONS.length} — {progressPercent}%</span>
             </div>
             <Progress value={progressPercent} className="h-2.5" />
+            {allComplete && !data.is_submitted && (
+              <div className="mt-3 rounded-lg bg-[hsl(var(--sim-success))]/10 border border-[hsl(var(--sim-success))]/30 p-3 flex items-center gap-2">
+                <Check className="h-4 w-4 text-[hsl(var(--sim-success))]" />
+                <span className="text-sm font-medium text-foreground">
+                  {t('All sections complete! Your startup is ready for evaluation. +50 XP earned. 🎉', 'Всички секции са завършени! Вашият стартъп е готов за оценка. +50 XP спечелени. 🎉')}
+                </span>
+              </div>
+            )}
             <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
               {saving ? (
                 <span className="flex items-center gap-1"><Save className="h-3 w-3 animate-pulse" /> {t('Saving...', 'Запазване...')}</span>
@@ -442,9 +461,10 @@ export default function MyStartupIdea() {
               <Lightbulb className="h-4 w-4" />
               {t('Sections', 'Секции')}
             </TabsTrigger>
-            <TabsTrigger value="evaluate" className="gap-1.5">
+            <TabsTrigger value="evaluate" className="gap-1.5" disabled={!allComplete}>
               <ClipboardCheck className="h-4 w-4" />
               {t('Evaluate', 'Оценка')}
+              {!allComplete && <LockIcon className="h-3 w-3 ml-0.5 opacity-50" />}
             </TabsTrigger>
             <TabsTrigger value="bmc" className="gap-1.5">
               <LayoutGrid className="h-4 w-4" />
@@ -498,18 +518,24 @@ export default function MyStartupIdea() {
               <div className="space-y-1">
                 {SECTIONS.map((s, i) => {
                   const Icon = s.icon;
-                  const filled = ((data as any)[s.key] || '').trim().length > 20;
+                  const filled = sectionCompletion[i];
+                  const isCurrent = i === activeSection;
                   return (
                     <button
                       key={s.key}
                       onClick={() => setActiveSection(i)}
                       className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm transition-colors text-left ${
-                        i === activeSection
+                        isCurrent
                           ? 'bg-primary/10 text-primary font-medium'
                           : 'text-muted-foreground hover:bg-accent hover:text-foreground'
                       }`}
                     >
-                      <Icon className="h-4 w-4 shrink-0" />
+                      <div className="relative shrink-0">
+                        <Icon className="h-4 w-4" />
+                        <span className={`absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full border border-card ${
+                          filled ? 'bg-[hsl(var(--sim-success))]' : isCurrent ? 'bg-primary' : 'bg-muted-foreground/30'
+                        }`} />
+                      </div>
                       <span className="flex-1 truncate">{lang === 'bg' ? s.labelBg : s.labelEn}</span>
                       {filled && <Check className="h-3.5 w-3.5 text-[hsl(var(--sim-success))] shrink-0" />}
                     </button>
