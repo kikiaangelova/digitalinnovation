@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useLang } from '@/context/LangContext';
 import { useSimulator } from '@/context/SimulatorContext';
 import { LearningPhaseBar } from '@/components/learning/LearningStructure';
@@ -9,6 +9,7 @@ import NarrativeBriefing from '@/components/simulator/NarrativeBriefing';
 import DecisionForm from '@/components/simulator/DecisionForm';
 import OutcomeReportView from '@/components/simulator/OutcomeReportView';
 import TurbulenceMeter from '@/components/simulator/TurbulenceMeter';
+import CrisisResponsePanel from '@/components/simulator/CrisisResponsePanel';
 import StructuredFeedback from '@/components/feedback/StructuredFeedback';
 import SkillsImproved from '@/components/learning/SkillsImproved';
 import { Button } from '@/components/ui/button';
@@ -32,6 +33,9 @@ export default function RoundView() {
   const round = season?.rounds.find(r => r.week_number === weekNumber);
   const participantId = season ? getParticipantId(season.id) : null;
 
+  // Crisis response state
+  const [crisisAnswers, setCrisisAnswers] = useState<Record<string, string>>({});
+
   const previousState = useMemo(() => {
     if (!participantId) return null;
     const history = getCompanyStateHistory(participantId);
@@ -45,11 +49,17 @@ export default function RoundView() {
     return state || previousState;
   }, [participantId, round, getCompanyState, previousState]);
 
+  const isInCrisis = (currentState?.turbulence?.stability_score ?? 100) < 30;
+
   const submission = participantId && round ? getSubmission(participantId, round.id) : null;
   const outcomeReport = participantId && round ? getOutcomeReport(participantId, round.id) : null;
   const isSubmitted = !!submission;
 
   const draftKey = participantId && round ? `${participantId}-${round.id}` : '';
+
+  const handleCrisisDecision = useCallback((decisionId: string, optionId: string) => {
+    setCrisisAnswers(prev => ({ ...prev, [decisionId]: optionId }));
+  }, []);
 
   const handleSaveDraft = useCallback((answers: any[], rationale: string, reflection: string) => {
     if (!round || !participantId) return;
@@ -58,11 +68,11 @@ export default function RoundView() {
 
   const handleSubmit = useCallback(() => {
     if (!round || !participantId) return;
-    const report = submitDecisions(round.id, participantId);
+    const report = submitDecisions(round.id, participantId, crisisAnswers);
     if (report) {
       toast.success(t('Decisions submitted! See the consequences below.', 'Решенията са изпратени! Вижте последствията по-долу.'));
     }
-  }, [round, participantId, submitDecisions, t]);
+  }, [round, participantId, submitDecisions, t, crisisAnswers]);
 
   if (!season || !round) {
     return <div className="p-8 text-center text-muted-foreground">{t('Round not found', 'Рундът не е намерен')}</div>;
@@ -132,6 +142,17 @@ export default function RoundView() {
             </div>
             <TurbulenceMeter turbulence={currentState.turbulence} lang={lang} />
           </div>
+        )}
+
+        {/* CRISIS RESPONSE – only when stability < 30 */}
+        {isInCrisis && currentState?.turbulence && !isSubmitted && (
+          <CrisisResponsePanel
+            turbulence={currentState.turbulence}
+            onCrisisDecision={handleCrisisDecision}
+            crisisAnswers={crisisAnswers}
+            isSubmitted={isSubmitted}
+            lang={lang}
+          />
         )}
 
         {/* 2. CURRENT METRICS – context for decision-making */}

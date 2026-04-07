@@ -5,6 +5,7 @@ import {
 } from '@/types/simulator';
 import { SEED_SEASON, INITIAL_KPIS } from '@/data/seed-season';
 import { processRound } from '@/engine/simulation-engine';
+import { CRISIS_DECISIONS } from '@/components/simulator/CrisisResponsePanel';
 
 export type SimulatorMode = 'individual' | 'team';
 
@@ -27,7 +28,7 @@ interface SimulatorActions {
   createTeam: (seasonId: string, name: string) => Team;
   joinTeam: (code: string, userName: string) => Team | null;
   saveDraft: (roundId: string, participantId: string, answers: DecisionAnswer[], rationale: string, reflection: string) => void;
-  submitDecisions: (roundId: string, participantId: string) => OutcomeReport | null;
+  submitDecisions: (roundId: string, participantId: string, crisisAnswers?: Record<string, string>) => OutcomeReport | null;
   getTeamForSeason: (seasonId: string) => Team | null;
   getCompanyState: (participantId: string, roundId: string) => CompanyState | null;
   getLatestCompanyState: (participantId: string) => CompanyState | null;
@@ -156,7 +157,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
     setDraftReflections(prev => ({ ...prev, [key]: reflection }));
   }, []);
 
-  const submitDecisions = useCallback((roundId: string, participantId: string) => {
+  const submitDecisions = useCallback((roundId: string, participantId: string, crisisAnswers?: Record<string, string>) => {
     const key = `${participantId}-${roundId}`;
     const answers = draftAnswers[key];
     if (!answers || answers.length === 0) return null;
@@ -169,10 +170,23 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
     const latestState = getLatestCompanyState(participantId);
     if (!latestState) return null;
 
+    // Merge crisis decisions into the round decisions for processing
+    let allDecisions = round.decisions;
+    let allAnswers = answers;
+
+    if (crisisAnswers && Object.keys(crisisAnswers).length > 0) {
+      allDecisions = [...round.decisions, ...CRISIS_DECISIONS];
+      const crisisAnswerList: DecisionAnswer[] = Object.entries(crisisAnswers).map(([id, answer]) => ({
+        decision_template_id: id,
+        answer,
+      }));
+      allAnswers = [...answers, ...crisisAnswerList];
+    }
+
     const { newKPIs, report, turbulence: newTurbulence, dynamicShock } = processRound(
       latestState.kpis,
-      answers,
-      round.decisions,
+      allAnswers,
+      allDecisions,
       round.shock_event,
       season.volatility,
       latestState.turbulence,
