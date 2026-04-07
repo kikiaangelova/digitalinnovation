@@ -285,10 +285,10 @@ export const SEED_SEASON: SimulationSeason = {
             { criterion: 'Growth preservation', max_score: 5, description: 'Can they still grow while cutting costs?' },
           ],
           rules: [
-            { option_id: 'r3d2a', deltas: { burn_rate: -1500, users_total: -30, cac: 5 } },
-            { option_id: 'r3d2b', deltas: { burn_rate: -1000, product_quality: -3, tech_debt: 3 } },
-            { option_id: 'r3d2c', deltas: { burn_rate: -800, tech_debt: 5, product_quality: -2 } },
-            { option_id: 'r3d2d', deltas: { burn_rate: -2000, users_total: 20, active_users: 15 } },
+            { option_id: 'r3d2a', deltas: { burn_rate: -1500, users_total: -30, cac: 5 }, resource_deltas: { money: 1500 } },
+            { option_id: 'r3d2b', deltas: { burn_rate: -1000, product_quality: -3, tech_debt: 3 }, resource_deltas: { money: 1000 } },
+            { option_id: 'r3d2c', deltas: { burn_rate: -800, tech_debt: 5, product_quality: -2 }, resource_deltas: { money: 800, team: -1 } },
+            { option_id: 'r3d2d', deltas: { burn_rate: -2000, users_total: 20, active_users: 15 }, resource_deltas: { money: 2000 } },
           ],
         },
         {
