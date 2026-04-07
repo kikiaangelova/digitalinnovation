@@ -337,7 +337,7 @@ export default function LearningJourney() {
               {t('Startup Journey Progress', 'Напредък по стартъп пътешествието')}
             </span>
             <span className="text-sm font-bold text-primary">
-              {t(`Stage ${completedCount} of ${STAGES.length}`, `Етап ${completedCount} от ${STAGES.length}`)}
+              {t(`Stage ${completedCount > 0 ? completedCount : (statuses[0] !== 'not_started' ? 1 : 0)} of ${STAGES.length}`, `Етап ${completedCount > 0 ? completedCount : (statuses[0] !== 'not_started' ? 1 : 0)} от ${STAGES.length}`)}
             </span>
           </div>
           <Progress value={overallPct} className="h-3" />
