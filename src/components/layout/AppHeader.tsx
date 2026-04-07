@@ -242,7 +242,7 @@ export default function AppHeader() {
         )}
       </header>
 
-      {/* ═══ Mobile "More" drawer overlay ═══ */}
+      {/* ═══ Mobile bottom sheet overlay ═══ */}
       {drawerOpen && (
         <div
           className="fixed inset-0 z-40 bg-black/40 md:hidden animate-fade-in"
@@ -250,89 +250,89 @@ export default function AppHeader() {
         />
       )}
 
-      {/* ═══ Mobile "More" drawer ═══ */}
+      {/* ═══ Mobile bottom sheet ═══ */}
       <div
-        className={`fixed top-0 right-0 z-50 h-full w-72 bg-card border-l border-border shadow-xl md:hidden transition-transform duration-300 ease-in-out ${
-          drawerOpen ? 'translate-x-0' : 'translate-x-full'
+        className={`fixed bottom-0 left-0 right-0 z-50 md:hidden bg-card rounded-t-2xl border-t border-border shadow-2xl transition-transform duration-300 ease-in-out ${
+          drawerOpen ? 'translate-y-0' : 'translate-y-full'
         }`}
+        style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
       >
-        {/* Drawer header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-          {user && (
-            <div className="flex items-center gap-2 min-w-0">
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary text-xs font-bold uppercase shrink-0">
-                {initials}
-              </div>
-              <span className="text-sm font-medium text-foreground truncate">
-                {displayName}
-              </span>
+        {/* Drag handle */}
+        <div className="w-10 h-1 bg-muted rounded-full mx-auto mt-3 mb-4" />
+
+        {/* User card */}
+        {user && (
+          <div className="flex items-center gap-3 px-5 pb-4 border-b border-border">
+            <div className="flex h-10 w-10 items-center justify-center rounded-full sim-gradient text-primary-foreground text-sm font-bold uppercase shrink-0">
+              {initials}
             </div>
-          )}
-          {!user && <span className="text-sm font-medium text-foreground">{t.menu}</span>}
-          <button
-            onClick={() => setDrawerOpen(false)}
-            className="flex items-center justify-center h-9 w-9 rounded-md hover:bg-muted transition-colors shrink-0"
-          >
-            <X className="h-5 w-5 text-foreground" />
-          </button>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-foreground truncate">{displayName}</p>
+              <p className="text-xs text-muted-foreground flex items-center gap-1">
+                <Zap className="h-3 w-3 text-amber-500" />
+                {userXp} XP · Level {level.level} {level.name[lang as 'en' | 'bg']}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Two-column grid */}
+        <div className="grid grid-cols-2 gap-px bg-border">
+          {/* Left column — Learn */}
+          <div className="bg-card px-5 py-4">
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold mb-2">
+              {lang === 'bg' ? 'Учене' : 'Learn'}
+            </p>
+            {[
+              { to: '/dictionary', icon: Book, label: t.dictionary },
+              { to: '/journey', icon: Map, label: lang === 'bg' ? 'Пътешествие' : 'Journey' },
+              { to: '/leaderboard', icon: Trophy, label: lang === 'bg' ? 'Класация' : 'Leaderboard' },
+            ].map(item => (
+              <Link
+                key={item.to}
+                to={item.to}
+                onClick={() => setDrawerOpen(false)}
+                className="flex items-center gap-2 py-2 text-sm text-foreground"
+              >
+                <item.icon className="h-4 w-4 text-muted-foreground" />
+                {item.label}
+              </Link>
+            ))}
+          </div>
+
+          {/* Right column — Account */}
+          <div className="bg-card px-5 py-4">
+            <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold mb-2">
+              {lang === 'bg' ? 'Акаунт' : 'Account'}
+            </p>
+            {[
+              { to: '/profile', icon: User, label: t.profile },
+              { to: '/about', icon: Lightbulb, label: t.about },
+              ...(isAdmin ? [{ to: '/admin', icon: Shield, label: t.admin }] : []),
+            ].map(item => (
+              <Link
+                key={item.to}
+                to={item.to}
+                onClick={() => setDrawerOpen(false)}
+                className="flex items-center gap-2 py-2 text-sm text-foreground"
+              >
+                <item.icon className="h-4 w-4 text-muted-foreground" />
+                {item.label}
+              </Link>
+            ))}
+          </div>
         </div>
 
-        {/* Drawer links */}
-        <nav className="flex flex-col p-3 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 60px)' }}>
-          {moreDrawerLinks.map(l => (
-            <Link
-              key={l.to}
-              to={l.to}
-              onClick={() => setDrawerOpen(false)}
-              className={`flex items-center gap-3 px-3 rounded-lg text-sm font-medium transition-colors ${
-                isActive(l.to)
-                  ? 'bg-accent text-accent-foreground'
-                  : 'text-foreground hover:bg-muted'
-              }`}
-              style={{ minHeight: 48 }}
-            >
-              <l.icon className="h-4 w-4 text-muted-foreground shrink-0" />
-              <span className="flex-1">{l.label}</span>
-              {'showProgress' in l && l.showProgress && user && (
-                <Badge variant="secondary" className="text-xs font-bold tabular-nums">
-                  {journeyPct}%
-                </Badge>
-              )}
-            </Link>
-          ))}
-
-          <div className="my-2 border-t border-border" />
-
-          {user ? (
-            <button
-              onClick={handleSignOut}
-              className="flex items-center gap-3 px-3 rounded-lg text-sm font-medium text-destructive hover:bg-destructive/10 transition-colors"
-              style={{ minHeight: 48 }}
-            >
-              <LogOut className="h-4 w-4" />
-              {t.signOut}
-            </button>
-          ) : (
-            <>
-              <Link
-                to="/auth"
-                onClick={() => setDrawerOpen(false)}
-                className="flex items-center justify-center rounded-lg text-sm font-medium text-foreground border border-border hover:bg-muted transition-colors"
-                style={{ minHeight: 48 }}
-              >
-                {t.signIn}
-              </Link>
-              <Link
-                to="/auth?mode=signup"
-                onClick={() => setDrawerOpen(false)}
-                className="flex items-center justify-center rounded-lg text-sm font-medium sim-gradient text-primary-foreground mt-2"
-                style={{ minHeight: 48 }}
-              >
-                {t.signUp}
-              </Link>
-            </>
-          )}
-        </nav>
+        {/* Sign out */}
+        {user && (
+          <button
+            onClick={handleSignOut}
+            className="flex items-center justify-center gap-2 w-full border-t border-border py-4 text-sm text-destructive"
+          >
+            <LogOut className="h-4 w-4" />
+            {t.signOut}
+          </button>
+        )}
       </div>
 
       {/* ═══ Mobile bottom tab bar (logged-in only) ═══ */}
@@ -351,6 +351,7 @@ export default function AppHeader() {
                 if (isMore) {
                   setDrawerOpen(prev => !prev);
                 } else {
+                  setDrawerOpen(false);
                   navigate(tab.to);
                 }
               };
@@ -359,16 +360,20 @@ export default function AppHeader() {
                 <button
                   key={tab.to}
                   onClick={handleClick}
-                  className="flex flex-col items-center gap-1 flex-1 py-2 cursor-pointer"
+                  className="flex flex-col items-center gap-1 flex-1 py-2 cursor-pointer relative"
                 >
                   <span
-                    className={`flex items-center justify-center transition-colors ${
+                    className={`flex items-center justify-center transition-colors relative ${
                       active
                         ? 'bg-primary/15 rounded-lg px-3 py-1'
                         : 'px-3 py-1'
                     }`}
                   >
                     <Icon className={`h-5 w-5 ${active ? 'text-primary' : 'text-muted-foreground'}`} />
+                    {/* Red dot badge on More tab for admins */}
+                    {isMore && isAdmin && (
+                      <span className="absolute -top-0.5 -right-0.5 h-1.5 w-1.5 rounded-full bg-destructive" />
+                    )}
                   </span>
                   <span
                     className={`text-[11px] leading-none ${
