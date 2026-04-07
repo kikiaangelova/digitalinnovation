@@ -20,8 +20,8 @@ const Index = () => {
   const [testimonialIdx, setTestimonialIdx] = useState(0);
 
   const testimonials = [
-    { quote: t.testimonial1, name: 'Iva M., 17' },
-    { quote: t.testimonial2, name: 'Viktor S., 16' },
+    { quote: t.testimonial1, name: lang === 'bg' ? 'Ива М., 17' : 'Iva M., 17' },
+    { quote: t.testimonial2, name: lang === 'bg' ? 'Виктор С., 16' : 'Viktor S., 16' },
   ];
 
   useEffect(() => {
