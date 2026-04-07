@@ -156,7 +156,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
     setDraftReflections(prev => ({ ...prev, [key]: reflection }));
   }, []);
 
-  const submitDecisions = useCallback((roundId: string, participantId: string) => {
+  const submitDecisions = useCallback((roundId: string, participantId: string, crisisAnswers?: Record<string, string>) => {
     const key = `${participantId}-${roundId}`;
     const answers = draftAnswers[key];
     if (!answers || answers.length === 0) return null;
@@ -169,10 +169,25 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
     const latestState = getLatestCompanyState(participantId);
     if (!latestState) return null;
 
+    // Merge crisis decisions into the round decisions for processing
+    let allDecisions = round.decisions;
+    let allAnswers = answers;
+
+    if (crisisAnswers && Object.keys(crisisAnswers).length > 0) {
+      const { CRISIS_DECISIONS } = require('@/components/simulator/CrisisResponsePanel');
+      const crisisDecisionTemplates = CRISIS_DECISIONS as import('@/types/simulator').DecisionTemplate[];
+      allDecisions = [...round.decisions, ...crisisDecisionTemplates];
+      const crisisAnswerList: import('@/types/simulator').DecisionAnswer[] = Object.entries(crisisAnswers).map(([id, answer]) => ({
+        decision_template_id: id,
+        answer,
+      }));
+      allAnswers = [...answers, ...crisisAnswerList];
+    }
+
     const { newKPIs, report, turbulence: newTurbulence, dynamicShock } = processRound(
       latestState.kpis,
-      answers,
-      round.decisions,
+      allAnswers,
+      allDecisions,
       round.shock_event,
       season.volatility,
       latestState.turbulence,
