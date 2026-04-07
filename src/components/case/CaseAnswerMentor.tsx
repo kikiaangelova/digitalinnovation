@@ -29,6 +29,23 @@ export default function CaseAnswerMentor({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [remaining, setRemaining] = useState<number | null>(null);
+  const [confidence, setConfidence] = useState(5);
+
+  const confidenceLabel = (val: number) => {
+    if (val <= 2) return t('Very uncertain', 'Много несигурен');
+    if (val <= 4) return t('Somewhat uncertain', 'Донякъде несигурен');
+    if (val <= 6) return t('Moderate', 'Умерена');
+    if (val <= 8) return t('Confident', 'Уверен');
+    return t('Very confident', 'Много уверен');
+  };
+
+  const confidenceColor = (val: number) => {
+    if (val <= 2) return 'text-destructive';
+    if (val <= 4) return 'text-sim-warning';
+    if (val <= 6) return 'text-muted-foreground';
+    if (val <= 8) return 'text-primary';
+    return 'text-sim-success';
+  };
 
   const minLength = questionType === 'long_answer' ? 20 : 5;
   const canRequest = (studentAnswer || '').trim().length >= minLength && !disabled;
