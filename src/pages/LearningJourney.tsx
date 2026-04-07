@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
-import { supabase } from '@/integrations/supabase/client';
+import { useProgress } from '@/context/ProgressContext';
 import { useNavigate } from 'react-router-dom';
 import AppHeader from '@/components/layout/AppHeader';
 import { Progress } from '@/components/ui/progress';
