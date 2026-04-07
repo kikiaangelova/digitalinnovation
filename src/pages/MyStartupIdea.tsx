@@ -500,18 +500,24 @@ export default function MyStartupIdea() {
               <div className="space-y-1">
                 {SECTIONS.map((s, i) => {
                   const Icon = s.icon;
-                  const filled = ((data as any)[s.key] || '').trim().length > 20;
+                  const filled = sectionCompletion[i];
+                  const isCurrent = i === activeSection;
                   return (
                     <button
                       key={s.key}
                       onClick={() => setActiveSection(i)}
                       className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm transition-colors text-left ${
-                        i === activeSection
+                        isCurrent
                           ? 'bg-primary/10 text-primary font-medium'
                           : 'text-muted-foreground hover:bg-accent hover:text-foreground'
                       }`}
                     >
-                      <Icon className="h-4 w-4 shrink-0" />
+                      <div className="relative shrink-0">
+                        <Icon className="h-4 w-4" />
+                        <span className={`absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full border border-card ${
+                          filled ? 'bg-[hsl(var(--sim-success))]' : isCurrent ? 'bg-primary' : 'bg-muted-foreground/30'
+                        }`} />
+                      </div>
                       <span className="flex-1 truncate">{lang === 'bg' ? s.labelBg : s.labelEn}</span>
                       {filled && <Check className="h-3.5 w-3.5 text-[hsl(var(--sim-success))] shrink-0" />}
                     </button>
