@@ -35,6 +35,13 @@ const translations = {
     requestDemo: 'Request Demo',
     accessClarity: 'Free for students. Contact us for schools and institutions.',
     gamifiedPlatform: 'Gamified Learning Platform',
+    howItWorksTitle: 'How It Works',
+    howItWorksDesc: 'A guided journey from idea to pitch — no experience needed.',
+    howStep1: 'Explore real business cases and learn key concepts',
+    howStep2: 'Build your own startup idea step by step',
+    howStep3: 'Get AI-powered feedback and improve',
+    howStep4: 'Pitch your startup and earn your certificate',
+    howCta: 'Ready to start?',
 
     // Landing sections
     skillsCount: '5 Skills',
