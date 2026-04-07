@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { useIsMobile } from '@/hooks/use-mobile';
 import {
   BookOpen, Search, Lightbulb, Palette, TrendingUp, Presentation,
-  CheckCircle2, ArrowRight, Lock, AlertCircle, Play, FileText, Rocket,
+  CheckCircle2, ArrowRight, Lock, Play, FileText, Rocket,
   ChevronDown, ChevronUp, GraduationCap, Target, Clock, Zap,
 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -39,116 +39,44 @@ const STAGE_OUTCOMES: StageOutcomes[] = [
       '3 вида дигитална дисрупция (поддържаща, нискобюджетна, нов пазар)',
       'Как да идентифицираш иновационни възможности във всяка индустрия',
     ],
-    doEn: [
-      'Analyze an industry for digital opportunities',
-      'Complete your first case study',
-    ],
-    doBg: [
-      'Анализирай индустрия за дигитални възможности',
-      'Завърши първия си казус',
-    ],
-    estMinutes: 45,
-    xpAvailable: 130,
+    doEn: ['Analyze an industry for digital opportunities', 'Complete your first case study'],
+    doBg: ['Анализирай индустрия за дигитални възможности', 'Завърши първия си казус'],
+    estMinutes: 45, xpAvailable: 130,
   },
   {
-    knowEn: [
-      'How to map a competitive landscape',
-      'What makes a digital business model defensible',
-    ],
-    knowBg: [
-      'Как да картографираш конкурентната среда',
-      'Какво прави дигиталния бизнес модел защитим',
-    ],
-    doEn: [
-      'Identify 3 competitors and analyze their strengths and weaknesses',
-      'Apply an analytical framework to a real industry',
-    ],
-    doBg: [
-      'Идентифицирай 3 конкурента и анализирай силните и слабите им страни',
-      'Приложи аналитична рамка към реална индустрия',
-    ],
-    estMinutes: 60,
-    xpAvailable: 140,
+    knowEn: ['How to map a competitive landscape', 'What makes a digital business model defensible'],
+    knowBg: ['Как да картографираш конкурентната среда', 'Какво прави дигиталния бизнес модел защитим'],
+    doEn: ['Identify 3 competitors and analyze their strengths and weaknesses', 'Apply an analytical framework to a real industry'],
+    doBg: ['Идентифицирай 3 конкурента и анализирай силните и слабите им страни', 'Приложи аналитична рамка към реална индустрия'],
+    estMinutes: 60, xpAvailable: 140,
   },
   {
-    knowEn: [
-      'What a value proposition is and how to craft one',
-      'How to define customer segments precisely',
-    ],
-    knowBg: [
-      'Какво е стойностно предложение и как да го създадеш',
-      'Как да дефинираш клиентски сегменти прецизно',
-    ],
-    doEn: [
-      'Write a clear problem statement',
-      'Define your target customer with specific demographics and needs',
-    ],
-    doBg: [
-      'Напиши ясна формулировка на проблема',
-      'Дефинирай целевия клиент с конкретни демографски данни и нужди',
-    ],
-    estMinutes: 50,
-    xpAvailable: 120,
+    knowEn: ['What a value proposition is and how to craft one', 'How to define customer segments precisely'],
+    knowBg: ['Какво е стойностно предложение и как да го създадеш', 'Как да дефинираш клиентски сегменти прецизно'],
+    doEn: ['Write a clear problem statement', 'Define your target customer with specific demographics and needs'],
+    doBg: ['Напиши ясна формулировка на проблема', 'Дефинирай целевия клиент с конкретни демографски данни и нужди'],
+    estMinutes: 50, xpAvailable: 120,
   },
   {
-    knowEn: [
-      'The 9 blocks of the Business Model Canvas',
-      'How to design a revenue model for a digital product',
-    ],
-    knowBg: [
-      'Деветте блока на Business Model Canvas',
-      'Как да проектирате модел за приходи за дигитален продукт',
-    ],
-    doEn: [
-      'Complete a full BMC for your startup idea',
-      'Define your MVP concept with key features',
-    ],
-    doBg: [
-      'Попълни пълен BMC за твоята стартъп идея',
-      'Дефинирай MVP концепцията с ключови функции',
-    ],
-    estMinutes: 90,
-    xpAvailable: 200,
+    knowEn: ['The 9 blocks of the Business Model Canvas', 'How to design a revenue model for a digital product'],
+    knowBg: ['Деветте блока на Business Model Canvas', 'Как да проектирате модел за приходи за дигитален продукт'],
+    doEn: ['Complete a full BMC for your startup idea', 'Define your MVP concept with key features'],
+    doBg: ['Попълни пълен BMC за твоята стартъп идея', 'Дефинирай MVP концепцията с ключови функции'],
+    estMinutes: 90, xpAvailable: 200,
   },
   {
-    knowEn: [
-      'What KPIs matter for a startup (users, revenue, satisfaction)',
-      'How strategic decisions affect growth vs risk',
-    ],
-    knowBg: [
-      'Кои KPI-та са важни за стартъп (потребители, приходи, удовлетвореност)',
-      'Как стратегическите решения влияят на растежа спрямо риска',
-    ],
-    doEn: [
-      'Run a complete simulator scenario',
-      'Interpret your startup performance score',
-    ],
-    doBg: [
-      'Проведи пълен симулаторен сценарий',
-      'Интерпретирай резултата от представянето на стартъпа',
-    ],
-    estMinutes: 40,
-    xpAvailable: 100,
+    knowEn: ['What KPIs matter for a startup (users, revenue, satisfaction)', 'How strategic decisions affect growth vs risk'],
+    knowBg: ['Кои KPI-та са важни за стартъп (потребители, приходи, удовлетвореност)', 'Как стратегическите решения влияят на растежа спрямо риска'],
+    doEn: ['Run a complete simulator scenario', 'Interpret your startup performance score'],
+    doBg: ['Проведи пълен симулаторен сценарий', 'Интерпретирай резултата от представянето на стартъпа'],
+    estMinutes: 40, xpAvailable: 100,
   },
   {
-    knowEn: [
-      'What investors look for in a startup pitch',
-      'How to structure a compelling 3-minute presentation',
-    ],
-    knowBg: [
-      'Какво търсят инвеститорите в стартъп представяне',
-      'Как да структурирате убедителна 3-минутна презентация',
-    ],
-    doEn: [
-      'Deliver a complete startup pitch',
-      'Receive and give constructive peer feedback',
-    ],
-    doBg: [
-      'Представи пълно стартъп представяне',
-      'Получи и дай конструктивна партньорска обратна връзка',
-    ],
-    estMinutes: 60,
-    xpAvailable: 170,
+    knowEn: ['What investors look for in a startup pitch', 'How to structure a compelling 3-minute presentation'],
+    knowBg: ['Какво търсят инвеститорите в стартъп представяне', 'Как да структурирате убедителна 3-минутна презентация'],
+    doEn: ['Deliver a complete startup pitch', 'Receive and give constructive peer feedback'],
+    doBg: ['Представи пълно стартъп представяне', 'Получи и дай конструктивна партньорска обратна връзка'],
+    estMinutes: 60, xpAvailable: 170,
   },
 ];
 
@@ -260,12 +188,10 @@ export default function LearningJourney() {
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
   const progress = useProgress();
 
-  // Derive local aliases from unified progress
   const casesCompleted = progress.casesCompleted;
   const casesTotal = progress.casesTotal;
   const loading = progress.loading;
 
-  // Track which stage cards are expanded; default: all expanded on desktop, all collapsed on mobile
   const [expanded, setExpanded] = useState<Set<number>>(new Set());
   const [initializedExpanded, setInitializedExpanded] = useState(false);
 
@@ -290,7 +216,7 @@ export default function LearningJourney() {
     });
   };
 
-  /* ---- derive stage statuses from unified progress ---- */
+  /* ---- derive stage statuses ---- */
   const sectionFilled = (key: string) => progress.startupSectionMap[key] || false;
 
   function stageStatus(stage: Stage): StageStatus {
@@ -321,16 +247,23 @@ export default function LearningJourney() {
   const statuses = STAGES.map(s => stageStatus(s));
   const completedCount = statuses.filter(s => s === 'completed').length;
   const overallPct = Math.round((completedCount / STAGES.length) * 100);
-  const recommendedIdx = statuses.findIndex(s => s !== 'completed');
 
-  function canSubmit(stageIdx: number): boolean {
-    if (stageIdx === 0) return true;
-    return statuses[stageIdx - 1] === 'completed';
+  /* ---- Locking logic: Stage N is unlocked only if Stage N-1 is completed ---- */
+  function isStageUnlocked(idx: number): boolean {
+    if (idx === 0) return true; // Stage 1 always unlocked
+    return statuses[idx - 1] === 'completed';
+  }
+
+  // The recommended stage is the first unlocked, non-completed stage
+  const recommendedIdx = statuses.findIndex((s, i) => s !== 'completed' && isStageUnlocked(i));
+
+  function handleLockedClick() {
+    toast.error(t('Complete the previous stage first.', 'Завърши предишния етап първо.'));
   }
 
   function handleSubmitAttempt(stageIdx: number) {
-    if (!canSubmit(stageIdx)) {
-      toast.error(t('Complete the previous step first.', 'Завърши предишната стъпка първо.'));
+    if (!isStageUnlocked(stageIdx)) {
+      handleLockedClick();
       return;
     }
     navigate('/my-startup');
@@ -357,8 +290,8 @@ export default function LearningJourney() {
             {t('Startup Journey', 'Стартъп пътешествие')}
           </h1>
           <p className="text-muted-foreground text-sm mt-1">
-            {t('Build your startup step by step. Complete each stage before moving to the next.',
-               'Изгради стартъпа си стъпка по стъпка. Завърши всеки етап, преди да преминеш към следващия.')}
+            {t('Build your startup step by step. Complete each stage to unlock the next one.',
+               'Изгради стартъпа си стъпка по стъпка. Завърши всеки етап, за да отключиш следващия.')}
           </p>
         </div>
 
@@ -382,25 +315,40 @@ export default function LearningJourney() {
           {STAGES.map((stage, idx) => {
             const Icon = stage.icon;
             const status = statuses[idx];
+            const unlocked = isStageUnlocked(idx);
             const isRecommended = idx === recommendedIdx;
-            const submittable = canSubmit(idx);
+            const isLocked = !unlocked;
             const outcomes = STAGE_OUTCOMES[idx];
-            const isExpanded = expanded.has(stage.id);
+            const isExpanded = expanded.has(stage.id) && unlocked;
 
             return (
               <div
                 key={stage.id}
                 className={`relative flex gap-4 md:gap-6 p-4 md:p-5 rounded-xl transition-all mb-3
-                  ${isRecommended ? 'bg-accent border border-primary/30 shadow-sm' : 'bg-card border border-border'}
+                  ${isLocked
+                    ? 'bg-muted/30 border border-border/50 opacity-60'
+                    : isRecommended
+                      ? 'bg-accent border-2 border-primary/40 shadow-md ring-1 ring-primary/10'
+                      : status === 'completed'
+                        ? 'bg-card border border-success/30'
+                        : 'bg-card border border-border'}
                 `}
               >
                 {/* Icon circle */}
                 <div className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-full z-10
-                  ${status === 'completed' ? 'bg-success text-primary-foreground'
-                    : isRecommended ? 'sim-gradient text-primary-foreground'
-                    : 'bg-muted text-muted-foreground'}`}
+                  ${isLocked
+                    ? 'bg-muted text-muted-foreground'
+                    : status === 'completed'
+                      ? 'bg-success text-primary-foreground'
+                      : isRecommended
+                        ? 'sim-gradient text-primary-foreground'
+                        : 'bg-muted text-muted-foreground'}`}
                 >
-                  {status === 'completed' ? <CheckCircle2 className="h-6 w-6" /> : <Icon className="h-6 w-6" />}
+                  {isLocked
+                    ? <Lock className="h-5 w-5" />
+                    : status === 'completed'
+                      ? <CheckCircle2 className="h-6 w-6" />
+                      : <Icon className="h-6 w-6" />}
                 </div>
 
                 {/* Content */}
@@ -409,34 +357,63 @@ export default function LearningJourney() {
                     <span className="typo-stage">
                       {t(`Stage ${stage.id}`, `Етап ${stage.id}`)}
                     </span>
-                    {getStatusBadge(status, lang)}
-                    {isRecommended && status !== 'completed' && (
-                      <Badge className="bg-primary/15 text-primary border-0 text-xs">
-                        <ArrowRight className="h-3 w-3 mr-1" />{t('Recommended', 'Препоръчано')}
+                    {isLocked ? (
+                      <Badge variant="outline" className="text-xs text-muted-foreground border-muted-foreground/30">
+                        <Lock className="h-3 w-3 mr-1" />
+                        {t('Locked', 'Заключено')}
                       </Badge>
+                    ) : (
+                      <>
+                        {getStatusBadge(status, lang)}
+                        {isRecommended && status !== 'completed' && (
+                          <Badge className="bg-primary/15 text-primary border-0 text-xs font-semibold">
+                            <ArrowRight className="h-3 w-3 mr-1" />{t('Recommended', 'Препоръчано')}
+                          </Badge>
+                        )}
+                      </>
                     )}
                   </div>
 
-                  {/* Title — clickable to toggle */}
+                  {/* Title */}
                   <button
-                    onClick={() => toggleExpand(stage.id)}
-                    className="flex items-center gap-2 w-full text-left group"
+                    onClick={() => {
+                      if (isLocked) {
+                        handleLockedClick();
+                        return;
+                      }
+                      toggleExpand(stage.id);
+                    }}
+                    className={`flex items-center gap-2 w-full text-left group ${isLocked ? 'cursor-not-allowed' : ''}`}
                   >
-                    <h3 className="typo-card-title text-base md:text-lg text-foreground group-hover:text-primary transition-colors">
+                    <h3 className={`typo-card-title text-base md:text-lg transition-colors
+                      ${isLocked ? 'text-muted-foreground' : 'text-foreground group-hover:text-primary'}`}>
                       {lang === 'bg' ? stage.bg : stage.en}
                     </h3>
-                    {isExpanded
-                      ? <ChevronUp className="h-4 w-4 text-muted-foreground shrink-0" />
-                      : <ChevronDown className="h-4 w-4 text-muted-foreground shrink-0" />}
+                    {!isLocked && (
+                      isExpanded
+                        ? <ChevronUp className="h-4 w-4 text-muted-foreground shrink-0" />
+                        : <ChevronDown className="h-4 w-4 text-muted-foreground shrink-0" />
+                    )}
                   </button>
-                  <p className="typo-helper mb-2">
+
+                  <p className={`typo-helper mb-2 ${isLocked ? 'text-muted-foreground/60' : ''}`}>
                     {lang === 'bg' ? stage.descBg : stage.descEn}
                   </p>
 
-                  {/* ═══ Expandable learning outcomes ═══ */}
-                  {isExpanded && (
+                  {/* Locked message */}
+                  {isLocked && (
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
+                      <Lock className="h-3.5 w-3.5" />
+                      {t(
+                        `Complete Stage ${stage.id - 1} to unlock`,
+                        `Завърши Етап ${stage.id - 1}, за да отключиш`
+                      )}
+                    </div>
+                  )}
+
+                  {/* ═══ Expandable learning outcomes (only for unlocked) ═══ */}
+                  {isExpanded && !isLocked && (
                     <div className="rounded-lg bg-muted/40 border border-border/50 p-4 mb-3 space-y-3 animate-in fade-in slide-in-from-top-1 duration-200">
-                      {/* Meta row: time + XP */}
                       <div className="flex flex-wrap gap-4 text-xs">
                         <span className="flex items-center gap-1 text-muted-foreground">
                           <Clock className="h-3.5 w-3.5" />
@@ -448,7 +425,6 @@ export default function LearningJourney() {
                         </span>
                       </div>
 
-                      {/* KNOW */}
                       <div>
                         <h4 className="flex items-center gap-1.5 text-xs font-semibold text-foreground mb-1.5">
                           <GraduationCap className="h-3.5 w-3.5 text-primary" />
@@ -461,7 +437,6 @@ export default function LearningJourney() {
                         </ul>
                       </div>
 
-                      {/* DO */}
                       <div>
                         <h4 className="flex items-center gap-1.5 text-xs font-semibold text-foreground mb-1.5">
                           <Target className="h-3.5 w-3.5 text-success" />
@@ -476,54 +451,40 @@ export default function LearningJourney() {
                     </div>
                   )}
 
-                  {/* Learn / Case / Simulator buttons */}
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    <Button variant="outline" size="sm" onClick={() => navigate(stage.learnPath)}>
-                      <BookOpen className="h-3.5 w-3.5 mr-1" />{t('Learn', 'Учи')}
-                    </Button>
-                    <Button variant="outline" size="sm" onClick={() => navigate(stage.casePath)}>
-                      <FileText className="h-3.5 w-3.5 mr-1" />{t('Case Study', 'Казус')}
-                    </Button>
-                    <Button variant="outline" size="sm" onClick={() => navigate(stage.simPath)}>
-                      <Play className="h-3.5 w-3.5 mr-1" />{t('Simulator', 'Симулатор')}
-                    </Button>
-                  </div>
-
-                  {/* Milestone submission */}
-                  {idx > 0 && status !== 'completed' && (
-                    <div className="flex items-center gap-2 pt-2 border-t border-border">
-                      {submittable ? (
-                        <Button size="sm" onClick={() => handleSubmitAttempt(idx)}>
-                          <Rocket className="h-3.5 w-3.5 mr-1" />
-                          {lang === 'bg' ? stage.milestoneBg : stage.milestoneEn}
+                  {/* Action buttons — only for unlocked stages */}
+                  {!isLocked && (
+                    <>
+                      <div className="flex flex-wrap gap-2 mb-3">
+                        <Button variant="outline" size="sm" onClick={() => navigate(stage.learnPath)}>
+                          <BookOpen className="h-3.5 w-3.5 mr-1" />{t('Learn', 'Учи')}
                         </Button>
-                      ) : (
-                        <div className="flex items-center gap-2">
-                          <Button size="sm" variant="outline" disabled className="opacity-60">
-                            <Lock className="h-3.5 w-3.5 mr-1" />
+                        <Button variant="outline" size="sm" onClick={() => navigate(stage.casePath)}>
+                          <FileText className="h-3.5 w-3.5 mr-1" />{t('Case Study', 'Казус')}
+                        </Button>
+                        <Button variant="outline" size="sm" onClick={() => navigate(stage.simPath)}>
+                          <Play className="h-3.5 w-3.5 mr-1" />{t('Simulator', 'Симулатор')}
+                        </Button>
+                      </div>
+
+                      {/* Milestone submission */}
+                      {idx > 0 && status !== 'completed' && (
+                        <div className="pt-2 border-t border-border">
+                          <Button size="sm" onClick={() => handleSubmitAttempt(idx)}>
+                            <Rocket className="h-3.5 w-3.5 mr-1" />
                             {lang === 'bg' ? stage.milestoneBg : stage.milestoneEn}
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            className="text-warning"
-                            onClick={() => navigate('/my-startup')}
-                          >
-                            <AlertCircle className="h-3.5 w-3.5 mr-1" />
-                            {t('Complete previous step', 'Завърши предишната стъпка')}
                           </Button>
                         </div>
                       )}
-                    </div>
-                  )}
 
-                  {idx === 0 && status !== 'completed' && (
-                    <div className="pt-2 border-t border-border">
-                      <Button size="sm" onClick={() => navigate('/cases')}>
-                        <BookOpen className="h-3.5 w-3.5 mr-1" />
-                        {t('Complete a Case Study', 'Завърши казус')}
-                      </Button>
-                    </div>
+                      {idx === 0 && status !== 'completed' && (
+                        <div className="pt-2 border-t border-border">
+                          <Button size="sm" onClick={() => navigate('/cases')}>
+                            <BookOpen className="h-3.5 w-3.5 mr-1" />
+                            {t('Complete a Case Study', 'Завърши казус')}
+                          </Button>
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
               </div>
