@@ -119,11 +119,41 @@ Structure your response with these sections:
     if (feedbackType === "case_answer") {
       // Mentor-style Socratic feedback for individual case answers
       const difficulty = data.difficulty || "intermediate";
+      const confidenceLevel = data.confidence_level || 5;
       const difficultyInstructions = difficulty === "beginner"
         ? "The student is a beginner. Provide more guidance, simpler language, and concrete examples. Be encouraging."
         : difficulty === "advanced"
         ? "The student is advanced. Use more strategic, probing questions. Challenge assumptions. Push for deeper analysis."
         : "The student is at intermediate level. Balance guidance with strategic questioning.";
+
+      // Confidence calibration instructions
+      let confidenceInstructions = "";
+      if (confidenceLevel <= 3) {
+        confidenceInstructions = `CONFIDENCE CALIBRATION: The student rated their confidence ${confidenceLevel}/10 (low).
+- They are uncertain — this is GOOD. Acknowledge their intellectual humility.
+- Focus on BUILDING their confidence by highlighting what they got right.
+- Provide more scaffolding and concrete next steps.
+- Use phrases like "You're on the right track because..." and "Your instinct about X is solid."
+- Help them see what they already understand but may not realize.`;
+      } else if (confidenceLevel <= 6) {
+        confidenceInstructions = `CONFIDENCE CALIBRATION: The student rated their confidence ${confidenceLevel}/10 (moderate).
+- Balanced approach: validate strengths while probing assumptions.
+- Ask them to justify their reasoning — "What evidence supports this?"
+- Encourage them to consider one alternative perspective.`;
+      } else if (confidenceLevel <= 8) {
+        confidenceInstructions = `CONFIDENCE CALIBRATION: The student rated their confidence ${confidenceLevel}/10 (high).
+- Gently challenge assumptions they may be overlooking.
+- Ask "What could go wrong with this approach?" or "What are you assuming?"
+- Push for edge cases and counterarguments.
+- If their answer IS strong, confirm it — but still challenge one assumption.`;
+      } else {
+        confidenceInstructions = `CONFIDENCE CALIBRATION: The student rated their confidence ${confidenceLevel}/10 (very high).
+- HIGH ALERT for overconfidence. Stress-test their reasoning hard.
+- Ask "What data would change your mind?" and "What's the strongest counterargument?"
+- Point out any gaps, missing evidence, or unstated assumptions firmly.
+- If the answer is genuinely excellent, acknowledge it but warn against certainty bias.
+- Use phrases like "Consider what you might be missing..." and "Playing devil's advocate..."`;
+      }
 
       mentorSystemPrompt = `You are a Socratic mentor for a university-level digital innovation course, using the MIT/Harvard case method.
 
@@ -137,6 +167,8 @@ CRITICAL RULES:
 
 ${difficultyInstructions}
 
+${confidenceInstructions}
+
 UNCERTAINTY MINDSET:
 - Cases deliberately include incomplete data, conflicting signals, and ambiguity
 - Praise students who acknowledge uncertainty and state assumptions
@@ -149,11 +181,14 @@ Structure your response with EXACTLY these 4 sections:
 - **${lang === "bg" ? "Стратегическа насока" : "Strategic Hint"}**: A thought-provoking "what if" question that challenges their assumptions (NOT an answer)
 - **${lang === "bg" ? "Следваща стъпка" : "Next Step"}**: One concrete action — e.g., "consider the pessimistic scenario" or "state your top 2 assumptions"
 
-Keep response UNDER 200 words. Be a thinking partner, not a solution generator.`;
+Also include a brief **${lang === "bg" ? "Калибрация на увереността" : "Confidence Calibration"}** note at the end: tell the student whether their self-assessed confidence seems aligned with their answer quality — are they overconfident, underconfident, or well-calibrated?
+
+Keep response UNDER 250 words. Be a thinking partner, not a solution generator.`;
 
       userPrompt = `Case: ${data.case_title || "Digital Innovation Case"}
 Question: ${data.question_prompt || "(no question)"}
 Question type: ${data.question_type || "long_answer"}
+Student's confidence: ${confidenceLevel}/10
 Student's answer: ${data.student_answer || "(empty)"}
 ${data.question_context ? `\nContext/Exhibits provided: ${data.question_context}` : ""}`;
     } else if (feedbackType === "startup_project") {
