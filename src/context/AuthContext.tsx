@@ -55,10 +55,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const fetchProfile = async (userId: string) => {
     const { data } = await supabase
       .from('profiles')
-      .select('full_name, display_name, avatar_url')
+      .select('full_name, display_name, avatar_url, avatar_style')
       .eq('user_id', userId)
       .maybeSingle();
-    if (data) setProfile(data);
+    if (data) setProfile({ ...data, avatar_style: data.avatar_style || '' });
   };
 
   const checkAdmin = async (userId: string) => {
