@@ -51,6 +51,7 @@ export default function CasePreview() {
   const [completedAt, setCompletedAt] = useState<string | null>(null);
   const [score, setScore] = useState<{ total: number; max: number } | null>(null);
   const [theoryBanner, setTheoryBanner] = useState<{ slug: string; titleEn: string; titleBg: string } | null>(null);
+  const [theoryCompleted, setTheoryCompleted] = useState<{ slug: string; titleEn: string; titleBg: string } | null>(null);
 
   useEffect(() => {
     if (!id) return;
