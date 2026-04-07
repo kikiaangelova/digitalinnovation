@@ -206,6 +206,14 @@ export default function Leaderboard({ lang, currentUserId, limit = 10, showTitle
               </p>
             </div>
           )}
+
+          {currentUserId && !myEntry && (
+            <div className="text-center pt-2 border-t border-border">
+              <p className="text-xs text-muted-foreground">
+                {t('Earn your first XP to appear on the leaderboard!', 'Спечели първия си XP, за да се появиш в класацията!')}
+              </p>
+            </div>
+          )}
         </div>
       )}
     </div>

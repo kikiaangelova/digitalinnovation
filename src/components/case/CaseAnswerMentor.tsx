@@ -95,7 +95,11 @@ export default function CaseAnswerMentor({
             </Badge>
           )}
         </div>
-      )}
+        {!canRequest && (studentAnswer || '').trim().length > 0 && (studentAnswer || '').trim().length < minLength && (
+          <p className="text-xs text-muted-foreground">
+            {t('Write at least 20 characters to unlock AI feedback', 'Напишете поне 20 знака, за да отключите AI обратна връзка')}
+          </p>
+        )}
 
       {error && (
         <div className="flex items-center gap-2 text-xs text-destructive bg-destructive/10 rounded-lg p-2.5">
