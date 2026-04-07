@@ -18,6 +18,7 @@ import {
   Factory, Target, Swords, Wrench, DollarSign, Megaphone,
   BarChart3, HelpCircle, BookOpen
 } from 'lucide-react';
+import PhaseBadge from '@/components/ui/phase-badge';
 import {
   RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
   ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Cell
