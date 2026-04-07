@@ -117,6 +117,7 @@ const App = () => (
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   </div>
+                  <CycleFAB />
                   <AppFooter />
                 </div>
                 </ProfileGate>
