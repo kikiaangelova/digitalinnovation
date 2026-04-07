@@ -68,7 +68,7 @@ export default function LearningNavigator(props: LearningNavigatorProps) {
   return (
     <div className="rounded-2xl border border-border bg-card overflow-hidden">
       {/* ── Top: Level + XP + Stage indicator ── */}
-      <div className="p-5 pb-4 space-y-4">
+      <div className="p-4 sm:p-5 pb-4 space-y-4">
         {/* Row 1: Level badge + XP */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
