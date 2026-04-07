@@ -449,9 +449,31 @@ export default function LearningJourney() {
                     </div>
                   )}
 
-                  {/* ═══ Expandable learning outcomes (only for unlocked) ═══ */}
+                  {/* ═══ Stage flow guidance + expandable outcomes (only for unlocked) ═══ */}
                   {isExpanded && !isLocked && (
-                    <div className="rounded-lg bg-muted/40 border border-border/50 p-4 mb-3 space-y-3 animate-in fade-in slide-in-from-top-1 duration-200">
+                    <div className="space-y-3 animate-in fade-in slide-in-from-top-1 duration-200">
+                      {/* Flow guidance */}
+                      <div className="rounded-lg bg-primary/5 border border-primary/15 p-3">
+                        <p className="text-xs font-semibold text-primary mb-2">
+                          {t('Complete this stage in 3 steps:', 'Завърши този етап в 3 стъпки:')}
+                        </p>
+                        <ol className="space-y-1 text-xs text-foreground/80">
+                          <li className="flex items-center gap-2">
+                            <span className="flex h-4.5 w-4.5 items-center justify-center rounded-full bg-primary/15 text-[10px] font-bold text-primary shrink-0">1</span>
+                            {t('Learn the concept', 'Научи концепцията')}
+                          </li>
+                          <li className="flex items-center gap-2">
+                            <span className="flex h-4.5 w-4.5 items-center justify-center rounded-full bg-primary/15 text-[10px] font-bold text-primary shrink-0">2</span>
+                            {t('Apply it in a case study', 'Приложи я в казус')}
+                          </li>
+                          <li className="flex items-center gap-2">
+                            <span className="flex h-4.5 w-4.5 items-center justify-center rounded-full bg-primary/15 text-[10px] font-bold text-primary shrink-0">3</span>
+                            {t('Practice via simulation', 'Упражни чрез симулация')}
+                          </li>
+                        </ol>
+                      </div>
+
+                    <div className="rounded-lg bg-muted/40 border border-border/50 p-4 space-y-3">
                       <div className="flex flex-wrap gap-4 text-xs">
                         <span className="flex items-center gap-1 text-muted-foreground">
                           <Clock className="h-3.5 w-3.5" />
@@ -486,6 +508,7 @@ export default function LearningJourney() {
                           ))}
                         </ul>
                       </div>
+                    </div>
                     </div>
                   )}
 
