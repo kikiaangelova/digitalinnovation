@@ -4,6 +4,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
 import { useProgress } from '@/context/ProgressContext';
 import { getCurrentLevel } from '@/components/dashboard/LevelCard';
+import PlayerAvatar from '@/components/avatar/PlayerAvatar';
 import { Button } from '@/components/ui/button';
 import {
   GraduationCap, LogOut, LayoutDashboard, Play, Shield, User,
