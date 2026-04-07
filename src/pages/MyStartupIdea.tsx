@@ -15,7 +15,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import {
   Lightbulb, Users, Zap, Monitor, DollarSign, TrendingUp,
-  Presentation, ChevronRight, Check, Save, Rocket, HelpCircle, Globe, LayoutGrid, ClipboardCheck, Search
+  Presentation, ChevronRight, Check, Save, Rocket, HelpCircle, Globe, LayoutGrid, ClipboardCheck, Search, Lock as LockIcon
 } from 'lucide-react';
 import { INDUSTRIES } from '@/data/industry-map-data';
 import BusinessModelCanvas, { BMC_KEYS, type BMCData } from '@/components/startup/BusinessModelCanvas';
