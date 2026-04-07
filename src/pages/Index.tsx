@@ -10,7 +10,7 @@ import {
   Presentation, Compass, Briefcase, Palette,
   Trophy, BookOpen, FlaskConical, TrendingUp, Mic,
   Zap, Star, Calendar, ChevronRight, Book,
-  Cpu, Users,
+  Cpu,
 } from 'lucide-react';
 
 const Index = () => {
