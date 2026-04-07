@@ -44,9 +44,8 @@ export default function WelcomeOnboarding({ onComplete }: Props) {
     setSaving(true);
     try {
       const profileUpdate: Record<string, unknown> = {};
-      if (classVal || schoolVal) {
-        profileUpdate.bio = [classVal && `Class: ${classVal}`, schoolVal && `School: ${schoolVal}`].filter(Boolean).join(' | ');
-      }
+      if (classVal) profileUpdate.class_name = classVal;
+      if (schoolVal) profileUpdate.school_name = schoolVal;
       if (Object.keys(profileUpdate).length > 0) {
         await supabase.from('profiles').update(profileUpdate).eq('user_id', user.id);
       }

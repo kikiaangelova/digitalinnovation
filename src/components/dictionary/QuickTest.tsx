@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
@@ -190,6 +190,7 @@ export default function QuickTest() {
   const [startDifficulty, setStartDifficulty] = useState<TermDifficulty>('beginner');
   const [pastAvg, setPastAvg] = useState<number | null>(null);
   const [recentWeakAreas, setRecentWeakAreas] = useState<string[]>([]);
+  const submittingRef = useRef(false);
 
   // Load past performance to determine adaptive difficulty + weak area reinforcement
   useEffect(() => {
@@ -253,6 +254,8 @@ export default function QuickTest() {
   };
 
   const submitTest = async () => {
+    if (submittingRef.current) return;
+    submittingRef.current = true;
     setSaving(true);
     const correctCount = answers.reduce((acc, ans, i) => acc + (ans === questions[i]?.correctIndex ? 1 : 0), 0);
     const score = Math.round((correctCount / questions.length) * 100);
@@ -350,6 +353,7 @@ export default function QuickTest() {
     setSavedResult({ score, xp: tier.xp, bonusXp, unlockedBadges, nextStep });
     setSaving(false);
     setPhase('results');
+    submittingRef.current = false;
   };
 
   // ─── SETUP PHASE ───
