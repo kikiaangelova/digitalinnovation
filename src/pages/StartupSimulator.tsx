@@ -283,8 +283,9 @@ export default function StartupSimulator() {
 
             <div className="text-center pt-4">
               <span className="text-6xl mb-4 block">🚀</span>
-              <h1 className="typo-h1 mb-3 flex items-center justify-center gap-3">
+               <h1 className="typo-h1 mb-3 flex items-center justify-center gap-3">
                 {t('Startup Simulator', 'Стартъп симулатор')}
+                <PhaseBadge phase="apply" lang={lang as 'en' | 'bg'} />
                 <StatusBadge status={localSimStatus as any} lang={lang as 'en' | 'bg'} size="md" />
               </h1>
               <p className="text-muted-foreground max-w-lg mx-auto mb-6">
