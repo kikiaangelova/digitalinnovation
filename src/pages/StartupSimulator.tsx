@@ -55,10 +55,19 @@ export default function StartupSimulator() {
   const [stepChoices, setStepChoices] = useState<string[]>([]);
   const [simId, setSimId] = useState<string | null>(null);
   const [multiSelections, setMultiSelections] = useState<string[]>([]);
+  const [casesCompleted, setCasesCompleted] = useState<number | null>(null);
 
   useEffect(() => {
     if (!authLoading && !user) navigate('/auth?redirect=/simulator');
   }, [user, authLoading, navigate]);
+
+  // Check how many cases the student has completed
+  useEffect(() => {
+    if (!user) return;
+    supabase.from('submissions').select('id', { count: 'exact', head: true })
+      .eq('user_id', user.id).eq('is_draft', false)
+      .then(({ count }) => setCasesCompleted(count ?? 0));
+  }, [user]);
 
   useEffect(() => {
     if (!user) return;
