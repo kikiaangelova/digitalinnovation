@@ -11,11 +11,11 @@ import { deriveJourneyStatuses } from '@/lib/journey';
 
 /* ── Stage definitions (matches JourneyProgress) ── */
 const STAGES = [
-  { id: 1, icon: BookOpen, en: 'Discover the Problem', bg: 'Открий проблема', path: '/innovation-basics' },
-  { id: 2, icon: Search, en: 'Analyze the Market', bg: 'Анализирай пазара', path: '/cases' },
-  { id: 3, icon: Lightbulb, en: 'Design the Solution', bg: 'Проектирай решението', path: '/my-startup?section=problem' },
-  { id: 4, icon: Palette, en: 'Build the Startup', bg: 'Изгради стартъпа', path: '/my-startup' },
-  { id: 5, icon: TrendingUp, en: 'Test in Simulator', bg: 'Тествай в симулатора', path: '/simulator' },
+  { id: 1, icon: BookOpen, en: 'Discover the Problem', bg: 'Открий проблема', path: '/learn/platform-business-models' },
+  { id: 2, icon: Search, en: 'Analyze the Market', bg: 'Анализирай пазара', path: '/learn/digital-ecosystems' },
+  { id: 3, icon: Lightbulb, en: 'Design the Solution', bg: 'Проектирай решението', path: '/learn/customer-acquisition-cost' },
+  { id: 4, icon: Palette, en: 'Build the Startup', bg: 'Изгради стартъпа', path: '/learn/marketing-fundamentals' },
+  { id: 5, icon: TrendingUp, en: 'Test in Simulator', bg: 'Тествай в симулатора', path: '/learn/operations-fundamentals' },
   { id: 6, icon: Presentation, en: 'Pitch the Startup', bg: 'Представи стартъпа', path: '/my-startup?section=final_pitch' },
 ];
 
