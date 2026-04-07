@@ -111,7 +111,7 @@ interface Props {
 
 export default function BusinessModelCanvas({ data, lang, disabled, onChange }: Props) {
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
-  const filledCount = BLOCKS.filter(b => (data[b.key] || '').trim().length > 10).length;
+  const filledCount = BLOCKS.filter(b => (data[b.key] || '').trim().length > 30).length;
   const pct = Math.round((filledCount / 9) * 100);
 
   return (
@@ -133,7 +133,7 @@ export default function BusinessModelCanvas({ data, lang, disabled, onChange }: 
       <div className="grid grid-cols-1 gap-3 md:hidden">
         {BLOCKS.map(block => {
           const Icon = block.icon;
-          const filled = (data[block.key] || '').trim().length > 10;
+          const filled = (data[block.key] || '').trim().length > 30;
           return (
             <div
               key={block.key}
@@ -178,7 +178,7 @@ export default function BusinessModelCanvas({ data, lang, disabled, onChange }: 
       >
         {BLOCKS.map(block => {
           const Icon = block.icon;
-          const filled = (data[block.key] || '').trim().length > 10;
+          const filled = (data[block.key] || '').trim().length > 30;
           return (
             <div
               key={block.key}
