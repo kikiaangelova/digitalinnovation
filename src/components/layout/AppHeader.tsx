@@ -146,7 +146,7 @@ export default function AppHeader() {
                       {initials}
                     </div>
                   )}
-                    <span className="text-sm text-foreground font-medium max-w-[5.5rem] truncate" title={displayName}>
+                    <span className="text-sm text-foreground font-medium max-w-[8rem] truncate" title={displayName}>
                       {displayName}
                     </span>
                     <span className="text-xs text-muted-foreground ml-1 hidden lg:inline">⚡ {userXp}</span>
