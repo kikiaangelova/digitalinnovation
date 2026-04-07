@@ -13,6 +13,7 @@ export const TURBULENCE_POOLS: TurbulencePool[] = [
         title: 'Market Downturn',
         description: 'Economic uncertainty causes consumer spending to drop 15%. Investors are cautious, and customer acquisition costs rise sharply.',
         kpi_effects: { users_total: -30, revenue: -500, cac: 15, burn_rate: 300, brand_trust: -5 },
+        resource_effects: { money: -1500 },
         category: 'market_crash',
         severity: 3,
         concept_lesson: '💡 Kotler\'s Chaotics: In turbulent markets, cutting all marketing is a mistake. Companies that maintain strategic visibility during downturns capture market share when recovery begins.',
