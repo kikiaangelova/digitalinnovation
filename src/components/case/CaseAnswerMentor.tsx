@@ -76,30 +76,33 @@ export default function CaseAnswerMentor({
     <div className="mt-3 space-y-3">
       {/* Get Feedback button */}
       {!feedback && (
-        <div className="flex items-center gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={requestFeedback}
-            disabled={loading || !canRequest}
-            className="gap-1.5 text-xs"
-          >
-            {loading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Bot className="h-3.5 w-3.5" />}
-            {loading
-              ? t('Analyzing...', 'Анализиране...')
-              : t('Get AI Mentor Feedback', 'Получи обратна връзка от AI ментор')}
-          </Button>
-          {remaining !== null && (
-            <Badge variant="outline" className="text-xs">
-              {remaining} {t('left today', 'остават днес')}
-            </Badge>
+        <>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={requestFeedback}
+              disabled={loading || !canRequest}
+              className="gap-1.5 text-xs"
+            >
+              {loading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Bot className="h-3.5 w-3.5" />}
+              {loading
+                ? t('Analyzing...', 'Анализиране...')
+                : t('Get AI Mentor Feedback', 'Получи обратна връзка от AI ментор')}
+            </Button>
+            {remaining !== null && (
+              <Badge variant="outline" className="text-xs">
+                {remaining} {t('left today', 'остават днес')}
+              </Badge>
+            )}
+          </div>
+          {!canRequest && (studentAnswer || '').trim().length > 0 && (studentAnswer || '').trim().length < minLength && (
+            <p className="text-xs text-muted-foreground">
+              {t('Write at least 20 characters to unlock AI feedback', 'Напишете поне 20 знака, за да отключите AI обратна връзка')}
+            </p>
           )}
-        </div>
-        {!canRequest && (studentAnswer || '').trim().length > 0 && (studentAnswer || '').trim().length < minLength && (
-          <p className="text-xs text-muted-foreground">
-            {t('Write at least 20 characters to unlock AI feedback', 'Напишете поне 20 знака, за да отключите AI обратна връзка')}
-          </p>
-        )}
+        </>
+      )}
 
       {error && (
         <div className="flex items-center gap-2 text-xs text-destructive bg-destructive/10 rounded-lg p-2.5">
