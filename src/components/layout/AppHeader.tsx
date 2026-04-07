@@ -295,7 +295,7 @@ export default function AppHeader() {
               <p className="text-sm font-semibold text-foreground truncate">{displayName}</p>
               <p className="text-xs text-muted-foreground flex items-center gap-1">
                 <Zap className="h-3 w-3 text-amber-500" />
-                {userXp} XP · Level {level.level} {level.name[lang as 'en' | 'bg']}
+                {userXp} XP · {lang === 'bg' ? `Ниво ${level.level} — ${level.name.bg}` : `Level ${level.level} ${level.name.en}`}
               </p>
             </div>
           </div>
