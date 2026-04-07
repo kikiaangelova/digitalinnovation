@@ -138,9 +138,13 @@ export default function AppHeader() {
                   onClick={() => setDropdownOpen(!dropdownOpen)}
                   className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg hover:bg-muted transition-colors"
                 >
-                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-primary text-xs font-bold uppercase">
-                    {initials}
-                  </div>
+                  {profile?.avatar_style ? (
+                    <PlayerAvatar style={profile.avatar_style} xp={userXp} size="xs" showBorder={false} />
+                  ) : (
+                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-primary text-xs font-bold uppercase">
+                      {initials}
+                    </div>
+                  )}
                     <span className="text-sm text-foreground font-medium max-w-[120px] truncate">
                       {displayName}
                     </span>
