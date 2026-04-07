@@ -187,7 +187,8 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       allAnswers = [...answers, ...crisisAnswerList];
     }
 
-    const { newKPIs, report, turbulence: newTurbulence, dynamicShock } = processRound(
+    const prevResources = latestState.resources || { ...INITIAL_RESOURCES };
+    const { newKPIs, report, turbulence: newTurbulence, dynamicShock, newResources, gameStatus } = processRound(
       latestState.kpis,
       allAnswers,
       allDecisions,
@@ -195,6 +196,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       season.volatility,
       latestState.turbulence,
       round.week_number,
+      prevResources,
     );
 
     const submission: DecisionSubmission = {
@@ -223,7 +225,9 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       round_id: roundId,
       week_number: round.week_number,
       kpis: newKPIs,
+      resources: newResources,
       turbulence: newTurbulence,
+      gameStatus,
     };
 
     setSubmissions(prev => [...prev, submission]);
