@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import { Zap, Star, Shield, Rocket, Crown, Gem } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Zap, Star, Shield, Rocket, Crown, Gem, Award } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
+import { Button } from '@/components/ui/button';
 
 const LEVELS = [
   { level: 1, name: { en: 'Explorer', bg: 'Изследовател' }, xpNeeded: 0, icon: Zap, gradient: 'gradient-explorer' },
@@ -32,6 +34,7 @@ export function getNextLevel(xp: number) {
 }
 
 export default function LevelCard({ xp, lang }: LevelCardProps) {
+  const navigate = useNavigate();
   const current = getCurrentLevel(xp);
   const next = getNextLevel(xp);
   const Icon = current.icon;
@@ -86,9 +89,15 @@ export default function LevelCard({ xp, lang }: LevelCardProps) {
           <Progress value={progressToNext} className="h-2.5" indicatorClassName="bg-xp-gold" />
         </div>
       ) : (
-        <p className="text-sm font-medium text-success">
-          {lang === 'bg' ? '🎉 Максимално ниво достигнато!' : '🎉 Max level reached!'}
-        </p>
+        <div className="flex items-center justify-between">
+          <p className="text-sm font-medium text-success">
+            {lang === 'bg' ? '🎉 Максимално ниво!' : '🎉 Max level reached!'}
+          </p>
+          <Button size="sm" variant="outline" onClick={() => navigate('/final-exam')} className="gap-1 text-xs">
+            <Award className="h-3 w-3" />
+            {lang === 'bg' ? 'Финален изпит' : 'Final Exam'}
+          </Button>
+        </div>
       )}
     </div>
   );

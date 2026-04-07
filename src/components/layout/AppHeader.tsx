@@ -232,7 +232,10 @@ export default function AppHeader() {
 
         {/* ═══ Journey progress bar (below top header, logged-in only) ═══ */}
         {user && (
-          <div className="h-[3px] w-full bg-muted">
+          <div
+            className="h-[3px] w-full bg-muted"
+            title={lang === 'bg' ? `Иновационно пътешествие: ${journeyPct}%` : `Innovation Journey: ${journeyPct}%`}
+          >
             <div
               className="h-full sim-gradient transition-all duration-700 ease-out"
               style={{ width: `${journeyPct}%` }}

@@ -193,7 +193,7 @@ export default function StudentDashboard() {
     <div className="min-h-screen bg-background">
       <AppHeader />
       {showOnboarding && <WelcomeOnboarding onComplete={handleOnboardingComplete} />}
-      <main className="container mx-auto px-4 py-8 space-y-8 max-w-6xl">
+      <main className="container mx-auto px-4 py-8 pb-20 md:pb-8 space-y-8 max-w-6xl">
         {/* ═══ Header + Next Action ═══ */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
