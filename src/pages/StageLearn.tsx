@@ -1,6 +1,7 @@
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
+import { useProgress } from '@/context/ProgressContext';
 import { STAGE_LEARN_CONTENT } from '@/data/stage-learn-content';
 import AppHeader from '@/components/layout/AppHeader';
 import { Button } from '@/components/ui/button';
@@ -8,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import MarkdownContent from '@/components/ui/markdown-content';
 import {
   BookOpen, Search, Lightbulb, Palette, TrendingUp, Presentation,
-  ArrowLeft, ArrowRight, Clock, ChevronRight, Rocket,
+  ArrowLeft, ArrowRight, Clock, ChevronRight, Rocket, Lock,
 } from 'lucide-react';
 import { useEffect } from 'react';
 
