@@ -51,10 +51,22 @@ export interface DecisionTemplate {
   rules: DecisionRule[];
 }
 
+export type TurbulenceCategory = 'market_crash' | 'competitor_entry' | 'regulation_change' | 'tech_disruption';
+
 export interface ShockEvent {
   title: string;
   description: string;
   kpi_effects: Partial<KPIs>;
+  category?: TurbulenceCategory;
+  severity?: number; // 1-5
+  concept_lesson?: string; // Kotler concept taught
+  concept_lesson_bg?: string;
+}
+
+export interface TurbulenceState {
+  stability_score: number; // 0-100 (100 = fully stable)
+  events_triggered: number;
+  resilience_bonus: number; // XP bonus for adapting well
 }
 
 export interface SimulationRound {
