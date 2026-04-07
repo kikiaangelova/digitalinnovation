@@ -17,7 +17,17 @@ const Index = () => {
   const { user } = useAuth();
   const { lang, t } = useLang();
   const navigate = useNavigate();
-  const [audience, setAudience] = useState<'student' | 'teacher'>('student');
+  const [testimonialIdx, setTestimonialIdx] = useState(0);
+
+  const testimonials = [
+    { quote: t.testimonial1, name: 'Iva M., 17' },
+    { quote: t.testimonial2, name: 'Viktor S., 16' },
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => setTestimonialIdx(i => (i + 1) % testimonials.length), 4000);
+    return () => clearInterval(timer);
+  }, [testimonials.length]);
 
   const handleNav = (path: string) => {
     if (user) navigate(path);
