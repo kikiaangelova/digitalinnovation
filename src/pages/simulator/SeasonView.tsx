@@ -1,24 +1,70 @@
+import { useMemo } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useLang } from '@/context/LangContext';
 import { useSimulator } from '@/context/SimulatorContext';
 import KPIDashboard from '@/components/simulator/KPIDashboard';
+import SimulatorJourneySummary from '@/components/simulator/SimulatorJourneySummary';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, Check, Lock, Clock, Users, Copy, Home } from 'lucide-react';
 import { toast } from 'sonner';
+import type { KPIs } from '@/types/simulator';
+import { KPI_DIRECTIONS } from '@/types/simulator';
 
 export default function SeasonView() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { lang } = useLang();
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
-  const { seasons, getParticipantId, getLatestCompanyState, getSubmission, getTeamForSeason, simulatorMode } = useSimulator();
+  const { seasons, getParticipantId, getLatestCompanyState, getSubmission, getOutcomeReport, getCompanyStateHistory, getTeamForSeason, simulatorMode } = useSimulator();
 
   const season = seasons.find(s => s.id === id);
-  if (!season) return <div className="p-8 text-center text-muted-foreground">{t('Season not found', 'Сезонът не е намерен')}</div>;
 
-  const participantId = getParticipantId(season.id);
+  const participantId = season ? getParticipantId(season.id) : null;
   const latestState = participantId ? getLatestCompanyState(participantId) : null;
-  const team = simulatorMode === 'team' ? getTeamForSeason(season.id) : null;
+  const team = simulatorMode === 'team' && season ? getTeamForSeason(season.id) : null;
+
+  const simComplete = participantId && season
+    ? season.rounds.every(r => !!getSubmission(participantId, r.id))
+    : false;
+
+  const stateHistory = participantId ? getCompanyStateHistory(participantId) : [];
+  const startKpis: KPIs = stateHistory.length > 0
+    ? stateHistory[0].kpis
+    : (season?.rounds[0]?.baseline_kpis || {} as KPIs);
+  const finalKpis: KPIs = latestState?.kpis || startKpis;
+
+  const journeySummary = useMemo(() => {
+    if (!participantId || !season) return [];
+    return season.rounds.map(round => {
+      const sub = getSubmission(participantId, round.id);
+      const report = getOutcomeReport(participantId, round.id);
+      const decisions = (sub?.answers || []).map(a => {
+        const tmpl = round.decisions.find(d => d.id === a.decision_template_id);
+        const chosen = tmpl?.options.find(o => o.id === a.answer);
+        return { title: tmpl?.title || '', chosenOption: chosen?.label || a.answer };
+      });
+      const changes = report?.kpi_changes || {};
+      let topPos = '';
+      let topNeg = '';
+      let bestDelta = 0;
+      let worstDelta = 0;
+      Object.entries(changes).forEach(([key, val]) => {
+        if (!val) return;
+        const dir = KPI_DIRECTIONS[key as keyof KPIs];
+        const effective = dir === 'down' ? -val.delta : val.delta;
+        if (effective > bestDelta) { bestDelta = effective; topPos = key; }
+        if (effective < worstDelta) { worstDelta = effective; topNeg = key; }
+      });
+      return {
+        weekNumber: round.week_number,
+        decisions,
+        topPositiveKpi: topPos || 'revenue',
+        topNegativeKpi: topNeg || 'burn_rate',
+      };
+    });
+  }, [participantId, season, getSubmission, getOutcomeReport]);
+
+  if (!season) return <div className="p-8 text-center text-muted-foreground">{t('Season not found', 'Сезонът не е намерен')}</div>;
 
   const copyCode = () => {
     if (team) {
@@ -130,6 +176,16 @@ export default function SeasonView() {
             })}
           </div>
         </div>
+
+        {/* Journey Summary — shown when all rounds are submitted */}
+        {simComplete && participantId && (
+          <SimulatorJourneySummary
+            allWeekAnswers={journeySummary}
+            startKpis={startKpis}
+            finalKpis={finalKpis}
+            lang={lang as 'en' | 'bg'}
+          />
+        )}
       </main>
     </div>
   );
