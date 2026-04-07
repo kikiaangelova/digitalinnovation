@@ -337,6 +337,10 @@ export const SEED_SEASON: SimulationSeason = {
         title: 'Competitor Launches Similar App',
         description: 'A well-funded team launches an app solving a similar problem. They have a bigger budget but less focus.',
         kpi_effects: { nps: -3, churn_rate: 0.01, users_total: -15, brand_trust: -3 },
+        category: 'competitor_entry',
+        severity: 3,
+        concept_lesson: '💡 Adaptability: When competitors appear, your differentiation becomes critical. Focus on what makes you unique rather than reacting to their moves.',
+        concept_lesson_bg: '💡 Адаптивност: Когато се появят конкуренти, вашата диференциация става критична.',
       },
       decisions: [
         {
