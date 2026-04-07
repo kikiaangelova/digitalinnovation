@@ -105,6 +105,7 @@ const App = () => (
                       <Route path="/my-report" element={<LearningReport />} />
                       <Route path="/admin/system-status" element={<AdminRoute><SystemStatus /></AdminRoute>} />
                       <Route path="/journey" element={<LearningJourney />} />
+                      <Route path="/journey/learn/:stageId" element={<StageLearn />} />
                       <Route path="/learn" element={<LearningModules />} />
                       <Route path="/learn/:slug" element={<LearningModulePlayer />} />
                       <Route path="/leaderboard" element={<LeaderboardPage />} />
