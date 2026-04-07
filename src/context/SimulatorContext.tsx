@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
 import {
   SimulationSeason, Team, TeamMember, CompanyState, DecisionSubmission,
-  DecisionAnswer, OutcomeReport, KPIs, SeasonScoreboard,
+  DecisionAnswer, OutcomeReport, KPIs, SeasonScoreboard, Resources, GameStatus,
 } from '@/types/simulator';
-import { SEED_SEASON, INITIAL_KPIS } from '@/data/seed-season';
+import { SEED_SEASON, INITIAL_KPIS, INITIAL_RESOURCES } from '@/data/seed-season';
 import { processRound } from '@/engine/simulation-engine';
 import { CRISIS_DECISIONS } from '@/components/simulator/CrisisResponsePanel';
 
@@ -82,6 +82,8 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       round_id: season?.rounds[0]?.id || '',
       week_number: 0,
       kpis: INITIAL_KPIS,
+      resources: { ...INITIAL_RESOURCES },
+      gameStatus: 'playing' as GameStatus,
     }]);
   }, [individualRuns, currentUser.id, seasons]);
 
@@ -138,6 +140,8 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       round_id: seasons.find(s => s.id === seasonId)?.rounds[0]?.id || '',
       week_number: 0,
       kpis: INITIAL_KPIS,
+      resources: { ...INITIAL_RESOURCES },
+      gameStatus: 'playing' as GameStatus,
     }]);
     return team;
   }, [currentUser.name, seasons]);
@@ -183,7 +187,8 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       allAnswers = [...answers, ...crisisAnswerList];
     }
 
-    const { newKPIs, report, turbulence: newTurbulence, dynamicShock } = processRound(
+    const prevResources = latestState.resources || { ...INITIAL_RESOURCES };
+    const { newKPIs, report, turbulence: newTurbulence, dynamicShock, newResources, gameStatus } = processRound(
       latestState.kpis,
       allAnswers,
       allDecisions,
@@ -191,6 +196,7 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       season.volatility,
       latestState.turbulence,
       round.week_number,
+      prevResources,
     );
 
     const submission: DecisionSubmission = {
@@ -219,7 +225,9 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       round_id: roundId,
       week_number: round.week_number,
       kpis: newKPIs,
+      resources: newResources,
       turbulence: newTurbulence,
+      gameStatus,
     };
 
     setSubmissions(prev => [...prev, submission]);

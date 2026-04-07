@@ -1,4 +1,4 @@
-import { SimulationSeason, KPIs } from '@/types/simulator';
+import { SimulationSeason, KPIs, Resources } from '@/types/simulator';
 
 export const INITIAL_KPIS: KPIs = {
   users_total: 0,
@@ -15,6 +15,12 @@ export const INITIAL_KPIS: KPIs = {
   tech_debt: 5,
   brand_trust: 20,
   compliance_risk: 5,
+};
+
+export const INITIAL_RESOURCES: Resources = {
+  money: 10000,
+  team: 2,
+  runway: 6,
 };
 
 export const SEED_SEASON: SimulationSeason = {
@@ -132,10 +138,10 @@ export const SEED_SEASON: SimulationSeason = {
             { criterion: 'Stage appropriateness', max_score: 5, description: 'Is this the right hire for this stage?' },
           ],
           rules: [
-            { option_id: 'r1d4a', deltas: { product_quality: 10, tech_debt: -3, burn_rate: 2000 } },
-            { option_id: 'r1d4b', deltas: { users_total: 50, cac: -5, burn_rate: 1500 } },
-            { option_id: 'r1d4c', deltas: { product_quality: 8, nps: 8, conversion_rate: 0.01, burn_rate: 1500 } },
-            { option_id: 'r1d4d', deltas: { revenue: 300, brand_trust: 5, burn_rate: 1800 } },
+            { option_id: 'r1d4a', deltas: { product_quality: 10, tech_debt: -3, burn_rate: 2000 }, resource_deltas: { money: -3000, team: 1 } },
+            { option_id: 'r1d4b', deltas: { users_total: 50, cac: -5, burn_rate: 1500 }, resource_deltas: { money: -1500, team: 1 } },
+            { option_id: 'r1d4c', deltas: { product_quality: 8, nps: 8, conversion_rate: 0.01, burn_rate: 1500 }, resource_deltas: { money: -1500, team: 1 } },
+            { option_id: 'r1d4d', deltas: { revenue: 300, brand_trust: 5, burn_rate: 1800 }, resource_deltas: { money: -1800, team: 1 } },
           ],
         },
       ],
@@ -190,10 +196,10 @@ export const SEED_SEASON: SimulationSeason = {
             { criterion: 'Scalability', max_score: 5, description: 'Can this scale as the business grows?' },
           ],
           rules: [
-            { option_id: 'r2d2a', deltas: { users_total: 100, active_users: 40, cac: 8, burn_rate: 800 } },
-            { option_id: 'r2d2b', deltas: { users_total: 60, active_users: 30, brand_trust: 10, burn_rate: 300 } },
-            { option_id: 'r2d2c', deltas: { users_total: 70, active_users: 45, cac: -5, churn_rate: -0.01 } },
-            { option_id: 'r2d2d', deltas: { users_total: 30, active_users: 20, brand_trust: 12, nps: 8, burn_rate: 500 } },
+            { option_id: 'r2d2a', deltas: { users_total: 100, active_users: 40, cac: 8, burn_rate: 800 }, resource_deltas: { money: -2000 } },
+            { option_id: 'r2d2b', deltas: { users_total: 60, active_users: 30, brand_trust: 10, burn_rate: 300 }, resource_deltas: { money: -500 } },
+            { option_id: 'r2d2c', deltas: { users_total: 70, active_users: 45, cac: -5, churn_rate: -0.01 }, resource_deltas: { money: -200 } },
+            { option_id: 'r2d2d', deltas: { users_total: 30, active_users: 20, brand_trust: 12, nps: 8, burn_rate: 500 }, resource_deltas: { money: -1000 } },
           ],
         },
         {
@@ -279,10 +285,10 @@ export const SEED_SEASON: SimulationSeason = {
             { criterion: 'Growth preservation', max_score: 5, description: 'Can they still grow while cutting costs?' },
           ],
           rules: [
-            { option_id: 'r3d2a', deltas: { burn_rate: -1500, users_total: -30, cac: 5 } },
-            { option_id: 'r3d2b', deltas: { burn_rate: -1000, product_quality: -3, tech_debt: 3 } },
-            { option_id: 'r3d2c', deltas: { burn_rate: -800, tech_debt: 5, product_quality: -2 } },
-            { option_id: 'r3d2d', deltas: { burn_rate: -2000, users_total: 20, active_users: 15 } },
+            { option_id: 'r3d2a', deltas: { burn_rate: -1500, users_total: -30, cac: 5 }, resource_deltas: { money: 1500 } },
+            { option_id: 'r3d2b', deltas: { burn_rate: -1000, product_quality: -3, tech_debt: 3 }, resource_deltas: { money: 1000 } },
+            { option_id: 'r3d2c', deltas: { burn_rate: -800, tech_debt: 5, product_quality: -2 }, resource_deltas: { money: 800, team: -1 } },
+            { option_id: 'r3d2d', deltas: { burn_rate: -2000, users_total: 20, active_users: 15 }, resource_deltas: { money: 2000 } },
           ],
         },
         {

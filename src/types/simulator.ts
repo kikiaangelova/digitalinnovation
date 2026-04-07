@@ -15,6 +15,22 @@ export interface KPIs {
   compliance_risk: number;
 }
 
+/** Core survival resources – layered on top of KPIs */
+export interface Resources {
+  money: number;       // € budget
+  team: number;        // people count
+  runway: number;      // months remaining
+}
+
+export type GameStatus = 'playing' | 'won' | 'lost_money' | 'lost_time';
+
+export interface ResourceDelta {
+  money?: number;
+  team?: number;
+  runway?: number;
+  label?: string;
+}
+
 export type DecisionType = 'strategy' | 'product' | 'growth' | 'data_ai' | 'ops_risk';
 export type QuestionFormat = 'multiple_choice' | 'ranking' | 'budget_allocation' | 'short_answer';
 export type TeamRole = 'lead' | 'member';
@@ -29,6 +45,7 @@ export interface DecisionOption {
 export interface DecisionRule {
   option_id: string;
   deltas: Partial<KPIs>;
+  resource_deltas?: ResourceDelta;
   conditions?: { kpi: keyof KPIs; operator: '>' | '<' | '>=' | '<='; value: number }[];
   conditional_deltas?: Partial<KPIs>;
 }
@@ -57,9 +74,10 @@ export interface ShockEvent {
   title: string;
   description: string;
   kpi_effects: Partial<KPIs>;
+  resource_effects?: ResourceDelta;
   category?: TurbulenceCategory;
-  severity?: number; // 1-5
-  concept_lesson?: string; // Kotler concept taught
+  severity?: number;
+  concept_lesson?: string;
   concept_lesson_bg?: string;
 }
 
@@ -121,7 +139,9 @@ export interface CompanyState {
   round_id: string;
   week_number: number;
   kpis: KPIs;
+  resources: Resources;
   turbulence?: TurbulenceState;
+  gameStatus: GameStatus;
 }
 
 export interface DecisionAnswer {
