@@ -129,9 +129,43 @@ export default function BusinessModelCanvas({ data, lang, disabled, onChange }: 
         <Progress value={pct} className="h-2" />
       </div>
 
-      {/* Canvas grid */}
+      {/* Canvas grid — mobile stack */}
+      <div className="grid grid-cols-1 gap-3 md:hidden">
+        {BLOCKS.map(block => {
+          const Icon = block.icon;
+          const filled = (data[block.key] || '').trim().length > 10;
+          return (
+            <div
+              key={block.key}
+              className="rounded-lg border border-border bg-card p-3 flex flex-col"
+            >
+              <div className="flex items-center gap-1.5 mb-1">
+                <Icon className="h-3.5 w-3.5 text-primary shrink-0" />
+                <span className="text-xs font-semibold text-foreground truncate">
+                  {t(block.en, block.bg)}
+                </span>
+                {filled && (
+                  <span className="ml-auto text-xs text-[hsl(var(--sim-success))]">✓</span>
+                )}
+              </div>
+              <p className="text-xs text-muted-foreground mb-2 leading-tight">
+                {t(block.descEn, block.descBg)}
+              </p>
+              <Textarea
+                value={data[block.key] || ''}
+                onChange={e => onChange(block.key, e.target.value)}
+                disabled={disabled}
+                placeholder={t('Type here...', 'Пишете тук...')}
+                className="flex-1 min-h-[80px] text-xs resize-none"
+              />
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Canvas grid — desktop */}
       <div
-        className="grid gap-2"
+        className="hidden md:grid gap-2"
         style={{
           gridTemplateColumns: 'repeat(10, 1fr)',
           gridTemplateRows: 'auto auto auto',

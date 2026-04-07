@@ -760,7 +760,12 @@ export default function IndustryProblemGenerator({ lang, onProblemSelected }: Pr
         </div>
 
         {/* Confirm */}
-        <Button onClick={handleConfirm} className="w-full" size="lg">
+        {innovationAnswer.length > 0 && innovationAnswer.trim().length < 20 && (
+          <p className="text-xs text-destructive text-center">
+            {t('Write at least 20 characters to continue', 'Напишете поне 20 знака за да продължите')}
+          </p>
+        )}
+        <Button onClick={handleConfirm} className="w-full" size="lg" disabled={innovationAnswer.trim().length < 20}>
           <Rocket className="h-4 w-4 mr-2" />
           {t('Start Building My Startup Solution', 'Започни изграждането на моето стартъп решение')}
         </Button>
