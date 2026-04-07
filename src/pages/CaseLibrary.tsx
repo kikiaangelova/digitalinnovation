@@ -3,9 +3,11 @@ import { Link } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useLang } from '@/context/LangContext';
 import { useAuth } from '@/context/AuthContext';
+import { useProgress } from '@/context/ProgressContext';
 import AppHeader from '@/components/layout/AppHeader';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { StatusBadge } from '@/components/ui/status-badge';
 import { BookOpen, Clock, ArrowRight, Search, ArrowLeft, TrendingUp, Brain, Landmark, GraduationCap, Building2, Network, HeartPulse, Factory, Sprout, Plane, ShoppingCart } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { INDUSTRY_DOMAINS, matchCaseToIndustry, type IndustryDomain } from '@/data/industry-domains';
@@ -29,7 +31,8 @@ interface CaseStudy {
 
 export default function CaseLibrary() {
   const { t, lang } = useLang();
-  const { isAdmin } = useAuth();
+  const { isAdmin, user } = useAuth();
+  const { completedCaseIds } = useProgress();
   const tx = (en: string | null | undefined, bg: string | null | undefined) => lang === 'bg' ? (bg || en || '') : (en || '');
   const tl = (en: string, bg: string) => lang === 'bg' ? bg : en;
 
@@ -156,13 +159,18 @@ export default function CaseLibrary() {
             </div>
           ) : (
             <div className="grid gap-4 md:grid-cols-2">
-              {domainCases.map(cs => (
+              {domainCases.map(cs => {
+                const caseStatus = user ? (completedCaseIds.has(cs.id) ? 'completed' : 'not_started') : undefined;
+                return (
                 <Link key={cs.id} to={`/case/${cs.id}/preview`} className="group block rounded-lg border border-border bg-card p-5 hover:border-primary/50 hover:shadow-md transition-all">
                   <div className="flex items-start justify-between mb-3">
                     <h3 className="font-display font-semibold text-foreground group-hover:text-primary transition-colors pr-2">
                       {tx(cs.title, cs.title_bg)}
                     </h3>
-                    <Badge variant="outline" className={`shrink-0 ${diffColor(cs.difficulty)}`}>{diffLabel(cs.difficulty)}</Badge>
+                    <div className="flex items-center gap-2 shrink-0">
+                      {caseStatus && <StatusBadge status={caseStatus} lang={lang} />}
+                      <Badge variant="outline" className={`${diffColor(cs.difficulty)}`}>{diffLabel(cs.difficulty)}</Badge>
+                    </div>
                   </div>
                   {(cs.description || cs.description_bg) && (
                     <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{tx(cs.description, cs.description_bg)}</p>
@@ -178,7 +186,8 @@ export default function CaseLibrary() {
                     </span>
                   </div>
                 </Link>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
