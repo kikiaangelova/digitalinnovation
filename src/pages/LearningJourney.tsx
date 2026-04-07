@@ -96,6 +96,7 @@ interface Stage {
   casePath: string;
   simPath: string;
   startupKey?: string;
+  moduleSlugs: string[]; // mapped Learn module slugs
 }
 
 const STAGES: Stage[] = [
@@ -107,6 +108,7 @@ const STAGES: Stage[] = [
     milestoneEn: 'Complete introductory case study',
     milestoneBg: 'Завърши уводния казус',
     learnPath: '/journey/learn/1', casePath: '/cases', simPath: '/simulator',
+    moduleSlugs: ['network-effects', 'platform-business-models'],
   },
   {
     id: 2, icon: Search,
@@ -117,6 +119,7 @@ const STAGES: Stage[] = [
     milestoneBg: 'Подай анализ на възможностите',
     learnPath: '/journey/learn/2', casePath: '/cases', simPath: '/simulator',
     startupKey: 'problem',
+    moduleSlugs: ['digital-ecosystems'],
   },
   {
     id: 3, icon: Lightbulb,
@@ -127,6 +130,7 @@ const STAGES: Stage[] = [
     milestoneBg: 'Подай стойностно предложение',
     learnPath: '/journey/learn/3', casePath: '/cases', simPath: '/simulator',
     startupKey: 'value_proposition',
+    moduleSlugs: ['customer-acquisition-cost', 'product-market-fit'],
   },
   {
     id: 4, icon: Palette,
@@ -137,6 +141,7 @@ const STAGES: Stage[] = [
     milestoneBg: 'Подай MVP дизайн',
     learnPath: '/journey/learn/4', casePath: '/cases', simPath: '/simulator',
     startupKey: 'digital_product',
+    moduleSlugs: ['marketing-fundamentals', 'pricing-and-revenue'],
   },
   {
     id: 5, icon: TrendingUp,
@@ -147,6 +152,7 @@ const STAGES: Stage[] = [
     milestoneBg: 'Подай бизнес модел и маркетинг',
     learnPath: '/journey/learn/5', casePath: '/cases', simPath: '/simulator',
     startupKey: 'business_model',
+    moduleSlugs: ['operations-fundamentals', 'supply-chain-basics'],
   },
   {
     id: 6, icon: Presentation,
@@ -157,6 +163,7 @@ const STAGES: Stage[] = [
     milestoneBg: 'Подай финално стартъп представяне',
     learnPath: '/journey/learn/6', casePath: '/cases', simPath: '/simulator',
     startupKey: 'final_pitch',
+    moduleSlugs: ['team-and-roles'],
   },
 ];
 
