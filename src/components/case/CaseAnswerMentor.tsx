@@ -2,9 +2,10 @@ import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Slider } from '@/components/ui/slider';
 import MarkdownContent from '@/components/ui/markdown-content';
 import { toast } from 'sonner';
-import { Bot, Sparkles, Loader2, PenTool, AlertCircle } from 'lucide-react';
+import { Bot, Sparkles, Loader2, PenTool, AlertCircle, Gauge } from 'lucide-react';
 
 interface Props {
   questionId: string;
@@ -28,6 +29,23 @@ export default function CaseAnswerMentor({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [remaining, setRemaining] = useState<number | null>(null);
+  const [confidence, setConfidence] = useState(5);
+
+  const confidenceLabel = (val: number) => {
+    if (val <= 2) return t('Very uncertain', 'Много несигурен');
+    if (val <= 4) return t('Somewhat uncertain', 'Донякъде несигурен');
+    if (val <= 6) return t('Moderate', 'Умерена');
+    if (val <= 8) return t('Confident', 'Уверен');
+    return t('Very confident', 'Много уверен');
+  };
+
+  const confidenceColor = (val: number) => {
+    if (val <= 2) return 'text-destructive';
+    if (val <= 4) return 'text-sim-warning';
+    if (val <= 6) return 'text-muted-foreground';
+    if (val <= 8) return 'text-primary';
+    return 'text-sim-success';
+  };
 
   const minLength = questionType === 'long_answer' ? 20 : 5;
   const canRequest = (studentAnswer || '').trim().length >= minLength && !disabled;
@@ -47,6 +65,7 @@ export default function CaseAnswerMentor({
             student_answer: studentAnswer,
             question_context: questionContext,
             difficulty,
+            confidence_level: confidence,
           },
           lang,
         },
@@ -74,6 +93,41 @@ export default function CaseAnswerMentor({
 
   return (
     <div className="mt-3 space-y-3">
+      {/* Confidence Slider */}
+      {!feedback && (
+        <div className="rounded-lg border border-border bg-muted/30 p-4 space-y-3">
+          <div className="flex items-center gap-2">
+            <Gauge className="h-4 w-4 text-primary" />
+            <span className="text-sm font-semibold text-foreground">
+              {t('Decision Confidence', 'Увереност в решението')}
+            </span>
+            <Badge variant="outline" className={`text-xs ml-auto ${confidenceColor(confidence)}`}>
+              {confidence}/10 — {confidenceLabel(confidence)}
+            </Badge>
+          </div>
+          <p className="text-xs text-muted-foreground">
+            {t(
+              'How confident are you in your answer? The AI mentor will calibrate feedback based on your self-assessment.',
+              'Колко сте уверени в отговора си? AI менторът ще калибрира обратната връзка спрямо вашата самооценка.'
+            )}
+          </p>
+          <div className="px-1">
+            <Slider
+              value={[confidence]}
+              onValueChange={(v) => setConfidence(v[0])}
+              min={1}
+              max={10}
+              step={1}
+              className="w-full"
+            />
+            <div className="flex justify-between text-[10px] text-muted-foreground mt-1 px-0.5">
+              <span>{t('Guessing', 'Гадая')}</span>
+              <span>{t('Certain', 'Сигурен')}</span>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Get Feedback button */}
       {!feedback && (
         <>
