@@ -28,8 +28,6 @@ const NEXT_STEP_HINTS: Record<number, { en: string; bg: string }> = {
   5: { en: 'Submit your final pitch', bg: 'Подай финалното си представяне' },
 };
 
-type StepStatus = 'completed' | 'in_progress' | 'not_started';
-
 interface LearningNavigatorProps {
   lang: 'en' | 'bg';
   xp: number;
@@ -39,19 +37,6 @@ interface LearningNavigatorProps {
   simWeek: number;
   simComplete: boolean;
   outcomeScores: Record<string, number>;
-}
-
-function deriveStatuses(props: LearningNavigatorProps): StepStatus[] {
-  const { casesCompleted, startupSections, startupSubmitted, simWeek, simComplete } = props;
-  const s = (key: string) => !!startupSections[key];
-  return [
-    casesCompleted >= 1 ? 'completed' : 'not_started',
-    casesCompleted >= 2 ? 'completed' : casesCompleted >= 1 ? 'in_progress' : 'not_started',
-    s('problem') && s('value_proposition') ? 'completed' : (s('problem') || s('customer') || s('value_proposition')) ? 'in_progress' : 'not_started',
-    s('digital_product') && s('business_model') && s('growth_strategy') ? 'completed' : (s('digital_product') || s('business_model') || s('growth_strategy')) ? 'in_progress' : 'not_started',
-    simComplete ? 'completed' : simWeek > 1 ? 'in_progress' : 'not_started',
-    startupSubmitted ? 'completed' : s('final_pitch') ? 'in_progress' : 'not_started',
-  ];
 }
 
 export default function LearningNavigator(props: LearningNavigatorProps) {
