@@ -205,6 +205,7 @@ export default function LearningJourney() {
 
   const [expanded, setExpanded] = useState<Set<number>>(new Set());
   const [initializedExpanded, setInitializedExpanded] = useState(false);
+  const [celebrateStage, setCelebrateStage] = useState<number | null>(null);
 
   useEffect(() => {
     if (!initializedExpanded) {
