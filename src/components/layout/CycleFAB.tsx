@@ -1,6 +1,6 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useLang } from '@/context/LangContext';
-import { ArrowRight, BookOpen, Rocket, Trophy } from 'lucide-react';
+import { BookOpen, Rocket, Trophy } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 type Phase = 'learn' | 'apply' | 'fun' | 'unknown';
