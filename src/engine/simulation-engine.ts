@@ -55,8 +55,19 @@ export function processRound(
   answers: DecisionAnswer[],
   decisions: DecisionTemplate[],
   shockEvent?: ShockEvent,
-  volatility: number = 0.1
-): { newKPIs: KPIs; report: Omit<OutcomeReport, 'id' | 'team_id' | 'round_id' | 'week_number'> } {
+  volatility: number = 0.1,
+  previousTurbulence?: TurbulenceState,
+  weekNumber: number = 1,
+): { newKPIs: KPIs; report: Omit<OutcomeReport, 'id' | 'team_id' | 'round_id' | 'week_number'>; turbulence: TurbulenceState; dynamicShock?: ShockEvent } {
+  const prevTurbulence: TurbulenceState = previousTurbulence || { stability_score: 85, events_triggered: 0, resilience_bonus: 0 };
+  
+  // Roll for a dynamic turbulence event if no pre-set shock event
+  let activeShock = shockEvent;
+  let dynamicShock: ShockEvent | undefined;
+  if (!activeShock) {
+    dynamicShock = rollTurbulenceEvent(weekNumber, prevTurbulence.stability_score);
+    activeShock = dynamicShock;
+  }
   let kpis = { ...currentKPIs };
 
   // Apply shock event first
