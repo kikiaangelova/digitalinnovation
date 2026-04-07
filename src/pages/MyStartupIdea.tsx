@@ -415,9 +415,17 @@ export default function MyStartupIdea() {
               <span className="text-sm font-medium text-foreground">
                 {t('Project Progress', 'Прогрес на проекта')}
               </span>
-              <span className="text-sm font-bold text-primary">{progressPercent}%</span>
+              <span className="text-sm font-bold text-primary">{filledCount}/{SECTIONS.length} — {progressPercent}%</span>
             </div>
             <Progress value={progressPercent} className="h-2.5" />
+            {allComplete && !data.is_submitted && (
+              <div className="mt-3 rounded-lg bg-[hsl(var(--sim-success))]/10 border border-[hsl(var(--sim-success))]/30 p-3 flex items-center gap-2">
+                <Check className="h-4 w-4 text-[hsl(var(--sim-success))]" />
+                <span className="text-sm font-medium text-foreground">
+                  {t('All sections complete! Your startup is ready for evaluation. +50 XP earned. 🎉', 'Всички секции са завършени! Вашият стартъп е готов за оценка. +50 XP спечелени. 🎉')}
+                </span>
+              </div>
+            )}
             <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
               {saving ? (
                 <span className="flex items-center gap-1"><Save className="h-3 w-3 animate-pulse" /> {t('Saving...', 'Запазване...')}</span>
