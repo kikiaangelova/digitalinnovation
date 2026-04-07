@@ -202,6 +202,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
           finalPitchSubmitted,
           simWeek,
           simComplete,
+          stageLearnCompleted,
           outcomeScores,
           loading: false,
           refresh,
