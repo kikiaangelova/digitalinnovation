@@ -230,6 +230,49 @@ export default function StageLearn() {
           </div>
         )}
 
+        {/* Related Theory Modules */}
+        {(STAGE_MODULE_MAP[stageNum] || []).length > 0 && (
+          <div className="mt-8 rounded-xl border border-border bg-card p-5">
+            <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+              <Brain className="h-4 w-4 text-primary" />
+              {t('Required Theory Modules', 'Задължителни теоретични модули')}
+            </h3>
+            <p className="text-xs text-muted-foreground mb-3">
+              {t('Complete these modules to check off the Learn requirement for this stage.',
+                 'Завърши тези модули, за да отбележиш изискването за учене на този етап.')}
+            </p>
+            <div className="space-y-2">
+              {(STAGE_MODULE_MAP[stageNum] || []).map(slug => {
+                const mod = LEARNING_MODULES.find(m => m.slug === slug);
+                if (!mod) return null;
+                const isDone = progress.completedModuleSlugs.has(slug);
+                return (
+                  <button
+                    key={slug}
+                    onClick={() => navigate(`/learn/${slug}`)}
+                    className={`w-full flex items-center gap-3 p-3 rounded-lg border transition-colors text-left
+                      ${isDone
+                        ? 'border-success/30 bg-success/5 hover:bg-success/10'
+                        : 'border-border hover:border-primary/30 hover:bg-accent'}`}
+                  >
+                    {isDone ? (
+                      <CheckCircle2 className="h-5 w-5 text-success shrink-0" />
+                    ) : (
+                      <BookOpen className="h-5 w-5 text-muted-foreground shrink-0" />
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <span className={`text-sm font-medium ${isDone ? 'text-success' : 'text-foreground'}`}>
+                        {lang === 'bg' ? mod.title_bg : mod.title_en}
+                      </span>
+                    </div>
+                    <ArrowRight className="h-4 w-4 text-muted-foreground shrink-0" />
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {/* Navigation */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mt-10 pt-6 border-t border-border">
           {hasPrev ? (
