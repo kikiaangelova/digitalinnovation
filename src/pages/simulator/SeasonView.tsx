@@ -21,20 +21,20 @@ export default function SeasonView() {
 
   const participantId = season ? getParticipantId(season.id) : null;
   const latestState = participantId ? getLatestCompanyState(participantId) : null;
-  const team = simulatorMode === 'team' ? getTeamForSeason(season.id) : null;
+  const team = simulatorMode === 'team' && season ? getTeamForSeason(season.id) : null;
 
-  const simComplete = participantId
+  const simComplete = participantId && season
     ? season.rounds.every(r => !!getSubmission(participantId, r.id))
     : false;
 
   const stateHistory = participantId ? getCompanyStateHistory(participantId) : [];
   const startKpis: KPIs = stateHistory.length > 0
     ? stateHistory[0].kpis
-    : (season.rounds[0]?.baseline_kpis || {} as KPIs);
+    : (season?.rounds[0]?.baseline_kpis || {} as KPIs);
   const finalKpis: KPIs = latestState?.kpis || startKpis;
 
   const journeySummary = useMemo(() => {
-    if (!participantId) return [];
+    if (!participantId || !season) return [];
     return season.rounds.map(round => {
       const sub = getSubmission(participantId, round.id);
       const report = getOutcomeReport(participantId, round.id);
@@ -62,7 +62,9 @@ export default function SeasonView() {
         topNegativeKpi: topNeg || 'burn_rate',
       };
     });
-  }, [participantId, season.rounds, getSubmission, getOutcomeReport]);
+  }, [participantId, season, getSubmission, getOutcomeReport]);
+
+  if (!season) return <div className="p-8 text-center text-muted-foreground">{t('Season not found', 'Сезонът не е намерен')}</div>;
 
   const copyCode = () => {
     if (team) {
