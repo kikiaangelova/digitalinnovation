@@ -65,6 +65,7 @@ const defaultProgress: UnifiedProgress = {
   finalPitchSubmitted: false,
   simWeek: 1,
   simComplete: false,
+  stageLearnCompleted: new Set(),
   outcomeScores: {},
   loading: true,
   refresh: () => {},
