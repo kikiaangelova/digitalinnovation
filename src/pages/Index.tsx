@@ -10,7 +10,7 @@ import {
   Presentation, Compass, Briefcase, Palette,
   Trophy, BookOpen, FlaskConical, TrendingUp, Mic,
   Zap, Star, Calendar, ChevronRight, Book,
-  Cpu, Eye, Users, Mail,
+  Cpu, Users,
 } from 'lucide-react';
 
 const Index = () => {
@@ -118,7 +118,6 @@ const Index = () => {
                   {t.startJourney} <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
                 <Button variant="outline" size="lg" className="text-base px-8" onClick={() => navigate('/about')}>
-                  <Eye className="mr-2 h-4 w-4" />
                   {t.explorePlatform}
                 </Button>
               </>
@@ -126,16 +125,15 @@ const Index = () => {
           </div>
 
           {!user && (
-            <div className="flex flex-col sm:flex-row gap-3 justify-center mt-4">
-              <Button variant="secondary" size="lg" className="text-base px-8" onClick={() => handleNav('/dashboard')}>
-                <BookOpen className="mr-2 h-4 w-4" />
-                {t.useInClassroom}
-              </Button>
-              <Button variant="ghost" size="lg" className="text-base px-8" onClick={() => window.location.href = 'mailto:contact@digiinnov.com'}>
-                <Mail className="mr-2 h-4 w-4" />
+            <p className="mt-6 text-sm text-muted-foreground">
+              {lang === 'bg' ? 'Вие сте преподавател?' : 'Are you a teacher?'}{' '}
+              <a
+                href="mailto:contact@digiinnov.com"
+                className="text-primary hover:underline font-medium"
+              >
                 {t.requestDemo}
-              </Button>
-            </div>
+              </a>
+            </p>
           )}
 
           <p className="text-xs text-muted-foreground mt-6">{t.accessClarity}</p>
