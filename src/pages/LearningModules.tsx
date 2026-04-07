@@ -5,6 +5,7 @@ import { useProgress } from '@/context/ProgressContext';
 import { useLang } from '@/context/LangContext';
 import { supabase } from '@/integrations/supabase/client';
 import AppHeader from '@/components/layout/AppHeader';
+import { StatusBadge, type ActivityStatus } from '@/components/ui/status-badge';
 import { LEARNING_MODULES, LEVEL_1_MODULES, LEVEL_2_MODULES, LEVEL_INFO } from '@/data/learning-modules';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
