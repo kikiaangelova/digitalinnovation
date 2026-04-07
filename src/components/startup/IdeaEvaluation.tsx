@@ -239,6 +239,10 @@ export default function IdeaEvaluation({ lang, startupData }: Props) {
     }
     const s = computeScores(startupData);
     setScores(s);
+    const innovScore = s.find(sc => sc.key === 'innovation')?.score ?? 5;
+    const marketScore = s.find(sc => sc.key === 'market')?.score ?? 5;
+    setIdeaXPos(`${10 + (innovScore / 10) * 65}%`);
+    setIdeaYPos(`${75 - (marketScore / 10) * 60}%`);
     const combined = `${startupData.problem} ${startupData.customer} ${startupData.value_proposition} ${startupData.digital_product} ${startupData.industry}`;
     const cat = detectCategory(combined);
     setCompetitors(COMPETITOR_DB[cat] || COMPETITOR_DB.default);
