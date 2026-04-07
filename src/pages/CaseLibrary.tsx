@@ -31,7 +31,8 @@ interface CaseStudy {
 
 export default function CaseLibrary() {
   const { t, lang } = useLang();
-  const { isAdmin } = useAuth();
+  const { isAdmin, user } = useAuth();
+  const { completedCaseIds } = useProgress();
   const tx = (en: string | null | undefined, bg: string | null | undefined) => lang === 'bg' ? (bg || en || '') : (en || '');
   const tl = (en: string, bg: string) => lang === 'bg' ? bg : en;
 
