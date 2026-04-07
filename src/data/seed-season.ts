@@ -430,7 +430,16 @@ export const SEED_SEASON: SimulationSeason = {
       id: 'round-5',
       season_id: 'season-startup-lab',
       week_number: 5,
-      narrative: `Week 5: Your MVP is live and getting real user feedback! Now it's time to think about growth. How do you get from your first 100 users to 1,000? And then to 10,000?\n\nGrowth is not just about marketing — it's about creating a product people want to share. Think about:\n• Acquisition — how do new users find you?\n• Activation — do they have a great first experience?\n• Retention — do they come back?\n• Revenue — do they pay?\n• Referral — do they tell friends?`,
+      narrative: `Week 5: Your MVP is live and getting real user feedback! Now it's time to think about growth.\n\nBut first — TURBULENCE! New data privacy regulations have been announced. Your data collection practices need review, and compliance costs are rising.\n\nGrowth is not just about marketing — it's about creating a product people want to share while navigating an increasingly chaotic market.`,
+      shock_event: {
+        title: 'New Data Privacy Regulation',
+        description: 'The government announces strict data privacy laws effective immediately. Startups must invest in compliance or face penalties.',
+        kpi_effects: { compliance_risk: 15, burn_rate: 800, tech_debt: 5, product_quality: -2 },
+        category: 'regulation_change',
+        severity: 3,
+        concept_lesson: '💡 Regulatory Resilience: Kotler teaches that regulatory turbulence creates winners and losers. Companies that see compliance as a trust-building opportunity gain long-term advantage.',
+        concept_lesson_bg: '💡 Регулаторна устойчивост: Котлър учи, че регулаторната турбулентност създава победители и губещи.',
+      },
       decisions: [
         {
           id: 'r5d1', round_id: 'round-5', title: 'Growth Strategy', description: 'Which growth approach will you prioritize?',
