@@ -152,14 +152,15 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
         const stagesCompleted = stageStatuses.filter(s => s === 'completed').length;
         const journeyPct = Math.round((stagesCompleted / 6) * 100);
 
-        // Learning modules
+        // Learning modules — use DB modules if available, fall back to static count
         const allMods = allModsRes.data || [];
         const completedModuleIds = new Set((moduleResponsesRes.data || []).map((r: any) => r.module_id));
         const completedModuleSlugs = new Set(
           allMods.filter((m: any) => completedModuleIds.has(m.id)).map((m: any) => m.slug)
         );
         const modulesCompleted = completedModuleSlugs.size;
-        const modulesTotal = allMods.length;
+        // If DB has modules use that count, otherwise fall back to static data length
+        const modulesTotal = allMods.length > 0 ? allMods.length : LEARNING_MODULES.length;
         const modulesPct = modulesTotal > 0 ? Math.round((modulesCompleted / modulesTotal) * 100) : 0;
 
         // Outcome scores
