@@ -144,6 +144,17 @@ export default function RoundView() {
           </div>
         )}
 
+        {/* CRISIS RESPONSE – only when stability < 30 */}
+        {isInCrisis && currentState?.turbulence && !isSubmitted && (
+          <CrisisResponsePanel
+            turbulence={currentState.turbulence}
+            onCrisisDecision={handleCrisisDecision}
+            crisisAnswers={crisisAnswers}
+            isSubmitted={isSubmitted}
+            lang={lang}
+          />
+        )}
+
         {/* 2. CURRENT METRICS – context for decision-making */}
         {currentState && (
           <div>
