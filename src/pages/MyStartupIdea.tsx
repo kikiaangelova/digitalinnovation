@@ -532,26 +532,49 @@ export default function MyStartupIdea() {
                   {lang === 'bg' ? section.descBg : section.descEn}
                 </p>
 
-                {/* Guided prompts */}
-                <div className="mb-4 rounded-lg bg-accent/50 border border-border p-4 space-y-1.5">
-                  <div className="flex items-center gap-1.5 text-xs font-medium text-accent-foreground mb-1">
-                    <HelpCircle className="h-3.5 w-3.5" />
-                    {t('Think about these questions:', 'Помислете над тези въпроси:')}
+                {/* Guided prompts — hide for structured sections */}
+                {section.key !== 'competitor_analysis' && section.key !== 'value_proposition' && (
+                  <div className="mb-4 rounded-lg bg-accent/50 border border-border p-4 space-y-1.5">
+                    <div className="flex items-center gap-1.5 text-xs font-medium text-accent-foreground mb-1">
+                      <HelpCircle className="h-3.5 w-3.5" />
+                      {t('Think about these questions:', 'Помислете над тези въпроси:')}
+                    </div>
+                    {section.prompts.map((p, i) => (
+                      <p key={i} className="text-sm text-foreground/80">
+                        {lang === 'bg' ? p.bg : p.en}
+                      </p>
+                    ))}
                   </div>
-                  {section.prompts.map((p, i) => (
-                    <p key={i} className="text-sm text-foreground/80">
-                      {lang === 'bg' ? p.bg : p.en}
-                    </p>
-                  ))}
-                </div>
+                )}
 
-                <Textarea
-                  value={(data as any)[section.key] || ''}
-                  onChange={e => handleChange(section.key, e.target.value)}
-                  placeholder={t('Write your answer here...', 'Напишете вашия отговор тук...')}
-                  className="min-h-[220px] text-base leading-relaxed resize-y"
-                  disabled={data.is_submitted}
-                />
+                {/* Structured competitor analysis */}
+                {section.key === 'competitor_analysis' ? (
+                  <CompetitorAnalysis
+                    value={(data as any)[section.key] || ''}
+                    onChange={val => handleChange(section.key, val)}
+                    lang={lang as 'en' | 'bg'}
+                    disabled={data.is_submitted}
+                  />
+                ) : section.key === 'value_proposition' ? (
+                  <ValuePropositionTemplate
+                    value={(data as any)[section.key] || ''}
+                    onChange={val => handleChange(section.key, val)}
+                    lang={lang as 'en' | 'bg'}
+                    disabled={data.is_submitted}
+                    prefill={{
+                      customer: data.customer,
+                      problem: data.problem,
+                    }}
+                  />
+                ) : (
+                  <Textarea
+                    value={(data as any)[section.key] || ''}
+                    onChange={e => handleChange(section.key, e.target.value)}
+                    placeholder={t('Write your answer here...', 'Напишете вашия отговор тук...')}
+                    className="min-h-[220px] text-base leading-relaxed resize-y"
+                    disabled={data.is_submitted}
+                  />
+                )}
 
                 {/* Navigation */}
                 <div className="flex items-center justify-between mt-5">
