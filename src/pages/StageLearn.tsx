@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import MarkdownContent from '@/components/ui/markdown-content';
 import {
   BookOpen, Search, Lightbulb, Palette, TrendingUp, Presentation,
-  ArrowLeft, ArrowRight, Clock, ChevronRight, Rocket, Lock, CheckCircle2,
+  ArrowLeft, ArrowRight, Clock, ChevronRight, Rocket, Lock, CheckCircle2, Brain,
 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
