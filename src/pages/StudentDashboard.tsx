@@ -144,15 +144,9 @@ export default function StudentDashboard() {
   const completedCaseIds = new Set(completedSubs.map(s => s.case_study_id));
   const industriesExplored = new Set(cases.filter(c => completedCaseIds.has(c.id) && c.topic).map(c => c.topic)).size;
 
-  const xp = totalXp;
+  const xp = totalXp || progress.xp;
 
-  const outcomeScores = calcOutcomeScores({
-    casesCompleted,
-    casesTotal: cases.length,
-    startupSections: startupSectionMap,
-    simWeek,
-    simComplete,
-  });
+  const outcomeScores = progress.outcomeScores;
 
   const xpActions = [
     { action: t('Complete case study', 'Завърши казус'), xp: '+100 XP', icon: BookOpen },
