@@ -50,6 +50,8 @@ import LearningModules from "./pages/LearningModules";
 import LearningModulePlayer from "./pages/LearningModulePlayer";
 import FinalExam from "./pages/FinalExam";
 import Certificate from "./pages/Certificate";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfUse from "./pages/TermsOfUse";
 
 const queryClient = new QueryClient();
 
