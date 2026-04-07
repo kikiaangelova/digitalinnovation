@@ -455,7 +455,7 @@ export default function MyStartupIdea() {
             <TabsTrigger value="evaluate" className="gap-1.5" disabled={!allComplete}>
               <ClipboardCheck className="h-4 w-4" />
               {t('Evaluate', 'Оценка')}
-              {!allComplete && <Lock className="h-3 w-3 ml-0.5 opacity-50" />}
+              {!allComplete && <LockIcon className="h-3 w-3 ml-0.5 opacity-50" />}
             </TabsTrigger>
             <TabsTrigger value="bmc" className="gap-1.5">
               <LayoutGrid className="h-4 w-4" />
