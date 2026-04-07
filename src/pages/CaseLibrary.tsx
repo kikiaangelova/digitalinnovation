@@ -289,10 +289,10 @@ export default function CaseLibrary() {
     return (
       <Link
         to={`/case/${cs.id}/preview`}
-        className="group block rounded-lg border border-border bg-card p-5 hover:border-primary/50 hover:shadow-md transition-all"
+        className="group block rounded-lg border border-border bg-card p-4 sm:p-5 hover:border-primary/50 hover:shadow-md transition-all"
       >
-        <div className="flex items-start justify-between mb-3">
-          <h3 className="font-display font-semibold text-foreground group-hover:text-primary transition-colors pr-2">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-3">
+          <h3 className="font-display font-semibold text-foreground group-hover:text-primary transition-colors text-sm sm:text-base">
             {tx(cs.title, cs.title_bg)}
           </h3>
           <div className="flex items-center gap-2 shrink-0">
@@ -303,8 +303,8 @@ export default function CaseLibrary() {
         {(cs.description || cs.description_bg) && (
           <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{tx(cs.description, cs.description_bg)}</p>
         )}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3 text-xs text-muted-foreground">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
             {domain && (
               <span className="flex items-center gap-1">
                 <DomainIcon className="h-3 w-3" style={{ color: domain.color }} />
@@ -512,7 +512,7 @@ export default function CaseLibrary() {
               )}
             </div>
           ) : (
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
               {filteredDomains.map(domain => {
                 const DIcon = ICON_MAP[domain.icon] || BookOpen;
                 const domainCases = casesByDomain[domain.id] || [];

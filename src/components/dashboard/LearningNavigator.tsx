@@ -68,7 +68,7 @@ export default function LearningNavigator(props: LearningNavigatorProps) {
   return (
     <div className="rounded-2xl border border-border bg-card overflow-hidden">
       {/* ── Top: Level + XP + Stage indicator ── */}
-      <div className="p-5 pb-4 space-y-4">
+      <div className="p-4 sm:p-5 pb-4 space-y-4">
         {/* Row 1: Level badge + XP */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -111,7 +111,7 @@ export default function LearningNavigator(props: LearningNavigatorProps) {
       </div>
 
       {/* ── Middle: Stage progress + 3 stats ── */}
-      <div className="px-5 pb-4">
+      <div className="px-4 sm:px-5 pb-4">
         <div className="grid grid-cols-3 gap-3">
           <div className="rounded-xl bg-accent/60 p-3 text-center">
             <Target className="h-4 w-4 mx-auto text-primary mb-1" />
@@ -132,7 +132,7 @@ export default function LearningNavigator(props: LearningNavigatorProps) {
       </div>
 
       {/* ── Stage dots ── */}
-      <div className="px-5 pb-3">
+      <div className="px-4 sm:px-5 pb-3">
         <div className="flex items-center gap-1">
           {STAGES.map((stage, idx) => {
             const status = statuses[idx];
@@ -167,11 +167,11 @@ export default function LearningNavigator(props: LearningNavigatorProps) {
       {/* ── Bottom: Recommended Next Step CTA (prominent) ── */}
       <div className={`border-t-2 border-primary/20 p-4 ${allDone ? 'bg-sim-success/5' : 'bg-primary/5'}`}>
         {allDone ? (
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
             <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-sim-success/15 shrink-0">
               <CheckCircle2 className="h-6 w-6 text-sim-success" />
             </div>
-            <div className="flex-1">
+            <div className="flex-1 min-w-0">
               <p className="text-base font-bold text-foreground">
                 {t('Journey Complete! 🎉', 'Пътешествието е завършено! 🎉')}
               </p>
@@ -179,36 +179,38 @@ export default function LearningNavigator(props: LearningNavigatorProps) {
                 {t('Take the final exam to earn your certificate', 'Направи финалния изпит за сертификат')}
               </p>
             </div>
-            <Button className="sim-gradient border-0 h-10 px-5 gap-2" onClick={() => navigate('/final-exam')}>
+            <Button className="sim-gradient border-0 h-10 px-5 gap-2 w-full sm:w-auto" onClick={() => navigate('/final-exam')}>
               <Award className="h-4 w-4" /> {t('Final Exam', 'Финален изпит')}
             </Button>
           </div>
         ) : currentStage && (
-          <div className="flex items-center gap-3">
-            <div className="relative flex h-12 w-12 items-center justify-center rounded-xl sim-gradient shrink-0 shadow-md">
-              <currentStage.icon className="h-6 w-6 text-primary-foreground" />
-              <span className="absolute -top-1 -right-1 flex h-4 w-4">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-40" />
-                <span className="relative inline-flex rounded-full h-4 w-4 bg-primary items-center justify-center">
-                  <ArrowRight className="h-2.5 w-2.5 text-primary-foreground" />
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+            <div className="flex items-center gap-3 w-full sm:w-auto">
+              <div className="relative flex h-12 w-12 items-center justify-center rounded-xl sim-gradient shrink-0 shadow-md">
+                <currentStage.icon className="h-6 w-6 text-primary-foreground" />
+                <span className="absolute -top-1 -right-1 flex h-4 w-4">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-40" />
+                  <span className="relative inline-flex rounded-full h-4 w-4 bg-primary items-center justify-center">
+                    <ArrowRight className="h-2.5 w-2.5 text-primary-foreground" />
+                  </span>
                 </span>
-              </span>
-            </div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-0.5">
-                <p className="text-[11px] font-bold text-primary uppercase tracking-wider">
-                  {t('Your Next Step', 'Следваща стъпка')}
-                </p>
-                <Badge className="bg-primary/15 text-primary border-0 text-[10px] px-1.5 py-0">
-                  {t(`Stage ${currentStageIdx + 1}/6`, `Етап ${currentStageIdx + 1}/6`)}
-                </Badge>
               </div>
-              <p className="text-sm font-bold text-foreground truncate">
-                {NEXT_STEP_HINTS[currentStageIdx]?.[lang] || (lang === 'bg' ? currentStage.bg : currentStage.en)}
-              </p>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-0.5">
+                  <p className="text-[11px] font-bold text-primary uppercase tracking-wider">
+                    {t('Your Next Step', 'Следваща стъпка')}
+                  </p>
+                  <Badge className="bg-primary/15 text-primary border-0 text-[10px] px-1.5 py-0">
+                    {t(`Stage ${currentStageIdx + 1}/6`, `Етап ${currentStageIdx + 1}/6`)}
+                  </Badge>
+                </div>
+                <p className="text-sm font-bold text-foreground truncate">
+                  {NEXT_STEP_HINTS[currentStageIdx]?.[lang] || (lang === 'bg' ? currentStage.bg : currentStage.en)}
+                </p>
+              </div>
             </div>
             <Button
-              className="sim-gradient border-0 shrink-0 gap-1.5 h-10 px-5 shadow-md"
+              className="sim-gradient border-0 gap-1.5 h-10 px-5 shadow-md w-full sm:w-auto shrink-0"
               onClick={() => navigate(currentStage.path)}
             >
               {t('Continue', 'Продължи')}
