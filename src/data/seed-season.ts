@@ -533,6 +533,10 @@ export const SEED_SEASON: SimulationSeason = {
         title: 'Investment Offers',
         description: 'Two investment offers arrive: a large investor (€200K for 40%) or an accelerator (€50K for 8% + mentorship).',
         kpi_effects: { brand_trust: 5, nps: 3 },
+        category: 'market_crash',
+        severity: 2,
+        concept_lesson: '💡 Strategic Decision Under Pressure: In Kotler\'s Chaotics, the best leaders make bold but calculated moves during market turbulence. Evaluate long-term impact, not just short-term relief.',
+        concept_lesson_bg: '💡 Стратегическо решение под натиск: Най-добрите лидери правят смели, но калкулирани ходове по време на турбулентност.',
       },
       decisions: [
         {
