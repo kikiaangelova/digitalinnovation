@@ -170,6 +170,11 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
         const modulesPct = modulesTotal > 0 ? Math.round((modulesCompleted / modulesTotal) * 100) : 0;
 
         // Outcome scores
+        // Stage learn completions
+        const stageLearnCompleted = new Set(
+          (stageLearnRes.data || []).map((r: any) => parseInt(r.module_id, 10)).filter((n: number) => !isNaN(n))
+        );
+
         const outcomeScores = calcOutcomeScores({
           casesCompleted,
           casesTotal,
