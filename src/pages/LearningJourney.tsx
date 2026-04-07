@@ -296,6 +296,30 @@ export default function LearningJourney() {
 
   const recommendedIdx = statuses.findIndex((s, i) => s !== 'completed' && isStageUnlocked(i));
 
+  // Stage completion celebration — fires once per stage via localStorage
+  const fireCelebration = useCallback((stageId: number) => {
+    const key = `stage_celebration_${stageId}`;
+    if (localStorage.getItem(key)) return;
+    localStorage.setItem(key, 'true');
+    setCelebrateStage(stageId);
+    // Fire confetti
+    const duration = 2000;
+    const end = Date.now() + duration;
+    const frame = () => {
+      confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#f59e0b', '#8b5cf6', '#10b981'] });
+      confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#f59e0b', '#8b5cf6', '#10b981'] });
+      if (Date.now() < end) requestAnimationFrame(frame);
+    };
+    frame();
+  }, []);
+
+  useEffect(() => {
+    if (loading) return;
+    statuses.forEach((s, i) => {
+      if (s === 'completed') fireCelebration(STAGES[i].id);
+    });
+  }, [statuses.join(','), loading, fireCelebration]);
+
   function handleLockedClick() {
     toast.error(t('Complete the previous stage first.', 'Завърши предишния етап първо.'));
   }
