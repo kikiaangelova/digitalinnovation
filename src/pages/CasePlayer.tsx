@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import type { Json } from '@/integrations/supabase/types';
 import CaseAnswerMentor from '@/components/case/CaseAnswerMentor';
+import UncertaintyBanner from '@/components/case/UncertaintyBanner';
 
 /* ── Types ── */
 interface CaseStudy {
@@ -619,6 +620,9 @@ export default function CasePlayer() {
             )}
           </div>
         </div>
+
+        {/* Uncertainty banner */}
+        <UncertaintyBanner stepIndex={currentStep} lang={lang as 'en' | 'bg'} />
 
         {/* Language fallback notice (students see BG fallback only) */}
         {bgFallbackActive && !showMissingSectionsWarning && (
