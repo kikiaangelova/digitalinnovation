@@ -29,7 +29,7 @@ export default function SeasonAnalytics() {
 
   if (loading) return null;
   if (!isAdmin) return <Navigate to="/dashboard" replace />;
-  if (!season) return <div className="p-8 text-center text-muted-foreground">Season not found</div>;
+  if (!season) return <div className="p-8 text-center text-muted-foreground">{t('Season not found', 'Сезонът не е намерен')}</div>;
 
   const team = seasonTeams.find(t => t.id === selectedTeam);
   const latestState = team ? getLatestCompanyState(team.id) : null;
