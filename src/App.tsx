@@ -62,48 +62,50 @@ const App = () => (
           <SimulatorProvider>
             <BrowserRouter>
               <ProfileGate>
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/auth" element={<AuthPage />} />
-                  <Route path="/reset-password" element={<ResetPasswordPage />} />
-                  <Route path="/dashboard" element={<StudentDashboard />} />
-                  <Route path="/profile" element={<ProfilePage />} />
-                  <Route path="/cases" element={<CaseLibrary />} />
-                  <Route path="/dictionary" element={<Dictionary />} />
-                  <Route path="/about" element={<AboutDigitalInnovation />} />
-                  <Route path="/innovation-basics" element={<AboutDigitalInnovation />} />
-                  <Route path="/case/:id/preview" element={<CasePreview />} />
-                  <Route path="/case/:id" element={<CasePlayer />} />
-                  <Route path="/case/:id/results" element={<CaseResults />} />
-                  <Route path="/simulator/preview" element={<SimulatorPreview />} />
-                  <Route path="/team/:teamId" element={<TeamWorkspace />} />
-                  <Route path="/assessment/:id" element={<AssessmentPlayer />} />
-                  <Route path="/assessment/:id/results" element={<AssessmentResults />} />
-                  <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
-                  <Route path="/admin/analytics" element={<AdminRoute><AnalyticsDashboard /></AdminRoute>} />
-                  <Route path="/admin/cohorts" element={<AdminRoute><CohortManager /></AdminRoute>} />
-                  <Route path="/my-startup" element={<MyStartupIdea />} />
-                  <Route path="/industries" element={<IndustryInnovationMap />} />
-                  <Route path="/startup-simulator" element={<StartupSimulator />} />
-                  <Route path="/simulator" element={<StartupSimulator />} />
-                  <Route path="/simulator/season/:id" element={<SeasonView />} />
-                  <Route path="/simulator/season/:id/round/:n" element={<RoundView />} />
-                  <Route path="/admin/simulator" element={<AdminRoute><SimulatorAdmin /></AdminRoute>} />
-                  <Route path="/admin/simulator/season/:id" element={<AdminRoute><SeasonAnalytics /></AdminRoute>} />
-                  <Route path="/admin/startup-projects" element={<AdminRoute><StartupProjectsAdmin /></AdminRoute>} />
-                  <Route path="/admin/teacher" element={<AdminRoute><TeacherDashboard /></AdminRoute>} />
-                  <Route path="/admin/peer-reviews" element={<AdminRoute><PeerReviewAdmin /></AdminRoute>} />
-                  <Route path="/peer-review" element={<PeerReview />} />
-                  <Route path="/my-report" element={<LearningReport />} />
-                  <Route path="/admin/system-status" element={<AdminRoute><SystemStatus /></AdminRoute>} />
-                  <Route path="/journey" element={<LearningJourney />} />
-                  <Route path="/learn" element={<LearningModules />} />
-                  <Route path="/learn/:slug" element={<LearningModulePlayer />} />
-                  <Route path="/leaderboard" element={<LeaderboardPage />} />
-                  <Route path="/final-exam" element={<FinalExam />} />
-                  <Route path="/certificate" element={<Certificate />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
+                <div className="pb-16 md:pb-0">
+                  <Routes>
+                    <Route path="/" element={<Index />} />
+                    <Route path="/auth" element={<AuthPage />} />
+                    <Route path="/reset-password" element={<ResetPasswordPage />} />
+                    <Route path="/dashboard" element={<StudentDashboard />} />
+                    <Route path="/profile" element={<ProfilePage />} />
+                    <Route path="/cases" element={<CaseLibrary />} />
+                    <Route path="/dictionary" element={<Dictionary />} />
+                    <Route path="/about" element={<AboutDigitalInnovation />} />
+                    <Route path="/innovation-basics" element={<AboutDigitalInnovation />} />
+                    <Route path="/case/:id/preview" element={<CasePreview />} />
+                    <Route path="/case/:id" element={<CasePlayer />} />
+                    <Route path="/case/:id/results" element={<CaseResults />} />
+                    <Route path="/simulator/preview" element={<SimulatorPreview />} />
+                    <Route path="/team/:teamId" element={<TeamWorkspace />} />
+                    <Route path="/assessment/:id" element={<AssessmentPlayer />} />
+                    <Route path="/assessment/:id/results" element={<AssessmentResults />} />
+                    <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+                    <Route path="/admin/analytics" element={<AdminRoute><AnalyticsDashboard /></AdminRoute>} />
+                    <Route path="/admin/cohorts" element={<AdminRoute><CohortManager /></AdminRoute>} />
+                    <Route path="/my-startup" element={<MyStartupIdea />} />
+                    <Route path="/industries" element={<IndustryInnovationMap />} />
+                    <Route path="/startup-simulator" element={<StartupSimulator />} />
+                    <Route path="/simulator" element={<StartupSimulator />} />
+                    <Route path="/simulator/season/:id" element={<SeasonView />} />
+                    <Route path="/simulator/season/:id/round/:n" element={<RoundView />} />
+                    <Route path="/admin/simulator" element={<AdminRoute><SimulatorAdmin /></AdminRoute>} />
+                    <Route path="/admin/simulator/season/:id" element={<AdminRoute><SeasonAnalytics /></AdminRoute>} />
+                    <Route path="/admin/startup-projects" element={<AdminRoute><StartupProjectsAdmin /></AdminRoute>} />
+                    <Route path="/admin/teacher" element={<AdminRoute><TeacherDashboard /></AdminRoute>} />
+                    <Route path="/admin/peer-reviews" element={<AdminRoute><PeerReviewAdmin /></AdminRoute>} />
+                    <Route path="/peer-review" element={<PeerReview />} />
+                    <Route path="/my-report" element={<LearningReport />} />
+                    <Route path="/admin/system-status" element={<AdminRoute><SystemStatus /></AdminRoute>} />
+                    <Route path="/journey" element={<LearningJourney />} />
+                    <Route path="/learn" element={<LearningModules />} />
+                    <Route path="/learn/:slug" element={<LearningModulePlayer />} />
+                    <Route path="/leaderboard" element={<LeaderboardPage />} />
+                    <Route path="/final-exam" element={<FinalExam />} />
+                    <Route path="/certificate" element={<Certificate />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </div>
               </ProfileGate>
             </BrowserRouter>
           </SimulatorProvider>
