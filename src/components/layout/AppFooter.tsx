@@ -5,6 +5,7 @@ import { GraduationCap } from 'lucide-react';
 
 export default function AppFooter() {
   const { lang } = useLang();
+  const { user } = useAuth();
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
   const year = new Date().getFullYear();
 
