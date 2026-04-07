@@ -111,7 +111,7 @@ export default function LearningNavigator(props: LearningNavigatorProps) {
       </div>
 
       {/* ── Middle: Stage progress + 3 stats ── */}
-      <div className="px-5 pb-4">
+      <div className="px-4 sm:px-5 pb-4">
         <div className="grid grid-cols-3 gap-3">
           <div className="rounded-xl bg-accent/60 p-3 text-center">
             <Target className="h-4 w-4 mx-auto text-primary mb-1" />
