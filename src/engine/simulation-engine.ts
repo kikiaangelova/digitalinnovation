@@ -71,8 +71,8 @@ export function processRound(
   let kpis = { ...currentKPIs };
 
   // Apply shock event first
-  if (shockEvent) {
-    kpis = applyDeltas(kpis, shockEvent.kpi_effects, volatility * 0.5);
+  if (activeShock) {
+    kpis = applyDeltas(kpis, activeShock.kpi_effects, volatility * 0.5);
   }
 
   // Apply each decision
