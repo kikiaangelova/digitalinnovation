@@ -119,6 +119,7 @@ export default function StartupSimulator() {
           setCurrentStep(Math.min(data.current_week - 1, SIM_WEEKS.length - 1));
           setHasInProgressSession(true);
           setInProgressStep(data.current_week);
+          setLocalSimStatus('in_progress');
         }
       }
 
@@ -131,6 +132,7 @@ export default function StartupSimulator() {
           (Number(raw?.growthPotential) || 0) * 0.2
         );
         setLastCompletedScore({ score, grade: compRes.data.grade || '' });
+        if (!ipRes.data) setLocalSimStatus('completed');
       }
 
       setSessionLoaded(true);
