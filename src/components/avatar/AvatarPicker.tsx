@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useLang } from '@/context/LangContext';
 import type { AvatarStyle } from './PlayerAvatar';
 import { getAvatarSrc } from './PlayerAvatar';
@@ -14,6 +13,9 @@ const STYLES: { key: AvatarStyle; en: string; bg: string; descEn: string; descBg
   { key: 'student', en: 'Student', bg: 'Студент', descEn: 'The eager learner', descBg: 'Нетърпелив ученик' },
   { key: 'founder', en: 'Founder', bg: 'Основател', descEn: 'The business builder', descBg: 'Бизнес строител' },
   { key: 'innovator', en: 'Innovator', bg: 'Иноватор', descEn: 'The creative thinker', descBg: 'Творчески мислител' },
+  { key: 'female-student', en: 'Student ♀', bg: 'Студентка', descEn: 'The eager learner', descBg: 'Нетърпелива ученичка' },
+  { key: 'female-founder', en: 'Founder ♀', bg: 'Основателка', descEn: 'The business builder', descBg: 'Бизнес строителка' },
+  { key: 'female-innovator', en: 'Innovator ♀', bg: 'Иноваторка', descEn: 'The creative thinker', descBg: 'Творческа мислителка' },
 ];
 
 export default function AvatarPicker({ selected, onSelect, xp = 0 }: AvatarPickerProps) {

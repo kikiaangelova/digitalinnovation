@@ -1,6 +1,6 @@
 import { getCurrentLevel } from '@/components/dashboard/LevelCard';
 
-// Static imports for all 18 avatar images
+// Static imports for all 36 avatar images
 import student1 from '@/assets/avatars/student-1.png';
 import student2 from '@/assets/avatars/student-2.png';
 import student3 from '@/assets/avatars/student-3.png';
@@ -19,26 +19,49 @@ import innovator3 from '@/assets/avatars/innovator-3.png';
 import innovator4 from '@/assets/avatars/innovator-4.png';
 import innovator5 from '@/assets/avatars/innovator-5.png';
 import innovator6 from '@/assets/avatars/innovator-6.png';
+import femaleStudent1 from '@/assets/avatars/female-student-1.png';
+import femaleStudent2 from '@/assets/avatars/female-student-2.png';
+import femaleStudent3 from '@/assets/avatars/female-student-3.png';
+import femaleStudent4 from '@/assets/avatars/female-student-4.png';
+import femaleStudent5 from '@/assets/avatars/female-student-5.png';
+import femaleStudent6 from '@/assets/avatars/female-student-6.png';
+import femaleFounder1 from '@/assets/avatars/female-founder-1.png';
+import femaleFounder2 from '@/assets/avatars/female-founder-2.png';
+import femaleFounder3 from '@/assets/avatars/female-founder-3.png';
+import femaleFounder4 from '@/assets/avatars/female-founder-4.png';
+import femaleFounder5 from '@/assets/avatars/female-founder-5.png';
+import femaleFounder6 from '@/assets/avatars/female-founder-6.png';
+import femaleInnovator1 from '@/assets/avatars/female-innovator-1.png';
+import femaleInnovator2 from '@/assets/avatars/female-innovator-2.png';
+import femaleInnovator3 from '@/assets/avatars/female-innovator-3.png';
+import femaleInnovator4 from '@/assets/avatars/female-innovator-4.png';
+import femaleInnovator5 from '@/assets/avatars/female-innovator-5.png';
+import femaleInnovator6 from '@/assets/avatars/female-innovator-6.png';
 
-export type AvatarStyle = 'student' | 'founder' | 'innovator';
+export type AvatarStyle = 'student' | 'founder' | 'innovator' | 'female-student' | 'female-founder' | 'female-innovator';
+
+export const AVATAR_STYLES: AvatarStyle[] = ['student', 'founder', 'innovator', 'female-student', 'female-founder', 'female-innovator'];
 
 const AVATAR_MAP: Record<AvatarStyle, string[]> = {
   student: [student1, student2, student3, student4, student5, student6],
   founder: [founder1, founder2, founder3, founder4, founder5, founder6],
   innovator: [innovator1, innovator2, innovator3, innovator4, innovator5, innovator6],
+  'female-student': [femaleStudent1, femaleStudent2, femaleStudent3, femaleStudent4, femaleStudent5, femaleStudent6],
+  'female-founder': [femaleFounder1, femaleFounder2, femaleFounder3, femaleFounder4, femaleFounder5, femaleFounder6],
+  'female-innovator': [femaleInnovator1, femaleInnovator2, femaleInnovator3, femaleInnovator4, femaleInnovator5, femaleInnovator6],
 };
 
 const LEVEL_BORDERS: string[] = [
-  'ring-2 ring-muted-foreground/30',      // Level 1 Explorer
-  'ring-2 ring-blue-400/50',               // Level 2 Solver
-  'ring-2 ring-purple-400/50',             // Level 3 Strategist
-  'ring-2 ring-amber-400/60 shadow-md',    // Level 4 Innovator
-  'ring-[3px] ring-amber-500/70 shadow-lg', // Level 5 Founder
-  'ring-[3px] ring-yellow-400 shadow-xl shadow-yellow-400/20', // Level 6 Legend
+  'ring-2 ring-muted-foreground/30',
+  'ring-2 ring-blue-400/50',
+  'ring-2 ring-purple-400/50',
+  'ring-2 ring-amber-400/60 shadow-md',
+  'ring-[3px] ring-amber-500/70 shadow-lg',
+  'ring-[3px] ring-yellow-400 shadow-xl shadow-yellow-400/20',
 ];
 
 export function getAvatarSrc(style: AvatarStyle | string, xp: number): string {
-  const validStyle = (['student', 'founder', 'innovator'].includes(style) ? style : 'student') as AvatarStyle;
+  const validStyle = (AVATAR_STYLES.includes(style as AvatarStyle) ? style : 'student') as AvatarStyle;
   const level = getCurrentLevel(xp);
   const idx = Math.min(level.level - 1, 5);
   return AVATAR_MAP[validStyle][idx];
@@ -75,7 +98,7 @@ export default function PlayerAvatar({
   showBorder = true,
   fallbackInitials,
 }: PlayerAvatarProps) {
-  const hasStyle = style && ['student', 'founder', 'innovator'].includes(style);
+  const hasStyle = style && AVATAR_STYLES.includes(style as AvatarStyle);
 
   if (!hasStyle && fallbackInitials) {
     return (

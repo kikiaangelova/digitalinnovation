@@ -16,7 +16,7 @@ import WelcomeOnboarding from '@/components/onboarding/WelcomeOnboarding';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Zap, BookOpen, Rocket, BarChart3, FileText, Users, Star, Award, ArrowRight, CheckCircle2, GraduationCap } from 'lucide-react';
-import DailyChallenge from '@/components/dashboard/DailyChallenge';
+import ChallengeHub from '@/components/dashboard/ChallengeHub';
 import { LEARNING_MODULES } from '@/data/learning-modules';
 
 interface CaseRow { id: string; title: string; difficulty: string; est_minutes: number | null; topic?: string | null; }
@@ -295,7 +295,7 @@ export default function StudentDashboard() {
           </div>
         </Card>
 
-        <DailyChallenge lang={lang} userId={user?.id} />
+        <ChallengeHub lang={lang} userId={user?.id} />
         <TestInsights lang={lang} userId={user?.id} />
 
         {/* ═══ SECTION 2: Learning & Competition ═══ */}
