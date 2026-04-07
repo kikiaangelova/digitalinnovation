@@ -11,6 +11,7 @@ import { ProgressProvider } from "@/context/ProgressContext";
 import ProfileGate from "@/components/layout/ProfileGate";
 import AppFooter from "@/components/layout/AppFooter";
 import AdminRoute from "@/components/layout/AdminRoute";
+import CycleFAB from "@/components/layout/CycleFAB";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import AuthPage from "./pages/AuthPage";
