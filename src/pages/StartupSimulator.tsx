@@ -222,6 +222,23 @@ export default function StartupSimulator() {
             <span className="text-foreground font-medium">{t('Startup Simulator', 'Стартъп симулатор')}</span>
           </nav>
 
+          {/* Nudge banner for students with 0 completed cases */}
+          {casesCompleted === 0 && (
+            <div className="rounded-xl border border-primary/30 bg-primary/5 p-4 flex items-center gap-4 mb-2">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+                <BookOpen className="h-5 w-5 text-primary" />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-foreground">
+                  {t('Tip: Complete a case study first to get more from the simulator.', 'Съвет: Завърши казус първо, за да извлечеш повече от симулатора.')}
+                </p>
+              </div>
+              <Button size="sm" variant="outline" onClick={() => navigate('/cases')} className="shrink-0">
+                {t('Start a Case →', 'Започни казус →')}
+              </Button>
+            </div>
+          )}
+
           <div className="space-y-4 py-6">
             <LearningPhaseBar currentPhase="learn" lang={lang as 'en' | 'bg'} />
             <WhatYouWillLearn outcomes={SIMULATOR_OUTCOMES} lang={lang as 'en' | 'bg'} activityType={{ en: 'Simulator', bg: 'Симулатор' }} />
