@@ -496,6 +496,104 @@ export type Database = {
         }
         Relationships: []
       }
+      challenge_responses: {
+        Row: {
+          ai_feedback: string
+          ai_feedback_bg: string | null
+          challenge_id: string
+          id: string
+          responded_at: string
+          selected_option: number
+          time_taken_seconds: number | null
+          user_id: string
+          xp_earned: number
+        }
+        Insert: {
+          ai_feedback?: string
+          ai_feedback_bg?: string | null
+          challenge_id: string
+          id?: string
+          responded_at?: string
+          selected_option?: number
+          time_taken_seconds?: number | null
+          user_id: string
+          xp_earned?: number
+        }
+        Update: {
+          ai_feedback?: string
+          ai_feedback_bg?: string | null
+          challenge_id?: string
+          id?: string
+          responded_at?: string
+          selected_option?: number
+          time_taken_seconds?: number | null
+          user_id?: string
+          xp_earned?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "challenge_responses_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "challenges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      challenges: {
+        Row: {
+          active_from: string
+          active_until: string | null
+          correct_reasoning: string
+          correct_reasoning_bg: string | null
+          created_at: string
+          difficulty: string
+          id: string
+          options: Json
+          scenario: string
+          scenario_bg: string | null
+          time_limit_seconds: number | null
+          title: string
+          title_bg: string | null
+          type: string
+          xp_reward: number
+        }
+        Insert: {
+          active_from?: string
+          active_until?: string | null
+          correct_reasoning?: string
+          correct_reasoning_bg?: string | null
+          created_at?: string
+          difficulty?: string
+          id?: string
+          options?: Json
+          scenario?: string
+          scenario_bg?: string | null
+          time_limit_seconds?: number | null
+          title?: string
+          title_bg?: string | null
+          type?: string
+          xp_reward?: number
+        }
+        Update: {
+          active_from?: string
+          active_until?: string | null
+          correct_reasoning?: string
+          correct_reasoning_bg?: string | null
+          created_at?: string
+          difficulty?: string
+          id?: string
+          options?: Json
+          scenario?: string
+          scenario_bg?: string | null
+          time_limit_seconds?: number | null
+          title?: string
+          title_bg?: string | null
+          type?: string
+          xp_reward?: number
+        }
+        Relationships: []
+      }
       cohort_members: {
         Row: {
           cohort_id: string
