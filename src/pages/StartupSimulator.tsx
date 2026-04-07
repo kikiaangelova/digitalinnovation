@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
+import { toast } from 'sonner';
 import { LearningPhaseBar, WhatYouWillLearn, SIMULATOR_OUTCOMES } from '@/components/learning/LearningStructure';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
@@ -50,7 +51,7 @@ export default function StartupSimulator() {
   const { lang } = useLang();
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
   const { simComplete, simWeek } = useProgress();
-  const simStatus = simComplete ? 'completed' : simWeek > 1 ? 'in_progress' : 'not_started';
+  const [localSimStatus, setLocalSimStatus] = useState<'not_started' | 'in_progress' | 'completed'>('not_started');
   const [phase, setPhase] = useState<Phase>('intro');
   const [currentStep, setCurrentStep] = useState(0);
   const [currentDecision, setCurrentDecision] = useState(0);
@@ -119,6 +120,7 @@ export default function StartupSimulator() {
           setCurrentStep(Math.min(data.current_week - 1, SIM_WEEKS.length - 1));
           setHasInProgressSession(true);
           setInProgressStep(data.current_week);
+          setLocalSimStatus('in_progress');
         }
       }
 
@@ -131,6 +133,7 @@ export default function StartupSimulator() {
           (Number(raw?.growthPotential) || 0) * 0.2
         );
         setLastCompletedScore({ score, grade: compRes.data.grade || '' });
+        if (!ipRes.data) setLocalSimStatus('completed');
       }
 
       setSessionLoaded(true);
@@ -210,6 +213,7 @@ export default function StartupSimulator() {
         saveProgress(newKpis, newHistory, currentStep + 2, false);
       } else {
         setPhase('results');
+        setLocalSimStatus('completed');
         saveProgress(newKpis, newHistory, currentStep + 1, true);
       }
     }
@@ -280,7 +284,7 @@ export default function StartupSimulator() {
               <span className="text-6xl mb-4 block">🚀</span>
               <h1 className="typo-h1 mb-3 flex items-center justify-center gap-3">
                 {t('Startup Simulator', 'Стартъп симулатор')}
-                <StatusBadge status={simStatus as any} lang={lang as 'en' | 'bg'} size="md" />
+                <StatusBadge status={localSimStatus as any} lang={lang as 'en' | 'bg'} size="md" />
               </h1>
               <p className="text-muted-foreground max-w-lg mx-auto mb-6">
                 {t(
@@ -641,13 +645,49 @@ export default function StartupSimulator() {
             </div>
           </div>
 
-          <div className="flex gap-3 justify-center">
+          <div className="flex flex-wrap gap-3 justify-center">
             <Button variant="outline" onClick={reset}>
               <RotateCcw className="h-4 w-4 mr-1.5" />
               {t('Play Again', 'Играй отново')}
             </Button>
-            <Button asChild>
-              <Link to="/my-startup">{t('Go to Startup Project →', 'Отиди към Стартъп проект →')}</Link>
+            <Button
+              className="sim-gradient border-0"
+              onClick={async () => {
+                if (!user) return;
+                // Extract industry from Step 1 choices, problem from Step 2 choices
+                const step1Choice = history[0]?.choices?.[0] || '';
+                const step2Choice = history[1]?.choices?.[0] || '';
+                const industryOpt = SIM_WEEKS[0]?.decisions?.[0]?.options?.find(o => o.id === step1Choice);
+                const problemOpt = SIM_WEEKS[1]?.decisions?.[0]?.options?.find(o => o.id === step2Choice);
+                const industryText = industryOpt ? (lang === 'bg' ? industryOpt.labelBg : industryOpt.labelEn) : '';
+                const problemText = problemOpt ? (lang === 'bg' ? problemOpt.descBg : problemOpt.descEn) : '';
+
+                // Upsert startup project with pre-filled fields
+                const { data: existing } = await supabase
+                  .from('startup_projects')
+                  .select('id')
+                  .eq('user_id', user.id)
+                  .maybeSingle();
+
+                if (existing) {
+                  await supabase.from('startup_projects').update({
+                    industry: industryText,
+                    problem: problemText,
+                  }).eq('id', existing.id);
+                } else {
+                  await supabase.from('startup_projects').insert({
+                    user_id: user.id,
+                    industry: industryText,
+                    problem: problemText,
+                  });
+                }
+
+                toast.success(t('Simulator results saved!', 'Резултатите от симулатора са запазени!'));
+                navigate('/my-startup');
+              }}
+            >
+              <Rocket className="h-4 w-4 mr-1.5" />
+              {t('Save Results to My Startup', 'Запази в Моя стартъп')}
             </Button>
           </div>
         </div>
