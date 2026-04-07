@@ -101,6 +101,19 @@ export default function StudentDashboard() {
           }
           setQuizConsecutiveImprovements(maxConsec);
         }
+        // Theory module completion
+        const { data: moduleResponses } = await supabase
+          .from('learning_module_responses')
+          .select('module_id, completed_at')
+          .eq('user_id', user.id)
+          .not('completed_at', 'is', null);
+        if (moduleResponses && moduleResponses.length > 0) {
+          const { data: allMods } = await supabase.from('learning_modules').select('id, slug');
+          if (allMods) {
+            const completedIds = new Set(moduleResponses.map(r => r.module_id));
+            setCompletedModuleSlugs(new Set(allMods.filter(m => completedIds.has(m.id)).map(m => m.slug)));
+          }
+        }
       } catch (err) {
         console.error('Dashboard fetch error:', err);
       } finally {
