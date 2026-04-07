@@ -55,10 +55,16 @@ const translations = {
     readyToInnovate: 'Ready to Innovate?',
     readyToInnovateDesc: 'Join the Digital Innovation Lab and start building your future today.',
 
-    // Hero hardcoded
-    heroLine1: 'Build Your Startup While',
-    heroLine2: 'Learning Digital Innovation',
-    heroDescriptionLine: 'Analyze real business cases, build your startup idea, and test your strategy in a startup simulator.',
+    // Hero audience toggle
+    heroHeadlineStudent1: 'Build Your Startup While',
+    heroHeadlineStudent2: 'Learning Digital Innovation',
+    heroHeadlineTeacher1: 'Teach Innovation With',
+    heroHeadlineTeacher2: 'Real Business Simulations',
+    heroDescStudent: 'Analyze real business cases, build your startup idea, and test your strategy in a startup simulator.',
+    heroDescTeacher: 'Give your students hands-on experience with case studies, a business simulator, and gamified learning — all in one platform.',
+    heroCtaTeacher: 'Request a Demo',
+    iAmStudent: 'I\'m a Student',
+    iAmTeacher: 'I\'m a Teacher',
     areYouTeacher: 'Are you a teacher?',
 
     // Dictionary section on landing
@@ -416,10 +422,16 @@ const translations = {
     readyToInnovate: 'Готов ли си да иновираш?',
     readyToInnovateDesc: 'Присъедини се към лабораторията за дигитални иновации и започни да градиш бъдещето си днес.',
 
-    // Hero hardcoded
-    heroLine1: 'Създай собствен стартъп и',
-    heroLine2: 'научи дигитални иновации',
-    heroDescriptionLine: 'Анализирай реални бизнес казуси, създай своя стартъп идея и тествай стратегията си в симулатор.',
+    // Hero audience toggle
+    heroHeadlineStudent1: 'Създай собствен стартъп и',
+    heroHeadlineStudent2: 'научи дигитални иновации',
+    heroHeadlineTeacher1: 'Преподавай иновации с',
+    heroHeadlineTeacher2: 'реални бизнес симулации',
+    heroDescStudent: 'Анализирай реални бизнес казуси, създай своя стартъп идея и тествай стратегията си в симулатор.',
+    heroDescTeacher: 'Дай на учениците си практически опит с казуси, бизнес симулатор и геймифицирано обучение — всичко на едно място.',
+    heroCtaTeacher: 'Заяви демо',
+    iAmStudent: 'Аз съм ученик',
+    iAmTeacher: 'Аз съм учител',
     areYouTeacher: 'Вие сте преподавател?',
 
     // Dictionary section on landing
