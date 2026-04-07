@@ -138,8 +138,8 @@ export const SIM_WEEKS: SimWeek[] = [
     descEn: 'Choose the type of digital product you will build. Many successful startups combine multiple product types into one solution.',
     descBg: 'Изберете типа дигитален продукт, който ще създадете. Много успешни стартъпи комбинират множество типове продукти.',
     icon: '🛠️',
-    theoryConceptEn: 'Network Effects',
-    theoryConceptBg: 'Мрежови ефекти',
+    theoryConceptEn: 'Product-Market Fit',
+    theoryConceptBg: 'Продукт-пазар фит',
     decisions: [
       {
         questionEn: 'What type of digital product will you build? (Select all that apply)',
