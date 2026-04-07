@@ -303,7 +303,7 @@ const Index = () => {
           <div className="text-center mt-8">
             <Button variant="outline" size="lg" onClick={() => navigate('/dictionary')} className="gap-2">
               <Book className="h-4 w-4" />
-              {lang === 'bg' ? 'Разгледай речника' : 'Explore Dictionary'}
+              {t.exploreDict}
               <ArrowRight className="h-4 w-4" />
             </Button>
           </div>
