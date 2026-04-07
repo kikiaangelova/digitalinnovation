@@ -14,6 +14,7 @@ import {
   ChevronDown, ChevronUp, GraduationCap, Target, Clock, Zap, Circle,
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { LEARNING_MODULES } from '@/data/learning-modules';
 
 /* ------------------------------------------------------------------ */
 /* Learning outcomes per stage                                         */
