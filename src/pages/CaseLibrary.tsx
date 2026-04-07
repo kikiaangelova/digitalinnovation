@@ -15,6 +15,7 @@ import {
   CheckCircle2, Zap,
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import PhaseBadge from '@/components/ui/phase-badge';
 import { INDUSTRY_DOMAINS, matchCaseToIndustry, type IndustryDomain } from '@/data/industry-domains';
 
 const ICON_MAP: Record<string, React.ElementType> = {
