@@ -6,6 +6,8 @@ import { awardXp } from '@/lib/xp';
 import { TERMS } from '@/data/dictionary-terms';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import AvatarPicker from '@/components/avatar/AvatarPicker';
+import type { AvatarStyle } from '@/components/avatar/PlayerAvatar';
 import {
   Sparkles, BookOpen, Rocket, Check, Star, Award, GraduationCap,
   Layers, BarChart3, MessageSquare, PenLine, Lightbulb, ArrowRight,
