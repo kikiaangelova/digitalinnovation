@@ -644,13 +644,49 @@ export default function StartupSimulator() {
             </div>
           </div>
 
-          <div className="flex gap-3 justify-center">
+          <div className="flex flex-wrap gap-3 justify-center">
             <Button variant="outline" onClick={reset}>
               <RotateCcw className="h-4 w-4 mr-1.5" />
               {t('Play Again', 'Играй отново')}
             </Button>
-            <Button asChild>
-              <Link to="/my-startup">{t('Go to Startup Project →', 'Отиди към Стартъп проект →')}</Link>
+            <Button
+              className="sim-gradient border-0"
+              onClick={async () => {
+                if (!user) return;
+                // Extract industry from Step 1 choices, problem from Step 2 choices
+                const step1Choice = history[0]?.choices?.[0] || '';
+                const step2Choice = history[1]?.choices?.[0] || '';
+                const industryOpt = SIM_WEEKS[0]?.decisions?.[0]?.options?.find(o => o.id === step1Choice);
+                const problemOpt = SIM_WEEKS[1]?.decisions?.[0]?.options?.find(o => o.id === step2Choice);
+                const industryText = industryOpt ? (lang === 'bg' ? industryOpt.labelBg : industryOpt.labelEn) : '';
+                const problemText = problemOpt ? (lang === 'bg' ? problemOpt.descBg : problemOpt.descEn) : '';
+
+                // Upsert startup project with pre-filled fields
+                const { data: existing } = await supabase
+                  .from('startup_projects')
+                  .select('id')
+                  .eq('user_id', user.id)
+                  .maybeSingle();
+
+                if (existing) {
+                  await supabase.from('startup_projects').update({
+                    industry: industryText,
+                    problem: problemText,
+                  }).eq('id', existing.id);
+                } else {
+                  await supabase.from('startup_projects').insert({
+                    user_id: user.id,
+                    industry: industryText,
+                    problem: problemText,
+                  });
+                }
+
+                toast.success(t('Simulator results saved!', 'Резултатите от симулатора са запазени!'));
+                navigate('/my-startup');
+              }}
+            >
+              <Rocket className="h-4 w-4 mr-1.5" />
+              {t('Save Results to My Startup', 'Запази в Моя стартъп')}
             </Button>
           </div>
         </div>
