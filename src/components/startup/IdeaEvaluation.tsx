@@ -455,7 +455,7 @@ export default function IdeaEvaluation({ lang, startupData }: Props) {
               })}
 
               {/* Your idea */}
-              <div className="absolute flex flex-col items-center" style={{ left: '25%', top: '35%' }}>
+              <div className="absolute flex flex-col items-center" style={{ left: ideaXPos, top: ideaYPos }}>
                 <div className="w-10 h-10 rounded-full bg-primary border-2 border-primary flex items-center justify-center">
                   <Rocket className="h-4 w-4 text-primary-foreground" />
                 </div>
