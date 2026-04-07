@@ -25,6 +25,7 @@ import IndustryProblemGenerator from '@/components/startup/IndustryProblemGenera
 import CompetitorAnalysis from '@/components/startup/CompetitorAnalysis';
 import ValuePropositionTemplate from '@/components/startup/ValuePropositionTemplate';
 import type { ProblemValidation } from '@/components/startup/IndustryProblemGenerator';
+import PhaseBadge from '@/components/ui/phase-badge';
 
 interface SectionConfig {
   key: string;
@@ -384,8 +385,9 @@ export default function MyStartupIdea() {
               <Rocket className="h-6 w-6" />
             </div>
             <div>
-               <h1 className="typo-h1">
+               <h1 className="typo-h1 flex items-center gap-2">
                 {t('My Startup Project', 'Моят стартъп проект')}
+                <PhaseBadge phase="apply" lang={lang as 'en' | 'bg'} />
               </h1>
               <p className="typo-helper">
                 {t('Build your startup idea step by step', 'Изградете стартъп идеята си стъпка по стъпка')}

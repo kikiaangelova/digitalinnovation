@@ -10,6 +10,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { TERMS, type DictionaryTerm } from '@/data/dictionary-terms';
 import { awardXp } from '@/lib/xp';
 import QuickTest from '@/components/dictionary/QuickTest';
+import PhaseBadge from '@/components/ui/phase-badge';
 
 const CATEGORY_COLORS: Record<string, string> = {
   Innovation: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20',
@@ -115,8 +116,9 @@ export default function Dictionary() {
           <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-accent">
             <Book className="h-5 w-5 text-primary" />
           </div>
-           <h1 className="typo-h1">
+           <h1 className="typo-h1 flex items-center gap-2">
             {lang === 'bg' ? 'Речник на дигиталните иновации' : 'Digital Innovation Dictionary'}
+            <PhaseBadge phase="learn" lang={lang as 'en' | 'bg'} />
           </h1>
         </div>
         <p className="typo-helper mb-6 ml-[52px]">
