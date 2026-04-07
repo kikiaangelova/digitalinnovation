@@ -11,8 +11,9 @@ import { toast } from 'sonner';
 
 export default function SeasonAnalytics() {
   const { isAdmin, loading } = useAuth();
+  const { lang } = useLang();
+  const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
   const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
   const {
     seasons, teams, submissions, outcomeReports,
     getLatestCompanyState, getCompanyStateHistory, addInstructorComment,
