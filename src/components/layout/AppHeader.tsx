@@ -1,6 +1,7 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 import { useLang } from '@/context/LangContext';
 import { useJourneyProgress } from '@/hooks/useJourneyProgress';
 import { getCurrentLevel } from '@/components/dashboard/LevelCard';
