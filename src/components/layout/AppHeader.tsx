@@ -95,25 +95,9 @@ export default function AppHeader() {
     { to: '__more__', icon: Menu, label: lang === 'bg' ? 'Още' : 'More' },
   ];
 
-  // ─── "More" drawer links (mobile bottom sheet) ───
-  const moreDrawerLinks = user
-    ? [
-        { to: '/journey', icon: Map, label: lang === 'bg' ? 'Пътешествие' : 'Journey', showProgress: true },
-        { to: '/learn', icon: GraduationCap, label: lang === 'bg' ? 'Теория' : 'Learn' },
-        { to: '/dictionary', icon: Book, label: t.dictionary },
-        { to: '/about', icon: Lightbulb, label: t.about },
-        { to: '/profile', icon: User, label: t.profile },
-        ...(isAdmin
-          ? [
-              { to: '/admin', icon: Shield, label: t.admin },
-              { to: '/admin/teacher', icon: GraduationCap, label: t.teacher },
-            ]
-          : []),
-      ]
-    : [
-        { to: '/dictionary', icon: Book, label: t.dictionary },
-        { to: '/about', icon: Lightbulb, label: t.about },
-      ];
+  // XP & level for bottom sheet
+  const xp = profile?.total_xp || 0;
+  const level = getCurrentLevel(xp);
 
   const displayName = profile?.display_name || profile?.full_name || user?.email || '';
   const initials = displayName
