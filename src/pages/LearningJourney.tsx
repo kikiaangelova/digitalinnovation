@@ -509,6 +509,7 @@ export default function LearningJourney() {
                         </ul>
                       </div>
                     </div>
+                    </div>
                   )}
 
                   {/* ═══ Completion checklist ═══ */}
