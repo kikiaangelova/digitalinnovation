@@ -35,6 +35,9 @@ const XP_CONFIG: Record<string, { xp: number; daily_cap?: number }> = {
   // Theory modules
   theory_complete: { xp: 10 },
   theory_quiz_pass: { xp: 15 },
+  // Onboarding
+  onboarding_profile: { xp: 5 },
+  onboarding_journey: { xp: 10 },
 };
 
 serve(async (req) => {
