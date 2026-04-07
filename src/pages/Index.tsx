@@ -85,11 +85,39 @@ const Index = () => {
             <span className="text-xs font-medium text-primary">{t.gamifiedPlatform}</span>
           </div>
 
+          {/* Audience toggle */}
+          {!user && (
+            <div className="flex justify-center mb-6">
+              <div className="inline-flex rounded-full border border-border bg-muted/50 p-1">
+                <button
+                  onClick={() => setAudience('student')}
+                  className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
+                    audience === 'student'
+                      ? 'bg-primary text-primary-foreground shadow-sm'
+                      : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  {t.iAmStudent}
+                </button>
+                <button
+                  onClick={() => setAudience('teacher')}
+                  className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
+                    audience === 'teacher'
+                      ? 'bg-primary text-primary-foreground shadow-sm'
+                      : 'text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  {t.iAmTeacher}
+                </button>
+              </div>
+            </div>
+          )}
+
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-display font-bold text-foreground mb-4 leading-[1.1]">
-            {t.heroLine1}
+            {audience === 'student' ? t.heroHeadlineStudent1 : t.heroHeadlineTeacher1}
             <br />
             <span className="sim-gradient-text">
-              {t.heroLine2}
+              {audience === 'student' ? t.heroHeadlineStudent2 : t.heroHeadlineTeacher2}
             </span>
           </h1>
 
@@ -97,7 +125,7 @@ const Index = () => {
             {t.heroAudience}
           </p>
           <p className="text-lg sm:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
-            {t.heroDescriptionLine}
+            {audience === 'student' ? t.heroDescStudent : t.heroDescTeacher}
           </p>
 
           {/* Social proof */}
@@ -111,7 +139,7 @@ const Index = () => {
               <Button size="lg" className="sim-gradient border-0 text-base px-8 glow-primary" onClick={() => navigate('/dashboard')}>
                 {t.goToDashboard} <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
-            ) : (
+            ) : audience === 'student' ? (
               <>
                 <Button size="lg" className="sim-gradient border-0 text-base px-8 glow-primary" onClick={() => navigate('/auth?mode=signup')}>
                   {t.startJourney} <ArrowRight className="ml-2 h-5 w-5" />
@@ -120,20 +148,17 @@ const Index = () => {
                   {t.explorePlatform}
                 </Button>
               </>
+            ) : (
+              <>
+                <Button size="lg" className="sim-gradient border-0 text-base px-8 glow-primary" onClick={() => window.location.href = 'mailto:contact@digiinnov.com'}>
+                  {t.heroCtaTeacher} <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+                <Button variant="outline" size="lg" className="text-base px-8" onClick={() => navigate('/about')}>
+                  {t.explorePlatform}
+                </Button>
+              </>
             )}
           </div>
-
-          {!user && (
-            <p className="mt-6 text-sm text-muted-foreground">
-              {t.areYouTeacher}{' '}
-              <a
-                href="mailto:contact@digiinnov.com"
-                className="text-primary hover:underline font-medium"
-              >
-                {t.requestDemo}
-              </a>
-            </p>
-          )}
 
           <p className="text-xs text-muted-foreground mt-6">{t.accessClarity}</p>
 
