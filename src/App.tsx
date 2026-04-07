@@ -108,9 +108,10 @@ const App = () => (
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </div>
-              </ProfileGate>
-            </BrowserRouter>
-          </SimulatorProvider>
+                </ProfileGate>
+              </BrowserRouter>
+            </SimulatorProvider>
+          </ProgressProvider>
         </AuthProvider>
       </LangProvider>
     </TooltipProvider>
