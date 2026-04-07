@@ -101,7 +101,7 @@ export default function SeasonAnalytics() {
         {/* Current State */}
         {latestState && (
           <div>
-            <h2 className="text-lg font-semibold text-foreground mb-3">Latest KPIs — {team?.name}</h2>
+            <h2 className="text-lg font-semibold text-foreground mb-3">{t('Latest KPIs', 'Последни KPI')} — {team?.name}</h2>
             <KPIDashboard kpis={latestState.kpis} />
           </div>
         )}
