@@ -18,6 +18,15 @@ import { toast } from 'sonner';
 
 const STAGE_ICONS = [BookOpen, Search, Lightbulb, Palette, TrendingUp, Presentation];
 
+const STAGE_MODULE_MAP: Record<number, string[]> = {
+  1: ['network-effects', 'platform-business-models'],
+  2: ['digital-ecosystems'],
+  3: ['customer-acquisition-cost', 'product-market-fit'],
+  4: ['marketing-fundamentals', 'pricing-and-revenue'],
+  5: ['operations-fundamentals', 'supply-chain-basics'],
+  6: ['team-and-roles'],
+};
+
 export default function StageLearn() {
   const { stageId } = useParams<{ stageId: string }>();
   const { user, loading: authLoading } = useAuth();
