@@ -35,9 +35,9 @@ export default function CycleFAB() {
   if (phase === 'unknown') return null;
 
   const config = {
-    learn: { label: t('Apply It Now', 'Приложи сега'), icon: Rocket, path: '/cases' },
-    apply: { label: t('See Your Rank', 'Виж класацията'), icon: Trophy, path: '/leaderboard' },
-    fun: { label: t('Continue Learning', 'Продължи да учиш'), icon: BookOpen, path: '/learn' },
+    learn: { label: t('Apply It Now →', 'Приложи сега →'), icon: Rocket, path: '/cases' },
+    apply: { label: t('See Your Rank →', 'Виж класацията →'), icon: Trophy, path: '/leaderboard' },
+    fun: { label: t('Keep Learning →', 'Продължи да учиш →'), icon: BookOpen, path: '/learn' },
   }[phase];
 
   // Don't show if already on target page
