@@ -49,6 +49,8 @@ export default function StartupSimulator() {
   const navigate = useNavigate();
   const { lang } = useLang();
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
+  const { simComplete, simWeek } = useProgress();
+  const simStatus = simComplete ? 'completed' : simWeek > 1 ? 'in_progress' : 'not_started';
   const [phase, setPhase] = useState<Phase>('intro');
   const [currentStep, setCurrentStep] = useState(0);
   const [currentDecision, setCurrentDecision] = useState(0);
