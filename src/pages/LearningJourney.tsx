@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { LEARNING_MODULES } from '@/data/learning-modules';
+import PhaseBadge from '@/components/ui/phase-badge';
 
 /* ------------------------------------------------------------------ */
 /* Learning outcomes per stage                                         */
