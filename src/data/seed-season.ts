@@ -1,4 +1,4 @@
-import { SimulationSeason, KPIs } from '@/types/simulator';
+import { SimulationSeason, KPIs, Resources } from '@/types/simulator';
 
 export const INITIAL_KPIS: KPIs = {
   users_total: 0,
@@ -15,6 +15,12 @@ export const INITIAL_KPIS: KPIs = {
   tech_debt: 5,
   brand_trust: 20,
   compliance_risk: 5,
+};
+
+export const INITIAL_RESOURCES: Resources = {
+  money: 10000,
+  team: 2,
+  runway: 6,
 };
 
 export const SEED_SEASON: SimulationSeason = {

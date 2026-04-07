@@ -1,9 +1,9 @@
 import React, { createContext, useContext, useState, useCallback, ReactNode } from 'react';
 import {
   SimulationSeason, Team, TeamMember, CompanyState, DecisionSubmission,
-  DecisionAnswer, OutcomeReport, KPIs, SeasonScoreboard,
+  DecisionAnswer, OutcomeReport, KPIs, SeasonScoreboard, Resources, GameStatus,
 } from '@/types/simulator';
-import { SEED_SEASON, INITIAL_KPIS } from '@/data/seed-season';
+import { SEED_SEASON, INITIAL_KPIS, INITIAL_RESOURCES } from '@/data/seed-season';
 import { processRound } from '@/engine/simulation-engine';
 import { CRISIS_DECISIONS } from '@/components/simulator/CrisisResponsePanel';
 
