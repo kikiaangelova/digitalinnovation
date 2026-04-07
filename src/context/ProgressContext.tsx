@@ -105,6 +105,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
           profileRes,
           moduleResponsesRes,
           allModsRes,
+          stageLearnRes,
         ] = await Promise.all([
           supabase.from('case_studies').select('id').eq('published', true),
           supabase.from('submissions').select('case_study_id, is_draft').eq('user_id', user.id).eq('is_draft', false),
@@ -116,6 +117,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
           supabase.from('profiles').select('total_xp').eq('user_id', user.id).maybeSingle(),
           supabase.from('learning_module_responses').select('module_id, completed_at').eq('user_id', user.id).not('completed_at', 'is', null),
           supabase.from('learning_modules').select('id, slug'),
+          supabase.from('course_progress').select('module_id').eq('user_id', user.id).eq('module', 'stage_learn').eq('status', 'completed'),
         ]);
 
         if (cancelled) return;
