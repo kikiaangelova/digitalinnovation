@@ -163,7 +163,7 @@ export default function SeasonAnalytics() {
               <option value="">{t('Select round...', 'Избери рунд...')}</option>
               {teamSubmissions.map(sub => {
                 const round = season.rounds.find(r => r.id === sub.round_id);
-                return <option key={sub.round_id} value={sub.round_id}>Week {round?.week_number}</option>;
+                return <option key={sub.round_id} value={sub.round_id}>{t('Week', 'Седмица')} {round?.week_number}</option>;
               })}
             </select>
             <Textarea
