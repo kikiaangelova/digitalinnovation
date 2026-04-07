@@ -25,6 +25,7 @@ import IndustryProblemGenerator from '@/components/startup/IndustryProblemGenera
 import CompetitorAnalysis from '@/components/startup/CompetitorAnalysis';
 import ValuePropositionTemplate from '@/components/startup/ValuePropositionTemplate';
 import type { ProblemValidation } from '@/components/startup/IndustryProblemGenerator';
+import PhaseBadge from '@/components/ui/phase-badge';
 
 interface SectionConfig {
   key: string;
