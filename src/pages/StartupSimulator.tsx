@@ -280,7 +280,7 @@ export default function StartupSimulator() {
               <span className="text-6xl mb-4 block">🚀</span>
               <h1 className="typo-h1 mb-3 flex items-center justify-center gap-3">
                 {t('Startup Simulator', 'Стартъп симулатор')}
-                <StatusBadge status={simStatus as any} lang={lang as 'en' | 'bg'} size="md" />
+                <StatusBadge status={localSimStatus as any} lang={lang as 'en' | 'bg'} size="md" />
               </h1>
               <p className="text-muted-foreground max-w-lg mx-auto mb-6">
                 {t(
