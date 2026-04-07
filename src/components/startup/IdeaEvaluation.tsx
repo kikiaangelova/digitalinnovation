@@ -220,6 +220,8 @@ export default function IdeaEvaluation({ lang, startupData }: Props) {
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
   const [evaluated, setEvaluated] = useState(false);
   const [scores, setScores] = useState<CriterionScore[]>([]);
+  const [ideaXPos, setIdeaXPos] = useState('25%');
+  const [ideaYPos, setIdeaYPos] = useState('35%');
   const [competitors, setCompetitors] = useState<Competitor[]>([]);
   const [market, setMarket] = useState<MarketInfo | null>(null);
   const [diffAnswer, setDiffAnswer] = useState('');
@@ -237,6 +239,10 @@ export default function IdeaEvaluation({ lang, startupData }: Props) {
     }
     const s = computeScores(startupData);
     setScores(s);
+    const innovScore = s.find(sc => sc.key === 'innovation')?.score ?? 5;
+    const marketScore = s.find(sc => sc.key === 'market')?.score ?? 5;
+    setIdeaXPos(`${10 + (innovScore / 10) * 65}%`);
+    setIdeaYPos(`${75 - (marketScore / 10) * 60}%`);
     const combined = `${startupData.problem} ${startupData.customer} ${startupData.value_proposition} ${startupData.digital_product} ${startupData.industry}`;
     const cat = detectCategory(combined);
     setCompetitors(COMPETITOR_DB[cat] || COMPETITOR_DB.default);
@@ -449,7 +455,7 @@ export default function IdeaEvaluation({ lang, startupData }: Props) {
               })}
 
               {/* Your idea */}
-              <div className="absolute flex flex-col items-center" style={{ left: '25%', top: '35%' }}>
+              <div className="absolute flex flex-col items-center" style={{ left: ideaXPos, top: ideaYPos }}>
                 <div className="w-10 h-10 rounded-full bg-primary border-2 border-primary flex items-center justify-center">
                   <Rocket className="h-4 w-4 text-primary-foreground" />
                 </div>
