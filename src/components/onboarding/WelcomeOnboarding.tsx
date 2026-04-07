@@ -65,7 +65,7 @@ export default function WelcomeOnboarding({ onComplete }: Props) {
   };
 
   const handleJourney = async () => {
-    await awardXp('case_open', 'onboarding_journey');
+    await awardXp('onboarding_journey', 'onboarding_step_4');
     showXp(10);
     setTimeout(() => setStep(5), 800);
   };
