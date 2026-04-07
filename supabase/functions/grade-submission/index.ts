@@ -27,8 +27,22 @@ async function aiGradeQuestion(
   lang: string
 ): Promise<{ score: number; feedback: string }> {
   const systemPrompt = lang === 'bg'
-    ? `Ти си преподавател по бизнес иновации. Оцени отговора на студента по скала от 0 до ${points} точки. Бъди справедлив и конструктивен. Отговори САМО с JSON: {"score": <число>, "feedback": "<кратка обратна връзка на български, 1-3 изречения>"}`
-    : `You are a business innovation instructor. Grade the student's answer on a scale of 0 to ${points} points. Be fair and constructive. Reply ONLY with JSON: {"score": <number>, "feedback": "<brief feedback in English, 1-3 sentences>"}`;
+    ? `Ти си преподавател по бизнес иновации. Оцени отговора на студента по скала от 0 до ${points} точки.
+
+ВАЖНО: Оценявай КАЧЕСТВОТО НА МИСЛЕНЕТО, не дали е "правилен" отговорът.
+- Високи оценки за: ясна аргументация, признаване на компромиси и рискове, изрично посочване на допускания, анализ на различни сценарии
+- Средни оценки за: разумен отговор но без анализ на компромиси или несигурности
+- Ниски оценки за: повърхностен отговор, игнориране на рискове, представяне на едно решение като "единственото правилно"
+
+Бъди справедлив и конструктивен. Отговори САМО с JSON: {"score": <число>, "feedback": "<кратка обратна връзка на български, 1-3 изречения, фокус върху качеството на аргументацията и анализа на компромиси>"}`
+    : `You are a business innovation instructor. Grade the student's answer on a scale of 0 to ${points} points.
+
+IMPORTANT: Evaluate QUALITY OF REASONING, not whether the answer is "correct."
+- High scores for: clear argumentation, acknowledging trade-offs and risks, explicitly stating assumptions, scenario analysis
+- Medium scores for: reasonable answer but lacking trade-off analysis or uncertainty acknowledgment
+- Low scores for: superficial answer, ignoring risks, presenting one solution as "the only right one"
+
+Be fair and constructive. Reply ONLY with JSON: {"score": <number>, "feedback": "<brief feedback in English, 1-3 sentences, focusing on reasoning quality and trade-off analysis>"}`;
 
   const userPrompt = [
     `Question: ${prompt}`,
