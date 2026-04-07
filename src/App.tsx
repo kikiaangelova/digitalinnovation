@@ -60,9 +60,10 @@ const App = () => (
       <XpCelebrationToaster />
       <LangProvider>
         <AuthProvider>
-          <SimulatorProvider>
-            <BrowserRouter>
-              <ProfileGate>
+          <ProgressProvider>
+            <SimulatorProvider>
+              <BrowserRouter>
+                <ProfileGate>
                 <div className="pb-20 md:pb-0">
                   <Routes>
                     <Route path="/" element={<Index />} />
