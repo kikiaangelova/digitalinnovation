@@ -73,7 +73,7 @@ export default function SeasonAnalytics() {
             </Button>
             <div>
               <h1 className="text-lg font-bold text-foreground">{season.theme}</h1>
-              <p className="text-sm text-muted-foreground">Season Analytics</p>
+              <p className="text-sm text-muted-foreground">{t('Season Analytics', 'Анализ на сезона')}</p>
             </div>
           </div>
           <Button variant="outline" size="sm" onClick={exportCSV} disabled={!team}>
