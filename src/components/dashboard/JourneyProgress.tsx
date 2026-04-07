@@ -95,23 +95,28 @@ export default function JourneyProgress(props: JourneyProgressProps) {
           const Icon = step.icon;
           const status = statuses[idx];
           const isRecommended = idx === recommendedIdx;
+          // Locked = not_started AND not the recommended next step AND previous step not completed/in_progress
+          const isLocked = status === 'not_started' && !isRecommended;
 
           return (
             <div
               key={step.id}
-              className={`flex items-center gap-3 p-3 rounded-lg cursor-pointer transition-all group
-                ${isRecommended ? 'bg-accent border border-primary/25' : 'hover:bg-muted/50'}
+              className={`flex items-center gap-3 p-3 rounded-lg transition-all group
+                ${isLocked ? 'cursor-default opacity-60' : 'cursor-pointer'}
+                ${isRecommended ? 'bg-accent border border-primary/25' : isLocked ? '' : 'hover:bg-muted/50'}
               `}
-              onClick={() => navigate(step.path)}
+              onClick={() => !isLocked && navigate(step.path)}
             >
               {/* Status icon */}
-              <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-transform group-hover:scale-105
+              <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full transition-transform ${!isLocked ? 'group-hover:scale-105' : ''}
                 ${status === 'completed' ? 'bg-sim-success text-white'
                   : isRecommended ? 'sim-gradient text-primary-foreground'
                   : status === 'in_progress' ? 'bg-primary/15 text-primary border border-primary/30'
                   : 'bg-muted text-muted-foreground'}`}
               >
-                {status === 'completed' ? <CheckCircle2 className="h-4 w-4" /> : <Icon className="h-4 w-4" />}
+                {status === 'completed' ? <CheckCircle2 className="h-4 w-4" />
+                  : isLocked ? <Lock className="h-4 w-4" />
+                  : <Icon className="h-4 w-4" />}
               </div>
 
               {/* Text */}
@@ -130,13 +135,23 @@ export default function JourneyProgress(props: JourneyProgressProps) {
                       <Play className="h-2.5 w-2.5 mr-0.5" />{t('Started', 'Започнато')}
                     </Badge>
                   )}
+                  {isLocked && (
+                    <Badge variant="outline" className="text-xs border-border/50 text-muted-foreground gap-1">
+                      <Lock className="h-2.5 w-2.5" />
+                      {t('Locked', 'Заключено')}
+                    </Badge>
+                  )}
                 </div>
                 <p className="text-xs text-muted-foreground truncate">
                   {lang === 'bg' ? step.descBg : step.descEn}
                 </p>
               </div>
 
-              <ChevronRight className={`h-4 w-4 shrink-0 transition-colors ${isRecommended ? 'text-primary' : 'text-muted-foreground/40 group-hover:text-muted-foreground'}`} />
+              {isLocked ? (
+                <Lock className="h-4 w-4 text-muted-foreground/40 shrink-0" />
+              ) : (
+                <ChevronRight className={`h-4 w-4 shrink-0 transition-colors ${isRecommended ? 'text-primary' : 'text-muted-foreground/40 group-hover:text-muted-foreground'}`} />
+              )}
             </div>
           );
         })}
