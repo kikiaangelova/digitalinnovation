@@ -62,7 +62,7 @@ const App = () => (
           <SimulatorProvider>
             <BrowserRouter>
               <ProfileGate>
-                <div className="pb-16 md:pb-0">
+                <div className="pb-20 md:pb-0">
                   <Routes>
                     <Route path="/" element={<Index />} />
                     <Route path="/auth" element={<AuthPage />} />

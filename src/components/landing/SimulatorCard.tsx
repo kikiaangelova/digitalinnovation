@@ -16,7 +16,7 @@ export default function SimulatorCard() {
   const { user } = useAuth();
   const { t } = useLang();
   const navigate = useNavigate();
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(true);
 
   const handleClick = () => {
     if (user) navigate('/simulator/preview');

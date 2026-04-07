@@ -89,9 +89,15 @@ export default function LevelCard({ xp, lang }: LevelCardProps) {
           <Progress value={progressToNext} className="h-2.5" indicatorClassName="bg-xp-gold" />
         </div>
       ) : (
-        <p className="text-sm font-medium text-success">
-          {lang === 'bg' ? '🎉 Максимално ниво достигнато!' : '🎉 Max level reached!'}
-        </p>
+        <div className="flex items-center justify-between">
+          <p className="text-sm font-medium text-success">
+            {lang === 'bg' ? '🎉 Максимално ниво!' : '🎉 Max level reached!'}
+          </p>
+          <Button size="sm" variant="outline" onClick={() => navigate('/final-exam')} className="gap-1 text-xs">
+            <Award className="h-3 w-3" />
+            {lang === 'bg' ? 'Финален изпит' : 'Final Exam'}
+          </Button>
+        </div>
       )}
     </div>
   );

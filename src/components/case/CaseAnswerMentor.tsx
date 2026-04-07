@@ -98,7 +98,7 @@ export default function CaseAnswerMentor({
           </div>
           {!canRequest && (studentAnswer || '').trim().length > 0 && (studentAnswer || '').trim().length < minLength && (
             <p className="text-xs text-muted-foreground">
-              {t('Write at least 20 characters to unlock AI feedback', 'Напишете поне 20 знака, за да отключите AI обратна връзка')}
+              {(studentAnswer || '').trim().length} / {minLength} {t('characters minimum to unlock AI feedback', 'знака минимум за AI обратна връзка')}
             </p>
           )}
         </>

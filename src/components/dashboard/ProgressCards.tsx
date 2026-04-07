@@ -40,7 +40,7 @@ export default function ProgressCards({
           </div>
         </div>
         <Progress value={casePct} className="h-2 mb-3" />
-        {nextCaseId && (
+        {nextCaseId ? (
           <div className="mt-auto pt-3 border-t border-border">
             <p className="text-xs text-muted-foreground mb-1">{t('Next case', 'Следващ казус')}</p>
             <p className="text-sm font-medium text-foreground truncate mb-2">{nextCaseTitle}</p>
@@ -52,6 +52,10 @@ export default function ProgressCards({
               <Link to={`/case/${nextCaseId}`}>{t('Start Case Study', 'Започни казус')} <ArrowRight className="h-3 w-3" /></Link>
             </Button>
           </div>
+        ) : (
+          <p className="text-xs text-muted-foreground mt-auto pt-3 border-t border-border">
+            {t('🎉 All cases completed!', '🎉 Всички казуси завършени!')}
+          </p>
         )}
       </div>
 

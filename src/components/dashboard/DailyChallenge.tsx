@@ -117,10 +117,11 @@ export default function DailyChallenge({ lang, userId }: Props) {
           {t('Daily Challenge', 'Предизвикателство на деня')}
         </h3>
         {streak > 0 && (
-          <span className="flex items-center gap-1 text-sm font-bold text-xp-gold">
-            <Flame className="h-4 w-4" />
-            {streak} {t('days in a row', 'дни подред')}
-          </span>
+          <div className="flex items-center gap-1.5 rounded-full bg-xp-gold/15 border border-xp-gold/30 px-3 py-1">
+            <Flame className="h-4 w-4 text-xp-gold" />
+            <span className="text-sm font-bold text-xp-gold">{streak}</span>
+            <span className="text-xs text-xp-gold/70">{t('day streak', 'дни подред')}</span>
+          </div>
         )}
       </div>
 
