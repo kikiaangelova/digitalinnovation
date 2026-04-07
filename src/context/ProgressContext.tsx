@@ -3,6 +3,7 @@ import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { deriveJourneyStatuses, type StepStatus } from '@/lib/journey';
 import { calcOutcomeScores } from '@/components/dashboard/LearningOutcomes';
+import { LEARNING_MODULES } from '@/data/learning-modules';
 
 /* ── Unified progress model ── */
 export interface UnifiedProgress {
