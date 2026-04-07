@@ -169,7 +169,7 @@ export default function SeasonAnalytics() {
             <Textarea
               value={comment}
               onChange={e => setComment(e.target.value)}
-              placeholder="Write your feedback..."
+              placeholder={t('Write your feedback...', 'Напиши обратна връзка...')}
               className="mb-3"
             />
             <Button size="sm" onClick={handleAddComment} disabled={!comment.trim() || !commentRound}>
