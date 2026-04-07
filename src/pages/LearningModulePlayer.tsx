@@ -339,8 +339,15 @@ export default function LearningModulePlayer() {
 
             {!quizSubmitted ? (
               <div className="flex justify-end">
-                <Button onClick={handleQuizSubmit}>
+                <Button
+                  onClick={handleQuizSubmit}
+                  disabled={Object.keys(quizAnswers).length < quizMax}
+                  className={Object.keys(quizAnswers).length < quizMax ? 'opacity-50' : ''}
+                >
                   {t('Check Answers', 'Провери отговорите')}
+                  {Object.keys(quizAnswers).length < quizMax && (
+                    <span className="ml-2 text-xs opacity-70">({Object.keys(quizAnswers).length}/{quizMax})</span>
+                  )}
                 </Button>
               </div>
             ) : (
