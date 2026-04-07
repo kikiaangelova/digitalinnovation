@@ -142,7 +142,7 @@ const Index = () => {
                 <Button size="lg" className="sim-gradient border-0 text-base px-8 glow-primary" onClick={() => navigate('/auth?mode=signup')}>
                   {t.startJourney} <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
-                <Button variant="outline" size="lg" className="text-base px-8" onClick={() => navigate('/about')}>
+                <Button variant="outline" size="lg" className="text-base px-8" onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}>
                   {t.explorePlatform}
                 </Button>
               </>
