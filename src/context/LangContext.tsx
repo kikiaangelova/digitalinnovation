@@ -55,6 +55,22 @@ const translations = {
     readyToInnovate: 'Ready to Innovate?',
     readyToInnovateDesc: 'Join the Digital Innovation Lab and start building your future today.',
 
+    // Hero hardcoded
+    heroLine1: 'Build Your Startup While',
+    heroLine2: 'Learning Digital Innovation',
+    heroDescriptionLine: 'Analyze real business cases, build your startup idea, and test your strategy in a startup simulator.',
+    areYouTeacher: 'Are you a teacher?',
+
+    // Dictionary section on landing
+    dictBadge: 'Business Dictionary',
+    dictTitle: 'Learn real business language',
+    dictSubtitle: 'Key terms from marketing, pricing, operations, and team management — in English and Bulgarian.',
+    exploreDict: 'Explore Dictionary',
+    dictTermTargetAudience: 'The specific group of people most likely to buy your product.',
+    dictTermRevenueModel: 'The strategy a business uses to generate income from its product.',
+    dictTermBottleneck: 'A point in a process where capacity is limited, restricting throughput.',
+    dictTermFoundingTeam: 'The initial group of people who start a company together.',
+
     // Learn cards
     learnDigitalInnovation: 'Digital Innovation',
     learnDigitalInnovationDesc: 'Understand how technology transforms industries.',
@@ -399,6 +415,22 @@ const translations = {
     week: 'Седмица',
     readyToInnovate: 'Готов ли си да иновираш?',
     readyToInnovateDesc: 'Присъедини се към лабораторията за дигитални иновации и започни да градиш бъдещето си днес.',
+
+    // Hero hardcoded
+    heroLine1: 'Създай собствен стартъп и',
+    heroLine2: 'научи дигитални иновации',
+    heroDescriptionLine: 'Анализирай реални бизнес казуси, създай своя стартъп идея и тествай стратегията си в симулатор.',
+    areYouTeacher: 'Вие сте преподавател?',
+
+    // Dictionary section on landing
+    dictBadge: 'Бизнес речник',
+    dictTitle: 'Научи истинския бизнес език',
+    dictSubtitle: 'Ключови термини от маркетинг, ценообразуване, операции и управление на екипи — на английски и български.',
+    exploreDict: 'Разгледай речника',
+    dictTermTargetAudience: 'Конкретната група хора, които е най-вероятно да купят продукта ти.',
+    dictTermRevenueModel: 'Стратегията за генериране на приходи от продукта или услугата.',
+    dictTermBottleneck: 'Точка в процеса, която ограничава общата производителност.',
+    dictTermFoundingTeam: 'Първоначалната група хора, които стартират компания заедно.',
 
     // Learn cards
     learnDigitalInnovation: 'Дигитални иновации',

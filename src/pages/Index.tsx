@@ -85,10 +85,10 @@ const Index = () => {
           </div>
 
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-display font-bold text-foreground mb-4 leading-[1.1]">
-            {lang === 'en' ? 'Build Your Startup While' : 'Създай собствен стартъп и'}
+            {t.heroLine1}
             <br />
             <span className="sim-gradient-text">
-              {lang === 'en' ? 'Learning Digital Innovation' : 'научи дигитални иновации'}
+              {t.heroLine2}
             </span>
           </h1>
 
@@ -96,9 +96,7 @@ const Index = () => {
             {t.heroAudience}
           </p>
           <p className="text-lg sm:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
-            {lang === 'en'
-              ? 'Analyze real business cases, build your startup idea, and test your strategy in a startup simulator.'
-              : 'Анализирай реални бизнес казуси, създай своя стартъп идея и тествай стратегията си в симулатор.'}
+            {t.heroDescriptionLine}
           </p>
 
           {/* Social proof */}
@@ -126,7 +124,7 @@ const Index = () => {
 
           {!user && (
             <p className="mt-6 text-sm text-muted-foreground">
-              {lang === 'bg' ? 'Вие сте преподавател?' : 'Are you a teacher?'}{' '}
+              {t.areYouTeacher}{' '}
               <a
                 href="mailto:contact@digiinnov.com"
                 className="text-primary hover:underline font-medium"
@@ -273,23 +271,21 @@ const Index = () => {
       <section className="py-16 px-4 border-t border-border">
         <div className="container mx-auto max-w-4xl">
           <div className="text-center mb-10">
-            <SectionBadge label={lang === 'bg' ? 'Бизнес речник' : 'Business Dictionary'} />
+            <SectionBadge label={t.dictBadge} />
             <h2 className="text-2xl sm:text-3xl font-display font-bold text-foreground mt-4 mb-3">
-              {lang === 'bg' ? 'Научи истинския бизнес език' : 'Learn real business language'}
+              {t.dictTitle}
             </h2>
             <p className="text-muted-foreground max-w-lg mx-auto">
-              {lang === 'bg'
-                ? 'Ключови термини от маркетинг, ценообразуване, операции и управление на екипи — на английски и български.'
-                : 'Key terms from marketing, pricing, operations, and team management — in English and Bulgarian.'}
+              {t.dictSubtitle}
             </p>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
             {[
-              { en: 'Target Audience', bg: 'Целева аудитория', cat: 'Marketing', catBg: 'Маркетинг', def: lang === 'bg' ? 'Конкретната група хора, които е най-вероятно да купят продукта ти.' : 'The specific group of people most likely to buy your product.' },
-              { en: 'Revenue Model', bg: 'Модел на приходите', cat: 'Pricing & Revenue', catBg: 'Ценообразуване', def: lang === 'bg' ? 'Стратегията за генериране на приходи от продукта или услугата.' : 'The strategy a business uses to generate income from its product.' },
-              { en: 'Bottleneck', bg: 'Тясно място', cat: 'Operations', catBg: 'Операции', def: lang === 'bg' ? 'Точка в процеса, която ограничава общата производителност.' : 'A point in a process where capacity is limited, restricting throughput.' },
-              { en: 'Founding Team', bg: 'Основателски екип', cat: 'Team & Roles', catBg: 'Екип и роли', def: lang === 'bg' ? 'Първоначалната група хора, които стартират компания заедно.' : 'The initial group of people who start a company together.' },
+              { en: 'Target Audience', bg: 'Целева аудитория', cat: 'Marketing', catBg: 'Маркетинг', def: t.dictTermTargetAudience },
+              { en: 'Revenue Model', bg: 'Модел на приходите', cat: 'Pricing & Revenue', catBg: 'Ценообразуване', def: t.dictTermRevenueModel },
+              { en: 'Bottleneck', bg: 'Тясно място', cat: 'Operations', catBg: 'Операции', def: t.dictTermBottleneck },
+              { en: 'Founding Team', bg: 'Основателски екип', cat: 'Team & Roles', catBg: 'Екип и роли', def: t.dictTermFoundingTeam },
             ].map((item, i) => (
               <div key={i} className="group rounded-xl border border-border bg-card p-4 hover:border-primary/30 transition-all duration-300">
                 <div className="flex items-center justify-between mb-2">
@@ -307,7 +303,7 @@ const Index = () => {
           <div className="text-center mt-8">
             <Button variant="outline" size="lg" onClick={() => navigate('/dictionary')} className="gap-2">
               <Book className="h-4 w-4" />
-              {lang === 'bg' ? 'Разгледай речника' : 'Explore Dictionary'}
+              {t.exploreDict}
               <ArrowRight className="h-4 w-4" />
             </Button>
           </div>
