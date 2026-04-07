@@ -60,6 +60,10 @@ export default function StartupSimulator() {
   const [simId, setSimId] = useState<string | null>(null);
   const [multiSelections, setMultiSelections] = useState<string[]>([]);
   const [casesCompleted, setCasesCompleted] = useState<number | null>(null);
+  const [hasInProgressSession, setHasInProgressSession] = useState(false);
+  const [inProgressStep, setInProgressStep] = useState(0);
+  const [lastCompletedScore, setLastCompletedScore] = useState<{ score: number; grade: string } | null>(null);
+  const [sessionLoaded, setSessionLoaded] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) navigate('/auth?redirect=/simulator');
@@ -73,39 +77,64 @@ export default function StartupSimulator() {
       .then(({ count }) => setCasesCompleted(count ?? 0));
   }, [user]);
 
+  // Load existing sessions (in-progress + last completed)
   useEffect(() => {
     if (!user) return;
-    supabase.from('simulator_progress')
+
+    // Fetch in-progress session
+    const loadInProgress = supabase.from('simulator_progress')
       .select('*')
       .eq('user_id', user.id)
       .eq('is_complete', false)
       .order('created_at', { ascending: false })
       .limit(1)
-      .maybeSingle()
-      .then(({ data }) => {
-        if (data) {
-          setSimId(data.id);
-          const raw = data.kpis as any;
-          const savedKpis: SimWeekKPIs = {
-            innovation: Number(raw?.innovation) || 0,
-            marketPotential: Number(raw?.marketPotential) || 0,
-            scalability: Number(raw?.scalability) || 0,
-            riskLevel: Number(raw?.riskLevel) || 0,
-            growthPotential: Number(raw?.growthPotential) || 0,
-          };
-          const savedDecisions = data.decisions as any as StepRecord[];
-          if (savedKpis && savedDecisions) {
-            setKpis(savedKpis);
-            setHistory(savedDecisions);
-            setCurrentStep(Math.min(data.current_week - 1, SIM_WEEKS.length - 1));
-            if (data.is_complete) {
-              setPhase('results');
-            } else if (savedDecisions.length > 0) {
-              setPhase('playing');
-            }
-          }
+      .maybeSingle();
+
+    // Fetch last completed session
+    const loadCompleted = supabase.from('simulator_progress')
+      .select('grade, kpis')
+      .eq('user_id', user.id)
+      .eq('is_complete', true)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    Promise.all([loadInProgress, loadCompleted]).then(([ipRes, compRes]) => {
+      // Handle in-progress session — store data but stay on intro
+      if (ipRes.data) {
+        const data = ipRes.data;
+        setSimId(data.id);
+        const raw = data.kpis as any;
+        const savedKpis: SimWeekKPIs = {
+          innovation: Number(raw?.innovation) || 0,
+          marketPotential: Number(raw?.marketPotential) || 0,
+          scalability: Number(raw?.scalability) || 0,
+          riskLevel: Number(raw?.riskLevel) || 0,
+          growthPotential: Number(raw?.growthPotential) || 0,
+        };
+        const savedDecisions = data.decisions as any as StepRecord[];
+        if (savedKpis && savedDecisions && savedDecisions.length > 0) {
+          setKpis(savedKpis);
+          setHistory(savedDecisions);
+          setCurrentStep(Math.min(data.current_week - 1, SIM_WEEKS.length - 1));
+          setHasInProgressSession(true);
+          setInProgressStep(data.current_week);
         }
-      });
+      }
+
+      // Handle last completed session
+      if (compRes.data) {
+        const raw = compRes.data.kpis as any;
+        const score = Math.round(
+          (Number(raw?.innovation) || 0) * 0.25 + (Number(raw?.marketPotential) || 0) * 0.2 +
+          (Number(raw?.scalability) || 0) * 0.2 + (100 - (Number(raw?.riskLevel) || 0)) * 0.15 +
+          (Number(raw?.growthPotential) || 0) * 0.2
+        );
+        setLastCompletedScore({ score, grade: compRes.data.grade || '' });
+      }
+
+      setSessionLoaded(true);
+    });
   }, [user]);
 
   const saveProgress = useCallback(async (
@@ -273,24 +302,73 @@ export default function StartupSimulator() {
               ))}
             </div>
 
-            <Button size="lg" onClick={() => setPhase('playing')}>
-              <Play className="h-4 w-4 mr-2" />
-              {t('Start Simulation', 'Стартирай симулацията')}
-            </Button>
+            {/* Session-aware CTAs */}
+            {hasInProgressSession ? (
+              <div className="space-y-3">
+                <div className="rounded-xl border border-primary/30 bg-primary/5 p-4 max-w-md mx-auto text-left">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+                      <BarChart3 className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-foreground">
+                        {t('Simulation in progress', 'Симулация в процес')}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {t(`Step ${inProgressStep} of ${SIM_WEEKS.length} completed`, `Стъпка ${inProgressStep} от ${SIM_WEEKS.length} завършена`)}
+                      </p>
+                    </div>
+                  </div>
+                  <Progress value={(inProgressStep / SIM_WEEKS.length) * 100} className="h-1.5" />
+                </div>
+                <div className="flex items-center justify-center gap-3">
+                  <Button size="lg" onClick={() => setPhase('playing')}>
+                    <Play className="h-4 w-4 mr-2" />
+                    {t('Resume Simulation', 'Продължи симулацията')}
+                  </Button>
+                  <Button size="lg" variant="outline" onClick={reset}>
+                    <RotateCcw className="h-4 w-4 mr-2" />
+                    {t('Start New', 'Започни нова')}
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <Button size="lg" onClick={() => setPhase('playing')}>
+                <Play className="h-4 w-4 mr-2" />
+                {t('Start Simulation', 'Стартирай симулацията')}
+              </Button>
+            )}
+
+            {/* Last completed score */}
+            {lastCompletedScore && !hasInProgressSession && (
+              <div className="mt-4 rounded-xl border border-border bg-card p-4 max-w-sm mx-auto">
+                <p className="text-xs text-muted-foreground mb-1">{t('Last Result', 'Последен резултат')}</p>
+                <div className="flex items-center justify-center gap-3">
+                  <span className="text-3xl font-bold text-primary">{lastCompletedScore.score}</span>
+                  <span className="text-sm text-muted-foreground">/100</span>
+                  {lastCompletedScore.grade && (
+                    <Badge variant="outline" className="text-sm">{lastCompletedScore.grade}</Badge>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="space-y-2 mt-4">
             {SIM_WEEKS.map((w, i) => {
               const Icon = STEP_ICONS[i] || Target;
+              const isCompleted = hasInProgressSession && i < inProgressStep;
+              const isCurrent = hasInProgressSession && i === inProgressStep;
               return (
-                <div key={w.week} className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10">
-                    <Icon className="h-4 w-4 text-primary" />
+                <div key={w.week} className={`flex items-center gap-3 rounded-lg border px-4 py-3 ${isCompleted ? 'border-emerald-500/30 bg-emerald-500/5' : isCurrent ? 'border-primary/30 bg-primary/5' : 'border-border bg-card'}`}>
+                  <div className={`flex h-9 w-9 items-center justify-center rounded-full ${isCompleted ? 'bg-emerald-500/15' : 'bg-primary/10'}`}>
+                    {isCompleted ? <CheckCircle2 className="h-4 w-4 text-emerald-600" /> : <Icon className="h-4 w-4 text-primary" />}
                   </div>
                   <div className="flex-1">
                     <span className="text-xs text-muted-foreground">{t(`Step ${w.week}`, `Стъпка ${w.week}`)}</span>
                     <h3 className="text-sm font-medium text-foreground">{lang === 'bg' ? w.titleBg : w.titleEn}</h3>
                   </div>
+                  {isCurrent && <Badge variant="outline" className="text-[10px] bg-primary/10 text-primary border-primary/20">{t('Next', 'Следваща')}</Badge>}
                 </div>
               );
             })}
