@@ -216,7 +216,7 @@ export default function StudentDashboard() {
           </div>
         </div>
 
-        {/* ═══ SECTION 1: Learning Navigator ═══ */}
+        {/* ═══ SECTION 1: Learning Navigator (Hero) ═══ */}
         <LearningNavigator
           lang={lang}
           xp={xp}
@@ -227,6 +227,36 @@ export default function StudentDashboard() {
           simComplete={simComplete}
           outcomeScores={outcomeScores}
         />
+
+        {/* ═══ Quick Resume Cards ═══ */}
+        {(() => {
+          // Find next incomplete module
+          const nextMod = LEARNING_MODULES.find(m => !completedModuleSlugs.has(m.slug));
+          // Find last started but incomplete case (draft submission)
+          const draftSubs = submissions.filter(s => s.is_draft);
+          const lastDraftCase = draftSubs.length > 0
+            ? cases.find(c => c.id === draftSubs[draftSubs.length - 1].case_study_id)
+            : undefined;
+          // Find next unstarted case if no draft
+          const nextCase = !lastDraftCase
+            ? cases.find(c => !completedCaseIds.has(c.id))
+            : undefined;
+          const resumeCase = lastDraftCase || nextCase;
+
+          return (
+            <QuickResumeCards
+              lang={lang}
+              lastCaseTitle={resumeCase?.title}
+              lastCaseId={resumeCase?.id}
+              nextModuleTitle={nextMod ? (lang === 'bg' ? nextMod.title_bg : nextMod.title_en) : undefined}
+              nextModuleSlug={nextMod?.slug}
+              simWeek={simWeek}
+              simComplete={simComplete}
+              startupProgressPct={progress.startupProgressPct}
+              startupSubmitted={startupProject?.is_submitted || false}
+            />
+          );
+        })()}
 
         {/* ═══ Theory Modules ═══ */}
         <Card className="p-5 border-border">
