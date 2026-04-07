@@ -6,6 +6,8 @@ import { awardXp } from '@/lib/xp';
 import { TERMS } from '@/data/dictionary-terms';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import AvatarPicker from '@/components/avatar/AvatarPicker';
+import type { AvatarStyle } from '@/components/avatar/PlayerAvatar';
 import {
   Sparkles, BookOpen, Rocket, Check, Star, Award, GraduationCap,
   Layers, BarChart3, MessageSquare, PenLine, Lightbulb, ArrowRight,
@@ -25,6 +27,7 @@ export default function WelcomeOnboarding({ onComplete }: Props) {
   const [step, setStep] = useState(0);
   const [classVal, setClassVal] = useState('');
   const [schoolVal, setSchoolVal] = useState('');
+  const [avatarStyle, setAvatarStyle] = useState<AvatarStyle | ''>('');
   const [xpPulse, setXpPulse] = useState(false);
   const [totalXpEarned, setTotalXpEarned] = useState(0);
   const [saving, setSaving] = useState(false);
@@ -46,6 +49,7 @@ export default function WelcomeOnboarding({ onComplete }: Props) {
       const profileUpdate: Record<string, unknown> = {};
       if (classVal) profileUpdate.class_name = classVal;
       if (schoolVal) profileUpdate.school_name = schoolVal;
+      if (avatarStyle) profileUpdate.avatar_style = avatarStyle;
       if (Object.keys(profileUpdate).length > 0) {
         await supabase.from('profiles').update(profileUpdate).eq('user_id', user.id);
       }
@@ -226,6 +230,7 @@ export default function WelcomeOnboarding({ onComplete }: Props) {
                 <label className="text-xs font-medium text-foreground mb-1 block">{t.onboardingStep1School || T(lang, 'School', 'Училище')}</label>
                 <Input value={schoolVal} onChange={e => setSchoolVal(e.target.value)} placeholder={t.onboardingStep1SchoolPlaceholder || ''} />
               </div>
+              <AvatarPicker selected={avatarStyle} onSelect={setAvatarStyle} xp={0} />
               <Button className="w-full" onClick={handleProfileSave} disabled={saving}>
                 {t.onboardingStep1Btn || T(lang, 'Save & Continue', 'Запази')} <span className="ml-1 text-xs opacity-80">+5 XP</span>
               </Button>

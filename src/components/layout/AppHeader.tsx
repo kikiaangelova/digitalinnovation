@@ -4,6 +4,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
 import { useProgress } from '@/context/ProgressContext';
 import { getCurrentLevel } from '@/components/dashboard/LevelCard';
+import PlayerAvatar from '@/components/avatar/PlayerAvatar';
 import { Button } from '@/components/ui/button';
 import {
   GraduationCap, LogOut, LayoutDashboard, Play, Shield, User,
@@ -138,9 +139,13 @@ export default function AppHeader() {
                   onClick={() => setDropdownOpen(!dropdownOpen)}
                   className="flex items-center gap-2 px-2.5 py-1.5 rounded-lg hover:bg-muted transition-colors"
                 >
-                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-primary text-xs font-bold uppercase">
-                    {initials}
-                  </div>
+                  {profile?.avatar_style ? (
+                    <PlayerAvatar style={profile.avatar_style} xp={userXp} size="xs" showBorder={false} />
+                  ) : (
+                    <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-primary text-xs font-bold uppercase">
+                      {initials}
+                    </div>
+                  )}
                     <span className="text-sm text-foreground font-medium max-w-[120px] truncate">
                       {displayName}
                     </span>
@@ -225,9 +230,15 @@ export default function AppHeader() {
             {user ? (
               <button
                 onClick={() => setDrawerOpen(prev => !prev)}
-                className="md:hidden flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary text-sm font-bold uppercase shrink-0"
+                className="md:hidden shrink-0"
               >
-                {initials}
+                {profile?.avatar_style ? (
+                  <PlayerAvatar style={profile.avatar_style} xp={userXp} size="sm" showBorder={false} />
+                ) : (
+                  <div className="h-8 w-8 flex items-center justify-center rounded-full bg-primary/10 text-primary text-sm font-bold uppercase">
+                    {initials}
+                  </div>
+                )}
               </button>
             ) : (
               <div className="md:hidden flex items-center gap-1.5">
