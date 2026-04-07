@@ -1,5 +1,6 @@
 import { Award, Search, Lightbulb, TrendingUp, Brain, Shield, Check, LayoutGrid, Mic, MessageSquare, RotateCcw, Briefcase, Calendar, HelpCircle, BookOpen, Target, Repeat } from 'lucide-react';
 import { type LucideIcon } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface BadgeDef {
   id: string;
