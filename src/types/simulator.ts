@@ -121,6 +121,7 @@ export interface CompanyState {
   round_id: string;
   week_number: number;
   kpis: KPIs;
+  turbulence?: TurbulenceState;
 }
 
 export interface DecisionAnswer {
