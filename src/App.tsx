@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/context/AuthContext";
 import { LangProvider } from "@/context/LangContext";
 import { SimulatorProvider } from "@/context/SimulatorContext";
+import { ProgressProvider } from "@/context/ProgressContext";
 import ProfileGate from "@/components/layout/ProfileGate";
 import AdminRoute from "@/components/layout/AdminRoute";
 import Index from "./pages/Index";
