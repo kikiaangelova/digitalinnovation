@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
-import { supabase } from '@/integrations/supabase/client';
+import { useProgress } from '@/context/ProgressContext';
 import { useNavigate } from 'react-router-dom';
 import AppHeader from '@/components/layout/AppHeader';
 import { Progress } from '@/components/ui/progress';
@@ -258,12 +258,13 @@ export default function LearningJourney() {
   const navigate = useNavigate();
   const isMobile = useIsMobile();
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
+  const progress = useProgress();
 
-  const [casesCompleted, setCasesCompleted] = useState(0);
-  const [casesTotal, setCasesTotal] = useState(0);
-  const [startupProject, setStartupProject] = useState<any>(null);
-  const [simProgress, setSimProgress] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  // Derive local aliases from unified progress
+  const casesCompleted = progress.casesCompleted;
+  const casesTotal = progress.casesTotal;
+  const loading = progress.loading;
+
   // Track which stage cards are expanded; default: all expanded on desktop, all collapsed on mobile
   const [expanded, setExpanded] = useState<Set<number>>(new Set());
   const [initializedExpanded, setInitializedExpanded] = useState(false);
@@ -278,22 +279,7 @@ export default function LearningJourney() {
   }, [isMobile, initializedExpanded]);
 
   useEffect(() => {
-    if (authLoading) return;
-    if (!user) { navigate('/auth?redirect=/journey'); return; }
-    const fetchData = async () => {
-      const [casesRes, subsRes, projRes, simRes] = await Promise.all([
-        supabase.from('case_studies').select('id').eq('published', true),
-        supabase.from('submissions').select('case_study_id, is_draft').eq('user_id', user.id).eq('is_draft', false),
-        supabase.from('startup_projects').select('*').eq('user_id', user.id).maybeSingle(),
-        supabase.from('simulator_progress').select('current_week, is_complete').eq('user_id', user.id).maybeSingle(),
-      ]);
-      setCasesTotal((casesRes.data || []).length);
-      setCasesCompleted((subsRes.data || []).length);
-      setStartupProject(projRes.data || null);
-      setSimProgress(simRes.data || null);
-      setLoading(false);
-    };
-    fetchData();
+    if (!authLoading && !user) navigate('/auth?redirect=/journey');
   }, [user, authLoading, navigate]);
 
   const toggleExpand = (id: number) => {
@@ -304,8 +290,8 @@ export default function LearningJourney() {
     });
   };
 
-  /* ---- derive stage statuses ---- */
-  const sectionFilled = (key: string) => startupProject ? ((startupProject as any)[key] || '').trim().length > 20 : false;
+  /* ---- derive stage statuses from unified progress ---- */
+  const sectionFilled = (key: string) => progress.startupSectionMap[key] || false;
 
   function stageStatus(stage: Stage): StageStatus {
     if (stage.id === 1) {
@@ -319,7 +305,7 @@ export default function LearningJourney() {
         return 'not_started';
       }
       if (stage.id === 6) {
-        if (startupProject?.is_submitted) return 'completed';
+        if (progress.startupSubmitted) return 'completed';
         if (sectionFilled('final_pitch')) return 'in_progress';
         return 'not_started';
       }
