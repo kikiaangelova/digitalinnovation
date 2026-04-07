@@ -19,7 +19,7 @@ import ReactMarkdown from 'react-markdown';
 import { AutoTermTooltips } from '@/components/ui/term-tooltip';
 import {
   ArrowLeft, BookOpen, CheckCircle2, XCircle, Brain, Target,
-  Lightbulb, Rocket, Send, ChevronRight, FileText, Zap,
+  Lightbulb, Rocket, Send, ChevronRight, FileText, Zap, BarChart3,
 } from 'lucide-react';
 
 type Phase = 'theory' | 'quiz' | 'case_study' | 'analytical' | 'application' | 'results';
@@ -593,27 +593,23 @@ export default function LearningModulePlayer() {
             )}
 
             {/* Theory → Simulator CTA */}
-            {mod.sim_transition_en && (
-              <Card className="p-5 border-primary/20 bg-primary/5">
-                <div className="flex items-start gap-4">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 shrink-0">
-                    <Zap className="h-5 w-5 text-primary" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="text-sm font-semibold text-foreground mb-1">
-                      {t('Test in Simulator', 'Тествай в симулатора')}
-                    </h3>
-                    <p className="text-xs text-muted-foreground mb-3">
-                      {lang === 'bg' ? mod.sim_transition_bg : mod.sim_transition_en}
-                    </p>
-                    <Button size="sm" variant="outline" onClick={() => navigate('/simulator')}>
-                      <Rocket className="h-3.5 w-3.5 mr-1" />
-                      {t('Open Simulator', 'Отвори симулатора')}
-                    </Button>
-                  </div>
-                </div>
-              </Card>
-            )}
+            <div className="rounded-xl border border-border bg-card p-5 space-y-3">
+              <div className="flex items-center gap-2">
+                <BarChart3 className="h-5 w-5 text-primary" />
+                <span className="text-sm font-semibold text-foreground">
+                  {t('Test your strategy', 'Тествай стратегията си')}
+                </span>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                {t(
+                  `Apply ${lang === 'bg' ? mod.title_bg : mod.title_en} concepts in the startup simulator to see real strategic trade-offs.`,
+                  `Приложи концепциите от ${mod.title_bg} в симулатора, за да видиш реални стратегически компромиси.`
+                )}
+              </p>
+              <Button variant="outline" onClick={() => navigate('/simulator')} className="w-full">
+                {t('Open Simulator →', 'Отвори симулатора →')}
+              </Button>
+            </div>
 
             <div className="flex justify-between">
               <Button variant="outline" onClick={() => navigate('/learn')}>

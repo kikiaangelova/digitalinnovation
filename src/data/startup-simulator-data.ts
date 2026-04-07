@@ -77,8 +77,6 @@ export const SIM_WEEKS: SimWeek[] = [
     descEn: 'Define the problem your startup solves. The best startups solve real, urgent, and widespread problems.',
     descBg: 'Дефинирайте проблема, който вашият стартъп решава. Най-добрите стартъпи решават реални, неотложни и широко разпространени проблеми.',
     icon: '🎯',
-    theoryConceptEn: 'Product-Market Fit',
-    theoryConceptBg: 'Продуктово-пазарно съответствие',
     decisions: [
       {
         questionEn: 'How significant is the problem you are solving?',
@@ -140,8 +138,8 @@ export const SIM_WEEKS: SimWeek[] = [
     descEn: 'Choose the type of digital product you will build. Many successful startups combine multiple product types into one solution.',
     descBg: 'Изберете типа дигитален продукт, който ще създадете. Много успешни стартъпи комбинират множество типове продукти.',
     icon: '🛠️',
-    theoryConceptEn: 'Network Effects',
-    theoryConceptBg: 'Мрежови ефекти',
+    theoryConceptEn: 'Product-Market Fit',
+    theoryConceptBg: 'Продукт-пазар фит',
     decisions: [
       {
         questionEn: 'What type of digital product will you build? (Select all that apply)',
@@ -166,8 +164,8 @@ export const SIM_WEEKS: SimWeek[] = [
     descEn: 'Design how your startup will generate revenue. The best startups often combine multiple revenue streams to diversify risk.',
     descBg: 'Проектирайте как вашият стартъп ще генерира приходи. Най-добрите стартъпи често комбинират множество приходни потоци.',
     icon: '💰',
-    theoryConceptEn: 'Platform Business Models',
-    theoryConceptBg: 'Платформени бизнес модели',
+    theoryConceptEn: 'Customer Acquisition Cost',
+    theoryConceptBg: 'Цена за привличане на клиент',
     decisions: [
       {
         questionEn: 'How will your startup make money? (Select all that apply)',
@@ -193,8 +191,8 @@ export const SIM_WEEKS: SimWeek[] = [
     descEn: 'Choose how you will acquire customers and grow your startup. The best founders use a strategic mix of channels.',
     descBg: 'Изберете как ще привлечете клиенти и ще развиете стартъпа. Най-добрите основатели използват стратегически микс от канали.',
     icon: '📣',
-    theoryConceptEn: 'Customer Acquisition Cost',
-    theoryConceptBg: 'Цена за привличане на клиент (CAC)',
+    theoryConceptEn: 'Network Effects',
+    theoryConceptBg: 'Мрежови ефекти',
     decisions: [
       {
         questionEn: 'Which marketing channels will you use? (Select all that apply)',
