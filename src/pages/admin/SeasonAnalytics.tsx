@@ -1,6 +1,7 @@
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
 import { useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
+import { useLang } from '@/context/LangContext';
 import { useSimulator } from '@/context/SimulatorContext';
 import KPIDashboard from '@/components/simulator/KPIDashboard';
 import { Button } from '@/components/ui/button';
