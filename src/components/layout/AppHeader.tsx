@@ -100,11 +100,12 @@ export default function AppHeader() {
         <div className="container mx-auto flex items-center justify-between px-4 py-2.5">
           {/* Logo — always visible */}
           <Link to="/" className="flex items-center gap-2.5 shrink-0">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg sim-gradient">
+            <div className="flex h-7 w-7 md:h-8 md:w-8 items-center justify-center rounded-lg sim-gradient">
               <GraduationCap className="h-4 w-4 text-primary-foreground" />
             </div>
-            <span className="font-display font-bold text-foreground">
-              {t.appName}
+            <span className="font-display font-bold text-foreground text-sm md:text-base">
+              <span className="md:hidden">DigiInnov</span>
+              <span className="hidden md:inline">{t.appName}</span>
             </span>
           </Link>
 
@@ -131,10 +132,10 @@ export default function AppHeader() {
             {/* Lang toggle — styled as pill */}
             <button
               onClick={toggleLang}
-              className="flex items-center gap-1 px-2.5 py-1 rounded-full border border-border bg-muted/50 text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+              className="flex items-center gap-1 px-2.5 py-1 rounded-full border border-border bg-accent text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
               title={lang === 'en' ? 'Превключи на български' : 'Switch to English'}
             >
-              <Globe className="h-3 w-3" />
+              <Globe className="h-3 w-3 md:inline hidden" />
               {lang === 'en' ? 'BG' : 'EN'}
             </button>
 
@@ -228,14 +229,14 @@ export default function AppHeader() {
               </div>
             )}
 
-            {/* ─── Mobile: avatar circle (logged-in) or sign-in buttons (logged-out) ─── */}
+            {/* ─── Mobile: avatar circle (opens bottom sheet) or sign-in buttons ─── */}
             {user ? (
-              <Link
-                to="/profile"
-                className="md:hidden flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary text-xs font-bold uppercase shrink-0"
+              <button
+                onClick={() => setDrawerOpen(prev => !prev)}
+                className="md:hidden flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary text-sm font-bold uppercase shrink-0"
               >
                 {initials}
-              </Link>
+              </button>
             ) : (
               <div className="md:hidden flex items-center gap-1.5">
                 <Button variant="outline" size="sm" asChild>
