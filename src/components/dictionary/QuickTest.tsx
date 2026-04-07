@@ -353,6 +353,7 @@ export default function QuickTest() {
     setSavedResult({ score, xp: tier.xp, bonusXp, unlockedBadges, nextStep });
     setSaving(false);
     setPhase('results');
+    submittingRef.current = false;
   };
 
   // ─── SETUP PHASE ───
