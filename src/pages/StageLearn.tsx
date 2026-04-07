@@ -3,6 +3,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
 import { useProgress } from '@/context/ProgressContext';
 import { STAGE_LEARN_CONTENT } from '@/data/stage-learn-content';
+import { LEARNING_MODULES } from '@/data/learning-modules';
 import AppHeader from '@/components/layout/AppHeader';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
