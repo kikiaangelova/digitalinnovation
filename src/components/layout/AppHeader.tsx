@@ -66,7 +66,6 @@ export default function AppHeader() {
         { to: '/cases', icon: BookOpen, label: t.cases },
         { to: '/learn', icon: GraduationCap, label: lang === 'bg' ? 'Теория' : 'Learn' },
         { to: '/simulator', icon: Play, label: t.simulator },
-        { to: '/dictionary', icon: Book, label: t.dictionary },
       ]
     : [
         { to: '/dictionary', icon: Book, label: t.dictionary },
