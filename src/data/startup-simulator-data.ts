@@ -164,8 +164,8 @@ export const SIM_WEEKS: SimWeek[] = [
     descEn: 'Design how your startup will generate revenue. The best startups often combine multiple revenue streams to diversify risk.',
     descBg: 'Проектирайте как вашият стартъп ще генерира приходи. Най-добрите стартъпи често комбинират множество приходни потоци.',
     icon: '💰',
-    theoryConceptEn: 'Platform Business Models',
-    theoryConceptBg: 'Платформени бизнес модели',
+    theoryConceptEn: 'Customer Acquisition Cost',
+    theoryConceptBg: 'Цена за привличане на клиент',
     decisions: [
       {
         questionEn: 'How will your startup make money? (Select all that apply)',
