@@ -547,7 +547,7 @@ export default function LearningJourney() {
                   {!isLocked && (
                     <>
                       <div className="flex flex-wrap gap-2 mb-2">
-                        <Button variant="outline" size="sm" onClick={() => navigate(stage.learnPath)}>
+                        <Button variant="outline" size="sm" onClick={() => navigate(stage.moduleSlugs.length > 0 ? `/learn/${stage.moduleSlugs[0]}` : stage.learnPath)}>
                           <BookOpen className="h-3.5 w-3.5 mr-1" />{t('Stage Primer', 'Въведение')}
                         </Button>
                         {stage.moduleSlugs.map(slug => {
