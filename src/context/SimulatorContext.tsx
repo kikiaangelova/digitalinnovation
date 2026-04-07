@@ -175,10 +175,8 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
     let allAnswers = answers;
 
     if (crisisAnswers && Object.keys(crisisAnswers).length > 0) {
-      const { CRISIS_DECISIONS } = require('@/components/simulator/CrisisResponsePanel');
-      const crisisDecisionTemplates = CRISIS_DECISIONS as import('@/types/simulator').DecisionTemplate[];
-      allDecisions = [...round.decisions, ...crisisDecisionTemplates];
-      const crisisAnswerList: import('@/types/simulator').DecisionAnswer[] = Object.entries(crisisAnswers).map(([id, answer]) => ({
+      allDecisions = [...round.decisions, ...CRISIS_DECISIONS];
+      const crisisAnswerList: DecisionAnswer[] = Object.entries(crisisAnswers).map(([id, answer]) => ({
         decision_template_id: id,
         answer,
       }));
