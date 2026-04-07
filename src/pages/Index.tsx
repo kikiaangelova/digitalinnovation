@@ -85,10 +85,10 @@ const Index = () => {
           </div>
 
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-display font-bold text-foreground mb-4 leading-[1.1]">
-            {lang === 'en' ? 'Build Your Startup While' : 'Създай собствен стартъп и'}
+            {t.heroLine1}
             <br />
             <span className="sim-gradient-text">
-              {lang === 'en' ? 'Learning Digital Innovation' : 'научи дигитални иновации'}
+              {t.heroLine2}
             </span>
           </h1>
 
@@ -96,9 +96,7 @@ const Index = () => {
             {t.heroAudience}
           </p>
           <p className="text-lg sm:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
-            {lang === 'en'
-              ? 'Analyze real business cases, build your startup idea, and test your strategy in a startup simulator.'
-              : 'Анализирай реални бизнес казуси, създай своя стартъп идея и тествай стратегията си в симулатор.'}
+            {t.heroDescriptionLine}
           </p>
 
           {/* Social proof */}
