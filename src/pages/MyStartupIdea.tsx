@@ -328,8 +328,10 @@ export default function MyStartupIdea() {
     }
   };
 
-  const filledCount = SECTIONS.filter(s => ((data as any)[s.key] || '').trim().length > 20).length;
+  const sectionCompletion = SECTIONS.map(s => ((data as any)[s.key] || '').trim().length > 20);
+  const filledCount = sectionCompletion.filter(Boolean).length;
   const progressPercent = Math.round((filledCount / SECTIONS.length) * 100);
+  const allComplete = filledCount === SECTIONS.length;
 
   if (loading) {
     return (
