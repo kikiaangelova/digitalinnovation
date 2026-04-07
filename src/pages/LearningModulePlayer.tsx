@@ -22,7 +22,7 @@ import {
   Lightbulb, Rocket, Send, ChevronRight, FileText, Zap, BarChart3,
 } from 'lucide-react';
 
-type Phase = 'theory' | 'quiz' | 'case_study' | 'analytical' | 'application' | 'results';
+type Phase = 'theory' | 'quiz' | 'case_study' | 'sim_decision' | 'analytical' | 'application' | 'results';
 
 export default function LearningModulePlayer() {
   const { slug } = useParams<{ slug: string }>();
