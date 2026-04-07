@@ -11,9 +11,10 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import {
   BookOpen, Search, Lightbulb, Palette, TrendingUp, Presentation,
   CheckCircle2, ArrowRight, Lock, Play, FileText, Rocket,
-  ChevronDown, ChevronUp, GraduationCap, Target, Clock, Zap, Circle,
+  ChevronDown, ChevronUp, GraduationCap, Target, Clock, Zap, Circle, Brain,
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { LEARNING_MODULES } from '@/data/learning-modules';
 
 /* ------------------------------------------------------------------ */
 /* Learning outcomes per stage                                         */
@@ -96,6 +97,7 @@ interface Stage {
   casePath: string;
   simPath: string;
   startupKey?: string;
+  moduleSlugs: string[]; // mapped Learn module slugs
 }
 
 const STAGES: Stage[] = [
@@ -107,6 +109,7 @@ const STAGES: Stage[] = [
     milestoneEn: 'Complete introductory case study',
     milestoneBg: 'Завърши уводния казус',
     learnPath: '/journey/learn/1', casePath: '/cases', simPath: '/simulator',
+    moduleSlugs: ['network-effects', 'platform-business-models'],
   },
   {
     id: 2, icon: Search,
@@ -117,6 +120,7 @@ const STAGES: Stage[] = [
     milestoneBg: 'Подай анализ на възможностите',
     learnPath: '/journey/learn/2', casePath: '/cases', simPath: '/simulator',
     startupKey: 'problem',
+    moduleSlugs: ['digital-ecosystems'],
   },
   {
     id: 3, icon: Lightbulb,
@@ -127,6 +131,7 @@ const STAGES: Stage[] = [
     milestoneBg: 'Подай стойностно предложение',
     learnPath: '/journey/learn/3', casePath: '/cases', simPath: '/simulator',
     startupKey: 'value_proposition',
+    moduleSlugs: ['customer-acquisition-cost', 'product-market-fit'],
   },
   {
     id: 4, icon: Palette,
@@ -137,6 +142,7 @@ const STAGES: Stage[] = [
     milestoneBg: 'Подай MVP дизайн',
     learnPath: '/journey/learn/4', casePath: '/cases', simPath: '/simulator',
     startupKey: 'digital_product',
+    moduleSlugs: ['marketing-fundamentals', 'pricing-and-revenue'],
   },
   {
     id: 5, icon: TrendingUp,
@@ -147,6 +153,7 @@ const STAGES: Stage[] = [
     milestoneBg: 'Подай бизнес модел и маркетинг',
     learnPath: '/journey/learn/5', casePath: '/cases', simPath: '/simulator',
     startupKey: 'business_model',
+    moduleSlugs: ['operations-fundamentals', 'supply-chain-basics'],
   },
   {
     id: 6, icon: Presentation,
@@ -157,6 +164,7 @@ const STAGES: Stage[] = [
     milestoneBg: 'Подай финално стартъп представяне',
     learnPath: '/journey/learn/6', casePath: '/cases', simPath: '/simulator',
     startupKey: 'final_pitch',
+    moduleSlugs: ['team-and-roles'],
   },
 ];
 
@@ -226,9 +234,12 @@ export default function LearningJourney() {
   }
 
   function getStageChecklist(stage: Stage, idx: number): ChecklistItem[] {
-    const learnDone = progress.stageLearnCompleted.has(stage.id);
+    // Learn is done when ALL mapped modules are completed OR stage learn is marked complete (fallback for stages with no modules)
+    const modulesDone = stage.moduleSlugs.length > 0
+      ? stage.moduleSlugs.every(slug => progress.completedModuleSlugs.has(slug))
+      : progress.stageLearnCompleted.has(stage.id);
     const items: ChecklistItem[] = [
-      { labelEn: 'Learn', labelBg: 'Учи', done: learnDone },
+      { labelEn: `Learn (${stage.moduleSlugs.length > 0 ? stage.moduleSlugs.filter(s => progress.completedModuleSlugs.has(s)).length + '/' + stage.moduleSlugs.length + ' modules' : 'primer'})`, labelBg: `Учи (${stage.moduleSlugs.length > 0 ? stage.moduleSlugs.filter(s => progress.completedModuleSlugs.has(s)).length + '/' + stage.moduleSlugs.length + ' модула' : 'въведение'})`, done: modulesDone },
     ];
 
     // Case study: Stage 1 requires ≥1 completed, Stage 2 requires ≥2
@@ -510,10 +521,29 @@ export default function LearningJourney() {
                   {/* Action buttons — only for unlocked stages */}
                   {!isLocked && (
                     <>
-                      <div className="flex flex-wrap gap-2 mb-3">
+                      <div className="flex flex-wrap gap-2 mb-2">
                         <Button variant="outline" size="sm" onClick={() => navigate(stage.learnPath)}>
-                          <BookOpen className="h-3.5 w-3.5 mr-1" />{t('Learn', 'Учи')}
+                          <BookOpen className="h-3.5 w-3.5 mr-1" />{t('Stage Primer', 'Въведение')}
                         </Button>
+                        {stage.moduleSlugs.map(slug => {
+                          const mod = LEARNING_MODULES.find(m => m.slug === slug);
+                          if (!mod) return null;
+                          const isDone = progress.completedModuleSlugs.has(slug);
+                          return (
+                            <Button
+                              key={slug}
+                              variant={isDone ? 'ghost' : 'outline'}
+                              size="sm"
+                              className={isDone ? 'text-success' : ''}
+                              onClick={() => navigate(`/learn/${slug}`)}
+                            >
+                              {isDone ? <CheckCircle2 className="h-3.5 w-3.5 mr-1" /> : <Brain className="h-3.5 w-3.5 mr-1" />}
+                              {lang === 'bg' ? mod.title_bg : mod.title_en}
+                            </Button>
+                          );
+                        })}
+                      </div>
+                      <div className="flex flex-wrap gap-2 mb-3">
                         <Button variant="outline" size="sm" onClick={() => navigate(stage.casePath)}>
                           <FileText className="h-3.5 w-3.5 mr-1" />{t('Case Study', 'Казус')}
                         </Button>
