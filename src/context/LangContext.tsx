@@ -55,17 +55,13 @@ const translations = {
     readyToInnovate: 'Ready to Innovate?',
     readyToInnovateDesc: 'Join the Digital Innovation Lab and start building your future today.',
 
-    // Hero audience toggle
-    heroHeadlineStudent1: 'Build Your Startup While',
-    heroHeadlineStudent2: 'Learning Digital Innovation',
-    heroHeadlineTeacher1: 'Teach Innovation With',
-    heroHeadlineTeacher2: 'Real Business Simulations',
-    heroDescStudent: 'Analyze real business cases, build your startup idea, and test your strategy in a startup simulator.',
-    heroDescTeacher: 'Give your students hands-on experience with case studies, a business simulator, and gamified learning — all in one platform.',
-    heroCtaTeacher: 'Request a Demo',
-    iAmStudent: 'I\'m a Student',
-    iAmTeacher: 'I\'m a Teacher',
+    // Hero
+    heroLine1: 'You have an idea.',
+    heroLine2: 'Let\'s build it together.',
+    heroDescriptionLine: 'Analyze real business cases, build your startup idea, and test your strategy in a startup simulator.',
     areYouTeacher: 'Are you a teacher?',
+    testimonial1: 'I built a business plan for a sustainable sneaker brand in just 3 weeks.',
+    testimonial2: 'The simulator made me think like a real founder, not just a student.',
 
     // Dictionary section on landing
     dictBadge: 'Business Dictionary',
@@ -422,17 +418,13 @@ const translations = {
     readyToInnovate: 'Готов ли си да иновираш?',
     readyToInnovateDesc: 'Присъедини се към лабораторията за дигитални иновации и започни да градиш бъдещето си днес.',
 
-    // Hero audience toggle
-    heroHeadlineStudent1: 'Създай собствен стартъп и',
-    heroHeadlineStudent2: 'научи дигитални иновации',
-    heroHeadlineTeacher1: 'Преподавай иновации с',
-    heroHeadlineTeacher2: 'реални бизнес симулации',
-    heroDescStudent: 'Анализирай реални бизнес казуси, създай своя стартъп идея и тествай стратегията си в симулатор.',
-    heroDescTeacher: 'Дай на учениците си практически опит с казуси, бизнес симулатор и геймифицирано обучение — всичко на едно място.',
-    heroCtaTeacher: 'Заяви демо',
-    iAmStudent: 'Аз съм ученик',
-    iAmTeacher: 'Аз съм учител',
-    areYouTeacher: 'Вие сте преподавател?',
+    // Hero
+    heroLine1: 'Имаш идея.',
+    heroLine2: 'Нека я изградим заедно.',
+    heroDescriptionLine: 'Анализирай реални бизнес казуси, създай своя стартъп идея и тествай стратегията си в симулатор.',
+    areYouTeacher: 'Учител си?',
+    testimonial1: 'Изградих бизнес план за устойчива марка маратонки само за 3 седмици.',
+    testimonial2: 'Симулаторът ме накара да мисля като истински предприемач.',
 
     // Dictionary section on landing
     dictBadge: 'Бизнес речник',
