@@ -302,10 +302,56 @@ export default function StartupSimulator() {
               ))}
             </div>
 
-            <Button size="lg" onClick={() => setPhase('playing')}>
-              <Play className="h-4 w-4 mr-2" />
-              {t('Start Simulation', 'Стартирай симулацията')}
-            </Button>
+            {/* Session-aware CTAs */}
+            {hasInProgressSession ? (
+              <div className="space-y-3">
+                <div className="rounded-xl border border-primary/30 bg-primary/5 p-4 max-w-md mx-auto text-left">
+                  <div className="flex items-center gap-3 mb-2">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+                      <BarChart3 className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-foreground">
+                        {t('Simulation in progress', 'Симулация в процес')}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {t(`Step ${inProgressStep} of ${SIM_WEEKS.length} completed`, `Стъпка ${inProgressStep} от ${SIM_WEEKS.length} завършена`)}
+                      </p>
+                    </div>
+                  </div>
+                  <Progress value={(inProgressStep / SIM_WEEKS.length) * 100} className="h-1.5" />
+                </div>
+                <div className="flex items-center justify-center gap-3">
+                  <Button size="lg" onClick={() => setPhase('playing')}>
+                    <Play className="h-4 w-4 mr-2" />
+                    {t('Resume Simulation', 'Продължи симулацията')}
+                  </Button>
+                  <Button size="lg" variant="outline" onClick={reset}>
+                    <RotateCcw className="h-4 w-4 mr-2" />
+                    {t('Start New', 'Започни нова')}
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <Button size="lg" onClick={() => setPhase('playing')}>
+                <Play className="h-4 w-4 mr-2" />
+                {t('Start Simulation', 'Стартирай симулацията')}
+              </Button>
+            )}
+
+            {/* Last completed score */}
+            {lastCompletedScore && !hasInProgressSession && (
+              <div className="mt-4 rounded-xl border border-border bg-card p-4 max-w-sm mx-auto">
+                <p className="text-xs text-muted-foreground mb-1">{t('Last Result', 'Последен резултат')}</p>
+                <div className="flex items-center justify-center gap-3">
+                  <span className="text-3xl font-bold text-primary">{lastCompletedScore.score}</span>
+                  <span className="text-sm text-muted-foreground">/100</span>
+                  {lastCompletedScore.grade && (
+                    <Badge variant="outline" className="text-sm">{lastCompletedScore.grade}</Badge>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="space-y-2 mt-4">
