@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
 import { useProgress } from '@/context/ProgressContext';
@@ -7,15 +7,17 @@ import AppHeader from '@/components/layout/AppHeader';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { useIsMobile } from '@/hooks/use-mobile';
 import {
   BookOpen, Search, Lightbulb, Palette, TrendingUp, Presentation,
   CheckCircle2, ArrowRight, Lock, Play, FileText, Rocket,
-  ChevronDown, ChevronUp, GraduationCap, Target, Clock, Zap, Circle, Brain,
+  ChevronDown, ChevronUp, GraduationCap, Target, Clock, Zap, Circle, Brain, PartyPopper,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { LEARNING_MODULES } from '@/data/learning-modules';
 import PhaseBadge from '@/components/ui/phase-badge';
+import confetti from 'canvas-confetti';
 
 /* ------------------------------------------------------------------ */
 /* Learning outcomes per stage                                         */
