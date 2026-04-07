@@ -24,6 +24,47 @@ export default function SeasonView() {
   const latestState = participantId ? getLatestCompanyState(participantId) : null;
   const team = simulatorMode === 'team' ? getTeamForSeason(season.id) : null;
 
+  const simComplete = participantId
+    ? season.rounds.every(r => !!getSubmission(participantId, r.id))
+    : false;
+
+  const stateHistory = participantId ? getCompanyStateHistory(participantId) : [];
+  const startKpis: KPIs = stateHistory.length > 0
+    ? stateHistory[0].kpis
+    : (season.rounds[0]?.baseline_kpis || {} as KPIs);
+  const finalKpis: KPIs = latestState?.kpis || startKpis;
+
+  const journeySummary = useMemo(() => {
+    if (!participantId) return [];
+    return season.rounds.map(round => {
+      const sub = getSubmission(participantId, round.id);
+      const report = getOutcomeReport(participantId, round.id);
+      const decisions = (sub?.answers || []).map(a => {
+        const tmpl = round.decisions.find(d => d.id === a.decision_template_id);
+        const chosen = tmpl?.options.find(o => o.id === a.answer);
+        return { title: tmpl?.title || '', chosenOption: chosen?.label || a.answer };
+      });
+      const changes = report?.kpi_changes || {};
+      let topPos = '';
+      let topNeg = '';
+      let bestDelta = 0;
+      let worstDelta = 0;
+      Object.entries(changes).forEach(([key, val]) => {
+        if (!val) return;
+        const dir = KPI_DIRECTIONS[key as keyof KPIs];
+        const effective = dir === 'down' ? -val.delta : val.delta;
+        if (effective > bestDelta) { bestDelta = effective; topPos = key; }
+        if (effective < worstDelta) { worstDelta = effective; topNeg = key; }
+      });
+      return {
+        weekNumber: round.week_number,
+        decisions,
+        topPositiveKpi: topPos || 'revenue',
+        topNegativeKpi: topNeg || 'burn_rate',
+      };
+    });
+  }, [participantId, season.rounds, getSubmission, getOutcomeReport]);
+
   const copyCode = () => {
     if (team) {
       navigator.clipboard.writeText(team.join_code);
