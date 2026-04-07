@@ -1,11 +1,11 @@
 /**
  * Bilingual learning content for each of the 6 Journey stages.
- * Each stage follows a structured lesson format:
- *   1. Introduction
- *   2. Key Concepts (with examples)
- *   3. Framework / Model
- *   4. Real-World Example
- *   5. Key Takeaways
+ * Every stage follows a standardized 5-section structure:
+ *   1. Introduction (why this matters)
+ *   2. Key Concepts (3–5 bullets explained clearly)
+ *   3. Framework (step-by-step thinking model)
+ *   4. Example (real or simplified case)
+ *   5. Quick Recap (3 key takeaways)
  */
 
 export interface LearnSection {
@@ -33,127 +33,141 @@ export const STAGE_LEARN_CONTENT: StageLearnData[] = [
     titleBg: 'Основи на дигиталните иновации',
     subtitleEn: 'Understand what digital innovation is, why it matters, and how technology transforms industries.',
     subtitleBg: 'Разбери какво е дигитална иновация, защо е важна и как технологиите трансформират индустриите.',
-    readMinutes: 8,
+    readMinutes: 6,
     sections: [
       {
-        titleEn: 'What is Digital Innovation?',
-        titleBg: 'Какво е дигитална иновация?',
-        bodyEn: `Digital innovation is the process of using **digital technologies** to create new — or improve existing — products, services, or business models.
+        titleEn: 'Why This Matters',
+        titleBg: 'Защо е важно',
+        bodyEn: `Every industry is being reshaped by technology. Companies that don't innovate get replaced — Kodak, Blockbuster, and Nokia all learned this the hard way.
 
-It's not just about adding technology. It's about **rethinking how value is created and delivered**.
+Understanding digital innovation isn't just for tech founders. Whether you work in healthcare, education, retail, or finance, **the ability to spot opportunities and think digitally is a must-have skill**.
 
-**Examples:**
-- **Netflix** didn't just put movies online — it reinvented how entertainment is distributed and consumed.
-- **Uber** didn't invent taxis — it reimagined urban transportation through a smartphone app.
-- **Duolingo** didn't create new language content — it gamified learning and made it free.
+> 💡 This stage gives you the vocabulary and mindset to see the world through an innovator's lens.`,
+        bodyBg: `Всяка индустрия се преобразява от технологиите. Компаниите, които не иновират, биват заменени — Kodak, Blockbuster и Nokia научиха това по трудния начин.
 
-> 💡 Digital innovation = Technology + New Value Creation`,
-        bodyBg: `Дигиталната иновация е процесът на използване на **дигитални технологии** за създаване на нови — или подобряване на съществуващи — продукти, услуги или бизнес модели.
+Разбирането на дигиталната иновация не е само за технологични основатели. Независимо дали работиш в здравеопазването, образованието, търговията или финансите, **способността да откриваш възможности и да мислиш дигитално е задължително умение**.
 
-Не става само за добавяне на технология. Става за **преосмисляне как се създава и доставя стойност**.
-
-**Примери:**
-- **Netflix** не просто сложи филми онлайн — преоткри как се разпространява и консумира забавлението.
-- **Uber** не изобрети таксита — преосмисли градския транспорт чрез мобилно приложение.
-- **Duolingo** не създаде ново езиково съдържание — геймифицира ученето и го направи безплатно.
-
-> 💡 Дигитална иновация = Технология + Ново създаване на стойност`,
+> 💡 Този етап ти дава речника и мисленето, за да гледаш света през призмата на иноватор.`,
       },
       {
-        titleEn: '3 Types of Digital Disruption',
-        titleBg: '3 вида дигитална дисрупция',
-        bodyEn: `Not all disruption is the same. Clayton Christensen identified three patterns:
+        titleEn: 'Key Concepts',
+        titleBg: 'Ключови понятия',
+        bodyEn: `**1. Digital Innovation ≠ Just Adding Technology**
+It's about **rethinking how value is created and delivered**. Netflix didn't just put movies online — it reinvented entertainment distribution.
 
-**1. Sustaining Innovation**
-Improves existing products for current customers.
-- *Example:* Apple adding Face ID to iPhones.
+**2. Three Types of Disruption**
+- **Sustaining** — Improves existing products (e.g., Apple adding Face ID)
+- **Low-End** — "Good enough" at a fraction of the price (e.g., Xiaomi smartphones)
+- **New-Market** — Creates a category where none existed (e.g., Airbnb)
 
-**2. Low-End Disruption**
-Offers a "good enough" product at a much lower price.
-- *Example:* Xiaomi offering smartphones at 1/3 the price of Samsung.
+**3. Innovation Signals**
+Look for: manual processes that could be automated, information that's hard to access, services that are expensive but don't need to be, and industries unchanged for 20+ years.
 
-**3. New-Market Disruption**
-Creates an entirely new market where none existed before.
-- *Example:* Airbnb turned spare rooms into a global hospitality network.
+**4. Value Creation Is the Goal**
+Technology is the tool, not the goal. The question is always: *"Does this make something 10x better, cheaper, or more accessible?"*`,
+        bodyBg: `**1. Дигитална иновация ≠ Просто добавяне на технология**
+Става дума за **преосмисляне как се създава и доставя стойност**. Netflix не просто сложи филми онлайн — преоткри разпространението на забавление.
 
-| Type | Target | Strategy |
-|------|--------|----------|
-| Sustaining | Existing customers | Better features |
-| Low-End | Price-sensitive users | Simpler & cheaper |
-| New-Market | Non-consumers | New category |`,
-        bodyBg: `Не всяка дисрупция е еднаква. Клейтън Кристенсен идентифицира три модела:
+**2. Три типа дисрупция**
+- **Поддържаща** — Подобрява съществуващи продукти (напр. Apple добавя Face ID)
+- **Нискобюджетна** — „Достатъчно добра" на малка част от цената (напр. смартфони Xiaomi)
+- **На нов пазар** — Създава категория, където преди нямаше (напр. Airbnb)
 
-**1. Поддържаща иновация**
-Подобрява съществуващи продукти за настоящите клиенти.
-- *Пример:* Apple добавя Face ID към iPhone.
+**3. Сигнали за иновация**
+Търси: ръчни процеси, които могат да се автоматизират, информация трудна за достъп, услуги скъпи без причина и индустрии непроменени от 20+ години.
 
-**2. Нискобюджетна дисрупция**
-Предлага „достатъчно добър" продукт на много по-ниска цена.
-- *Пример:* Xiaomi предлага смартфони на 1/3 от цената на Samsung.
-
-**3. Дисрупция на нов пазар**
-Създава изцяло нов пазар, където преди не е имало такъв.
-- *Пример:* Airbnb превърна свободните стаи в глобална мрежа за настаняване.
-
-| Тип | Целева група | Стратегия |
-|-----|-------------|-----------|
-| Поддържаща | Настоящи клиенти | По-добри функции |
-| Нискобюджетна | Чувствителни към цената | По-просто и евтино |
-| Нов пазар | Не-потребители | Нова категория |`,
+**4. Целта е създаване на стойност**
+Технологията е инструментът, не целта. Въпросът винаги е: *„Прави ли това нещо 10 пъти по-добро, по-евтино или по-достъпно?"*`,
       },
       {
-        titleEn: 'How to Spot Innovation Opportunities',
-        titleBg: 'Как да откриеш иновационни възможности',
-        bodyEn: `Every industry has pain points waiting for a digital solution. Here's a simple framework:
+        titleEn: 'Framework: Pain → Technology → Market',
+        titleBg: 'Рамка: Болка → Технология → Пазар',
+        bodyEn: `Use this 3-step model to evaluate any innovation opportunity:
 
-**The Pain-Technology-Market (PTM) Framework:**
+**Step 1 — Identify the Pain** 🎯
+What frustrates people? What's slow, expensive, or inaccessible?
+- Ask: *"What do people complain about in this industry?"*
 
-1. **Pain** — What frustrates people? What's slow, expensive, or inaccessible?
-2. **Technology** — What digital tools could solve it? (AI, mobile, cloud, IoT, blockchain)
-3. **Market** — Are enough people willing to pay for the solution?
+**Step 2 — Match with Technology** 🔧
+Which digital tools could solve the pain? (AI, mobile apps, cloud, IoT, blockchain)
+- Ask: *"What technology exists today that didn't exist 5 years ago?"*
 
-**Exercise:** Think about your daily life. What's something you do that feels outdated or frustrating? Could technology make it 10x better?
+**Step 3 — Validate the Market** 📊
+Are enough people willing to pay for the solution?
+- Ask: *"How many people have this problem? Would they switch from their current solution?"*
 
-**Signs of an innovation opportunity:**
-- ❌ Manual processes that could be automated
-- ❌ Information that's hard to access or compare
-- ❌ Services that are expensive but don't need to be
-- ❌ Industries that haven't changed in 20+ years`,
-        bodyBg: `Всяка индустрия има болки, които чакат дигитално решение. Ето проста рамка:
+> ⚡ If all three align — Pain + Technology + Market — you have a genuine innovation opportunity.`,
+        bodyBg: `Използвай този 3-стъпков модел, за да оцениш всяка иновационна възможност:
 
-**Рамка Болка-Технология-Пазар (БТП):**
+**Стъпка 1 — Идентифицирай болката** 🎯
+Какво разочарова хората? Какво е бавно, скъпо или недостъпно?
+- Попитай: *„От какво се оплакват хората в тази индустрия?"*
 
-1. **Болка** — Какво разочарова хората? Какво е бавно, скъпо или недостъпно?
-2. **Технология** — Кои дигитални инструменти могат да го решат? (AI, мобилни, облак, IoT, блокчейн)
-3. **Пазар** — Достатъчно хора ли са готови да платят за решението?
+**Стъпка 2 — Съпостави с технология** 🔧
+Кои дигитални инструменти могат да решат болката? (AI, мобилни приложения, облак, IoT, блокчейн)
+- Попитай: *„Каква технология съществува днес, която не съществуваше преди 5 години?"*
 
-**Упражнение:** Помисли за ежедневието си. Какво правиш, което ти се струва остаряло или разочароващо? Може ли технологията да го направи 10 пъти по-добро?
+**Стъпка 3 — Валидирай пазара** 📊
+Достатъчно хора ли са готови да платят за решението?
+- Попитай: *„Колко хора имат този проблем? Биха ли сменили текущото си решение?"*
 
-**Признаци на иновационна възможност:**
-- ❌ Ръчни процеси, които могат да бъдат автоматизирани
-- ❌ Информация, която е трудна за достъп или сравнение
-- ❌ Услуги, които са скъпи, но не е задължително
-- ❌ Индустрии, които не са се променили от 20+ години`,
+> ⚡ Ако и трите се подреждат — Болка + Технология + Пазар — имаш истинска иновационна възможност.`,
       },
       {
-        titleEn: 'Key Takeaways',
-        titleBg: 'Ключови изводи',
-        bodyEn: `✅ Digital innovation is about **creating new value**, not just adding technology.
+        titleEn: 'Example: Duolingo',
+        titleBg: 'Пример: Duolingo',
+        bodyEn: `Let's see the PTM framework in action:
 
-✅ Disruption comes in three flavors: **sustaining, low-end, and new-market**.
+**Pain:** Learning a language is expensive (tutors cost $30–60/hr) and boring (textbooks). Most people give up after a few weeks.
 
-✅ Opportunities exist where there's **pain + available technology + willing market**.
+**Technology:** Smartphones are everywhere. Gamification mechanics (points, streaks, leaderboards) are proven to boost engagement. AI can personalize lesson difficulty.
 
-✅ The best innovations make something **10x better, cheaper, or more accessible**.
+**Market:** 1.5 billion people are actively learning a language worldwide. Most can't afford traditional methods.
+
+**Result:** Duolingo built a free, gamified mobile app that adapts to each learner. Today it has 500M+ users and is worth over $7 billion.
+
+| PTM Check | Duolingo |
+|-----------|----------|
+| Pain | Language learning is expensive & boring |
+| Technology | Mobile + gamification + AI |
+| Market | 1.5B language learners globally |
+| Disruption type | New-market (made learning free) |`,
+        bodyBg: `Нека видим рамката БТП в действие:
+
+**Болка:** Изучаването на език е скъпо (частни уроци струват $30–60/час) и скучно (учебници). Повечето хора се отказват след няколко седмици.
+
+**Технология:** Смартфоните са навсякъде. Механиките за геймификация (точки, серии, класации) доказано увеличават ангажираността. AI може да персонализира трудността на урока.
+
+**Пазар:** 1,5 милиарда души активно учат език по света. Повечето не могат да си позволят традиционни методи.
+
+**Резултат:** Duolingo създаде безплатно, геймифицирано мобилно приложение, което се адаптира към всеки учащ. Днес има 500M+ потребители и е на стойност над $7 милиарда.
+
+| БТП проверка | Duolingo |
+|-------------|----------|
+| Болка | Изучаването на език е скъпо и скучно |
+| Технология | Мобилно + геймификация + AI |
+| Пазар | 1,5 милиарда учащи езици глобално |
+| Тип дисрупция | На нов пазар (направи ученето безплатно) |`,
+      },
+      {
+        titleEn: 'Quick Recap',
+        titleBg: 'Бърз преговор',
+        bodyEn: `**3 things to remember:**
+
+✅ Digital innovation is about **creating new value**, not just adding tech — ask *"Does this make something 10x better?"*
+
+✅ Disruption comes in three forms: **sustaining, low-end, and new-market** — each requires a different strategy.
+
+✅ Use the **Pain → Technology → Market** framework to evaluate any opportunity before you build.
 
 **Next step:** Complete your first case study to see real digital innovation in action →`,
-        bodyBg: `✅ Дигиталната иновация е за **създаване на нова стойност**, а не просто добавяне на технология.
+        bodyBg: `**3 неща за запомняне:**
 
-✅ Дисрупцията идва в три форми: **поддържаща, нискобюджетна и на нов пазар**.
+✅ Дигиталната иновация е за **създаване на нова стойност**, не просто добавяне на технология — питай *„Прави ли това нещо 10 пъти по-добро?"*
 
-✅ Възможности съществуват където има **болка + налична технология + готов пазар**.
+✅ Дисрупцията идва в три форми: **поддържаща, нискобюджетна и на нов пазар** — всяка изисква различна стратегия.
 
-✅ Най-добрите иновации правят нещо **10 пъти по-добро, по-евтино или по-достъпно**.
+✅ Използвай рамката **Болка → Технология → Пазар**, за да оцениш всяка възможност, преди да строиш.
 
 **Следваща стъпка:** Завърши първия си казус, за да видиш реална дигитална иновация в действие →`,
       },
@@ -167,201 +181,185 @@ Creates an entirely new market where none existed before.
     titleBg: 'Анализ на индустрията и конкуренцията',
     subtitleEn: 'Learn to map competitive landscapes and identify what makes digital businesses defensible.',
     subtitleBg: 'Научи се да картографираш конкурентни среди и да идентифицираш какво прави дигиталните бизнеси защитими.',
-    readMinutes: 10,
+    readMinutes: 7,
     sections: [
       {
-        titleEn: 'Mapping the Competitive Landscape',
-        titleBg: 'Картографиране на конкурентната среда',
-        bodyEn: `Before building anything, you need to understand **who else is solving the same problem** — and how well they're doing it.
+        titleEn: 'Why This Matters',
+        titleBg: 'Защо е важно',
+        bodyEn: `Building a product without understanding the competition is like entering a race blindfolded. You might run fast, but you'll probably hit a wall.
 
-A competitive landscape map helps you find gaps and position your idea.
+**Competitor analysis helps you:**
+- Find gaps no one is filling
+- Avoid building something that already exists
+- Position your product so it stands out
+- Build defenses that keep copycats away
 
-**Three types of competitors:**
+> 🎯 The goal isn't to be scared of competitors — it's to **outsmart** them by understanding the landscape.`,
+        bodyBg: `Създаването на продукт без разбиране на конкуренцията е като да влезеш в състезание със завързани очи. Може да бягаш бързо, но вероятно ще се блъснеш в стена.
 
-| Type | Definition | Example (for a food delivery app) |
-|------|-----------|-----------------------------------|
+**Анализът на конкуренцията ти помага да:**
+- Намериш пропуски, които никой не запълва
+- Избегнеш създаването на нещо, което вече съществува
+- Позиционираш продукта си, за да се отличава
+- Изградиш защити, които държат копирачите далеч
+
+> 🎯 Целта не е да се страхуваш от конкуренти — а да ги **надхитриш**, като разбереш средата.`,
+      },
+      {
+        titleEn: 'Key Concepts',
+        titleBg: 'Ключови понятия',
+        bodyEn: `**1. Three Types of Competitors**
+
+| Type | Definition | Example (food delivery) |
+|------|-----------|------------------------|
 | **Direct** | Same product, same market | Uber Eats, DoorDash |
-| **Indirect** | Different product, same need | Restaurant takeout, meal kits |
+| **Indirect** | Different product, same need | Meal kits, restaurant takeout |
 | **Substitutes** | Alternative way to solve the need | Cooking at home, eating out |
 
-> 🎯 Your startup doesn't compete only with similar apps — it competes with **every way customers currently solve their problem**.
+**2. SWOT Analysis**
+Evaluate any company (including yours) across four dimensions:
+- **S**trengths — What you do well (internal)
+- **W**eaknesses — Where you're limited (internal)
+- **O**pportunities — Market trends in your favor (external)
+- **T**hreats — Risks and competitors (external)
 
-**How to research competitors:**
-1. Google the problem (not the solution)
-2. Check app stores and Product Hunt
-3. Read customer reviews — what do they complain about?
-4. Look at competitor pricing and features`,
-        bodyBg: `Преди да създаваш каквото и да е, трябва да разбереш **кой друг решава същия проблем** — и колко добре го прави.
+**3. Competitive Moats**
+Four ways digital businesses stay defensible:
+- 🌐 **Network effects** — More users = better product (Instagram)
+- 🔒 **Switching costs** — Painful to leave (Slack)
+- 📊 **Data advantage** — More data = smarter product (Spotify)
+- 💎 **Brand trust** — People pay premium for trust (Apple)
 
-Картата на конкурентната среда ти помага да намериш пропуски и да позиционираш идеята си.
+**4. Porter's Five Forces (Simplified)**
+Assess industry attractiveness by checking: rivalry intensity, threat of new entrants, threat of substitutes, buyer power, and supplier power.`,
+        bodyBg: `**1. Три типа конкуренти**
 
-**Три типа конкуренти:**
-
-| Тип | Определение | Пример (за приложение за доставка на храна) |
-|-----|-----------|---------------------------------------------|
+| Тип | Определение | Пример (доставка на храна) |
+|-----|-----------|--------------------------|
 | **Преки** | Същият продукт, същият пазар | Uber Eats, DoorDash |
-| **Непреки** | Различен продукт, същата нужда | Ресторантска храна за вкъщи, кутии с рецепти |
-| **Заместители** | Алтернативен начин за задоволяване на нуждата | Готвене у дома, хранене навън |
+| **Непреки** | Различен продукт, същата нужда | Кутии с рецепти, храна за вкъщи |
+| **Заместители** | Алтернативен начин за решение | Готвене у дома, хранене навън |
 
-> 🎯 Твоят стартъп не се конкурира само с подобни приложения — конкурира се с **всеки начин, по който клиентите в момента решават проблема си**.
+**2. SWOT анализ**
+Оцени всяка компания (включително своята) по четири измерения:
+- **S**ilni strani — Какво правиш добре (вътрешно)
+- **W**eaknesses — Къде си ограничен (вътрешно)
+- **O**pportunities — Пазарни тенденции в твоя полза (външно)
+- **T**hreats — Рискове и конкуренти (външно)
 
-**Как да проучиш конкурентите:**
-1. Търси в Google за проблема (не за решението)
-2. Провери магазини за приложения и Product Hunt
-3. Прочети отзиви на клиенти — от какво се оплакват?
-4. Разгледай ценообразуването и функциите на конкурентите`,
+**3. Конкурентни ровове**
+Четири начина дигиталните бизнеси да останат защитими:
+- 🌐 **Мрежови ефекти** — Повече потребители = по-добър продукт (Instagram)
+- 🔒 **Разходи за смяна** — Болезнено е да напуснеш (Slack)
+- 📊 **Предимство от данни** — Повече данни = по-умен продукт (Spotify)
+- 💎 **Доверие в марката** — Хората плащат повече за доверие (Apple)
+
+**4. Петте сили на Портър (опростено)**
+Оцени привлекателността на индустрията чрез: интензивност на конкуренцията, заплаха от нови участници, заплаха от заместители, сила на купувачите и сила на доставчиците.`,
       },
       {
-        titleEn: 'SWOT Analysis (Simplified)',
-        titleBg: 'SWOT анализ (опростен)',
-        bodyEn: `SWOT is one of the most popular strategic frameworks. It helps you evaluate any company — including your own.
+        titleEn: 'Framework: Competitor Mapping in 4 Steps',
+        titleBg: 'Рамка: Картографиране на конкуренти в 4 стъпки',
+        bodyEn: `Follow this process to map any competitive landscape:
 
+**Step 1 — List competitors by type** 📋
+Write down at least 2 direct, 2 indirect, and 1 substitute competitor. Google the *problem*, not the solution.
+
+**Step 2 — Analyze each competitor** 🔍
+For each, answer:
+- What do they do well? (Read customer reviews)
+- What do customers complain about? (That's your opportunity)
+- How do they make money?
+- How big are they? (Users, revenue, funding)
+
+**Step 3 — Run a mini-SWOT on yourself** 📊
+Be honest. Your strengths should be specific (not "good team"). Compare your SWOT to competitors' to find your unique edge.
+
+**Step 4 — Identify your moat** 🏰
+Which of the four moats can you start building from Day 1? Even a small moat (like being hyper-focused on one niche) counts.
+
+> 💡 **Pro tip:** The best competitive advantage is often doing one thing *much* better than everyone else, rather than doing everything a little better.`,
+        bodyBg: `Следвай този процес, за да картографираш всяка конкурентна среда:
+
+**Стъпка 1 — Изброй конкуренти по тип** 📋
+Запиши поне 2 преки, 2 непреки и 1 заместител. Търси в Google за *проблема*, не за решението.
+
+**Стъпка 2 — Анализирай всеки конкурент** 🔍
+За всеки отговори:
+- Какво правят добре? (Прочети отзиви на клиенти)
+- От какво се оплакват клиентите? (Това е твоята възможност)
+- Как печелят пари?
+- Колко големи са? (Потребители, приходи, финансиране)
+
+**Стъпка 3 — Направи мини-SWOT за себе си** 📊
+Бъди честен. Силните ти страни трябва да са конкретни (не „добър екип"). Сравни своя SWOT с този на конкурентите, за да намериш уникалното си предимство.
+
+**Стъпка 4 — Идентифицирай рова си** 🏰
+Кой от четирите рова можеш да започнеш да строиш от Ден 1? Дори малък ров (като хипер-фокус върху една ниша) има значение.
+
+> 💡 **Съвет:** Най-доброто конкурентно предимство често е да правиш едно нещо *много* по-добре от всички останали, вместо да правиш всичко малко по-добре.`,
+      },
+      {
+        titleEn: 'Example: Spotify vs. the Music Industry',
+        titleBg: 'Пример: Spotify срещу музикалната индустрия',
+        bodyEn: `Let's apply the competitor mapping framework to Spotify when it launched in 2008:
+
+**Competitors identified:**
+| Type | Competitor | Weakness spotted |
+|------|-----------|-----------------|
+| Direct | iTunes | Pay per song, no discovery |
+| Direct | Pandora | Radio-only, no on-demand |
+| Indirect | YouTube | Bad audio quality, needs screen |
+| Substitute | Piracy (Napster era) | Illegal, unreliable |
+
+**Spotify's mini-SWOT:**
 | | Helpful | Harmful |
 |---|---------|---------|
-| **Internal** | **Strengths** — What you do well | **Weaknesses** — Where you're limited |
-| **External** | **Opportunities** — Market trends in your favor | **Threats** — Risks and competitors |
+| Internal | ✅ Instant streaming, great UX | ⚠️ No content (needed label deals) |
+| External | ✅ People hate paying per song | ⚠️ Music labels are powerful |
 
-**Example: A student building an eco-friendly packaging startup**
+**Moat chosen:** Data advantage — the more you listen, the better the recommendations (Discover Weekly became a killer feature).
 
-| | Helpful | Harmful |
-|---|---------|---------|
-| Internal | ✅ Passionate team, low costs | ⚠️ No manufacturing experience |
-| External | ✅ Growing demand for sustainability | ⚠️ Big players entering the space |
+**Result:** Spotify became the #1 streaming platform with 600M+ users by doing *one thing* (music streaming + discovery) far better than anyone else.`,
+        bodyBg: `Нека приложим рамката за картографиране на конкуренти към Spotify, когато стартира през 2008:
 
-**Tips for a good SWOT:**
-- Be **specific** — "good team" is weak; "team has chemistry background" is strong
-- Focus on what's **actionable** — can you leverage strengths or address weaknesses?
-- Compare your SWOT to competitors' to find your **unique advantage**`,
-        bodyBg: `SWOT е една от най-популярните стратегически рамки. Помага ти да оцениш всяка компания — включително своята.
+**Идентифицирани конкуренти:**
+| Тип | Конкурент | Забелязана слабост |
+|-----|-----------|-------------------|
+| Пряк | iTunes | Плащане за песен, без откриване |
+| Пряк | Pandora | Само радио, без слушане по заявка |
+| Непряк | YouTube | Лошо аудио качество, нужен е екран |
+| Заместител | Пиратство (ерата на Napster) | Нелегално, ненадеждно |
 
+**Мини-SWOT на Spotify:**
 | | Полезно | Вредно |
 |---|---------|--------|
-| **Вътрешно** | **Силни страни** — Какво правиш добре | **Слабости** — Къде си ограничен |
-| **Външно** | **Възможности** — Пазарни тенденции в твоя полза | **Заплахи** — Рискове и конкуренти |
+| Вътрешно | ✅ Мигновено стрийминг, страхотен UX | ⚠️ Няма съдържание (нужни са договори с лейбъли) |
+| Външно | ✅ Хората мразят да плащат за песен | ⚠️ Музикалните лейбъли са мощни |
 
-**Пример: Ученик, който създава стартъп за екологични опаковки**
+**Избран ров:** Предимство от данни — колкото повече слушаш, толкова по-добри са препоръките (Discover Weekly стана убийствена функция).
 
-| | Полезно | Вредно |
-|---|---------|--------|
-| Вътрешно | ✅ Мотивиран екип, ниски разходи | ⚠️ Няма производствен опит |
-| Външно | ✅ Нарастващо търсене на устойчивост | ⚠️ Големи играчи навлизат |
-
-**Съвети за добър SWOT:**
-- Бъди **конкретен** — „добър екип" е слабо; „екипът има знания по химия" е силно
-- Фокусирай се върху **приложимото** — можеш ли да използваш силните страни или да адресираш слабостите?
-- Сравни своя SWOT с този на конкурентите, за да намериш **уникалното си предимство**`,
+**Резултат:** Spotify стана #1 стрийминг платформа с 600M+ потребители, като прави *едно нещо* (музикално стрийминг + откриване) далеч по-добре от всички останали.`,
       },
       {
-        titleEn: 'Porter\'s Five Forces (Lite)',
-        titleBg: 'Петте сили на Портър (опростено)',
-        bodyEn: `Michael Porter's framework helps you understand **how attractive an industry is** and how hard it will be to succeed in it.
+        titleEn: 'Quick Recap',
+        titleBg: 'Бърз преговор',
+        bodyEn: `**3 things to remember:**
 
-**The 5 Forces:**
+✅ Competitors come in three types — **direct, indirect, and substitutes** — analyze all three to see the full picture.
 
-1. 🏭 **Rivalry among competitors** — How intense is the competition?
-   - Many similar products = high rivalry
-2. 🚪 **Threat of new entrants** — How easy is it for new players to enter?
-   - Low barriers = more competition coming
-3. 🔄 **Threat of substitutes** — Can customers solve the problem differently?
-   - Many alternatives = harder to retain users
-4. 💰 **Bargaining power of buyers** — Can customers easily switch?
-   - Low switching costs = less loyalty
-5. 🏗️ **Bargaining power of suppliers** — Do you depend on a few key suppliers?
-   - Fewer suppliers = they have more power
+✅ Use **SWOT** to find your unique edge and **Porter's Five Forces** to assess how tough the industry is.
 
-**Quick assessment example (ride-sharing industry):**
-- Rivalry: ⬆️ High (Uber, Lyft, Bolt)
-- New entrants: ⬇️ Moderate (need capital + drivers)
-- Substitutes: ⬆️ High (public transport, bikes, walking)
-- Buyer power: ⬆️ High (easy to switch apps)
-- Supplier power: ⬆️ High (drivers can switch platforms)
-
-> This tells us ride-sharing is a **tough industry** — margins are thin and loyalty is low.`,
-        bodyBg: `Рамката на Майкъл Портър ти помага да разбереш **колко привлекателна е една индустрия** и колко трудно ще е да успееш в нея.
-
-**Петте сили:**
-
-1. 🏭 **Конкуренция между компаниите** — Колко интензивна е?
-   - Много подобни продукти = висока конкуренция
-2. 🚪 **Заплаха от нови участници** — Колко лесно е за нови играчи да навлязат?
-   - Ниски бариери = идва повече конкуренция
-3. 🔄 **Заплаха от заместители** — Могат ли клиентите да решат проблема по друг начин?
-   - Много алтернативи = по-трудно задържане на потребители
-4. 💰 **Пазарна сила на купувачите** — Могат ли клиентите лесно да сменят?
-   - Ниски разходи за смяна = по-малка лоялност
-5. 🏗️ **Пазарна сила на доставчиците** — Зависиш ли от малко ключови доставчици?
-   - По-малко доставчици = повече власт за тях
-
-**Пример за бърза оценка (индустрия за споделено пътуване):**
-- Конкуренция: ⬆️ Висока (Uber, Lyft, Bolt)
-- Нови участници: ⬇️ Умерена (нужен е капитал + шофьори)
-- Заместители: ⬆️ Висока (обществен транспорт, велосипеди, ходене)
-- Сила на купувачите: ⬆️ Висока (лесно се сменя приложение)
-- Сила на доставчиците: ⬆️ Висока (шофьорите могат да сменят платформи)
-
-> Това ни казва, че споделеното пътуване е **трудна индустрия** — маржовете са тънки и лоялността е ниска.`,
-      },
-      {
-        titleEn: 'What Makes a Digital Business Defensible?',
-        titleBg: 'Какво прави дигиталния бизнес защитим?',
-        bodyEn: `A defensible business is one that's **hard for competitors to copy**. In the digital world, there are four main "moats":
-
-**1. Network Effects** 🌐
-The product gets better as more people use it.
-- *Example:* Instagram — more users = more content = more users
-
-**2. Switching Costs** 🔒
-It's painful for customers to leave.
-- *Example:* Slack — all your team history and integrations are there
-
-**3. Data Advantage** 📊
-More data leads to better products.
-- *Example:* Spotify's recommendation algorithm improves with every listen
-
-**4. Brand & Trust** 💎
-People choose you because they trust you.
-- *Example:* Apple — customers pay premium prices for the brand
-
-> ⚡ **The strongest startups have at least one moat from Day 1**, even if it's small. Your job is to identify which moat your startup can build.`,
-        bodyBg: `Защитимият бизнес е такъв, който е **труден за копиране от конкурентите**. В дигиталния свят има четири основни „рова":
-
-**1. Мрежови ефекти** 🌐
-Продуктът става по-добър, когато повече хора го използват.
-- *Пример:* Instagram — повече потребители = повече съдържание = повече потребители
-
-**2. Разходи за смяна** 🔒
-Болезнено е за клиентите да напуснат.
-- *Пример:* Slack — цялата история на екипа и интеграциите ти са там
-
-**3. Предимство от данни** 📊
-Повече данни водят до по-добри продукти.
-- *Пример:* Алгоритъмът за препоръки на Spotify се подобрява с всяко слушане
-
-**4. Марка и доверие** 💎
-Хората те избират, защото ти имат доверие.
-- *Пример:* Apple — клиентите плащат премиум цени заради марката
-
-> ⚡ **Най-силните стартъпи имат поне един ров от Ден 1**, дори и малък. Твоята задача е да идентифицираш кой ров може да изгради твоят стартъп.`,
-      },
-      {
-        titleEn: 'Key Takeaways',
-        titleBg: 'Ключови изводи',
-        bodyEn: `✅ Competitors come in three types: **direct, indirect, and substitutes** — analyze all three.
-
-✅ Use **SWOT** to evaluate strengths vs. threats — be specific, not generic.
-
-✅ Use **Porter's Five Forces** to assess how hard the industry is.
-
-✅ Build a **defensible moat**: network effects, switching costs, data advantage, or brand trust.
+✅ Build a **defensible moat** from Day 1 — network effects, switching costs, data advantage, or brand trust.
 
 **Next step:** Identify 3 competitors for your startup idea and analyze their strengths →`,
-        bodyBg: `✅ Конкурентите са три вида: **преки, непреки и заместители** — анализирай и трите.
+        bodyBg: `**3 неща за запомняне:**
 
-✅ Използвай **SWOT** за оценка на силни страни срещу заплахи — бъди конкретен, не общ.
+✅ Конкурентите са три вида — **преки, непреки и заместители** — анализирай и трите, за да видиш пълната картина.
 
-✅ Използвай **Петте сили на Портър** за оценка колко трудна е индустрията.
+✅ Използвай **SWOT**, за да намериш уникалното си предимство и **Петте сили на Портър**, за да оцениш колко трудна е индустрията.
 
-✅ Изгради **защитен ров**: мрежови ефекти, разходи за смяна, предимство от данни или марка.
+✅ Изгради **защитен ров** от Ден 1 — мрежови ефекти, разходи за смяна, предимство от данни или доверие в марката.
 
 **Следваща стъпка:** Идентифицирай 3 конкурента за стартъп идеята си и анализирай силните им страни →`,
       },
@@ -375,155 +373,179 @@ People choose you because they trust you.
     titleBg: 'Стартъп идея и стойностно предложение',
     subtitleEn: 'Learn to define a clear problem, target customer, and compelling value proposition.',
     subtitleBg: 'Научи се да дефинираш ясен проблем, целеви клиент и убедително стойностно предложение.',
-    readMinutes: 8,
+    readMinutes: 6,
     sections: [
       {
-        titleEn: 'The Problem-Solution Fit',
-        titleBg: 'Съответствие проблем-решение',
-        bodyEn: `Every great startup starts with a **real problem**. Not a feature, not a technology — a problem.
+        titleEn: 'Why This Matters',
+        titleBg: 'Защо е важно',
+        bodyEn: `Most startups don't fail because of bad technology. They fail because they **solve a problem nobody cares about**.
 
-**The Problem Statement Formula:**
+The #1 reason startups die is "no market need" — meaning the founders built something people didn't actually want. Before writing a single line of code, you need to answer three questions clearly:
+
+1. **What problem** are you solving?
+2. **Who** has this problem?
+3. **Why** should they choose you?
+
+> ⚠️ This stage prevents you from building the wrong thing. It's the most important 6 minutes of your startup journey.`,
+        bodyBg: `Повечето стартъпи не се провалят заради лоша технология. Те се провалят, защото **решават проблем, който никого не интересува**.
+
+Причина #1 за гибелта на стартъпите е „няма нужда от пазара" — основателите са създали нещо, което хората всъщност не искат. Преди да напишеш един ред код, трябва да отговориш ясно на три въпроса:
+
+1. **Какъв проблем** решаваш?
+2. **Кой** има този проблем?
+3. **Защо** да изберат теб?
+
+> ⚠️ Този етап те предпазва от създаването на грешното нещо. Това са най-важните 6 минути от стартъп пътешествието ти.`,
+      },
+      {
+        titleEn: 'Key Concepts',
+        titleBg: 'Ключови понятия',
+        bodyEn: `**1. Problem-Solution Fit**
+Every great startup starts with a **real problem**, not a feature or technology. Your problem statement should follow this formula:
 > "[Target customer] struggles with [specific problem] because [root cause], which results in [negative outcome]."
 
-**Good example:**
-> "High school students struggle with choosing a career path because career counseling is limited to 1-2 sessions per year, which results in uninformed university choices."
+**2. Target Customer ≠ "Everyone"**
+The more specific your customer, the better your product. Define them by: age, location, occupation, pain point, current solution, and why it's not enough.
 
-**Bad example:**
-> "People need a better app." ← Too vague!
+**3. The "Mom Test"**
+Don't ask *"Would you use my product?"* — people lie to be polite. Instead ask: *"Tell me about the last time you faced this problem. What did you try?"*
 
-**How to validate your problem:**
-1. 🗣️ Ask 5 people: "Have you experienced this problem?"
-2. 📊 Search for data: How many people are affected?
-3. 💰 Check willingness to pay: Would they pay for a solution?
+**4. Value Proposition**
+Your one-sentence answer to: *"Why should the customer choose YOU instead of alternatives?"*
+Formula: *"We help [customer] to [job] by [unique approach], unlike [alternative] which [limitation]."*
 
-> ⚠️ **Common mistake:** Falling in love with your solution before proving the problem exists.`,
-        bodyBg: `Всеки велик стартъп започва с **реален проблем**. Не функция, не технология — проблем.
-
-**Формула за формулировка на проблема:**
+**5. Validation Before Building**
+Talk to 5+ potential users before you build anything. If they don't get excited about the problem, your solution won't matter.`,
+        bodyBg: `**1. Съответствие проблем-решение**
+Всеки велик стартъп започва с **реален проблем**, не с функция или технология. Формулировката ти на проблема трябва да следва тази формула:
 > „[Целеви клиент] се затруднява с [конкретен проблем], защото [основна причина], което води до [негативен резултат]."
 
-**Добър пример:**
-> „Учениците от гимназията се затрудняват с избора на кариера, защото кариерното консултиране е ограничено до 1-2 сесии годишно, което води до неинформирани избори за университет."
+**2. Целеви клиент ≠ „Всички"**
+Колкото по-конкретен е клиентът ти, толкова по-добър ще е продуктът. Определи го по: възраст, местоположение, занимание, болка, текущо решение и защо не е достатъчно.
 
-**Лош пример:**
-> „Хората имат нужда от по-добро приложение." ← Твърде неясно!
+**3. „Тестът на мама"**
+Не питай *„Би ли използвал продукта ми?"* — хората лъжат от учтивост. Вместо това питай: *„Разкажи ми за последния път, когато срещна този проблем. Какво опита?"*
 
-**Как да валидираш проблема си:**
-1. 🗣️ Попитай 5 души: „Преживявал/а ли си този проблем?"
-2. 📊 Потърси данни: Колко хора са засегнати?
-3. 💰 Провери готовността за плащане: Биха ли платили за решение?
+**4. Стойностно предложение**
+Твоят отговор в едно изречение на: *„Защо клиентът да избере ТЕБ вместо алтернативите?"*
+Формула: *„Помагаме на [клиент] да [задача] чрез [уникален подход], за разлика от [алтернатива], която [ограничение]."*
 
-> ⚠️ **Честа грешка:** Да се влюбиш в решението си, преди да докажеш, че проблемът съществува.`,
+**5. Валидация преди създаване**
+Говори с 5+ потенциални потребители, преди да създаваш каквото и да е. Ако не се вълнуват от проблема, решението ти няма да има значение.`,
       },
       {
-        titleEn: 'Defining Your Target Customer',
-        titleBg: 'Определяне на целевия клиент',
-        bodyEn: `"Everyone" is not a customer segment. The more specific you are, the better your product will be.
+        titleEn: 'Framework: Value Proposition Canvas',
+        titleBg: 'Рамка: Канвас за стойностно предложение',
+        bodyEn: `This canvas helps you align what customers need with what you offer:
 
-**Customer Persona Template:**
+**Step 1 — Map the Customer Side**
+| Element | Question to answer |
+|---------|-------------------|
+| **Jobs** | What are they trying to achieve? |
+| **Pains** | What frustrates them about current solutions? |
+| **Gains** | What would make them delighted? |
 
-| Attribute | Your Answer |
-|-----------|------------|
-| **Age range** | e.g., 16-19 |
-| **Location** | e.g., Urban Bulgaria |
-| **Occupation** | e.g., High school student |
-| **Pain point** | e.g., No structured career guidance |
-| **Current solution** | e.g., Asking friends, random Google searches |
-| **Why it's not enough** | e.g., Biased advice, information overload |
+**Step 2 — Map Your Side**
+| Element | Question to answer |
+|---------|-------------------|
+| **Products/Services** | What do you offer? |
+| **Pain Relievers** | How do you reduce their frustrations? |
+| **Gain Creators** | How do you create delight? |
 
-**The "Mom Test" Questions:**
-Instead of asking "Would you use my product?", ask:
-- "Tell me about the last time you faced [problem]."
-- "What did you try? Why didn't it work?"
-- "How much time/money do you spend dealing with this?"
-
-> 🎯 **Rule of thumb:** If you can't describe your customer in one sentence, you haven't defined them well enough.`,
-        bodyBg: `„Всички" не е клиентски сегмент. Колкото по-конкретен си, толкова по-добър ще е продуктът ти.
-
-**Шаблон за клиентска персона:**
-
-| Атрибут | Твоят отговор |
-|---------|--------------|
-| **Възрастов диапазон** | напр. 16-19 |
-| **Местоположение** | напр. Градска България |
-| **Занимание** | напр. Гимназист |
-| **Болка** | напр. Няма структурирано кариерно ориентиране |
-| **Текущо решение** | напр. Питане на приятели, случайни търсения в Google |
-| **Защо не е достатъчно** | напр. Пристрастни съвети, претоварване с информация |
-
-**Въпроси по „Теста на мама":**
-Вместо да питаш „Би ли използвал продукта ми?", питай:
-- „Разкажи ми за последния път, когато срещна [проблема]."
-- „Какво опита? Защо не проработи?"
-- „Колко време/пари харчиш за справяне с това?"
-
-> 🎯 **Правило:** Ако не можеш да опишеш клиента си в едно изречение, не си го дефинирал достатъчно добре.`,
-      },
-      {
-        titleEn: 'Crafting Your Value Proposition',
-        titleBg: 'Създаване на стойностно предложение',
-        bodyEn: `Your value proposition answers: **"Why should the customer choose YOU instead of the alternatives?"**
-
-**Value Proposition Canvas (Simplified):**
-
-| Customer Side | Your Side |
-|---------------|-----------|
-| **Jobs** — What are they trying to achieve? | **Products/Services** — What do you offer? |
-| **Pains** — What frustrates them? | **Pain Relievers** — How do you reduce their frustrations? |
-| **Gains** — What would delight them? | **Gain Creators** — How do you create delight? |
-
-**Formula:**
-> "We help [target customer] to [job to be done] by [unique approach], unlike [alternative] which [limitation]."
-
-**Example:**
-> "We help high school students make informed career choices by providing AI-powered career matching based on their skills and interests, unlike school counselors who have time for only 2 sessions per year."
+**Step 3 — Check the Fit**
+Draw lines between customer pains and your pain relievers. If most pains are addressed, you have strong fit. If there are gaps, iterate.
 
 **Checklist for a strong value proposition:**
 - [ ] Specific to one customer segment
 - [ ] Addresses a real, validated pain
 - [ ] Clearly different from existing alternatives
-- [ ] Can be explained in under 15 seconds`,
-        bodyBg: `Стойностното ти предложение отговаря на: **„Защо клиентът да избере ТЕБ вместо алтернативите?"**
+- [ ] Explainable in under 15 seconds`,
+        bodyBg: `Този канвас ти помага да съгласуваш нуждите на клиентите с това, което предлагаш:
 
-**Канвас за стойностно предложение (опростен):**
+**Стъпка 1 — Картографирай страната на клиента**
+| Елемент | Въпрос за отговор |
+|---------|------------------|
+| **Задачи** | Какво се опитват да постигнат? |
+| **Болки** | Какво ги разочарова в текущите решения? |
+| **Ползи** | Какво би ги зарадвало? |
 
-| Страна на клиента | Твоята страна |
-|-------------------|---------------|
-| **Задачи** — Какво се опитват да постигнат? | **Продукти/Услуги** — Какво предлагаш? |
-| **Болки** — Какво ги разочарова? | **Облекчаващи болката** — Как намаляваш разочарованията им? |
-| **Ползи** — Какво би ги зарадвало? | **Създатели на ползи** — Как създаваш радост? |
+**Стъпка 2 — Картографирай твоята страна**
+| Елемент | Въпрос за отговор |
+|---------|------------------|
+| **Продукти/Услуги** | Какво предлагаш? |
+| **Облекчаващи болката** | Как намаляваш разочарованията им? |
+| **Създатели на ползи** | Как създаваш радост? |
 
-**Формула:**
-> „Помагаме на [целеви клиент] да [задача за изпълнение] чрез [уникален подход], за разлика от [алтернатива], която [ограничение]."
-
-**Пример:**
-> „Помагаме на гимназисти да направят информирани кариерни избори чрез AI-базирано съпоставяне на кариери според уменията и интересите им, за разлика от училищните съветници, които имат време за само 2 сесии годишно."
+**Стъпка 3 — Провери съответствието**
+Начертай линии между болките на клиентите и твоите облекчители. Ако повечето болки са адресирани, имаш силно съответствие. Ако има пропуски, итерирай.
 
 **Чеклист за силно стойностно предложение:**
 - [ ] Конкретно за един клиентски сегмент
 - [ ] Адресира реална, валидирана болка
 - [ ] Ясно различно от съществуващите алтернативи
-- [ ] Може да се обясни за под 15 секунди`,
+- [ ] Обяснимо за под 15 секунди`,
       },
       {
-        titleEn: 'Key Takeaways',
-        titleBg: 'Ключови изводи',
-        bodyEn: `✅ Start with the **problem**, not the solution. Validate before you build.
+        titleEn: 'Example: Career Guidance App',
+        titleBg: 'Пример: Приложение за кариерно ориентиране',
+        bodyEn: `Let's build a value proposition step by step:
 
-✅ Define your customer with **specifics**: age, location, pain, current solution.
+**Problem statement:**
+> "High school students struggle with choosing a career path because career counseling is limited to 1-2 sessions per year, which results in uninformed university choices."
 
-✅ Your value proposition must be **clear, specific, and differentiated**.
+**Customer persona:**
+| Attribute | Answer |
+|-----------|--------|
+| Age | 16-19 |
+| Location | Urban Bulgaria |
+| Occupation | High school student |
+| Pain | No structured career guidance |
+| Current solution | Asking friends, random Google searches |
+| Why it's not enough | Biased advice, information overload |
 
-✅ Use the **Value Proposition Canvas** to align customer needs with your offering.
+**Value proposition:**
+> "We help high school students make informed career choices by providing AI-powered career matching based on skills and interests, unlike school counselors who have time for only 2 sessions per year."
+
+**Fit check:** The pain (limited guidance) directly maps to the solution (AI-powered matching available anytime). The customer is specific. The differentiation is clear. ✅`,
+        bodyBg: `Нека изградим стойностно предложение стъпка по стъпка:
+
+**Формулировка на проблема:**
+> „Гимназистите се затрудняват с избора на кариера, защото кариерното консултиране е ограничено до 1-2 сесии годишно, което води до неинформирани избори за университет."
+
+**Клиентска персона:**
+| Атрибут | Отговор |
+|---------|--------|
+| Възраст | 16-19 |
+| Местоположение | Градска България |
+| Занимание | Гимназист |
+| Болка | Няма структурирано кариерно ориентиране |
+| Текущо решение | Питане на приятели, случайни търсения в Google |
+| Защо не е достатъчно | Пристрастни съвети, претоварване с информация |
+
+**Стойностно предложение:**
+> „Помагаме на гимназисти да направят информирани кариерни избори чрез AI-базирано съпоставяне на кариери според уменията и интересите им, за разлика от училищните съветници, които имат време за само 2 сесии годишно."
+
+**Проверка за съответствие:** Болката (ограничено ориентиране) директно се свързва с решението (AI-базирано съпоставяне, достъпно по всяко време). Клиентът е конкретен. Разграничаването е ясно. ✅`,
+      },
+      {
+        titleEn: 'Quick Recap',
+        titleBg: 'Бърз преговор',
+        bodyEn: `**3 things to remember:**
+
+✅ Start with the **problem**, not the solution — validate with real people before you build anything.
+
+✅ Define your customer with **specifics** (age, pain, current solution) — "everyone" is not a segment.
+
+✅ Your value proposition must be **clear, specific, and differentiated** — use the Value Proposition Canvas to check your fit.
 
 **Next step:** Go to My Startup and write your problem statement and target customer →`,
-        bodyBg: `✅ Започни с **проблема**, не с решението. Валидирай, преди да строиш.
+        bodyBg: `**3 неща за запомняне:**
 
-✅ Определи клиента си с **конкретики**: възраст, местоположение, болка, текущо решение.
+✅ Започни с **проблема**, не с решението — валидирай с реални хора, преди да строиш каквото и да е.
 
-✅ Стойностното ти предложение трябва да е **ясно, конкретно и диференцирано**.
+✅ Определи клиента си с **конкретики** (възраст, болка, текущо решение) — „всички" не е сегмент.
 
-✅ Използвай **Канваса за стойностно предложение**, за да съгласуваш нуждите на клиента с предложението си.
+✅ Стойностното ти предложение трябва да е **ясно, конкретно и диференцирано** — използвай Канваса за стойностно предложение, за да провериш съответствието.
 
 **Следваща стъпка:** Отиди в Моят стартъп и напиши формулировка на проблема и целевия клиент →`,
       },
@@ -537,321 +559,371 @@ Instead of asking "Would you use my product?", ask:
     titleBg: 'Продуктов дизайн (MVP)',
     subtitleEn: 'Learn to design a minimum viable product and the 9 blocks of the Business Model Canvas.',
     subtitleBg: 'Научи се да проектираш минимално жизнеспособен продукт и 9-те блока на Business Model Canvas.',
-    readMinutes: 10,
+    readMinutes: 7,
     sections: [
       {
-        titleEn: 'What is an MVP?',
-        titleBg: 'Какво е MVP?',
-        bodyEn: `MVP stands for **Minimum Viable Product** — the simplest version of your product that delivers value to early users.
+        titleEn: 'Why This Matters',
+        titleBg: 'Защо е важно',
+        bodyEn: `The biggest waste in startups is spending months building something users don't want. An MVP prevents that.
 
-**The MVP is NOT:**
-- ❌ A broken or ugly product
-- ❌ A demo with no real functionality
-- ❌ Your final product stripped down
+**MVP = the fastest way to learn if your idea works.** It's not about launching a perfect product — it's about testing your biggest assumption with real people, as quickly as possible.
 
-**The MVP IS:**
-- ✅ The **smallest thing you can build** to test your core assumption
+Alongside the MVP, you need a clear business model. The Business Model Canvas gives you a one-page blueprint of how your startup creates, delivers, and captures value.
+
+> 💡 Think of the MVP as your experiment, and the Business Model Canvas as your hypothesis written down.`,
+        bodyBg: `Най-голямата загуба при стартъпите е да прекараш месеци в създаване на нещо, което потребителите не искат. MVP предотвратява това.
+
+**MVP = най-бързият начин да научиш дали идеята ти работи.** Не става дума за пускане на перфектен продукт — а за тестване на най-голямото ти предположение с реални хора, възможно най-бързо.
+
+Наред с MVP, ти трябва ясен бизнес модел. Business Model Canvas ти дава едностраничен план за това как стартъпът ти създава, доставя и улавя стойност.
+
+> 💡 Мисли за MVP като за експеримент, а за Business Model Canvas като за хипотезата ти, записана на хартия.`,
+      },
+      {
+        titleEn: 'Key Concepts',
+        titleBg: 'Ключови понятия',
+        bodyEn: `**1. What an MVP Is (and Isn't)**
+- ✅ The **smallest thing** you can build to test your core assumption
 - ✅ Something real users can **actually use**
-- ✅ A learning tool, not a revenue tool
+- ❌ NOT a broken product, a demo, or your final product stripped down
 
-**Types of MVPs:**
+**2. Types of MVPs**
 
-| Type | Description | Example |
+| Type | How it works | Example |
 |------|-------------|---------|
-| **Landing Page** | A website describing the product + sign-up | Dropbox's explainer video |
-| **Wizard of Oz** | Looks automated, but you do it manually behind the scenes | Early Zappos (manually bought shoes) |
-| **Concierge** | Do the service manually for first users | Food delivery before the app exists |
-| **Single-Feature** | Build just ONE core feature | Instagram started with only photo filters |
+| **Landing Page** | Describe product + collect sign-ups | Dropbox's explainer video |
+| **Wizard of Oz** | Looks automated, done manually | Early Zappos |
+| **Concierge** | Do the service manually first | Food delivery before the app |
+| **Single-Feature** | Build just ONE core feature | Instagram (only photo filters) |
 
-> 🎯 **Ask yourself:** "What is the ONE feature that, without it, my product has no reason to exist?"`,
-        bodyBg: `MVP означава **Minimum Viable Product (Минимално жизнеспособен продукт)** — най-простата версия на продукта ти, която доставя стойност на ранни потребители.
+**3. The Business Model Canvas (BMC)**
+A one-page tool with 9 blocks: Customer Segments, Value Proposition, Channels, Customer Relationships, Revenue Streams, Key Resources, Key Activities, Key Partners, and Cost Structure.
 
-**MVP НЕ е:**
-- ❌ Счупен или грозен продукт
-- ❌ Демо без реална функционалност
-- ❌ Финалният ти продукт в орязана версия
+**4. Revenue Models**
+Common digital models: Subscription (Netflix), Freemium (Canva), Commission (Airbnb), Advertising (YouTube), One-time purchase (games).
 
-**MVP Е:**
-- ✅ **Най-малкото нещо, което можеш да създадеш**, за да тестваш основното си предположение
+**5. The Core Question**
+*"What is the ONE feature that, without it, my product has no reason to exist?"*`,
+        bodyBg: `**1. Какво е MVP (и какво не е)**
+- ✅ **Най-малкото нещо**, което можеш да създадеш, за да тестваш основното си предположение
 - ✅ Нещо, което реални потребители могат **наистина да използват**
-- ✅ Инструмент за учене, не за приходи
+- ❌ НЕ Е счупен продукт, демо или финалният ти продукт в орязана версия
 
-**Типове MVP:**
+**2. Типове MVP**
 
-| Тип | Описание | Пример |
-|-----|----------|--------|
-| **Целева страница** | Уебсайт, описващ продукта + регистрация | Обяснителното видео на Dropbox |
-| **Магьосник от Оз** | Изглежда автоматизирано, но го правиш ръчно зад кулисите | Ранният Zappos (ръчно купуваше обувки) |
-| **Консиерж** | Предоставяш услугата ръчно за първите потребители | Доставка на храна преди приложението да съществува |
-| **Единична функция** | Създай ЕДНА основна функция | Instagram започна само с филтри за снимки |
+| Тип | Как работи | Пример |
+|-----|-----------|--------|
+| **Целева страница** | Описваш продукта + събираш регистрации | Видеото на Dropbox |
+| **Магьосник от Оз** | Изглежда автоматизирано, правено ръчно | Ранният Zappos |
+| **Консиерж** | Предоставяш услугата ръчно първо | Доставка на храна преди приложението |
+| **Единична функция** | Създай ЕДНА основна функция | Instagram (само филтри за снимки) |
 
-> 🎯 **Попитай себе си:** „Коя е ЕДИНСТВЕНАТА функция, без която продуктът ми няма причина да съществува?"`,
+**3. Business Model Canvas (BMC)**
+Едностраничен инструмент с 9 блока: Клиентски сегменти, Стойностно предложение, Канали, Отношения с клиенти, Потоци приходи, Ключови ресурси, Ключови дейности, Ключови партньори и Структура на разходите.
+
+**4. Модели на приходи**
+Разпространени дигитални модели: Абонамент (Netflix), Freemium (Canva), Комисионна (Airbnb), Реклама (YouTube), Еднократна покупка (игри).
+
+**5. Основният въпрос**
+*„Коя е ЕДИНСТВЕНАТА функция, без която продуктът ми няма причина да съществува?"*`,
       },
       {
-        titleEn: 'The Business Model Canvas',
-        titleBg: 'Business Model Canvas',
-        bodyEn: `The Business Model Canvas (BMC) is a **one-page strategic tool** that describes how your business creates, delivers, and captures value.
+        titleEn: 'Framework: BMC in 4 Steps',
+        titleBg: 'Рамка: BMC в 4 стъпки',
+        bodyEn: `Fill out your Business Model Canvas in this order:
 
-**The 9 Building Blocks:**
+**Step 1 — Start with the right side (Value)**
+| Block | Question |
+|-------|---------|
+| Customer Segments | Who exactly are your customers? |
+| Value Proposition | Why do they choose you? |
+| Channels | How do you reach them? |
+| Customer Relationships | How do you keep them? |
+| Revenue Streams | How do you make money? |
 
-| # | Block | Key Question |
-|---|-------|-------------|
-| 1 | **Customer Segments** | Who are your customers? |
-| 2 | **Value Proposition** | Why do they buy from you? |
-| 3 | **Channels** | How do you reach them? |
-| 4 | **Customer Relationships** | How do you keep them? |
-| 5 | **Revenue Streams** | How do you make money? |
-| 6 | **Key Resources** | What do you need to operate? |
-| 7 | **Key Activities** | What must you do daily? |
-| 8 | **Key Partners** | Who helps you? |
-| 9 | **Cost Structure** | What are your main costs? |
+**Step 2 — Then the left side (Operations)**
+| Block | Question |
+|-------|---------|
+| Key Resources | What do you need to operate? (Tech, people, data) |
+| Key Activities | What must you do daily? (Build, sell, support) |
+| Key Partners | Who helps you? (Suppliers, platforms, APIs) |
+| Cost Structure | What are your main costs? (Hosting, marketing, salaries) |
 
-**Tips for filling out your BMC:**
-- Start with **Customer Segments** and **Value Proposition** — everything else flows from these
-- Be specific: "Instagram ads targeting 16-25 year olds" is better than "social media marketing"
-- Revenue Streams should include **pricing model** (subscription, freemium, commission, etc.)`,
-        bodyBg: `Business Model Canvas (BMC) е **едностраничен стратегически инструмент**, който описва как бизнесът ти създава, доставя и улавя стойност.
+**Step 3 — Choose your revenue model**
+Pick the model that fits your product: subscription for ongoing value, freemium for viral growth, commission for marketplaces.
 
-**Деветте градивни блока:**
+**Step 4 — Stress-test**
+Ask: *"If I remove any one block, does the whole model collapse?"* If yes, that block is a critical risk.`,
+        bodyBg: `Попълни Business Model Canvas в този ред:
 
-| # | Блок | Ключов въпрос |
-|---|------|--------------|
-| 1 | **Клиентски сегменти** | Кои са клиентите ти? |
-| 2 | **Стойностно предложение** | Защо купуват от теб? |
-| 3 | **Канали** | Как ги достигаш? |
-| 4 | **Отношения с клиенти** | Как ги задържаш? |
-| 5 | **Потоци приходи** | Как печелиш пари? |
-| 6 | **Ключови ресурси** | Какво ти трябва, за да работиш? |
-| 7 | **Ключови дейности** | Какво трябва да правиш ежедневно? |
-| 8 | **Ключови партньори** | Кой ти помага? |
-| 9 | **Структура на разходите** | Кои са основните ти разходи? |
+**Стъпка 1 — Започни с дясната страна (Стойност)**
+| Блок | Въпрос |
+|------|--------|
+| Клиентски сегменти | Кои точно са клиентите ти? |
+| Стойностно предложение | Защо те избират? |
+| Канали | Как ги достигаш? |
+| Отношения с клиенти | Как ги задържаш? |
+| Потоци приходи | Как печелиш пари? |
 
-**Съвети за попълване на BMC:**
-- Започни с **Клиентски сегменти** и **Стойностно предложение** — всичко останало произтича от тях
-- Бъди конкретен: „Instagram реклами, насочени към 16-25 годишни" е по-добре от „маркетинг в социални мрежи"
-- Потоците приходи трябва да включват **ценови модел** (абонамент, freemium, комисионна и т.н.)`,
+**Стъпка 2 — После лявата страна (Операции)**
+| Блок | Въпрос |
+|------|--------|
+| Ключови ресурси | Какво ти трябва, за да работиш? (Технология, хора, данни) |
+| Ключови дейности | Какво трябва да правиш ежедневно? (Създавай, продавай, поддържай) |
+| Ключови партньори | Кой ти помага? (Доставчици, платформи, API-та) |
+| Структура на разходите | Кои са основните ти разходи? (Хостинг, маркетинг, заплати) |
+
+**Стъпка 3 — Избери модел на приходи**
+Избери модела, който пасва на продукта ти: абонамент за постоянна стойност, freemium за вирусен растеж, комисионна за маркетплейси.
+
+**Стъпка 4 — Стрес-тест**
+Попитай: *„Ако махна който и да е блок, целият модел ли се срива?"* Ако да, този блок е критичен риск.`,
       },
       {
-        titleEn: 'Revenue Models for Digital Products',
-        titleBg: 'Модели на приходи за дигитални продукти',
-        bodyEn: `How will your startup make money? Here are the most common digital revenue models:
+        titleEn: 'Example: Instagram\'s MVP',
+        titleBg: 'Пример: MVP на Instagram',
+        bodyEn: `When Instagram launched in 2010, it wasn't the feature-rich app we know today. Here's what they built as their MVP:
 
-| Model | How it works | Example |
-|-------|-------------|---------|
-| **Subscription** | Monthly/yearly fee for access | Netflix, Spotify |
-| **Freemium** | Free basic tier + paid premium | Canva, Slack |
-| **Commission** | Take a % of each transaction | Airbnb (3-15%), Uber (25%) |
-| **Advertising** | Free for users, paid by advertisers | Instagram, YouTube |
-| **One-time purchase** | Pay once to own | Games, digital downloads |
-| **Data licensing** | Sell insights derived from usage data | Waze sells traffic data |
+**Core assumption:** People want to share beautiful photos from their phone, but phone cameras take ugly photos.
 
-**Choosing your model:**
-- **Subscription** works when users get ongoing value
-- **Freemium** works when the free version drives word-of-mouth
-- **Commission** works in marketplace/platform businesses
-- **Advertising** works when you have millions of users
+**MVP approach:** Single-Feature — just photo filters + sharing. No stories, no reels, no DMs, no shopping.
 
-> 💡 Many startups combine models. Spotify uses freemium (free with ads) + subscription (premium without ads).`,
-        bodyBg: `Как ще печели пари стартъпът ти? Ето най-разпространените модели на дигитални приходи:
+**BMC snapshot:**
+| Block | Instagram MVP |
+|-------|-------------|
+| Customer Segments | iPhone users who love photography |
+| Value Proposition | Make phone photos look professional in 1 tap |
+| Channels | App Store + word of mouth |
+| Revenue | None (growth first, monetize later) |
+| Key Activity | Build great filters |
+| Key Resource | Mobile development team (13 people at launch) |
 
-| Модел | Как работи | Пример |
-|-------|-----------|--------|
-| **Абонамент** | Месечна/годишна такса за достъп | Netflix, Spotify |
-| **Freemium** | Безплатно основно ниво + платено премиум | Canva, Slack |
-| **Комисионна** | Вземаш % от всяка транзакция | Airbnb (3-15%), Uber (25%) |
-| **Реклама** | Безплатно за потребителите, платено от рекламодатели | Instagram, YouTube |
-| **Еднократна покупка** | Плащаш веднъж, за да притежаваш | Игри, дигитални продукти |
-| **Лицензиране на данни** | Продажба на анализи от данни за използване | Waze продава данни за трафика |
+**What happened:** 25,000 users signed up on Day 1. Within 2 years, Facebook acquired Instagram for $1 billion — with only 13 employees.
 
-**Избиране на модел:**
-- **Абонамент** работи, когато потребителите получават постоянна стойност
-- **Freemium** работи, когато безплатната версия генерира „от уста на уста"
-- **Комисионна** работи за маркетплейс/платформени бизнеси
-- **Реклама** работи, когато имаш милиони потребители
+> 💡 **Lesson:** They didn't try to be Facebook. They did ONE thing (filters + sharing) extremely well.`,
+        bodyBg: `Когато Instagram стартира през 2010, не беше богатото на функции приложение, което познаваме днес. Ето какво създадоха като MVP:
 
-> 💡 Много стартъпи комбинират модели. Spotify използва freemium (безплатно с реклами) + абонамент (премиум без реклами).`,
+**Основно предположение:** Хората искат да споделят красиви снимки от телефоните си, но телефонните камери правят грозни снимки.
+
+**MVP подход:** Единична функция — само филтри за снимки + споделяне. Без сториз, без рийлс, без DM-ове, без пазаруване.
+
+**BMC моментна снимка:**
+| Блок | Instagram MVP |
+|------|-------------|
+| Клиентски сегменти | Потребители на iPhone, които обичат фотографията |
+| Стойностно предложение | Направи телефонните снимки професионални с 1 тап |
+| Канали | App Store + от уста на уста |
+| Приходи | Няма (растеж първо, монетизация после) |
+| Ключова дейност | Създаване на страхотни филтри |
+| Ключов ресурс | Екип за мобилна разработка (13 души при стартиране) |
+
+**Какво се случи:** 25 000 потребители се регистрираха на Ден 1. В рамките на 2 години Facebook придоби Instagram за $1 милиард — с едва 13 служители.
+
+> 💡 **Урок:** Не се опитаха да бъдат Facebook. Направиха ЕДНО нещо (филтри + споделяне) изключително добре.`,
       },
       {
-        titleEn: 'Key Takeaways',
-        titleBg: 'Ключови изводи',
-        bodyEn: `✅ Your MVP should test your **core assumption** with real users — keep it minimal.
+        titleEn: 'Quick Recap',
+        titleBg: 'Бърз преговор',
+        bodyEn: `**3 things to remember:**
 
-✅ The Business Model Canvas has **9 blocks** — start with Customer Segments + Value Proposition.
+✅ Your MVP should test your **core assumption** with real users — build the smallest thing that proves or disproves your idea.
 
-✅ Choose a **revenue model** that matches your product type and audience.
+✅ The Business Model Canvas has **9 blocks** — start with Customer Segments + Value Proposition, everything else flows from there.
 
-✅ Revenue = Value. If customers won't pay, reassess your value proposition.
+✅ Choose a **revenue model** that matches your product — and remember, many successful startups combine models.
 
 **Next step:** Go to My Startup and fill out your Business Model Canvas →`,
-        bodyBg: `✅ Твоят MVP трябва да тества **основното ти предположение** с реални потребители — дръж го минимално.
+        bodyBg: `**3 неща за запомняне:**
 
-✅ Business Model Canvas има **9 блока** — започни с Клиентски сегменти + Стойностно предложение.
+✅ Твоят MVP трябва да тества **основното ти предположение** с реални потребители — създай най-малкото нещо, което доказва или опровергава идеята ти.
 
-✅ Избери **модел на приходи**, който съответства на типа продукт и аудитория.
+✅ Business Model Canvas има **9 блока** — започни с Клиентски сегменти + Стойностно предложение, всичко останало следва от там.
 
-✅ Приход = Стойност. Ако клиентите не плащат, преосмисли стойностното си предложение.
+✅ Избери **модел на приходи**, който пасва на продукта ти — и помни, много успешни стартъпи комбинират модели.
 
 **Следваща стъпка:** Отиди в Моят стартъп и попълни своя Business Model Canvas →`,
       },
     ],
   },
 
-  /* ══════════════ STAGE 5: Business Model & Marketing ══════════════ */
+  /* ══════════════ STAGE 5: Business Model & Marketing Strategy ══════════════ */
   {
     stageId: 5,
     titleEn: 'Business Model & Marketing Strategy',
     titleBg: 'Бизнес модел и маркетинг стратегия',
     subtitleEn: 'Learn growth frameworks, marketing channels, and how strategic decisions affect KPIs.',
     subtitleBg: 'Научи рамки за растеж, маркетинг канали и как стратегическите решения влияят на KPI.',
-    readMinutes: 9,
+    readMinutes: 7,
     sections: [
       {
-        titleEn: 'KPIs That Matter for Startups',
-        titleBg: 'KPI-та, които имат значение за стартъпи',
-        bodyEn: `KPIs (Key Performance Indicators) are the **numbers that tell you if your startup is healthy**.
+        titleEn: 'Why This Matters',
+        titleBg: 'Защо е важно',
+        bodyEn: `A great product with no growth strategy is like a restaurant in the middle of a desert — amazing food, zero customers.
 
-**The 5 Essential Startup KPIs:**
+**Growth is not luck. It's a system.** The best startups track specific numbers (KPIs), experiment with marketing channels, and make data-driven decisions instead of guessing.
+
+This stage teaches you to think like a growth-minded founder: measure what matters, find the right channels, and make strategic trade-offs with limited resources.
+
+> 📊 If you can't measure it, you can't improve it.`,
+        bodyBg: `Страхотен продукт без стратегия за растеж е като ресторант в средата на пустиня — прекрасна храна, нула клиенти.
+
+**Растежът не е късмет. Той е система.** Най-добрите стартъпи проследяват конкретни числа (KPI), експериментират с маркетинг канали и вземат решения на база данни, вместо да гадаят.
+
+Този етап те учи да мислиш като основател, ориентиран към растеж: измервай важното, намери правилните канали и вземай стратегически решения с ограничени ресурси.
+
+> 📊 Ако не можеш да го измериш, не можеш да го подобриш.`,
+      },
+      {
+        titleEn: 'Key Concepts',
+        titleBg: 'Ключови понятия',
+        bodyEn: `**1. The 5 Essential Startup KPIs**
 
 | KPI | What it measures | Good target |
 |-----|-----------------|-------------|
-| **Users/Customers** | How many people use your product | Growing week-over-week |
+| **Users** | How many people use your product | Growing week-over-week |
 | **Revenue** | How much money you earn | Positive trend |
-| **Conversion Rate** | % of visitors who become users | 2-5% for digital products |
+| **Conversion** | % of visitors who become users | 2-5% for digital products |
 | **Retention** | % of users who come back | >40% after 30 days |
-| **CAC** (Customer Acquisition Cost) | Cost to get one new customer | Lower than customer lifetime value |
+| **CAC** | Cost to get one new customer | Lower than lifetime value |
 
-**The AARRR Framework (Pirate Metrics):**
+**2. AARRR Framework (Pirate Metrics)**
+A funnel to diagnose where you're losing users:
+Acquisition → Activation → Retention → Revenue → Referral
 
-1. **Acquisition** — How do users find you?
-2. **Activation** — Do they have a good first experience?
-3. **Retention** — Do they come back?
-4. **Revenue** — Do they pay?
-5. **Referral** — Do they tell friends?
+**3. Marketing Channels**
+Social media, content marketing, SEO, paid ads, email, partnerships, community — each has different cost and speed characteristics.
 
-> 📊 **Focus on retention first.** If users don't come back, spending more on acquisition is like pouring water into a leaky bucket.`,
-        bodyBg: `KPI (ключови показатели за ефективност) са **числата, които ти казват дали стартъпът ти е здрав**.
-
-**Петте основни KPI за стартъпи:**
+**4. Strategic Trade-offs**
+Every decision has a cost. Growth vs. profitability, quality vs. speed, broad vs. niche — there are no perfect answers, only informed choices.`,
+        bodyBg: `**1. Петте основни KPI за стартъпи**
 
 | KPI | Какво измерва | Добра цел |
 |-----|--------------|-----------|
-| **Потребители/Клиенти** | Колко хора използват продукта ти | Растеж седмица по седмица |
+| **Потребители** | Колко хора използват продукта ти | Растеж седмица по седмица |
 | **Приходи** | Колко пари печелиш | Положителна тенденция |
 | **Конверсия** | % посетители, които стават потребители | 2-5% за дигитални продукти |
 | **Задържане** | % потребители, които се връщат | >40% след 30 дни |
-| **CAC** (Цена за привличане на клиент) | Разход за привличане на един нов клиент | По-ниска от стойността на клиента |
+| **CAC** | Разход за привличане на един нов клиент | По-ниска от стойността на клиента |
 
-**Рамка AARRR (Пиратски метрики):**
+**2. Рамка AARRR (Пиратски метрики)**
+Фуния за диагностициране къде губиш потребители:
+Привличане → Активиране → Задържане → Приход → Препоръки
 
-1. **Привличане** — Как потребителите те намират?
-2. **Активиране** — Имат ли добро първо преживяване?
-3. **Задържане** — Връщат ли се?
-4. **Приход** — Плащат ли?
-5. **Препоръки** — Казват ли на приятели?
+**3. Маркетинг канали**
+Социални мрежи, маркетинг чрез съдържание, SEO, платена реклама, имейл, партньорства, общност — всеки има различни характеристики по цена и скорост.
 
-> 📊 **Фокусирай се върху задържането първо.** Ако потребителите не се връщат, да харчиш повече за привличане е като да наливаш вода в пробита кофа.`,
+**4. Стратегически компромиси**
+Всяко решение има цена. Растеж срещу печалба, качество срещу скорост, широко срещу нишово — няма перфектни отговори, само информирани избори.`,
       },
       {
-        titleEn: 'Growth & Marketing Channels',
-        titleBg: 'Канали за растеж и маркетинг',
-        bodyEn: `There are many ways to reach customers. The key is finding the **right channel for your audience**.
+        titleEn: 'Framework: The Bullseye Growth Method',
+        titleBg: 'Рамка: Методът Bullseye за растеж',
+        bodyEn: `Use this 3-step process to find the best marketing channels for your startup:
 
-**Digital Marketing Channels:**
+**Step 1 — Brainstorm (Outer Ring)** 💭
+List ALL possible channels where your customers might be:
 
 | Channel | Best for | Cost |
 |---------|---------|------|
-| **Social Media** (Instagram, TikTok) | B2C, young audiences | Low-Medium |
-| **Content Marketing** (blog, YouTube) | Building authority | Low (but slow) |
-| **SEO** (Google search) | Long-term organic traffic | Low (takes time) |
-| **Paid Ads** (Google, Meta) | Fast, scalable reach | High |
-| **Email Marketing** | Retention, upselling | Very Low |
-| **Partnerships** | Reaching new audiences | Varies |
-| **Community** (Discord, Reddit) | Niche products | Low |
+| Social Media (Instagram, TikTok) | B2C, young audiences | Low-Medium |
+| Content Marketing (blog, YouTube) | Building authority | Low (but slow) |
+| SEO (Google search) | Long-term organic traffic | Low (takes time) |
+| Paid Ads (Google, Meta) | Fast, scalable reach | High |
+| Email Marketing | Retention, upselling | Very Low |
+| Partnerships | Reaching new audiences | Varies |
+| Community (Discord, Reddit) | Niche products | Low |
 
-**Choosing your channel — the Bullseye Framework:**
-1. **Outer ring:** Brainstorm ALL possible channels
-2. **Middle ring:** Test the 3 most promising with small experiments
-3. **Bullseye:** Double down on the 1-2 that work best
+**Step 2 — Test (Middle Ring)** 🧪
+Pick the 3 most promising channels. Run small, cheap experiments for 1-2 weeks each. Measure results.
 
-> 💡 **Most startups find that 1-2 channels drive 80% of their growth.** Don't try to be everywhere — find what works and focus.`,
-        bodyBg: `Има много начини да достигнеш клиентите. Ключът е да намериш **правилния канал за твоята аудитория**.
+**Step 3 — Focus (Bullseye)** 🎯
+Double down on the 1-2 channels that worked best. Most startups find that **1-2 channels drive 80% of their growth**.
 
-**Дигитални маркетинг канали:**
+> 💡 Don't try to be everywhere. Find what works and focus relentlessly.`,
+        bodyBg: `Използвай този 3-стъпков процес, за да намериш най-добрите маркетинг канали за стартъпа си:
+
+**Стъпка 1 — Мозъчна атака (Външен пръстен)** 💭
+Изброй ВСИЧКИ възможни канали, където клиентите ти може да са:
 
 | Канал | Най-добър за | Цена |
 |-------|-------------|------|
-| **Социални мрежи** (Instagram, TikTok) | B2C, млада аудитория | Ниска-Средна |
-| **Съдържание** (блог, YouTube) | Изграждане на авторитет | Ниска (но бавна) |
-| **SEO** (търсене в Google) | Дългосрочен органичен трафик | Ниска (отнема време) |
-| **Платена реклама** (Google, Meta) | Бърз, мащабируем обхват | Висока |
-| **Имейл маркетинг** | Задържане, кръстосани продажби | Много ниска |
-| **Партньорства** | Достигане до нови аудитории | Различна |
-| **Общност** (Discord, Reddit) | Нишови продукти | Ниска |
+| Социални мрежи (Instagram, TikTok) | B2C, млада аудитория | Ниска-Средна |
+| Маркетинг чрез съдържание (блог, YouTube) | Изграждане на авторитет | Ниска (но бавна) |
+| SEO (търсене в Google) | Дългосрочен органичен трафик | Ниска (отнема време) |
+| Платена реклама (Google, Meta) | Бърз, мащабируем обхват | Висока |
+| Имейл маркетинг | Задържане, кръстосани продажби | Много ниска |
+| Партньорства | Достигане до нови аудитории | Различна |
+| Общност (Discord, Reddit) | Нишови продукти | Ниска |
 
-**Избиране на канал — рамката Bullseye:**
-1. **Външен пръстен:** Направи мозъчна атака за ВСИЧКИ възможни канали
-2. **Среден пръстен:** Тествай 3-те най-обещаващи с малки експерименти
-3. **Bullseye:** Удвои усилията за 1-2-та, които работят най-добре
+**Стъпка 2 — Тествай (Среден пръстен)** 🧪
+Избери 3-те най-обещаващи канала. Проведи малки, евтини експерименти за 1-2 седмици всеки. Измери резултатите.
 
-> 💡 **Повечето стартъпи откриват, че 1-2 канала генерират 80% от растежа им.** Не се опитвай да си навсякъде — намери какво работи и се фокусирай.`,
+**Стъпка 3 — Фокусирай се (Bullseye)** 🎯
+Удвои усилията за 1-2-та канала, които работиха най-добре. Повечето стартъпи откриват, че **1-2 канала генерират 80% от растежа им**.
+
+> 💡 Не се опитвай да си навсякъде. Намери какво работи и се фокусирай безмилостно.`,
       },
       {
-        titleEn: 'Strategic Decisions & Trade-offs',
-        titleBg: 'Стратегически решения и компромиси',
-        bodyEn: `Running a startup means making decisions with **limited resources**. Every choice has trade-offs.
+        titleEn: 'Example: How Slack Grew Without Ads',
+        titleBg: 'Пример: Как Slack порасна без реклами',
+        bodyEn: `Slack is a team communication tool that reached $1B in revenue faster than almost any SaaS company in history. Here's how they applied growth thinking:
 
-**Common strategic dilemmas:**
+**KPIs they tracked:**
+| KPI | Slack's result |
+|-----|---------------|
+| Users | 8,000 on Day 1 → 500K in 1 year |
+| Retention | 93% of teams that tried it kept using it |
+| Conversion | 30% of free teams upgraded to paid |
+| Referral | Users invited teammates organically |
 
-| Dilemma | Option A | Option B |
-|---------|----------|----------|
-| **Growth vs. Profitability** | Spend aggressively to grow fast | Grow slowly but stay profitable |
-| **Quality vs. Speed** | Build a polished product slowly | Ship fast and iterate |
-| **Broad vs. Niche** | Target everyone | Dominate a small segment first |
+**Growth channels used:**
+- ❌ NOT paid ads (initially)
+- ✅ **Word of mouth** — the product was so useful, people told colleagues
+- ✅ **Freemium model** — free tier let teams try with zero risk
+- ✅ **Switching cost moat** — once your history is in Slack, leaving is painful
 
-**Decision-Making Framework:**
-1. **What is our #1 goal right now?** (Growth? Revenue? Validation?)
-2. **What data do we have?** (User feedback, KPI trends)
-3. **What's reversible?** (Prefer reversible decisions — less risky)
-4. **What's the worst case?** (Can we survive if this fails?)
+**Strategic trade-off:** Slack chose **growth over revenue** early on. The free tier cost them money, but it built a massive user base that later converted to paid.
 
-> ⚡ **Speed matters more than perfection.** In the startup world, a good decision made quickly beats a perfect decision made too late.`,
-        bodyBg: `Воденето на стартъп означава вземане на решения с **ограничени ресурси**. Всеки избор има компромиси.
+> 💡 **Lesson:** The best marketing is a product people can't stop talking about. Focus on retention first — growth follows.`,
+        bodyBg: `Slack е инструмент за екипна комуникация, който достигна $1 милиард приходи по-бързо от почти всяка SaaS компания в историята. Ето как приложиха мислене за растеж:
 
-**Чести стратегически дилеми:**
+**KPI, които проследяваха:**
+| KPI | Резултат на Slack |
+|-----|------------------|
+| Потребители | 8 000 на Ден 1 → 500K за 1 година |
+| Задържане | 93% от екипите, които го пробваха, продължиха да го ползват |
+| Конверсия | 30% от безплатните екипи преминаха на платен план |
+| Препоръки | Потребителите канеха колеги органично |
 
-| Дилема | Вариант А | Вариант Б |
-|--------|-----------|-----------|
-| **Растеж vs. Печалба** | Харчи агресивно за бърз растеж | Расти бавно, но остани печеливш |
-| **Качество vs. Скорост** | Създай полиран продукт бавно | Пусни бързо и итерирай |
-| **Широк vs. Нишов** | Таргетирай всички | Доминирай малък сегмент първо |
+**Използвани канали за растеж:**
+- ❌ НЕ платена реклама (първоначално)
+- ✅ **От уста на уста** — продуктът беше толкова полезен, че хората го споделяха с колеги
+- ✅ **Freemium модел** — безплатното ниво позволяваше на екипи да пробват без риск
+- ✅ **Ров от разходи за смяна** — щом историята ти е в Slack, напускането е болезнено
 
-**Рамка за вземане на решения:**
-1. **Коя е целта ни #1 в момента?** (Растеж? Приходи? Валидация?)
-2. **Какви данни имаме?** (Обратна връзка от потребители, тенденции в KPI)
-3. **Какво е обратимо?** (Предпочитай обратими решения — по-малко рискови)
-4. **Какъв е най-лошият сценарий?** (Можем ли да оцелеем, ако това се провали?)
+**Стратегически компромис:** Slack избра **растеж пред приходи** в началото. Безплатното ниво им струваше пари, но изгради масивна потребителска база, която по-късно се конвертира в платена.
 
-> ⚡ **Скоростта е по-важна от перфекцията.** В стартъп света доброто решение, взето бързо, побеждава перфектното решение, взето твърде късно.`,
+> 💡 **Урок:** Най-добрият маркетинг е продукт, за който хората не могат да спрат да говорят. Фокусирай се върху задържането първо — растежът следва.`,
       },
       {
-        titleEn: 'Key Takeaways',
-        titleBg: 'Ключови изводи',
-        bodyEn: `✅ Track the **5 essential KPIs**: users, revenue, conversion, retention, CAC.
+        titleEn: 'Quick Recap',
+        titleBg: 'Бърз преговор',
+        bodyEn: `**3 things to remember:**
 
-✅ Use the **AARRR framework** to find leaks in your growth funnel.
+✅ Track the **5 essential KPIs** (users, revenue, conversion, retention, CAC) and use the **AARRR framework** to find leaks in your funnel.
 
-✅ Find 1-2 **marketing channels** that work and focus on them.
+✅ Use the **Bullseye method** to find 1-2 marketing channels that work — don't spread yourself thin across all of them.
 
-✅ Strategic decisions are about **trade-offs** — use data, not gut feeling.
+✅ Strategic decisions are about **trade-offs** — use data and the decision framework (goal → data → reversibility → worst case) instead of gut feeling.
 
 **Next step:** Try the Business Simulator to practice strategic decision-making with real KPIs →`,
-        bodyBg: `✅ Проследявай **5-те основни KPI**: потребители, приходи, конверсия, задържане, CAC.
+        bodyBg: `**3 неща за запомняне:**
 
-✅ Използвай **рамката AARRR**, за да намериш пропуските в своята фуния за растеж.
+✅ Проследявай **5-те основни KPI** (потребители, приходи, конверсия, задържане, CAC) и използвай **рамката AARRR**, за да намериш пропуски във фунията.
 
-✅ Намери 1-2 **маркетинг канала**, които работят, и се фокусирай върху тях.
+✅ Използвай **метода Bullseye**, за да намериш 1-2 маркетинг канала, които работят — не се разпилявай по всички.
 
-✅ Стратегическите решения са за **компромиси** — използвай данни, не интуиция.
+✅ Стратегическите решения са за **компромиси** — използвай данни и рамката за решения (цел → данни → обратимост → най-лош сценарий) вместо интуиция.
 
 **Следваща стъпка:** Опитай бизнес симулатора, за да практикуваш вземане на стратегически решения с реални KPI →`,
       },
@@ -865,163 +937,167 @@ Instead of asking "Would you use my product?", ask:
     titleBg: 'Стартъп представяне',
     subtitleEn: 'Learn to structure a compelling startup pitch and present confidently.',
     subtitleBg: 'Научи се да структурираш убедително стартъп представяне и да представяш уверено.',
-    readMinutes: 7,
+    readMinutes: 6,
     sections: [
       {
-        titleEn: 'What Investors Look For',
-        titleBg: 'Какво търсят инвеститорите',
-        bodyEn: `When investors evaluate a startup pitch, they look for **four things** (in this order):
+        titleEn: 'Why This Matters',
+        titleBg: 'Защо е важно',
+        bodyEn: `You've built the idea, validated the problem, designed the product, and planned the growth. Now it's time to **sell the vision**.
 
-**1. Team** 👥 — Can these people execute?
-- Do they understand the problem deeply?
-- Do they have relevant skills or experience?
+Every startup founder pitches — to investors, customers, partners, and even their own team. A great pitch doesn't just share information. It **inspires action**.
 
-**2. Market** 📈 — Is the opportunity big enough?
-- How many potential customers exist?
-- Is the market growing?
+The difference between a funded startup and a forgotten one is often not the idea — it's the ability to **communicate it clearly and compellingly in 3 minutes or less**.
 
-**3. Product** 🎯 — Does it solve a real problem?
-- Is there evidence of demand (users, sign-ups, interest)?
-- What's the unique advantage?
+> 🎤 This stage teaches you the structure, techniques, and mindset to pitch with confidence.`,
+        bodyBg: `Изградил си идеята, валидирал си проблема, проектирал си продукта и планирал си растежа. Сега е време да **продадеш визията**.
 
-**4. Traction** 🚀 — Is there proof it works?
-- User numbers, revenue, growth rate
-- Even small numbers matter if the trend is up
+Всеки стартъп основател представя — пред инвеститори, клиенти, партньори и дори собствения си екип. Страхотното представяне не просто споделя информация. То **вдъхновява действие**.
 
-> 💡 **Key insight:** Investors bet on teams more than ideas. A great team with a mediocre idea will pivot. A mediocre team with a great idea will fail.`,
-        bodyBg: `Когато инвеститорите оценяват стартъп представяне, те търсят **четири неща** (в този ред):
+Разликата между финансиран стартъп и забравен често не е идеята — а способността да я **комуникираш ясно и убедително за 3 минути или по-малко**.
 
-**1. Екип** 👥 — Могат ли тези хора да изпълнят?
-- Разбират ли проблема дълбоко?
-- Имат ли подходящи умения или опит?
-
-**2. Пазар** 📈 — Достатъчно голяма ли е възможността?
-- Колко потенциални клиенти съществуват?
-- Расте ли пазарът?
-
-**3. Продукт** 🎯 — Решава ли реален проблем?
-- Има ли доказателства за търсене (потребители, регистрации, интерес)?
-- Какво е уникалното предимство?
-
-**4. Тракция** 🚀 — Има ли доказателство, че работи?
-- Брой потребители, приходи, темп на растеж
-- Дори малки числа имат значение, ако тенденцията е нагоре
-
-> 💡 **Ключов извод:** Инвеститорите залагат на екипи повече от идеи. Страхотен екип с посредствена идея ще се пренасочи. Посредствен екип със страхотна идея ще се провали.`,
+> 🎤 Този етап те учи на структурата, техниките и мисленето, за да представяш с увереност.`,
       },
       {
-        titleEn: 'The 3-Minute Pitch Structure',
-        titleBg: 'Структура на 3-минутно представяне',
-        bodyEn: `A great pitch tells a **story** in a structured way. Here's the proven format:
+        titleEn: 'Key Concepts',
+        titleBg: 'Ключови понятия',
+        bodyEn: `**1. What Investors Look For (in this order)**
+- 👥 **Team** — Can these people execute? Do they understand the problem deeply?
+- 📈 **Market** — Is the opportunity big enough? Is it growing?
+- 🎯 **Product** — Does it solve a real problem? Is there evidence of demand?
+- 🚀 **Traction** — User numbers, revenue, growth rate (even small, if trending up)
 
-**The 7-Slide Framework:**
+**2. Story > Data**
+Humans remember stories, not spreadsheets. Start with a hook, not "Hi, my name is…"
 
-| # | Slide | Duration | Content |
-|---|-------|----------|---------|
-| 1 | **Hook** | 15 sec | One sentence that captures attention |
-| 2 | **Problem** | 30 sec | The pain your customers feel |
-| 3 | **Solution** | 30 sec | Your product and how it solves the problem |
-| 4 | **Market** | 20 sec | How big is the opportunity (TAM/SAM/SOM) |
+**3. Show, Don't Tell**
+"We have 200 users" beats "Our product is great." Numbers and proof always win over adjectives.
+
+**4. Constructive Feedback**
+Giving: start with strengths, be specific, suggest alternatives.
+Receiving: listen first, look for patterns, say thank you.
+
+**5. The Ask**
+Every pitch must end with a clear call to action: funding, partnership, sign-ups, or feedback.`,
+        bodyBg: `**1. Какво търсят инвеститорите (в този ред)**
+- 👥 **Екип** — Могат ли тези хора да изпълнят? Разбират ли проблема дълбоко?
+- 📈 **Пазар** — Достатъчно голяма ли е възможността? Расте ли?
+- 🎯 **Продукт** — Решава ли реален проблем? Има ли доказателства за търсене?
+- 🚀 **Тракция** — Брой потребители, приходи, темп на растеж (дори малки, ако тенденцията е нагоре)
+
+**2. История > Данни**
+Хората запомнят истории, не таблици. Започни с кука, не с „Здравейте, казвам се…"
+
+**3. Покажи, не казвай**
+„Имаме 200 потребители" побеждава „Продуктът ни е страхотен." Числата и доказателствата винаги печелят срещу прилагателни.
+
+**4. Конструктивна обратна връзка**
+Даване: започни със силните страни, бъди конкретен, предложи алтернативи.
+Получаване: слушай първо, търси модели, кажи благодаря.
+
+**5. Искането**
+Всяко представяне трябва да завърши с ясен призив за действие: финансиране, партньорство, регистрации или обратна връзка.`,
+      },
+      {
+        titleEn: 'Framework: The 7-Slide Pitch',
+        titleBg: 'Рамка: Представяне от 7 слайда',
+        bodyEn: `Structure your 3-minute pitch using this proven framework:
+
+| # | Slide | Time | What to include |
+|---|-------|------|----------------|
+| 1 | **Hook** | 15 sec | One sentence or statistic that grabs attention |
+| 2 | **Problem** | 30 sec | The real pain your customers feel |
+| 3 | **Solution** | 30 sec | Your product and how it works |
+| 4 | **Market** | 20 sec | How big the opportunity is (TAM/SAM/SOM) |
 | 5 | **Business Model** | 20 sec | How you make money |
 | 6 | **Traction** | 20 sec | What you've achieved so far |
-| 7 | **Ask** | 15 sec | What you need (funding, partnership, feedback) |
+| 7 | **Ask** | 15 sec | What you need from the audience |
 
-**Pitch tips:**
-- **Start with a story or a shocking statistic** — don't start with "Hi, my name is..."
-- **Show, don't tell** — "We have 200 users" beats "Our product is great"
+**Delivery tips:**
+- **Start with a story or shocking stat** — emotion before logic
 - **One idea per slide** — don't overload with text
-- **Practice out loud** — it's always longer than you think
-- **End with a clear call to action** — what do you want the audience to do?`,
-        bodyBg: `Страхотното представяне разказва **история** по структуриран начин. Ето доказаният формат:
+- **Practice out loud** — it always takes longer than you think
+- **Make eye contact** — connect with people, not the screen
+- **End strong** — your last sentence is what they'll remember`,
+        bodyBg: `Структурирай 3-минутното си представяне, използвайки тази доказана рамка:
 
-**Рамката от 7 слайда:**
-
-| # | Слайд | Продължителност | Съдържание |
-|---|-------|----------------|-----------|
-| 1 | **Кука** | 15 сек | Едно изречение, което привлича внимание |
-| 2 | **Проблем** | 30 сек | Болката, която клиентите ти изпитват |
-| 3 | **Решение** | 30 сек | Твоят продукт и как решава проблема |
+| # | Слайд | Време | Какво да включиш |
+|---|-------|-------|-----------------|
+| 1 | **Кука** | 15 сек | Едно изречение или статистика, която привлича внимание |
+| 2 | **Проблем** | 30 сек | Реалната болка, която клиентите ти изпитват |
+| 3 | **Решение** | 30 сек | Твоят продукт и как работи |
 | 4 | **Пазар** | 20 сек | Колко голяма е възможността (TAM/SAM/SOM) |
 | 5 | **Бизнес модел** | 20 сек | Как печелиш пари |
 | 6 | **Тракция** | 20 сек | Какво си постигнал досега |
-| 7 | **Искане** | 15 сек | Какво ти трябва (финансиране, партньорство, обратна връзка) |
+| 7 | **Искане** | 15 сек | Какво ти трябва от аудиторията |
 
 **Съвети за представяне:**
-- **Започни с история или шокираща статистика** — не започвай с „Здравейте, казвам се..."
-- **Покажи, не казвай** — „Имаме 200 потребители" побеждава „Продуктът ни е страхотен"
+- **Започни с история или шокираща статистика** — емоция преди логика
 - **Една идея на слайд** — не претоварвай с текст
-- **Упражнявай на глас** — винаги е по-дълго, отколкото мислиш
-- **Завърши с ясен призив за действие** — какво искаш аудиторията да направи?`,
+- **Упражнявай на глас** — винаги отнема повече, отколкото мислиш
+- **Поддържай контакт с очите** — свържи се с хората, не с екрана
+- **Завърши силно** — последното ти изречение е, което ще запомнят`,
       },
       {
-        titleEn: 'Giving & Receiving Feedback',
-        titleBg: 'Даване и получаване на обратна връзка',
-        bodyEn: `Peer feedback is one of the most valuable parts of the entrepreneurial process.
+        titleEn: 'Example: Airbnb\'s Original Pitch',
+        titleBg: 'Пример: Оригиналното представяне на Airbnb',
+        bodyEn: `Airbnb's 2008 pitch deck is one of the most studied startup pitches ever. Here's how it maps to the 7-slide framework:
 
-**Giving constructive feedback:**
-- ✅ Start with what's **strong** — "Your problem statement is very clear"
-- ✅ Be **specific** — "The revenue model section needs more detail on pricing"
-- ✅ Suggest **alternatives** — "Have you considered a freemium model instead?"
-- ❌ Avoid vague criticism — "It's not good enough" helps nobody
+| Slide | What Airbnb did |
+|-------|----------------|
+| **Hook** | "Book rooms with locals, rather than hotels" |
+| **Problem** | Hotels are expensive. Travelers want authentic local experiences. Hosts have extra space. |
+| **Solution** | A platform connecting travelers with locals who have spare rooms |
+| **Market** | 630K+ couchsurfers, 17M budget travelers, $1.9B market |
+| **Business Model** | 10% commission on each booking |
+| **Traction** | 2 successful pilot tests during conferences |
+| **Ask** | $500K seed funding |
 
-**Receiving feedback gracefully:**
-- Listen first, defend later (or not at all)
-- Look for patterns — if 3 people say the same thing, they're probably right
-- Not all feedback needs to be acted on — you decide what's valuable
-- Say "thank you" — it takes courage to give honest feedback
+**What made it work:**
+- Simple, clear problem → simple, clear solution
+- Real market numbers (not "everyone who travels")
+- Proof that it worked (pilot tests), even at tiny scale
+- Specific ask with a clear use of funds
 
-**Feedback rubric for peer reviews:**
+> 💡 **Notice:** The pitch is about the *customer's* story, not the founder's. Great pitches make the audience feel the problem.`,
+        bodyBg: `Представянето на Airbnb от 2008 е едно от най-изучаваните стартъп представяния. Ето как се съотнася с рамката от 7 слайда:
 
-| Criterion | What to evaluate |
-|-----------|-----------------|
-| **Clarity** | Is the idea easy to understand? |
-| **Problem importance** | Is this a real, significant problem? |
-| **Innovation** | Is the solution new or creative? |
-| **Feasibility** | Can it actually be built and delivered? |
-| **Market potential** | Is there a real market for this? |`,
-        bodyBg: `Партньорската обратна връзка е една от най-ценните части на предприемаческия процес.
+| Слайд | Какво направи Airbnb |
+|-------|---------------------|
+| **Кука** | „Резервирай стаи при местни хора, вместо хотели" |
+| **Проблем** | Хотелите са скъпи. Пътуващите искат автентични местни преживявания. Домакините имат допълнително пространство. |
+| **Решение** | Платформа, свързваща пътуващи с местни хора, които имат свободни стаи |
+| **Пазар** | 630K+ каучсърфъри, 17M бюджетни пътешественици, пазар от $1,9 милиарда |
+| **Бизнес модел** | 10% комисионна на всяка резервация |
+| **Тракция** | 2 успешни пилотни теста по време на конференции |
+| **Искане** | $500K начално финансиране |
 
-**Даване на конструктивна обратна връзка:**
-- ✅ Започни с това, което е **силно** — „Формулировката ти на проблема е много ясна"
-- ✅ Бъди **конкретен** — „Секцията за модел на приходи се нуждае от повече детайли за ценообразуването"
-- ✅ Предложи **алтернативи** — „Обмислял ли си freemium модел вместо това?"
-- ❌ Избягвай неясна критика — „Не е достатъчно добро" не помага на никого
+**Какво го направи успешно:**
+- Прост, ясен проблем → просто, ясно решение
+- Реални пазарни числа (не „всеки, който пътува")
+- Доказателство, че работи (пилотни тестове), дори в малък мащаб
+- Конкретно искане с ясно използване на средствата
 
-**Получаване на обратна връзка с достойнство:**
-- Слушай първо, защитавай се по-късно (или въобще не)
-- Търси модели — ако 3 души казват едно и също, вероятно са прави
-- Не всяка обратна връзка трябва да се следва — ти решаваш какво е ценно
-- Кажи „благодаря" — нужна е смелост да дадеш честна обратна връзка
-
-**Рубрика за партньорски ревюта:**
-
-| Критерий | Какво да оцениш |
-|----------|----------------|
-| **Яснота** | Лесна ли е за разбиране идеята? |
-| **Важност на проблема** | Реален и значим ли е проблемът? |
-| **Иновация** | Новаторско или креативно ли е решението? |
-| **Осъществимост** | Може ли реално да бъде създадено и доставено? |
-| **Пазарен потенциал** | Има ли реален пазар за това? |`,
+> 💡 **Забележи:** Представянето е за историята на *клиента*, не на основателя. Великите представяния карат аудиторията да почувства проблема.`,
       },
       {
-        titleEn: 'Key Takeaways',
-        titleBg: 'Ключови изводи',
-        bodyEn: `✅ Investors care about **team, market, product, and traction** — in that order.
+        titleEn: 'Quick Recap',
+        titleBg: 'Бърз преговор',
+        bodyEn: `**3 things to remember:**
 
-✅ Structure your pitch with the **7-slide framework** — keep it under 3 minutes.
+✅ Investors care about **team, market, product, and traction** — in that order. Lead with your strongest point.
 
-✅ Give **specific, constructive feedback** — not vague criticism.
+✅ Structure your pitch with the **7-slide framework** — hook, problem, solution, market, model, traction, ask — and keep it under 3 minutes.
 
-✅ Your pitch is a **story**, not a report. Make it compelling and human.
+✅ Your pitch is a **story**, not a report — start with emotion, back it up with data, and end with a clear call to action.
 
 **Next step:** Submit your final startup pitch and get peer feedback →`,
-        bodyBg: `✅ Инвеститорите се интересуват от **екип, пазар, продукт и тракция** — в този ред.
+        bodyBg: `**3 неща за запомняне:**
 
-✅ Структурирай представянето си с **рамката от 7 слайда** — дръж го под 3 минути.
+✅ Инвеститорите се интересуват от **екип, пазар, продукт и тракция** — в този ред. Води с най-силната си точка.
 
-✅ Давай **конкретна, конструктивна обратна връзка** — не неясна критика.
+✅ Структурирай представянето си с **рамката от 7 слайда** — кука, проблем, решение, пазар, модел, тракция, искане — и го дръж под 3 минути.
 
-✅ Представянето ти е **история**, не доклад. Направи го убедително и човешко.
+✅ Представянето ти е **история**, не доклад — започни с емоция, подкрепи с данни и завърши с ясен призив за действие.
 
 **Следваща стъпка:** Подай финалното си стартъп представяне и получи партньорска обратна връзка →`,
       },
