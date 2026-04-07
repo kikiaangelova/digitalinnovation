@@ -191,8 +191,8 @@ export const SIM_WEEKS: SimWeek[] = [
     descEn: 'Choose how you will acquire customers and grow your startup. The best founders use a strategic mix of channels.',
     descBg: 'Изберете как ще привлечете клиенти и ще развиете стартъпа. Най-добрите основатели използват стратегически микс от канали.',
     icon: '📣',
-    theoryConceptEn: 'Customer Acquisition Cost',
-    theoryConceptBg: 'Цена за привличане на клиент (CAC)',
+    theoryConceptEn: 'Network Effects',
+    theoryConceptBg: 'Мрежови ефекти',
     decisions: [
       {
         questionEn: 'Which marketing channels will you use? (Select all that apply)',

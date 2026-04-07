@@ -603,11 +603,14 @@ export default function StartupSimulator() {
 
         {/* Theory concept badge */}
         {step.theoryConceptEn && (
-          <div className="flex items-center gap-2 mb-4">
-            <Badge variant="outline" className="text-xs border-primary/30 bg-primary/5 text-primary">
-              <BookOpen className="h-3 w-3 mr-1" />
-              {t('Related', 'Свързано')}: {lang === 'bg' ? step.theoryConceptBg : step.theoryConceptEn}
-            </Badge>
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-primary/10 border border-primary/20 px-3 py-1 mb-3">
+            <BookOpen className="h-3 w-3 text-primary" />
+            <span className="text-xs font-medium text-primary">
+              {t('Related theory:', 'Свързана теория:')} {lang === 'bg' ? step.theoryConceptBg : step.theoryConceptEn}
+            </span>
+            <button onClick={() => navigate('/learning-modules')} className="text-xs text-primary underline ml-1">
+              {t('Review →', 'Прегледай →')}
+            </button>
           </div>
         )}
 
