@@ -3,6 +3,8 @@ import { LearningPhaseBar, WhatYouWillLearn, SIMULATOR_OUTCOMES } from '@/compon
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
+import { useProgress } from '@/context/ProgressContext';
+import { StatusBadge } from '@/components/ui/status-badge';
 import { supabase } from '@/integrations/supabase/client';
 import AppHeader from '@/components/layout/AppHeader';
 import { Button } from '@/components/ui/button';
