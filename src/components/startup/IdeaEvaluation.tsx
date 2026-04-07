@@ -220,6 +220,8 @@ export default function IdeaEvaluation({ lang, startupData }: Props) {
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
   const [evaluated, setEvaluated] = useState(false);
   const [scores, setScores] = useState<CriterionScore[]>([]);
+  const [ideaXPos, setIdeaXPos] = useState('25%');
+  const [ideaYPos, setIdeaYPos] = useState('35%');
   const [competitors, setCompetitors] = useState<Competitor[]>([]);
   const [market, setMarket] = useState<MarketInfo | null>(null);
   const [diffAnswer, setDiffAnswer] = useState('');
