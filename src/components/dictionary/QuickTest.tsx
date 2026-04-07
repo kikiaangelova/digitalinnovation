@@ -190,6 +190,7 @@ export default function QuickTest() {
   const [startDifficulty, setStartDifficulty] = useState<TermDifficulty>('beginner');
   const [pastAvg, setPastAvg] = useState<number | null>(null);
   const [recentWeakAreas, setRecentWeakAreas] = useState<string[]>([]);
+  const submittingRef = useRef(false);
 
   // Load past performance to determine adaptive difficulty + weak area reinforcement
   useEffect(() => {
