@@ -6,11 +6,10 @@ import { useLang } from '@/context/LangContext';
 import { useJourneyProgress } from '@/hooks/useJourneyProgress';
 import { getCurrentLevel } from '@/components/dashboard/LevelCard';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import {
   GraduationCap, LogOut, LayoutDashboard, Play, Shield, User,
   BarChart3, Users, BookOpen, Book, Menu, Globe, Lightbulb,
-  Rocket, Map, ChevronDown, X, Trophy, Zap,
+  Rocket, Map, ChevronDown, Trophy, Zap,
 } from 'lucide-react';
 
 export default function AppHeader() {
