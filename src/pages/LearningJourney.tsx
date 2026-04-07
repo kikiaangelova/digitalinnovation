@@ -233,9 +233,12 @@ export default function LearningJourney() {
   }
 
   function getStageChecklist(stage: Stage, idx: number): ChecklistItem[] {
-    const learnDone = progress.stageLearnCompleted.has(stage.id);
+    // Learn is done when ALL mapped modules are completed OR stage learn is marked complete (fallback for stages with no modules)
+    const modulesDone = stage.moduleSlugs.length > 0
+      ? stage.moduleSlugs.every(slug => progress.completedModuleSlugs.has(slug))
+      : progress.stageLearnCompleted.has(stage.id);
     const items: ChecklistItem[] = [
-      { labelEn: 'Learn', labelBg: 'Учи', done: learnDone },
+      { labelEn: `Learn (${stage.moduleSlugs.length > 0 ? stage.moduleSlugs.filter(s => progress.completedModuleSlugs.has(s)).length + '/' + stage.moduleSlugs.length + ' modules' : 'primer'})`, labelBg: `Учи (${stage.moduleSlugs.length > 0 ? stage.moduleSlugs.filter(s => progress.completedModuleSlugs.has(s)).length + '/' + stage.moduleSlugs.length + ' модула' : 'въведение'})`, done: modulesDone },
     ];
 
     // Case study: Stage 1 requires ≥1 completed, Stage 2 requires ≥2
