@@ -230,6 +230,44 @@ export default function StudentDashboard() {
           simComplete={simComplete}
           outcomeScores={outcomeScores}
         />
+
+        {/* ═══ Theory Modules ═══ */}
+        <Card className="p-5 border-border">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <GraduationCap className="h-5 w-5 text-primary" />
+              <h3 className="text-sm font-semibold text-foreground">
+                {t('Theory Modules', 'Теоретични модули')}
+              </h3>
+            </div>
+            <span className="text-xs text-muted-foreground">
+              {t('Earn up to 125 XP', 'Спечели до 125 XP')}
+            </span>
+          </div>
+          <div className="space-y-2">
+            {LEARNING_MODULES.map(mod => {
+              const done = completedModuleSlugs.has(mod.slug);
+              return (
+                <button
+                  key={mod.slug}
+                  onClick={() => navigate(`/learn/${mod.slug}`)}
+                  className="flex items-center gap-3 w-full rounded-lg border border-border bg-card px-3 py-2.5 text-left hover:border-primary/30 transition-colors"
+                >
+                  {done ? (
+                    <CheckCircle2 className="h-4 w-4 text-green-600 shrink-0" />
+                  ) : (
+                    <div className="h-4 w-4 rounded-full border-2 border-muted-foreground/30 shrink-0" />
+                  )}
+                  <span className={`text-sm flex-1 ${done ? 'text-muted-foreground line-through' : 'text-foreground font-medium'}`}>
+                    {lang === 'bg' ? mod.title_bg : mod.title_en}
+                  </span>
+                  <ArrowRight className="h-3.5 w-3.5 text-muted-foreground" />
+                </button>
+              );
+            })}
+          </div>
+        </Card>
+
         <DailyChallenge lang={lang} userId={user?.id} />
         <TestInsights lang={lang} userId={user?.id} />
 
