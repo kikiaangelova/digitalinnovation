@@ -19,7 +19,7 @@ import ReactMarkdown from 'react-markdown';
 import { AutoTermTooltips } from '@/components/ui/term-tooltip';
 import {
   ArrowLeft, BookOpen, CheckCircle2, XCircle, Brain, Target,
-  Lightbulb, Rocket, Send, ChevronRight, FileText, Zap,
+  Lightbulb, Rocket, Send, ChevronRight, FileText, Zap, BarChart3,
 } from 'lucide-react';
 
 type Phase = 'theory' | 'quiz' | 'case_study' | 'analytical' | 'application' | 'results';
