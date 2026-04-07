@@ -13,6 +13,7 @@ import { BookOpen, CheckCircle2, ArrowRight, Brain, Target, Lightbulb, Rocket, L
 
 export default function LearningModules() {
   const { user } = useAuth();
+  const { modulesCompleted: unifiedModulesCompleted, modulesTotal: unifiedModulesTotal, modulesPct: unifiedModulesPct } = useProgress();
   const { lang } = useLang();
   const navigate = useNavigate();
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
