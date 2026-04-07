@@ -190,7 +190,7 @@ const Index = () => {
             <h2 className="text-3xl sm:text-4xl font-display font-bold text-foreground mt-4 mb-3">{t.whatYouLearn}</h2>
             <p className="text-muted-foreground max-w-lg mx-auto">{t.whatYouLearnDesc}</p>
           </div>
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5 mb-16">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 mb-16">
             {learnCards.map((card, i) => (
               <div key={i} className="group rounded-2xl border border-border bg-card p-5 text-center hover:border-primary/40 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
                 <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${card.gradient} mx-auto mb-3 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
