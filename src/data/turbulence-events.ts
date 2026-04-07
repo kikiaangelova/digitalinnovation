@@ -47,6 +47,7 @@ export const TURBULENCE_POOLS: TurbulencePool[] = [
         title: 'Tech Giant Enters Your Market',
         description: 'A major tech company announces a competing product with massive distribution. Your users are nervous. Brand trust wavers.',
         kpi_effects: { users_total: -50, churn_rate: 0.03, brand_trust: -8, nps: -10 },
+        resource_effects: { money: -1000 },
         category: 'competitor_entry',
         severity: 5,
         concept_lesson: '💡 Adaptability: When a gorilla enters the room, don\'t fight on their terms. Find the niche they can\'t serve. Speed and focus beat scale in uncertainty.',
