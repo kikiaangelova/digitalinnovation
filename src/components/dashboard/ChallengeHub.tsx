@@ -1,8 +1,10 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { Flame, Sparkles, Zap, Clock, Target, TrendingUp, AlertTriangle, CheckCircle, Loader2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Flame, Sparkles, Zap, Clock, Target, TrendingUp, AlertTriangle, CheckCircle, Loader2, CalendarClock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { supabase } from '@/integrations/supabase/client';
 import { showXpToast } from '@/lib/xp-toast';
 
@@ -37,8 +39,14 @@ const TYPE_CONFIG: Record<ChallengeType, { icon: typeof Zap; color: string; en: 
   strategic: { icon: TrendingUp, color: 'text-purple-500', en: 'Strategic Challenge', bg: 'Стратегическо', descEn: 'Long-term impact decision', descBg: 'Решение с дългосрочно влияние' },
 };
 
+const COMING_SOON: Record<string, { dateEn: string; dateBg: string }> = {
+  crisis: { dateEn: 'Expected: September 2026', dateBg: 'Очаквано: Септември 2026' },
+  strategic: { dateEn: 'Expected: October 2026', dateBg: 'Очаквано: Октомври 2026' },
+};
+
 export default function ChallengeHub({ lang, userId }: ChallengeHubProps) {
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
+  const navigate = useNavigate();
 
   const [activeType, setActiveType] = useState<ChallengeType>('daily');
   const [challenge, setChallenge] = useState<Challenge | null>(null);
@@ -51,6 +59,8 @@ export default function ChallengeHub({ lang, userId }: ChallengeHubProps) {
   const [timer, setTimer] = useState<number | null>(null);
   const [startTime, setStartTime] = useState<number | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const [comingSoonOpen, setComingSoonOpen] = useState(false);
+  const [comingSoonType, setComingSoonType] = useState<ChallengeType>('crisis');
 
   const fetchChallenge = useCallback(async (type: ChallengeType) => {
     if (!userId) return;
@@ -135,169 +145,224 @@ export default function ChallengeHub({ lang, userId }: ChallengeHubProps) {
     }
   };
 
+  const handleTypeClick = (type: ChallengeType) => {
+    if (type === 'crisis' || type === 'strategic') {
+      setComingSoonType(type);
+      setComingSoonOpen(true);
+      return;
+    }
+    setActiveType(type);
+    setChallenge(null);
+    setFeedback(null);
+    setAlreadyCompleted(false);
+  };
+
+  const handleStartChallenge = () => {
+    if (activeType === 'weekly') {
+      navigate('/cases');
+      return;
+    }
+    fetchChallenge(activeType);
+  };
+
   const types = Object.keys(TYPE_CONFIG) as ChallengeType[];
 
   return (
-    <Card className="p-5 border-border">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="typo-card-title flex items-center gap-2">
-          <Flame className="h-4 w-4 text-xp-gold" />
-          {t('Challenges', 'Предизвикателства')}
-        </h3>
-      </div>
-
-      {/* Type tabs */}
-      <div className="flex gap-1.5 mb-4 overflow-x-auto pb-1">
-        {types.map(type => {
-          const cfg = TYPE_CONFIG[type];
-          const Icon = cfg.icon;
-          const isActive = activeType === type;
-          return (
-            <button
-              key={type}
-              onClick={() => { setActiveType(type); setChallenge(null); setFeedback(null); setAlreadyCompleted(false); }}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors
-                ${isActive ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:bg-accent'}`}
-            >
-              <Icon className="h-3 w-3" />
-              {lang === 'bg' ? cfg.bg : cfg.en}
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Challenge area */}
-      {!challenge && !loading && !alreadyCompleted && (
-        <div className="text-center py-6">
-          <p className="typo-body text-muted-foreground mb-3">
-            {lang === 'bg' ? TYPE_CONFIG[activeType].descBg : TYPE_CONFIG[activeType].descEn}
-          </p>
-          <div className="flex items-center justify-center gap-2 mb-4">
-            <Badge variant="secondary" className="gap-1">
-              <Zap className="h-3 w-3 text-xp-gold" />
-              +{TYPE_CONFIG[activeType] && activeType === 'daily' ? 10 : activeType === 'weekly' ? 25 : activeType === 'crisis' ? 20 : 30} XP
-            </Badge>
-            {activeType === 'crisis' && (
-              <Badge variant="secondary" className="gap-1">
-                <Clock className="h-3 w-3" />
-                2 min
-              </Badge>
-            )}
-          </div>
-          <Button onClick={() => fetchChallenge(activeType)} disabled={!userId}>
-            {t('Start Challenge', 'Започни предизвикателство')}
-          </Button>
+    <>
+      <Card className="p-5 border-border">
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="typo-card-title flex items-center gap-2">
+            <Flame className="h-4 w-4 text-xp-gold" />
+            {t('Challenges', 'Предизвикателства')}
+          </h3>
         </div>
-      )}
 
-      {loading && (
-        <div className="flex items-center justify-center py-8 gap-2 text-muted-foreground">
-          <Loader2 className="h-5 w-5 animate-spin" />
-          <span className="text-sm">{t('Generating scenario...', 'Генериране на сценарий...')}</span>
-        </div>
-      )}
-
-      {alreadyCompleted && (
-        <div className="flex items-center gap-3 rounded-lg bg-success/10 p-4">
-          <CheckCircle className="h-5 w-5 text-success shrink-0" />
-          <div>
-            <p className="typo-body font-semibold text-success">
-              {t('Challenge completed!', 'Предизвикателството е завършено!')}
-            </p>
-            <p className="typo-helper mt-1">
-              {activeType === 'daily' || activeType === 'crisis'
-                ? t('Come back tomorrow for a new challenge', 'Върни се утре за ново предизвикателство')
-                : t('Come back next week for a new challenge', 'Върни се следващата седмица за ново предизвикателство')}
-            </p>
-          </div>
-        </div>
-      )}
-
-      {challenge && !feedback && (
-        <div className="space-y-4">
-          {/* Timer */}
-          {timer !== null && (
-            <div className={`flex items-center gap-2 rounded-lg px-3 py-2 ${timer <= 30 ? 'bg-destructive/10 text-destructive' : 'bg-warning/10 text-warning'}`}>
-              <Clock className="h-4 w-4" />
-              <span className="text-sm font-mono font-bold">
-                {Math.floor(timer / 60)}:{String(timer % 60).padStart(2, '0')}
-              </span>
-              <span className="text-xs">{t('remaining', 'остават')}</span>
-            </div>
-          )}
-
-          <div>
-            <h4 className="typo-body font-bold mb-2">{challenge.title}</h4>
-            <p className="typo-body text-foreground/80 whitespace-pre-line">{challenge.scenario}</p>
-          </div>
-
-          <div className="space-y-2">
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-              {t('Your Decision', 'Твоето решение')}
-            </p>
-            {challenge.options.map((opt, i) => (
+        {/* Type tabs */}
+        <div className="flex gap-1.5 mb-4 overflow-x-auto pb-1">
+          {types.map(type => {
+            const cfg = TYPE_CONFIG[type];
+            const Icon = cfg.icon;
+            const isActive = activeType === type;
+            const isComingSoon = type === 'crisis' || type === 'strategic';
+            return (
               <button
-                key={i}
-                onClick={() => setSelectedOption(i)}
-                disabled={timer === 0}
-                className={`w-full text-left rounded-lg border-2 p-3 transition-all
-                  ${selectedOption === i
-                    ? 'border-primary bg-primary/5'
-                    : 'border-border hover:border-primary/30'
-                  } ${timer === 0 ? 'opacity-50' : ''}`}
+                key={type}
+                onClick={() => handleTypeClick(type)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors
+                  ${isActive && !isComingSoon ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:bg-accent'}
+                  ${isComingSoon ? 'opacity-60' : ''}`}
               >
-                <div className="flex items-start gap-2">
-                  <span className="font-bold text-primary text-sm shrink-0">{String.fromCharCode(65 + i)}.</span>
-                  <div>
-                    <p className="text-sm font-semibold">{opt.label}</p>
-                    <p className="text-xs text-muted-foreground mt-0.5">{opt.description}</p>
-                    <p className="text-xs text-warning/80 mt-1 italic">⚠ {opt.risk}</p>
-                  </div>
-                </div>
+                <Icon className="h-3 w-3" />
+                {lang === 'bg' ? cfg.bg : cfg.en}
+                {isComingSoon && <CalendarClock className="h-3 w-3 ml-0.5" />}
               </button>
-            ))}
-          </div>
-
-          <Button
-            onClick={handleSubmit}
-            disabled={selectedOption === null || submitting || timer === 0}
-            className="w-full"
-          >
-            {submitting ? (
-              <><Loader2 className="h-4 w-4 animate-spin mr-2" />{t('Analyzing...', 'Анализиране...')}</>
-            ) : timer === 0 ? (
-              t('Time expired', 'Времето изтече')
-            ) : (
-              t('Submit Decision', 'Подай решение')
-            )}
-          </Button>
+            );
+          })}
         </div>
-      )}
 
-      {feedback && (
-        <div className="space-y-3">
-          <div className="flex items-center gap-2 mb-2">
-            <CheckCircle className="h-5 w-5 text-success" />
-            <span className="typo-body font-bold text-success">
-              {t('Decision Submitted', 'Решението е подадено')} — +{xpEarned} XP
-            </span>
-          </div>
-          <div className="rounded-lg bg-accent/50 p-4">
-            <p className="text-xs font-semibold text-muted-foreground uppercase mb-2">
-              {t('AI Mentor Feedback', 'Обратна връзка от AI ментора')}
+        {/* Challenge area */}
+        {!challenge && !loading && !alreadyCompleted && (
+          <div className="text-center py-6">
+            <p className="typo-body text-muted-foreground mb-3">
+              {lang === 'bg' ? TYPE_CONFIG[activeType].descBg : TYPE_CONFIG[activeType].descEn}
             </p>
-            <p className="typo-body text-foreground/90 whitespace-pre-line">{feedback}</p>
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <Badge variant="secondary" className="gap-1">
+                <Zap className="h-3 w-3 text-xp-gold" />
+                +{activeType === 'daily' ? 10 : 25} XP
+              </Badge>
+              {activeType === 'daily' && (
+                <Badge variant="secondary" className="gap-1">
+                  <Clock className="h-3 w-3" />
+                  1-2 min
+                </Badge>
+              )}
+            </div>
+            <Button onClick={handleStartChallenge} disabled={!userId}>
+              {activeType === 'weekly'
+                ? t('Browse Cases', 'Разгледай казуси')
+                : t('Start Challenge', 'Започни предизвикателство')}
+            </Button>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => { setChallenge(null); setFeedback(null); }}
-            className="w-full"
-          >
-            {t('Back to Challenges', 'Обратно към предизвикателствата')}
-          </Button>
-        </div>
-      )}
-    </Card>
+        )}
+
+        {loading && (
+          <div className="flex items-center justify-center py-8 gap-2 text-muted-foreground">
+            <Loader2 className="h-5 w-5 animate-spin" />
+            <span className="text-sm">{t('Generating scenario...', 'Генериране на сценарий...')}</span>
+          </div>
+        )}
+
+        {alreadyCompleted && (
+          <div className="flex items-center gap-3 rounded-lg bg-success/10 p-4">
+            <CheckCircle className="h-5 w-5 text-success shrink-0" />
+            <div>
+              <p className="typo-body font-semibold text-success">
+                {t('Challenge completed!', 'Предизвикателството е завършено!')}
+              </p>
+              <p className="typo-helper mt-1">
+                {activeType === 'daily'
+                  ? t('Come back tomorrow for a new challenge', 'Върни се утре за ново предизвикателство')
+                  : t('Come back next week for a new challenge', 'Върни се следващата седмица за ново предизвикателство')}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {challenge && !feedback && (
+          <div className="space-y-4">
+            {/* Timer */}
+            {timer !== null && (
+              <div className={`flex items-center gap-2 rounded-lg px-3 py-2 ${timer <= 30 ? 'bg-destructive/10 text-destructive' : 'bg-warning/10 text-warning'}`}>
+                <Clock className="h-4 w-4" />
+                <span className="text-sm font-mono font-bold">
+                  {Math.floor(timer / 60)}:{String(timer % 60).padStart(2, '0')}
+                </span>
+                <span className="text-xs">{t('remaining', 'остават')}</span>
+              </div>
+            )}
+
+            <div>
+              <h4 className="typo-body font-bold mb-2">{challenge.title}</h4>
+              <p className="typo-body text-foreground/80 whitespace-pre-line">{challenge.scenario}</p>
+            </div>
+
+            <div className="space-y-2">
+              <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                {t('Your Decision', 'Твоето решение')}
+              </p>
+              {challenge.options.map((opt, i) => (
+                <button
+                  key={i}
+                  onClick={() => setSelectedOption(i)}
+                  disabled={timer === 0}
+                  className={`w-full text-left rounded-lg border-2 p-3 transition-all
+                    ${selectedOption === i
+                      ? 'border-primary bg-primary/5'
+                      : 'border-border hover:border-primary/30'
+                    } ${timer === 0 ? 'opacity-50' : ''}`}
+                >
+                  <div className="flex items-start gap-2">
+                    <span className="font-bold text-primary text-sm shrink-0">{String.fromCharCode(65 + i)}.</span>
+                    <div>
+                      <p className="text-sm font-semibold">{opt.label}</p>
+                      <p className="text-xs text-muted-foreground mt-0.5">{opt.description}</p>
+                      <p className="text-xs text-warning/80 mt-1 italic">⚠ {opt.risk}</p>
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+
+            <Button
+              onClick={handleSubmit}
+              disabled={selectedOption === null || submitting || timer === 0}
+              className="w-full"
+            >
+              {submitting ? (
+                <><Loader2 className="h-4 w-4 animate-spin mr-2" />{t('Analyzing...', 'Анализиране...')}</>
+              ) : timer === 0 ? (
+                t('Time expired', 'Времето изтече')
+              ) : (
+                t('Submit Decision', 'Подай решение')
+              )}
+            </Button>
+          </div>
+        )}
+
+        {feedback && (
+          <div className="space-y-3">
+            <div className="flex items-center gap-2 mb-2">
+              <CheckCircle className="h-5 w-5 text-success" />
+              <span className="typo-body font-bold text-success">
+                {t('Decision Submitted', 'Решението е подадено')} — +{xpEarned} XP
+              </span>
+            </div>
+            <div className="rounded-lg bg-accent/50 p-4">
+              <p className="text-xs font-semibold text-muted-foreground uppercase mb-2">
+                {t('AI Mentor Feedback', 'Обратна връзка от AI ментора')}
+              </p>
+              <p className="typo-body text-foreground/90 whitespace-pre-line">{feedback}</p>
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => { setChallenge(null); setFeedback(null); }}
+              className="w-full"
+            >
+              {t('Back to Challenges', 'Обратно към предизвикателствата')}
+            </Button>
+          </div>
+        )}
+      </Card>
+
+      {/* Coming Soon Modal */}
+      <Dialog open={comingSoonOpen} onOpenChange={setComingSoonOpen}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <CalendarClock className="h-5 w-5 text-primary" />
+              {t('Coming Soon', 'Очаквайте скоро')}
+            </DialogTitle>
+            <DialogDescription>
+              {lang === 'bg' ? TYPE_CONFIG[comingSoonType].bg : TYPE_CONFIG[comingSoonType].en}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3 py-2">
+            <p className="text-sm text-foreground/80">
+              {t(
+                `The ${TYPE_CONFIG[comingSoonType].en} mode is currently in development. Stay tuned!`,
+                `Режимът „${TYPE_CONFIG[comingSoonType].bg}" е в процес на разработка. Очаквайте!`
+              )}
+            </p>
+            <div className="rounded-lg bg-primary/5 border border-primary/15 p-3 text-center">
+              <p className="text-xs font-semibold text-primary">
+                📅 {lang === 'bg' ? COMING_SOON[comingSoonType]?.dateBg : COMING_SOON[comingSoonType]?.dateEn}
+              </p>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
