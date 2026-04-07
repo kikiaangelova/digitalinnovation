@@ -22,6 +22,8 @@ import BusinessModelCanvas, { BMC_KEYS, type BMCData } from '@/components/startu
 import AIMentorPanel from '@/components/startup/AIMentorPanel';
 import IdeaEvaluation from '@/components/startup/IdeaEvaluation';
 import IndustryProblemGenerator from '@/components/startup/IndustryProblemGenerator';
+import CompetitorAnalysis from '@/components/startup/CompetitorAnalysis';
+import ValuePropositionTemplate from '@/components/startup/ValuePropositionTemplate';
 import type { ProblemValidation } from '@/components/startup/IndustryProblemGenerator';
 
 interface SectionConfig {
