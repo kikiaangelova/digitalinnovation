@@ -55,10 +55,19 @@ export default function StartupSimulator() {
   const [stepChoices, setStepChoices] = useState<string[]>([]);
   const [simId, setSimId] = useState<string | null>(null);
   const [multiSelections, setMultiSelections] = useState<string[]>([]);
+  const [casesCompleted, setCasesCompleted] = useState<number | null>(null);
 
   useEffect(() => {
     if (!authLoading && !user) navigate('/auth?redirect=/simulator');
   }, [user, authLoading, navigate]);
+
+  // Check how many cases the student has completed
+  useEffect(() => {
+    if (!user) return;
+    supabase.from('submissions').select('id', { count: 'exact', head: true })
+      .eq('user_id', user.id).eq('is_draft', false)
+      .then(({ count }) => setCasesCompleted(count ?? 0));
+  }, [user]);
 
   useEffect(() => {
     if (!user) return;
@@ -212,6 +221,23 @@ export default function StartupSimulator() {
             <ChevronRight className="h-3.5 w-3.5" />
             <span className="text-foreground font-medium">{t('Startup Simulator', 'Стартъп симулатор')}</span>
           </nav>
+
+          {/* Nudge banner for students with 0 completed cases */}
+          {casesCompleted === 0 && (
+            <div className="rounded-xl border border-primary/30 bg-primary/5 p-4 flex items-center gap-4 mb-2">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+                <BookOpen className="h-5 w-5 text-primary" />
+              </div>
+              <div className="flex-1">
+                <p className="text-sm font-semibold text-foreground">
+                  {t('Tip: Complete a case study first to get more from the simulator.', 'Съвет: Завърши казус първо, за да извлечеш повече от симулатора.')}
+                </p>
+              </div>
+              <Button size="sm" variant="outline" onClick={() => navigate('/cases')} className="shrink-0">
+                {t('Start a Case →', 'Започни казус →')}
+              </Button>
+            </div>
+          )}
 
           <div className="space-y-4 py-6">
             <LearningPhaseBar currentPhase="learn" lang={lang as 'en' | 'bg'} />
