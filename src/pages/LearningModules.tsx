@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import { BookOpen, CheckCircle2, ArrowRight, Brain, Target, Lightbulb, Rocket, Lock, Unlock, TrendingUp, Play } from 'lucide-react';
+import PhaseBadge from '@/components/ui/phase-badge';
 
 export default function LearningModules() {
   const { user } = useAuth();
