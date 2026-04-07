@@ -99,7 +99,9 @@ export default function CasePreview() {
             if (dbMod) {
               const { data: response } = await supabase.from('learning_module_responses')
                 .select('completed_at').eq('module_id', dbMod.id).eq('user_id', user.id).maybeSingle();
-              if (!response?.completed_at) {
+              if (response?.completed_at) {
+                setTheoryCompleted({ slug: moduleSlug, titleEn: mod.title_en, titleBg: mod.title_bg });
+              } else {
                 setTheoryBanner({ slug: moduleSlug, titleEn: mod.title_en, titleBg: mod.title_bg });
               }
             } else {
