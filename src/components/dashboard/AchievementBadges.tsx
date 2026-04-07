@@ -1,5 +1,6 @@
 import { Award, Search, Lightbulb, TrendingUp, Brain, Shield, Check, LayoutGrid, Mic, MessageSquare, RotateCcw, Briefcase, Calendar, HelpCircle, BookOpen, Target, Repeat } from 'lucide-react';
 import { type LucideIcon } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 interface BadgeDef {
   id: string;
@@ -152,8 +153,8 @@ export default function AchievementBadges(props: AchievementBadgesProps) {
           const progress = !isEarned ? getProgress(b.id, lang, props) : null;
           const pct = progress ? (progress.current / progress.max) * 100 : 0;
 
-          return (
-            <div key={b.id} className={`flex flex-col items-center text-center p-3 rounded-lg transition-all ${isEarned ? 'bg-xp-gold/10 ring-1 ring-xp-gold/30' : 'bg-muted/30 opacity-40'}`}>
+          const badgeContent = (
+            <div key={b.id} className={`flex flex-col items-center text-center p-3 rounded-lg transition-all ${isEarned ? 'bg-xp-gold/10 ring-1 ring-xp-gold/30' : 'bg-muted/30 opacity-40 hover:opacity-60 cursor-help'}`}>
               <div className="relative">
                 <div className={`flex h-12 w-12 items-center justify-center rounded-full mb-2 ${isEarned ? 'bg-xp-gold shadow-[0_0_16px_hsl(var(--xp-gold)/0.4)]' : 'bg-muted'}`}>
                   <Icon className={`h-6 w-6 ${isEarned ? 'text-white' : 'text-muted-foreground'}`} />
@@ -179,6 +180,19 @@ export default function AchievementBadges(props: AchievementBadgesProps) {
               )}
             </div>
           );
+
+          if (!isEarned && progress) {
+            return (
+              <Tooltip key={b.id}>
+                <TooltipTrigger asChild>{badgeContent}</TooltipTrigger>
+                <TooltipContent side="top" className="max-w-[200px] text-center">
+                  <p className="text-xs">{progress.label}</p>
+                </TooltipContent>
+              </Tooltip>
+            );
+          }
+
+          return badgeContent;
         })}
       </div>
     </div>

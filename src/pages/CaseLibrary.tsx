@@ -15,6 +15,7 @@ import {
   CheckCircle2, Zap,
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import PhaseBadge from '@/components/ui/phase-badge';
 import { INDUSTRY_DOMAINS, matchCaseToIndustry, type IndustryDomain } from '@/data/industry-domains';
 
 const ICON_MAP: Record<string, React.ElementType> = {
@@ -424,7 +425,7 @@ export default function CaseLibrary() {
       <div className="container mx-auto max-w-5xl px-4 py-8">
         <div className="flex items-start justify-between mb-6">
           <div>
-            <h1 className="typo-h1 mb-2">{t.caseLibrary}</h1>
+            <h1 className="typo-h1 mb-2 flex items-center gap-2">{t.caseLibrary} <PhaseBadge phase="apply" lang={lang} /></h1>
             <p className="typo-helper">
               {tl(
                 'Explore case studies organized by industry domain. Select an industry to understand its context and analyze related cases.',

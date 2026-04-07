@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { LEARNING_MODULES } from '@/data/learning-modules';
+import PhaseBadge from '@/components/ui/phase-badge';
 
 /* ------------------------------------------------------------------ */
 /* Learning outcomes per stage                                         */
@@ -321,8 +322,9 @@ export default function LearningJourney() {
       <main className="container mx-auto px-4 py-8 max-w-4xl space-y-8">
         {/* Header */}
         <div>
-          <h1 className="typo-h1">
+          <h1 className="typo-h1 flex items-center gap-2">
             {t('Startup Journey', 'Стартъп пътешествие')}
+            <PhaseBadge phase="fun" lang={lang as 'en' | 'bg'} />
           </h1>
           <p className="text-muted-foreground text-sm mt-1">
             {t('Build your startup step by step. Complete each stage to unlock the next one.',
@@ -337,7 +339,7 @@ export default function LearningJourney() {
               {t('Startup Journey Progress', 'Напредък по стартъп пътешествието')}
             </span>
             <span className="text-sm font-bold text-primary">
-              {t(`Stage ${completedCount} of ${STAGES.length}`, `Етап ${completedCount} от ${STAGES.length}`)}
+              {t(`Stage ${completedCount > 0 ? completedCount : (statuses[0] !== 'not_started' ? 1 : 0)} of ${STAGES.length}`, `Етап ${completedCount > 0 ? completedCount : (statuses[0] !== 'not_started' ? 1 : 0)} от ${STAGES.length}`)}
             </span>
           </div>
           <Progress value={overallPct} className="h-3" />

@@ -18,6 +18,7 @@ import { Card } from '@/components/ui/card';
 import { Zap, BookOpen, Rocket, BarChart3, FileText, Users, Star, Award, ArrowRight, CheckCircle2, GraduationCap } from 'lucide-react';
 import ChallengeHub from '@/components/dashboard/ChallengeHub';
 import { LEARNING_MODULES } from '@/data/learning-modules';
+import PhaseBadge from '@/components/ui/phase-badge';
 
 interface CaseRow { id: string; title: string; difficulty: string; est_minutes: number | null; topic?: string | null; }
 interface SubRow { case_study_id: string; is_draft: boolean; total_score?: number | null; max_score?: number | null; }
@@ -194,8 +195,9 @@ export default function StudentDashboard() {
         {/* ═══ Header + Next Action ═══ */}
         <div className="flex flex-col gap-3">
           <div>
-            <h1 className="typo-h1">
+            <h1 className="typo-h1 flex items-center gap-2">
               {t('Your Innovation Dashboard', 'Твоето иновационно табло')}
+              <PhaseBadge phase="fun" lang={lang} />
             </h1>
             <p className="typo-helper mt-1">
               {t('Track your progress, earn XP, and build your startup', 'Проследи напредъка си, спечели XP и изгради своя стартъп')}

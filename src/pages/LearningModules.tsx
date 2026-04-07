@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import { BookOpen, CheckCircle2, ArrowRight, Brain, Target, Lightbulb, Rocket, Lock, Unlock, TrendingUp, Play } from 'lucide-react';
+import PhaseBadge from '@/components/ui/phase-badge';
 
 export default function LearningModules() {
   const { user } = useAuth();
@@ -103,6 +104,7 @@ export default function LearningModules() {
           <h1 className="typo-h1 flex items-center gap-2">
             <BookOpen className="h-6 w-6 text-primary" />
             {t('Learning Modules', 'Учебни модули')}
+            <PhaseBadge phase="learn" lang={lang as 'en' | 'bg'} />
           </h1>
           <p className="typo-helper mt-1">
             {t('Master key concepts in digital innovation and entrepreneurship', 'Овладейте ключови концепции в дигиталните иновации и предприемачеството')}

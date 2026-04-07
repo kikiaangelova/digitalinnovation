@@ -7,6 +7,7 @@ import { getCurrentLevel } from '@/components/dashboard/LevelCard';
 import { Trophy, Medal, Award, Zap } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from '@/components/ui/table';
+import PhaseBadge from '@/components/ui/phase-badge';
 
 interface Entry {
   user_id: string;
@@ -50,6 +51,8 @@ export default function LeaderboardPage() {
     fetchData();
   }, []);
 
+  const myEntry = entries.find(e => e.user_id === user?.id);
+
   return (
     <div className="min-h-screen bg-background">
       <AppHeader />
@@ -60,6 +63,7 @@ export default function LeaderboardPage() {
              <h1 className="typo-h1">
               {t('Leaderboard', 'Класация')}
             </h1>
+            <PhaseBadge phase="fun" lang={lang} />
           </div>
           <p className="text-muted-foreground">
             {t(
@@ -71,6 +75,30 @@ export default function LeaderboardPage() {
             {t('The leaderboard shows display names only to protect privacy', 'Класацията показва само псевдоними за защита на личните данни')}
           </p>
         </div>
+
+        {/* Current user rank highlight */}
+        {!loading && myEntry && (
+          <div className="rounded-xl border-2 border-primary/30 bg-primary/5 p-4 mb-6 flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full sim-gradient text-primary-foreground font-bold">
+                #{myEntry.rank}
+              </div>
+              <div>
+                <p className="text-sm font-bold text-foreground">
+                  {t('Your rank this week', 'Твоята класация тази седмица')}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {myEntry.full_name} — {t('Level', 'Ниво')} {myEntry.level.level}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-1">
+              <Zap className="h-5 w-5 text-xp-gold" />
+              <span className="text-xl font-bold text-xp-gold">{myEntry.xp}</span>
+              <span className="text-xs text-muted-foreground">XP</span>
+            </div>
+          </div>
+        )}
 
         {loading ? (
           <div className="text-center py-12 text-muted-foreground animate-pulse">{t('Loading...', 'Зареждане...')}</div>
