@@ -230,7 +230,7 @@ export default function IdeaEvaluation({ lang, startupData }: Props) {
   const [remaining, setRemaining] = useState<number | null>(null);
 
   const maturityStage = getMaturityStage(startupData);
-  const hasEnoughData = startupData.problem.trim().length > 10 && startupData.customer.trim().length > 10;
+  const hasEnoughData = startupData.problem.trim().length > 30 && startupData.customer.trim().length > 30;
 
   const runEvaluation = () => {
     if (!hasEnoughData) {

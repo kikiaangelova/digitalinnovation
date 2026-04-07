@@ -154,6 +154,11 @@ export default function DailyChallenge({ lang, userId }: Props) {
               </div>
             </div>
           )}
+          {answered && !wasCorrect && (
+            <p className="typo-helper text-center text-muted-foreground">
+              {t('Your streak has been reset. Come back tomorrow to start a new one!', 'Серията ти е нулирана. Върни се утре за нова!')}
+            </p>
+          )}
         </div>
       ) : (
         <div className="space-y-3">
