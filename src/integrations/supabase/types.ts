@@ -898,6 +898,7 @@ export type Database = {
         Row: {
           avatar_url: string | null
           bio: string | null
+          class_name: string | null
           cohort_id: string | null
           created_at: string
           display_name: string | null
@@ -908,6 +909,7 @@ export type Database = {
           links_json: Json | null
           onboarding_completed: boolean
           profile_visible: boolean | null
+          school_name: string | null
           skills_tags: string[] | null
           total_xp: number
           updated_at: string
@@ -916,6 +918,7 @@ export type Database = {
         Insert: {
           avatar_url?: string | null
           bio?: string | null
+          class_name?: string | null
           cohort_id?: string | null
           created_at?: string
           display_name?: string | null
@@ -926,6 +929,7 @@ export type Database = {
           links_json?: Json | null
           onboarding_completed?: boolean
           profile_visible?: boolean | null
+          school_name?: string | null
           skills_tags?: string[] | null
           total_xp?: number
           updated_at?: string
@@ -934,6 +938,7 @@ export type Database = {
         Update: {
           avatar_url?: string | null
           bio?: string | null
+          class_name?: string | null
           cohort_id?: string | null
           created_at?: string
           display_name?: string | null
@@ -944,6 +949,7 @@ export type Database = {
           links_json?: Json | null
           onboarding_completed?: boolean
           profile_visible?: boolean | null
+          school_name?: string | null
           skills_tags?: string[] | null
           total_xp?: number
           updated_at?: string

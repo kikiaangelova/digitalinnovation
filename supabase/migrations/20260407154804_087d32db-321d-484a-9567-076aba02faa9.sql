@@ -1,0 +1,1 @@
+ALTER TABLE public.profiles ADD COLUMN IF NOT EXISTS class_name TEXT, ADD COLUMN IF NOT EXISTS school_name TEXT;
