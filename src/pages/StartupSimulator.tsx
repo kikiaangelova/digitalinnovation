@@ -253,7 +253,6 @@ export default function StartupSimulator() {
                 {t('Startup Simulator', 'Стартъп симулатор')}
                 <StatusBadge status={simStatus as any} lang={lang as 'en' | 'bg'} size="md" />
               </h1>
-              </h1>
               <p className="text-muted-foreground max-w-lg mx-auto mb-6">
                 {t(
                   'Build a startup step by step. Every decision affects your innovation score, market potential, scalability, risk level, and growth potential. Think strategically — like a real founder.',
