@@ -1,4 +1,5 @@
-import { KPIs, DecisionRule, DecisionAnswer, DecisionTemplate, ShockEvent, OutcomeReport, CompanyState } from '@/types/simulator';
+import { KPIs, DecisionRule, DecisionAnswer, DecisionTemplate, ShockEvent, OutcomeReport, CompanyState, TurbulenceState } from '@/types/simulator';
+import { rollTurbulenceEvent, calculateStability } from '@/data/turbulence-events';
 
 function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
