@@ -41,10 +41,9 @@ export function checkLevelUp(xpBefore: number, xpAfter: number, lang: Lang) {
   const levelAfter = getCurrentLevel(xpAfter);
 
   if (levelAfter.level > levelBefore.level) {
-    const prefix = lang === 'bg' ? 'НИВО' : 'LEVEL';
-    fireLevelUpToast(
-      levelAfter.level,
-      `${prefix} ${levelAfter.level} — ${levelAfter.name[lang]}!`
-    );
+    const label = lang === 'bg'
+      ? `Ниво ${levelAfter.level} — ${levelAfter.name.bg}!`
+      : `LEVEL ${levelAfter.level} — ${levelAfter.name.en}!`;
+    fireLevelUpToast(levelAfter.level, label);
   }
 }
