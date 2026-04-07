@@ -189,31 +189,41 @@ export default function CasePreview() {
           </div>
         )}
 
-        {/* Recommended Theory Banner */}
+        {/* Recommended Theory Banner — not yet completed */}
         {theoryBanner && completionStatus !== 'completed' && (
-          <div className="rounded-lg border border-amber-500/30 bg-amber-500/5 p-4 mb-6 flex items-center gap-3">
-            <GraduationCap className="h-6 w-6 text-amber-600 shrink-0" />
+          <div className="rounded-xl border border-primary/30 bg-primary/5 p-4 flex items-center gap-4 mb-6">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+              <BookOpen className="h-5 w-5 text-primary" />
+            </div>
             <div className="flex-1">
               <p className="text-sm font-semibold text-foreground">
-                {tl('Prepare for this case', 'Подгответе се за този казус')}
+                {tl('Prepare for this case', 'Подготви се за казуса')}
               </p>
               <p className="text-xs text-muted-foreground mt-0.5">
                 {tl(
-                  `Study "${theoryBanner.titleEn}" first for better analysis.`,
-                  `Научете „${theoryBanner.titleBg}" първо за по-добър анализ.`
+                  `Learn about ${theoryBanner.titleEn} first to get more from this case study.`,
+                  `Научи за ${theoryBanner.titleBg} първо, за да извлечеш повече от казуса.`
                 )}
               </p>
             </div>
-            <Button variant="outline" size="sm" asChild className="shrink-0">
-              <Link to={`/learn/${theoryBanner.slug}`}>
-                <BookOpen className="h-3.5 w-3.5 mr-1" />
-                {tl('Study Theory', 'Учи теория')}
-              </Link>
+            <Button size="sm" variant="outline" onClick={() => navigate(`/learn/${theoryBanner.slug}`)} className="shrink-0">
+              {tl('Study Theory', 'Учи теория')}
             </Button>
           </div>
         )}
 
-        <div className="rounded-xl border border-border bg-card overflow-hidden mb-8">
+        {/* Theory completed badge */}
+        {theoryCompleted && (
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-green-500/10 border border-green-500/20 px-3 py-1 mb-4">
+            <CheckCircle2 className="h-3.5 w-3.5 text-green-600" />
+            <span className="text-xs font-medium text-green-700">
+              {tl(
+                `You've studied ${theoryCompleted.titleEn} — you're ready!`,
+                `Изучил си ${theoryCompleted.titleBg} — готов си!`
+              )}
+            </span>
+          </div>
+        )}
           <div className="sim-gradient px-6 py-8 sm:px-8 sm:py-10">
             <Badge className="mb-3 bg-white/20 text-primary-foreground border-white/30 text-xs font-sans uppercase tracking-wider">
               {tl('Case Study', 'Бизнес казус')}
