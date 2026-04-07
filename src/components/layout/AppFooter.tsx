@@ -10,7 +10,7 @@ export default function AppFooter() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-border bg-card/80 backdrop-blur-sm mt-auto">
+    <footer className={`border-t border-border bg-card/80 backdrop-blur-sm mt-auto ${user ? 'hidden md:block' : ''}`}>
       <div className="container mx-auto max-w-6xl px-4 py-8">
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
