@@ -169,24 +169,57 @@ export default function AppHeader() {
                   <ChevronDown className={`h-3.5 w-3.5 text-muted-foreground transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`} />
                 </button>
 
-                {/* Dropdown */}
                 {dropdownOpen && (
                   <div className="absolute right-0 top-full mt-1.5 w-56 rounded-lg border border-border bg-card shadow-lg py-1.5 z-50 animate-fade-in">
-                    {dropdownItems.map(item => (
-                      <Link
-                        key={item.to}
-                        to={item.to}
-                        onClick={() => setDropdownOpen(false)}
-                        className={`flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors ${
-                          isActive(item.to)
-                            ? 'text-primary bg-accent/50 font-medium'
-                            : 'text-foreground hover:bg-muted'
-                        }`}
-                      >
-                        <item.icon className="h-4 w-4 text-muted-foreground" />
-                        {item.label}
-                      </Link>
-                    ))}
+                    {/* Profile & About */}
+                    <Link
+                      to="/profile"
+                      onClick={() => setDropdownOpen(false)}
+                      className={`flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors ${isActive('/profile') ? 'text-primary bg-accent/50 font-medium' : 'text-foreground hover:bg-muted'}`}
+                    >
+                      <User className="h-4 w-4 text-muted-foreground" />
+                      {t.profile}
+                    </Link>
+                    <Link
+                      to="/dictionary"
+                      onClick={() => setDropdownOpen(false)}
+                      className={`flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors ${isActive('/dictionary') ? 'text-primary bg-accent/50 font-medium' : 'text-foreground hover:bg-muted'}`}
+                    >
+                      <Book className="h-4 w-4 text-muted-foreground" />
+                      {t.dictionary}
+                    </Link>
+                    <Link
+                      to="/about"
+                      onClick={() => setDropdownOpen(false)}
+                      className={`flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors ${isActive('/about') ? 'text-primary bg-accent/50 font-medium' : 'text-foreground hover:bg-muted'}`}
+                    >
+                      <Lightbulb className="h-4 w-4 text-muted-foreground" />
+                      {t.about}
+                    </Link>
+
+                    {/* Admin section */}
+                    {isAdmin && (
+                      <>
+                        <div className="my-1.5 border-t border-border" />
+                        {[
+                          { to: '/admin', icon: Shield, label: t.admin },
+                          { to: '/admin/teacher', icon: GraduationCap, label: t.teacher },
+                          { to: '/admin/cohorts', icon: Users, label: t.cohorts },
+                          { to: '/admin/analytics', icon: BarChart3, label: t.analytics },
+                        ].map(item => (
+                          <Link
+                            key={item.to}
+                            to={item.to}
+                            onClick={() => setDropdownOpen(false)}
+                            className={`flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors ${isActive(item.to) ? 'text-primary bg-accent/50 font-medium' : 'text-foreground hover:bg-muted'}`}
+                          >
+                            <item.icon className="h-4 w-4 text-muted-foreground" />
+                            {item.label}
+                          </Link>
+                        ))}
+                      </>
+                    )}
+
                     <div className="my-1.5 border-t border-border" />
                     <button
                       onClick={handleSignOut}
