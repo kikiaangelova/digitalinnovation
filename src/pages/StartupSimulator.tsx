@@ -60,6 +60,10 @@ export default function StartupSimulator() {
   const [simId, setSimId] = useState<string | null>(null);
   const [multiSelections, setMultiSelections] = useState<string[]>([]);
   const [casesCompleted, setCasesCompleted] = useState<number | null>(null);
+  const [hasInProgressSession, setHasInProgressSession] = useState(false);
+  const [inProgressStep, setInProgressStep] = useState(0);
+  const [lastCompletedScore, setLastCompletedScore] = useState<{ score: number; grade: string } | null>(null);
+  const [sessionLoaded, setSessionLoaded] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) navigate('/auth?redirect=/simulator');
@@ -73,39 +77,64 @@ export default function StartupSimulator() {
       .then(({ count }) => setCasesCompleted(count ?? 0));
   }, [user]);
 
+  // Load existing sessions (in-progress + last completed)
   useEffect(() => {
     if (!user) return;
-    supabase.from('simulator_progress')
+
+    // Fetch in-progress session
+    const loadInProgress = supabase.from('simulator_progress')
       .select('*')
       .eq('user_id', user.id)
       .eq('is_complete', false)
       .order('created_at', { ascending: false })
       .limit(1)
-      .maybeSingle()
-      .then(({ data }) => {
-        if (data) {
-          setSimId(data.id);
-          const raw = data.kpis as any;
-          const savedKpis: SimWeekKPIs = {
-            innovation: Number(raw?.innovation) || 0,
-            marketPotential: Number(raw?.marketPotential) || 0,
-            scalability: Number(raw?.scalability) || 0,
-            riskLevel: Number(raw?.riskLevel) || 0,
-            growthPotential: Number(raw?.growthPotential) || 0,
-          };
-          const savedDecisions = data.decisions as any as StepRecord[];
-          if (savedKpis && savedDecisions) {
-            setKpis(savedKpis);
-            setHistory(savedDecisions);
-            setCurrentStep(Math.min(data.current_week - 1, SIM_WEEKS.length - 1));
-            if (data.is_complete) {
-              setPhase('results');
-            } else if (savedDecisions.length > 0) {
-              setPhase('playing');
-            }
-          }
+      .maybeSingle();
+
+    // Fetch last completed session
+    const loadCompleted = supabase.from('simulator_progress')
+      .select('grade, kpis')
+      .eq('user_id', user.id)
+      .eq('is_complete', true)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+
+    Promise.all([loadInProgress, loadCompleted]).then(([ipRes, compRes]) => {
+      // Handle in-progress session — store data but stay on intro
+      if (ipRes.data) {
+        const data = ipRes.data;
+        setSimId(data.id);
+        const raw = data.kpis as any;
+        const savedKpis: SimWeekKPIs = {
+          innovation: Number(raw?.innovation) || 0,
+          marketPotential: Number(raw?.marketPotential) || 0,
+          scalability: Number(raw?.scalability) || 0,
+          riskLevel: Number(raw?.riskLevel) || 0,
+          growthPotential: Number(raw?.growthPotential) || 0,
+        };
+        const savedDecisions = data.decisions as any as StepRecord[];
+        if (savedKpis && savedDecisions && savedDecisions.length > 0) {
+          setKpis(savedKpis);
+          setHistory(savedDecisions);
+          setCurrentStep(Math.min(data.current_week - 1, SIM_WEEKS.length - 1));
+          setHasInProgressSession(true);
+          setInProgressStep(data.current_week);
         }
-      });
+      }
+
+      // Handle last completed session
+      if (compRes.data) {
+        const raw = compRes.data.kpis as any;
+        const score = Math.round(
+          (Number(raw?.innovation) || 0) * 0.25 + (Number(raw?.marketPotential) || 0) * 0.2 +
+          (Number(raw?.scalability) || 0) * 0.2 + (100 - (Number(raw?.riskLevel) || 0)) * 0.15 +
+          (Number(raw?.growthPotential) || 0) * 0.2
+        );
+        setLastCompletedScore({ score, grade: compRes.data.grade || '' });
+      }
+
+      setSessionLoaded(true);
+    });
   }, [user]);
 
   const saveProgress = useCallback(async (
