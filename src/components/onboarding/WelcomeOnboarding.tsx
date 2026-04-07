@@ -50,7 +50,7 @@ export default function WelcomeOnboarding({ onComplete }: Props) {
       if (Object.keys(profileUpdate).length > 0) {
         await supabase.from('profiles').update(profileUpdate).eq('user_id', user.id);
       }
-      await awardXp('case_open', 'onboarding_profile');
+      await awardXp('onboarding_profile', 'onboarding_step_2');
       showXp(5);
       setTimeout(() => setStep(3), 800);
     } finally {
