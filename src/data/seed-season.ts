@@ -196,10 +196,10 @@ export const SEED_SEASON: SimulationSeason = {
             { criterion: 'Scalability', max_score: 5, description: 'Can this scale as the business grows?' },
           ],
           rules: [
-            { option_id: 'r2d2a', deltas: { users_total: 100, active_users: 40, cac: 8, burn_rate: 800 } },
-            { option_id: 'r2d2b', deltas: { users_total: 60, active_users: 30, brand_trust: 10, burn_rate: 300 } },
-            { option_id: 'r2d2c', deltas: { users_total: 70, active_users: 45, cac: -5, churn_rate: -0.01 } },
-            { option_id: 'r2d2d', deltas: { users_total: 30, active_users: 20, brand_trust: 12, nps: 8, burn_rate: 500 } },
+            { option_id: 'r2d2a', deltas: { users_total: 100, active_users: 40, cac: 8, burn_rate: 800 }, resource_deltas: { money: -2000 } },
+            { option_id: 'r2d2b', deltas: { users_total: 60, active_users: 30, brand_trust: 10, burn_rate: 300 }, resource_deltas: { money: -500 } },
+            { option_id: 'r2d2c', deltas: { users_total: 70, active_users: 45, cac: -5, churn_rate: -0.01 }, resource_deltas: { money: -200 } },
+            { option_id: 'r2d2d', deltas: { users_total: 30, active_users: 20, brand_trust: 12, nps: 8, burn_rate: 500 }, resource_deltas: { money: -1000 } },
           ],
         },
         {
