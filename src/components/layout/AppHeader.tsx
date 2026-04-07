@@ -230,9 +230,15 @@ export default function AppHeader() {
             {user ? (
               <button
                 onClick={() => setDrawerOpen(prev => !prev)}
-                className="md:hidden flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary text-sm font-bold uppercase shrink-0"
+                className="md:hidden shrink-0"
               >
-                {initials}
+                {profile?.avatar_style ? (
+                  <PlayerAvatar style={profile.avatar_style} xp={userXp} size="sm" showBorder={false} />
+                ) : (
+                  <div className="h-8 w-8 flex items-center justify-center rounded-full bg-primary/10 text-primary text-sm font-bold uppercase">
+                    {initials}
+                  </div>
+                )}
               </button>
             ) : (
               <div className="md:hidden flex items-center gap-1.5">
