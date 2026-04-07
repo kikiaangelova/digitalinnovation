@@ -224,6 +224,8 @@ export default function CasePreview() {
             </span>
           </div>
         )}
+
+        <div className="rounded-xl border border-border bg-card overflow-hidden mb-8">
           <div className="sim-gradient px-6 py-8 sm:px-8 sm:py-10">
             <Badge className="mb-3 bg-white/20 text-primary-foreground border-white/30 text-xs font-sans uppercase tracking-wider">
               {tl('Case Study', 'Бизнес казус')}
