@@ -108,7 +108,7 @@ export default function SeasonAnalytics() {
 
         {/* Submission Timeline */}
         <div>
-          <h2 className="text-lg font-semibold text-foreground mb-4">Decision Timeline</h2>
+          <h2 className="text-lg font-semibold text-foreground mb-4">{t('Decision Timeline', 'Хронология на решенията')}</h2>
           <div className="space-y-4">
             {teamSubmissions.map(sub => {
               const round = season.rounds.find(r => r.id === sub.round_id);
