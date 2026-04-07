@@ -19,7 +19,7 @@ export default function AppHeader() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const journeyPct = useJourneyProgress();
+  const { xp: userXp, journeyPct } = useProgress();
 
   const handleSignOut = async () => {
     setDropdownOpen(false);
