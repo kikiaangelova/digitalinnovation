@@ -190,9 +190,9 @@ export default function StudentDashboard() {
     <div className="min-h-screen bg-background">
       <AppHeader />
       {showOnboarding && <WelcomeOnboarding onComplete={handleOnboardingComplete} />}
-      <main className="container mx-auto px-4 py-8 pb-20 md:pb-8 space-y-8 max-w-6xl">
+      <main className="container mx-auto px-4 py-6 sm:py-8 pb-24 md:pb-8 space-y-6 sm:space-y-8 max-w-6xl">
         {/* ═══ Header + Next Action ═══ */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="flex flex-col gap-3">
           <div>
             <h1 className="typo-h1">
               {t('Your Innovation Dashboard', 'Твоето иновационно табло')}
@@ -201,16 +201,16 @@ export default function StudentDashboard() {
               {t('Track your progress, earn XP, and build your startup', 'Проследи напредъка си, спечели XP и изгради своя стартъп')}
             </p>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
             <Button
-              className="sim-gradient border-0 gap-2"
+              className="sim-gradient border-0 gap-2 w-full sm:w-auto"
               onClick={() => navigate(nextAction.path)}
             >
               <nextAction.icon className="h-4 w-4" />
-              {nextAction.label}
-              <ArrowRight className="h-4 w-4" />
+              <span className="truncate">{nextAction.label}</span>
+              <ArrowRight className="h-4 w-4 shrink-0" />
             </Button>
-            <Button variant="outline" size="sm" className="print:hidden" onClick={() => navigate('/my-report')}>
+            <Button variant="outline" size="sm" className="print:hidden w-full sm:w-auto" onClick={() => navigate('/my-report')}>
               <FileText className="h-4 w-4 mr-1" /> {t('Report', 'Доклад')}
             </Button>
           </div>
