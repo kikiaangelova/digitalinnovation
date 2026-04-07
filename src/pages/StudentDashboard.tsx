@@ -41,6 +41,7 @@ export default function StudentDashboard() {
   const [quizCategoriesTested, setQuizCategoriesTested] = useState(0);
   const [quizConsecutiveImprovements, setQuizConsecutiveImprovements] = useState(0);
   const [quizHighScores80, setQuizHighScores80] = useState(0);
+  const [completedModuleSlugs, setCompletedModuleSlugs] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
