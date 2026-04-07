@@ -114,9 +114,7 @@ const App = () => (
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   </div>
-                  <div className="hidden md:block">
-                    <AppFooter />
-                  </div>
+                  <AppFooter />
                 </div>
                 </ProfileGate>
               </BrowserRouter>
