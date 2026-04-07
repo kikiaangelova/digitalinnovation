@@ -478,6 +478,35 @@ export default function LearningJourney() {
                     </div>
                   )}
 
+                  {/* ═══ Completion checklist ═══ */}
+                  {!isLocked && (
+                    <div className="rounded-lg bg-muted/30 border border-border/50 p-3 mb-3 space-y-2">
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="text-xs font-semibold text-foreground">
+                          {t('Completion Checklist', 'Чеклист за завършване')}
+                        </span>
+                        <span className="text-xs font-bold text-primary">
+                          {checkDone}/{checklist.length}
+                        </span>
+                      </div>
+                      <Progress value={checkPct} className="h-1.5" />
+                      <div className="space-y-1 mt-2">
+                        {checklist.map((item, ci) => (
+                          <div key={ci} className="flex items-center gap-2 text-xs">
+                            {item.done ? (
+                              <CheckCircle2 className="h-3.5 w-3.5 text-success shrink-0" />
+                            ) : (
+                              <Circle className="h-3.5 w-3.5 text-muted-foreground/50 shrink-0" />
+                            )}
+                            <span className={item.done ? 'text-success font-medium line-through' : 'text-foreground'}>
+                              {lang === 'bg' ? item.labelBg : item.labelEn}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                   {/* Action buttons — only for unlocked stages */}
                   {!isLocked && (
                     <>
