@@ -173,7 +173,7 @@ export default function SeasonAnalytics() {
               className="mb-3"
             />
             <Button size="sm" onClick={handleAddComment} disabled={!comment.trim() || !commentRound}>
-              Add Comment
+              {t('Add Comment', 'Добави коментар')}
             </Button>
           </div>
         )}
