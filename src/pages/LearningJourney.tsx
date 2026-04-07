@@ -290,8 +290,8 @@ export default function LearningJourney() {
     });
   };
 
-  /* ---- derive stage statuses ---- */
-  const sectionFilled = (key: string) => startupProject ? ((startupProject as any)[key] || '').trim().length > 20 : false;
+  /* ---- derive stage statuses from unified progress ---- */
+  const sectionFilled = (key: string) => progress.startupSectionMap[key] || false;
 
   function stageStatus(stage: Stage): StageStatus {
     if (stage.id === 1) {
@@ -305,7 +305,7 @@ export default function LearningJourney() {
         return 'not_started';
       }
       if (stage.id === 6) {
-        if (startupProject?.is_submitted) return 'completed';
+        if (progress.startupSubmitted) return 'completed';
         if (sectionFilled('final_pitch')) return 'in_progress';
         return 'not_started';
       }
