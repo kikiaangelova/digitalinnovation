@@ -17,6 +17,7 @@ const Index = () => {
   const { user } = useAuth();
   const { lang, t } = useLang();
   const navigate = useNavigate();
+  const [audience, setAudience] = useState<'student' | 'teacher'>('student');
 
   const handleNav = (path: string) => {
     if (user) navigate(path);
