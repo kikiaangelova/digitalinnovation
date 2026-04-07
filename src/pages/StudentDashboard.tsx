@@ -25,6 +25,7 @@ export default function StudentDashboard() {
   const { user, loading: authLoading } = useAuth();
   const { lang } = useLang();
   const navigate = useNavigate();
+  const progress = useProgress();
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
 
   const [cases, setCases] = useState<CaseRow[]>([]);
