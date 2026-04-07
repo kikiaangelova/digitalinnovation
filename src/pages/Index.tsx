@@ -271,14 +271,12 @@ const Index = () => {
       <section className="py-16 px-4 border-t border-border">
         <div className="container mx-auto max-w-4xl">
           <div className="text-center mb-10">
-            <SectionBadge label={lang === 'bg' ? 'Бизнес речник' : 'Business Dictionary'} />
+            <SectionBadge label={t.dictBadge} />
             <h2 className="text-2xl sm:text-3xl font-display font-bold text-foreground mt-4 mb-3">
-              {lang === 'bg' ? 'Научи истинския бизнес език' : 'Learn real business language'}
+              {t.dictTitle}
             </h2>
             <p className="text-muted-foreground max-w-lg mx-auto">
-              {lang === 'bg'
-                ? 'Ключови термини от маркетинг, ценообразуване, операции и управление на екипи — на английски и български.'
-                : 'Key terms from marketing, pricing, operations, and team management — in English and Bulgarian.'}
+              {t.dictSubtitle}
             </p>
           </div>
 
