@@ -77,8 +77,6 @@ export const SIM_WEEKS: SimWeek[] = [
     descEn: 'Define the problem your startup solves. The best startups solve real, urgent, and widespread problems.',
     descBg: 'Дефинирайте проблема, който вашият стартъп решава. Най-добрите стартъпи решават реални, неотложни и широко разпространени проблеми.',
     icon: '🎯',
-    theoryConceptEn: 'Product-Market Fit',
-    theoryConceptBg: 'Продуктово-пазарно съответствие',
     decisions: [
       {
         questionEn: 'How significant is the problem you are solving?',
