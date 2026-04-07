@@ -9,9 +9,11 @@ import { Badge } from '@/components/ui/badge';
 import MarkdownContent from '@/components/ui/markdown-content';
 import {
   BookOpen, Search, Lightbulb, Palette, TrendingUp, Presentation,
-  ArrowLeft, ArrowRight, Clock, ChevronRight, Rocket, Lock,
+  ArrowLeft, ArrowRight, Clock, ChevronRight, Rocket, Lock, CheckCircle2,
 } from 'lucide-react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 const STAGE_ICONS = [BookOpen, Search, Lightbulb, Palette, TrendingUp, Presentation];
 
@@ -27,10 +29,12 @@ export default function StageLearn() {
   const stageData = STAGE_LEARN_CONTENT.find(s => s.stageId === stageNum);
   const Icon = STAGE_ICONS[stageNum - 1] || BookOpen;
 
-  // Stage locking: Stage N requires Stage N-1 completed
   const isStageUnlocked = stageNum === 1 || (
     progress.stageStatuses[stageNum - 2] === 'completed'
   );
+
+  const isLearnCompleted = progress.stageLearnCompleted.has(stageNum);
+  const [marking, setMarking] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) navigate('/auth?redirect=/journey/learn/' + stageNum);
@@ -39,6 +43,45 @@ export default function StageLearn() {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [stageNum]);
+
+  async function handleMarkComplete() {
+    if (!user || isLearnCompleted) return;
+    setMarking(true);
+    try {
+      const { error } = await supabase.from('course_progress').upsert({
+        user_id: user.id,
+        module: 'stage_learn',
+        module_id: String(stageNum),
+        status: 'completed',
+        completed_at: new Date().toISOString(),
+        started_at: new Date().toISOString(),
+      }, { onConflict: 'user_id,module,module_id' });
+
+      if (error) {
+        // If upsert fails due to no unique constraint, try insert
+        if (error.code === '42P10' || error.message.includes('unique')) {
+          await supabase.from('course_progress').insert({
+            user_id: user.id,
+            module: 'stage_learn',
+            module_id: String(stageNum),
+            status: 'completed',
+            completed_at: new Date().toISOString(),
+            started_at: new Date().toISOString(),
+          });
+        } else {
+          throw error;
+        }
+      }
+
+      toast.success(t('Learn section completed! ✅', 'Секцията за учене е завършена! ✅'));
+      progress.refresh();
+    } catch (err) {
+      console.error('Failed to mark learn complete:', err);
+      toast.error(t('Failed to save progress', 'Неуспешно записване на напредъка'));
+    } finally {
+      setMarking(false);
+    }
+  }
 
   if (!stageData) {
     return (
@@ -54,7 +97,6 @@ export default function StageLearn() {
     );
   }
 
-  // If stage is locked, show a locked message
   if (!progress.loading && !isStageUnlocked) {
     return (
       <div className="min-h-screen bg-background">
@@ -125,6 +167,12 @@ export default function StageLearn() {
               <BookOpen className="h-3.5 w-3.5" />
               {stageData.sections.length} {t('sections', 'секции')}
             </span>
+            {isLearnCompleted && (
+              <Badge className="bg-success/15 text-success border-0 text-xs">
+                <CheckCircle2 className="h-3 w-3 mr-1" />
+                {t('Completed', 'Завършено')}
+              </Badge>
+            )}
           </div>
         </div>
 
@@ -147,6 +195,30 @@ export default function StageLearn() {
             </section>
           ))}
         </div>
+
+        {/* Mark as Complete */}
+        {!isLearnCompleted && (
+          <div className="mt-8 p-5 rounded-xl border-2 border-dashed border-primary/30 bg-primary/5 text-center">
+            <p className="text-sm text-muted-foreground mb-3">
+              {t('Finished reading? Mark this lesson as complete.', 'Приключи с четенето? Отбележи урока като завършен.')}
+            </p>
+            <Button onClick={handleMarkComplete} disabled={marking} className="sim-gradient border-0">
+              <CheckCircle2 className="h-4 w-4 mr-1" />
+              {marking
+                ? t('Saving...', 'Записване...')
+                : t('Mark as Complete', 'Отбележи като завършено')}
+            </Button>
+          </div>
+        )}
+
+        {isLearnCompleted && (
+          <div className="mt-8 p-4 rounded-xl border border-success/30 bg-success/5 text-center">
+            <div className="flex items-center justify-center gap-2 text-success font-medium text-sm">
+              <CheckCircle2 className="h-5 w-5" />
+              {t('You completed this lesson!', 'Завърши този урок!')}
+            </div>
+          </div>
+        )}
 
         {/* Navigation */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mt-10 pt-6 border-t border-border">

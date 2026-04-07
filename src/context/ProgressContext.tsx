@@ -35,6 +35,9 @@ export interface UnifiedProgress {
   simWeek: number;
   simComplete: boolean;
 
+  // Stage learn completion (which stages had their Learn section marked complete)
+  stageLearnCompleted: Set<number>;
+
   // Computed scores
   outcomeScores: Record<string, number>;
 
@@ -62,6 +65,7 @@ const defaultProgress: UnifiedProgress = {
   finalPitchSubmitted: false,
   simWeek: 1,
   simComplete: false,
+  stageLearnCompleted: new Set(),
   outcomeScores: {},
   loading: true,
   refresh: () => {},
@@ -101,6 +105,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
           profileRes,
           moduleResponsesRes,
           allModsRes,
+          stageLearnRes,
         ] = await Promise.all([
           supabase.from('case_studies').select('id').eq('published', true),
           supabase.from('submissions').select('case_study_id, is_draft').eq('user_id', user.id).eq('is_draft', false),
@@ -112,6 +117,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
           supabase.from('profiles').select('total_xp').eq('user_id', user.id).maybeSingle(),
           supabase.from('learning_module_responses').select('module_id, completed_at').eq('user_id', user.id).not('completed_at', 'is', null),
           supabase.from('learning_modules').select('id, slug'),
+          supabase.from('course_progress').select('module_id').eq('user_id', user.id).eq('module', 'stage_learn').eq('status', 'completed'),
         ]);
 
         if (cancelled) return;
@@ -164,6 +170,11 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
         const modulesPct = modulesTotal > 0 ? Math.round((modulesCompleted / modulesTotal) * 100) : 0;
 
         // Outcome scores
+        // Stage learn completions
+        const stageLearnCompleted = new Set(
+          (stageLearnRes.data || []).map((r: any) => parseInt(r.module_id, 10)).filter((n: number) => !isNaN(n))
+        );
+
         const outcomeScores = calcOutcomeScores({
           casesCompleted,
           casesTotal,
@@ -191,6 +202,7 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
           finalPitchSubmitted,
           simWeek,
           simComplete,
+          stageLearnCompleted,
           outcomeScores,
           loading: false,
           refresh,
