@@ -82,6 +82,8 @@ export function SimulatorProvider({ children }: { children: ReactNode }) {
       round_id: season?.rounds[0]?.id || '',
       week_number: 0,
       kpis: INITIAL_KPIS,
+      resources: { ...INITIAL_RESOURCES },
+      gameStatus: 'playing' as GameStatus,
     }]);
   }, [individualRuns, currentUser.id, seasons]);
 
