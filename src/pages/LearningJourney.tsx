@@ -521,10 +521,29 @@ export default function LearningJourney() {
                   {/* Action buttons — only for unlocked stages */}
                   {!isLocked && (
                     <>
-                      <div className="flex flex-wrap gap-2 mb-3">
+                      <div className="flex flex-wrap gap-2 mb-2">
                         <Button variant="outline" size="sm" onClick={() => navigate(stage.learnPath)}>
-                          <BookOpen className="h-3.5 w-3.5 mr-1" />{t('Learn', 'Учи')}
+                          <BookOpen className="h-3.5 w-3.5 mr-1" />{t('Stage Primer', 'Въведение')}
                         </Button>
+                        {stage.moduleSlugs.map(slug => {
+                          const mod = LEARNING_MODULES.find(m => m.slug === slug);
+                          if (!mod) return null;
+                          const isDone = progress.completedModuleSlugs.has(slug);
+                          return (
+                            <Button
+                              key={slug}
+                              variant={isDone ? 'ghost' : 'outline'}
+                              size="sm"
+                              className={isDone ? 'text-success' : ''}
+                              onClick={() => navigate(`/learn/${slug}`)}
+                            >
+                              {isDone ? <CheckCircle2 className="h-3.5 w-3.5 mr-1" /> : <Brain className="h-3.5 w-3.5 mr-1" />}
+                              {lang === 'bg' ? mod.title_bg : mod.title_en}
+                            </Button>
+                          );
+                        })}
+                      </div>
+                      <div className="flex flex-wrap gap-2 mb-3">
                         <Button variant="outline" size="sm" onClick={() => navigate(stage.casePath)}>
                           <FileText className="h-3.5 w-3.5 mr-1" />{t('Case Study', 'Казус')}
                         </Button>
