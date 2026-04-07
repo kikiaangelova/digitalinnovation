@@ -160,7 +160,7 @@ export default function SeasonAnalytics() {
               value={commentRound}
               onChange={e => setCommentRound(e.target.value)}
             >
-              <option value="">Select round...</option>
+              <option value="">{t('Select round...', 'Избери рунд...')}</option>
               {teamSubmissions.map(sub => {
                 const round = season.rounds.find(r => r.id === sub.round_id);
                 return <option key={sub.round_id} value={sub.round_id}>Week {round?.week_number}</option>;
