@@ -71,20 +71,6 @@ export default function AppHeader() {
         { to: '/dictionary', icon: Book, label: t.dictionary },
       ];
 
-  // ─── Dropdown menu items ───
-  const dropdownItems = [
-    { to: '/about', icon: Lightbulb, label: t.about },
-    { to: '/profile', icon: User, label: t.profile },
-    ...(isAdmin
-      ? [
-          { to: '/admin', icon: Shield, label: t.admin },
-          { to: '/admin/teacher', icon: GraduationCap, label: t.teacher },
-          { to: '/admin/cohorts', icon: Users, label: t.cohorts },
-          { to: '/admin/analytics', icon: BarChart3, label: t.analytics },
-        ]
-      : []),
-  ];
-
   // ─── Bottom tab bar items (mobile, logged-in) ───
   const bottomTabs = [
     { to: '/dashboard', icon: LayoutDashboard, label: lang === 'bg' ? 'Начало' : 'Home' },
