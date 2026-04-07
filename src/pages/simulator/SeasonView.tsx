@@ -180,7 +180,7 @@ export default function SeasonView() {
         {/* Journey Summary — shown when all rounds are submitted */}
         {simComplete && participantId && (
           <SimulatorJourneySummary
-            allWeekAnswers={journeySummary}
+            weekSummaries={weekSummaries}
             startKpis={startKpis}
             finalKpis={finalKpis}
             lang={lang as 'en' | 'bg'}
