@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import { Zap, Star, Shield, Rocket, Crown, Gem } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Zap, Star, Shield, Rocket, Crown, Gem, Award } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
+import { Button } from '@/components/ui/button';
 
 const LEVELS = [
   { level: 1, name: { en: 'Explorer', bg: 'Изследовател' }, xpNeeded: 0, icon: Zap, gradient: 'gradient-explorer' },
