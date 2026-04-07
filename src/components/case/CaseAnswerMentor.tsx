@@ -65,6 +65,7 @@ export default function CaseAnswerMentor({
             student_answer: studentAnswer,
             question_context: questionContext,
             difficulty,
+            confidence_level: confidence,
           },
           lang,
         },
