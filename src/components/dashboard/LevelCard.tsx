@@ -34,6 +34,7 @@ export function getNextLevel(xp: number) {
 }
 
 export default function LevelCard({ xp, lang }: LevelCardProps) {
+  const navigate = useNavigate();
   const current = getCurrentLevel(xp);
   const next = getNextLevel(xp);
   const Icon = current.icon;
