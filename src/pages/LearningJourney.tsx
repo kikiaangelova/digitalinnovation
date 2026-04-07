@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
 import { useProgress } from '@/context/ProgressContext';
@@ -7,15 +7,17 @@ import AppHeader from '@/components/layout/AppHeader';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { useIsMobile } from '@/hooks/use-mobile';
 import {
   BookOpen, Search, Lightbulb, Palette, TrendingUp, Presentation,
   CheckCircle2, ArrowRight, Lock, Play, FileText, Rocket,
-  ChevronDown, ChevronUp, GraduationCap, Target, Clock, Zap, Circle, Brain,
+  ChevronDown, ChevronUp, GraduationCap, Target, Clock, Zap, Circle, Brain, PartyPopper,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { LEARNING_MODULES } from '@/data/learning-modules';
 import PhaseBadge from '@/components/ui/phase-badge';
+import confetti from 'canvas-confetti';
 
 /* ------------------------------------------------------------------ */
 /* Learning outcomes per stage                                         */
@@ -203,6 +205,7 @@ export default function LearningJourney() {
 
   const [expanded, setExpanded] = useState<Set<number>>(new Set());
   const [initializedExpanded, setInitializedExpanded] = useState(false);
+  const [celebrateStage, setCelebrateStage] = useState<number | null>(null);
 
   useEffect(() => {
     if (!initializedExpanded) {
@@ -292,6 +295,30 @@ export default function LearningJourney() {
   }
 
   const recommendedIdx = statuses.findIndex((s, i) => s !== 'completed' && isStageUnlocked(i));
+
+  // Stage completion celebration — fires once per stage via localStorage
+  const fireCelebration = useCallback((stageId: number) => {
+    const key = `stage_celebration_${stageId}`;
+    if (localStorage.getItem(key)) return;
+    localStorage.setItem(key, 'true');
+    setCelebrateStage(stageId);
+    // Fire confetti
+    const duration = 2000;
+    const end = Date.now() + duration;
+    const frame = () => {
+      confetti({ particleCount: 3, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#f59e0b', '#8b5cf6', '#10b981'] });
+      confetti({ particleCount: 3, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#f59e0b', '#8b5cf6', '#10b981'] });
+      if (Date.now() < end) requestAnimationFrame(frame);
+    };
+    frame();
+  }, []);
+
+  useEffect(() => {
+    if (loading) return;
+    statuses.forEach((s, i) => {
+      if (s === 'completed') fireCelebration(STAGES[i].id);
+    });
+  }, [statuses.join(','), loading, fireCelebration]);
 
   function handleLockedClick() {
     toast.error(t('Complete the previous stage first.', 'Завърши предишния етап първо.'));
@@ -603,6 +630,54 @@ export default function LearningJourney() {
           })}
         </div>
       </main>
+
+      {/* Stage Completion Celebration Modal */}
+      <Dialog open={celebrateStage !== null} onOpenChange={(open) => { if (!open) setCelebrateStage(null); }}>
+        <DialogContent className="max-w-sm text-center">
+          <DialogHeader>
+            <DialogTitle className="flex items-center justify-center gap-2 text-xl">
+              <PartyPopper className="h-6 w-6 text-xp-gold" />
+              {t(`Stage ${celebrateStage} Complete! 🎉`, `Етап ${celebrateStage} завършен! 🎉`)}
+            </DialogTitle>
+            <DialogDescription>
+              {t('Congratulations on completing this stage!', 'Поздравления за завършването на този етап!')}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="py-4 space-y-4">
+            <div className="rounded-lg bg-xp-gold/10 border border-xp-gold/30 p-4">
+              <p className="text-lg font-bold text-xp-gold flex items-center justify-center gap-2">
+                <Zap className="h-5 w-5" />
+                +{celebrateStage && STAGE_OUTCOMES[celebrateStage - 1]
+                  ? STAGE_OUTCOMES[celebrateStage - 1].xpAvailable
+                  : 0} XP {t('earned this stage', 'спечелени в този етап')}
+              </p>
+            </div>
+            {celebrateStage && celebrateStage < STAGES.length && (
+              <Button
+                className="w-full"
+                onClick={() => {
+                  const nextStage = STAGES[celebrateStage];
+                  setCelebrateStage(null);
+                  if (nextStage?.moduleSlugs?.length > 0) {
+                    navigate(`/learn/${nextStage.moduleSlugs[0]}`);
+                  } else {
+                    navigate(nextStage?.learnPath || '/journey');
+                  }
+                }}
+              >
+                <ArrowRight className="h-4 w-4 mr-2" />
+                {t(`Start Stage ${celebrateStage + 1}`, `Започни Етап ${celebrateStage + 1}`)}
+              </Button>
+            )}
+            {celebrateStage === STAGES.length && (
+              <Button className="w-full" onClick={() => { setCelebrateStage(null); navigate('/certificate'); }}>
+                <GraduationCap className="h-4 w-4 mr-2" />
+                {t('View Certificate', 'Виж сертификата')}
+              </Button>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
