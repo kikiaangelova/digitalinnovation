@@ -44,7 +44,7 @@ export default function LearningNavigator(props: LearningNavigatorProps) {
   const navigate = useNavigate();
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
 
-  const statuses = deriveStatuses(props);
+  const statuses = deriveJourneyStatuses(props);
   const completedCount = statuses.filter(s => s === 'completed').length;
   const currentStageIdx = statuses.findIndex(s => s !== 'completed');
   const currentStage = currentStageIdx >= 0 ? STAGES[currentStageIdx] : null;

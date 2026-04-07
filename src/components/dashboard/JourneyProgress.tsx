@@ -68,7 +68,7 @@ export default function JourneyProgress(props: JourneyProgressProps) {
   const navigate = useNavigate();
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
 
-  const statuses = deriveStatuses(props);
+  const statuses = deriveJourneyStatuses(props);
   const completedCount = statuses.filter(s => s === 'completed').length;
   const overallPct = Math.round((completedCount / JOURNEY_STEPS.length) * 100);
   const recommendedIdx = statuses.findIndex(s => s !== 'completed');

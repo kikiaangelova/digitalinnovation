@@ -254,6 +254,8 @@ export default function QuickTest() {
   };
 
   const submitTest = async () => {
+    if (submittingRef.current) return;
+    submittingRef.current = true;
     setSaving(true);
     const correctCount = answers.reduce((acc, ans, i) => acc + (ans === questions[i]?.correctIndex ? 1 : 0), 0);
     const score = Math.round((correctCount / questions.length) * 100);
