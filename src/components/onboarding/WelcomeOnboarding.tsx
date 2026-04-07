@@ -294,7 +294,7 @@ export default function WelcomeOnboarding({ onComplete }: Props) {
             <h2 className="text-xl font-display font-bold text-foreground">{t.onboardingComplete || T(lang, "You're all set!", 'Готов си!')}</h2>
             <p className="text-sm text-muted-foreground">{t.onboardingCompleteDesc || T(lang, 'Your dashboard will guide you through every step.', 'Таблото ти ще те води през всяка стъпка.')}</p>
             <div className="flex items-center justify-center gap-1 text-2xl font-bold text-xp-gold">
-              <Star className="h-6 w-6" /> 20 XP
+              <Star className="h-6 w-6" /> {totalXpEarned} XP
             </div>
             <Button className="w-full sim-gradient border-0" onClick={handleFinish}>
               {t.onboardingGoToDashboard || T(lang, 'Go to Dashboard', 'Към таблото')}

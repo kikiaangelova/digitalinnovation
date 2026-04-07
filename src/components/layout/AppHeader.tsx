@@ -72,7 +72,7 @@ export default function AppHeader() {
 
   // ─── Dropdown menu items ───
   const dropdownItems = [
-    { to: '/dictionary', icon: Book, label: t.dictionary },
+    { to: '/about', icon: Lightbulb, label: t.about },
     { to: '/about', icon: Lightbulb, label: t.about },
     { to: '/profile', icon: User, label: t.profile },
     ...(isAdmin

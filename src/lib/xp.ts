@@ -47,6 +47,8 @@ export const XP_VALUES: Record<XpAction, number> = {
   case_startup_notes: 50,
   theory_complete: 10,
   theory_quiz_pass: 15,
+  onboarding_profile: 5,
+  onboarding_journey: 10,
 };
 
 interface AwardXpResult {
