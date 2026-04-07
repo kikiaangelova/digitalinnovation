@@ -162,9 +162,10 @@ export default function AppHeader() {
                   <div className="flex h-7 w-7 items-center justify-center rounded-full bg-primary/10 text-primary text-xs font-bold uppercase">
                     {initials}
                   </div>
-                  <span className="text-sm text-foreground font-medium max-w-[120px] truncate">
-                    {displayName}
-                  </span>
+                    <span className="text-sm text-foreground font-medium max-w-[120px] truncate">
+                      {displayName}
+                    </span>
+                    <span className="text-xs text-muted-foreground ml-1 hidden lg:inline">⚡ {userXp}</span>
                   <ChevronDown className={`h-3.5 w-3.5 text-muted-foreground transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`} />
                 </button>
 
