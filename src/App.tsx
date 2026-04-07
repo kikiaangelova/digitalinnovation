@@ -9,6 +9,7 @@ import { LangProvider } from "@/context/LangContext";
 import { SimulatorProvider } from "@/context/SimulatorContext";
 import { ProgressProvider } from "@/context/ProgressContext";
 import ProfileGate from "@/components/layout/ProfileGate";
+import AppFooter from "@/components/layout/AppFooter";
 import AdminRoute from "@/components/layout/AdminRoute";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
