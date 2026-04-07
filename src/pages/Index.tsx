@@ -124,7 +124,7 @@ const Index = () => {
 
           {!user && (
             <p className="mt-6 text-sm text-muted-foreground">
-              {lang === 'bg' ? 'Вие сте преподавател?' : 'Are you a teacher?'}{' '}
+              {t.areYouTeacher}{' '}
               <a
                 href="mailto:contact@digiinnov.com"
                 className="text-primary hover:underline font-medium"
