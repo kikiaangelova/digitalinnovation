@@ -44,14 +44,13 @@ export default function CycleFAB() {
   if (pathname === config.path) return null;
 
   return (
-    <div className="fixed bottom-24 md:bottom-6 right-4 z-40">
+    <div className="fixed bottom-24 md:bottom-6 right-6 z-50">
       <Button
         onClick={() => navigate(config.path)}
-        className="sim-gradient border-0 shadow-lg gap-2 rounded-full px-5 h-11 text-sm font-semibold"
+        className="bg-primary text-primary-foreground hover:bg-primary/90 border-0 shadow-lg gap-2 rounded-full px-5 h-11 text-sm font-semibold"
       >
         <config.icon className="h-4 w-4" />
         {config.label}
-        <ArrowRight className="h-3.5 w-3.5" />
       </Button>
     </div>
   );
