@@ -23,6 +23,7 @@ export const TURBULENCE_POOLS: TurbulencePool[] = [
         title: 'Funding Winter',
         description: 'Venture capital dries up across the sector. Your runway feels shorter as future fundraising becomes uncertain.',
         kpi_effects: { runway_months: -2, burn_rate: 500, brand_trust: -3 },
+        resource_effects: { money: -2000, runway: -1 },
         category: 'market_crash',
         severity: 4,
         concept_lesson: '💡 Resilience Principle: Cash is oxygen in a crisis. Startups that proactively reduce burn rate and focus on unit economics survive when others don\'t.',
