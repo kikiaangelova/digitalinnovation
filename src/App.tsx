@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/context/AuthContext";
 import { LangProvider } from "@/context/LangContext";
 import { SimulatorProvider } from "@/context/SimulatorContext";
+import { ProgressProvider } from "@/context/ProgressContext";
 import ProfileGate from "@/components/layout/ProfileGate";
 import AdminRoute from "@/components/layout/AdminRoute";
 import Index from "./pages/Index";
@@ -59,9 +60,10 @@ const App = () => (
       <XpCelebrationToaster />
       <LangProvider>
         <AuthProvider>
-          <SimulatorProvider>
-            <BrowserRouter>
-              <ProfileGate>
+          <ProgressProvider>
+            <SimulatorProvider>
+              <BrowserRouter>
+                <ProfileGate>
                 <div className="pb-20 md:pb-0">
                   <Routes>
                     <Route path="/" element={<Index />} />
@@ -106,9 +108,10 @@ const App = () => (
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </div>
-              </ProfileGate>
-            </BrowserRouter>
-          </SimulatorProvider>
+                </ProfileGate>
+              </BrowserRouter>
+            </SimulatorProvider>
+          </ProgressProvider>
         </AuthProvider>
       </LangProvider>
     </TooltipProvider>

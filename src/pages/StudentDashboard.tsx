@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
+import { useProgress } from '@/context/ProgressContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 import AppHeader from '@/components/layout/AppHeader';
@@ -8,7 +9,7 @@ import LearningNavigator from '@/components/dashboard/LearningNavigator';
 import AchievementBadges from '@/components/dashboard/AchievementBadges';
 import TestInsights from '@/components/dashboard/TestInsights';
 import AIMentorWidget from '@/components/dashboard/AIMentorWidget';
-import LearningOutcomes, { calcOutcomeScores } from '@/components/dashboard/LearningOutcomes';
+import LearningOutcomes from '@/components/dashboard/LearningOutcomes';
 import Leaderboard from '@/components/dashboard/Leaderboard';
 import WelcomeOnboarding from '@/components/onboarding/WelcomeOnboarding';
 import { Button } from '@/components/ui/button';
@@ -24,6 +25,7 @@ export default function StudentDashboard() {
   const { user, loading: authLoading } = useAuth();
   const { lang } = useLang();
   const navigate = useNavigate();
+  const progress = useProgress();
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
 
   const [cases, setCases] = useState<CaseRow[]>([]);
@@ -142,15 +144,9 @@ export default function StudentDashboard() {
   const completedCaseIds = new Set(completedSubs.map(s => s.case_study_id));
   const industriesExplored = new Set(cases.filter(c => completedCaseIds.has(c.id) && c.topic).map(c => c.topic)).size;
 
-  const xp = totalXp;
+  const xp = totalXp || progress.xp;
 
-  const outcomeScores = calcOutcomeScores({
-    casesCompleted,
-    casesTotal: cases.length,
-    startupSections: startupSectionMap,
-    simWeek,
-    simComplete,
-  });
+  const outcomeScores = progress.outcomeScores;
 
   const xpActions = [
     { action: t('Complete case study', 'Завърши казус'), xp: '+100 XP', icon: BookOpen },

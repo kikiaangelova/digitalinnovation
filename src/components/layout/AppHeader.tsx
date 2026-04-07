@@ -1,9 +1,8 @@
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { supabase } from '@/integrations/supabase/client';
 import { useLang } from '@/context/LangContext';
-import { useJourneyProgress } from '@/hooks/useJourneyProgress';
+import { useProgress } from '@/context/ProgressContext';
 import { getCurrentLevel } from '@/components/dashboard/LevelCard';
 import { Button } from '@/components/ui/button';
 import {
@@ -20,7 +19,7 @@ export default function AppHeader() {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const journeyPct = useJourneyProgress();
+  const { xp: userXp, journeyPct } = useProgress();
 
   const handleSignOut = async () => {
     setDropdownOpen(false);
@@ -80,13 +79,6 @@ export default function AppHeader() {
     { to: '__more__', icon: Menu, label: lang === 'bg' ? 'Още' : 'More' },
   ];
 
-  // XP & level for bottom sheet
-  const [userXp, setUserXp] = useState(0);
-  useEffect(() => {
-    if (!user) return;
-    supabase.from('profiles').select('total_xp').eq('user_id', user.id).maybeSingle()
-      .then(({ data }) => { if (data) setUserXp((data as any).total_xp || 0); });
-  }, [user]);
   const level = getCurrentLevel(userXp);
 
   const displayName = profile?.display_name || profile?.full_name || user?.email || '';
