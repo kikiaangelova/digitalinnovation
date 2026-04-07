@@ -5,6 +5,7 @@ import {
 } from '@/types/simulator';
 import { SEED_SEASON, INITIAL_KPIS } from '@/data/seed-season';
 import { processRound } from '@/engine/simulation-engine';
+import { CRISIS_DECISIONS } from '@/components/simulator/CrisisResponsePanel';
 
 export type SimulatorMode = 'individual' | 'team';
 
