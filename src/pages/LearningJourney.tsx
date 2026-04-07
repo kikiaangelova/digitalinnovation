@@ -216,45 +216,67 @@ export default function LearningJourney() {
     });
   };
 
-  /* ---- derive stage statuses ---- */
-  const sectionFilled = (key: string) => progress.startupSectionMap[key] || false;
+  /* ---- per-stage checklist items ---- */
+  interface ChecklistItem {
+    labelEn: string;
+    labelBg: string;
+    done: boolean;
+  }
 
-  function stageStatus(stage: Stage): StageStatus {
+  function getStageChecklist(stage: Stage, idx: number): ChecklistItem[] {
+    const learnDone = progress.stageLearnCompleted.has(stage.id);
+    const items: ChecklistItem[] = [
+      { labelEn: 'Learn', labelBg: 'Учи', done: learnDone },
+    ];
+
+    // Case study: Stage 1 requires ≥1 completed, Stage 2 requires ≥2
     if (stage.id === 1) {
-      if (casesCompleted >= 1) return 'completed';
-      return casesTotal > 0 ? 'in_progress' : 'not_started';
+      items.push({ labelEn: 'Case Study', labelBg: 'Казус', done: casesCompleted >= 1 });
+    } else if (stage.id === 2) {
+      items.push({ labelEn: 'Case Study', labelBg: 'Казус', done: casesCompleted >= 2 });
+    } else {
+      // Stages 3-6: case study not required but shown if they have cases
+      items.push({ labelEn: 'Case Study', labelBg: 'Казус', done: casesCompleted >= idx + 1 });
     }
+
+    // Startup section (stages 2-6)
     if (stage.startupKey) {
       if (stage.id === 5) {
-        if (sectionFilled('business_model') && sectionFilled('growth_strategy')) return 'completed';
-        if (sectionFilled('business_model') || sectionFilled('growth_strategy')) return 'in_progress';
-        return 'not_started';
+        items.push({ labelEn: 'Startup Task', labelBg: 'Стартъп задача', done: sectionFilled('business_model') && sectionFilled('growth_strategy') });
+      } else if (stage.id === 6) {
+        items.push({ labelEn: 'Startup Task', labelBg: 'Стартъп задача', done: progress.startupSubmitted });
+      } else {
+        items.push({ labelEn: 'Startup Task', labelBg: 'Стартъп задача', done: sectionFilled(stage.startupKey) });
       }
-      if (stage.id === 6) {
-        if (progress.startupSubmitted) return 'completed';
-        if (sectionFilled('final_pitch')) return 'in_progress';
-        return 'not_started';
-      }
-      const filled = sectionFilled(stage.startupKey);
-      if (filled) return 'completed';
-      if (stage.id === 2 && (sectionFilled('problem') || sectionFilled('customer'))) return 'in_progress';
-      if (stage.id === 3 && sectionFilled('customer')) return 'in_progress';
-      if (stage.id === 4 && sectionFilled('digital_product')) return 'in_progress';
     }
+
+    // Simulator (stage 5)
+    if (stage.id === 5) {
+      items.push({ labelEn: 'Simulator', labelBg: 'Симулатор', done: progress.simComplete });
+    }
+
+    return items;
+  }
+
+  /* ---- derive stage statuses from checklist ---- */
+  function stageStatus(stage: Stage, idx: number): StageStatus {
+    const checklist = getStageChecklist(stage, idx);
+    const doneCount = checklist.filter(c => c.done).length;
+    if (doneCount === checklist.length) return 'completed';
+    if (doneCount > 0) return 'in_progress';
     return 'not_started';
   }
 
-  const statuses = STAGES.map(s => stageStatus(s));
+  const statuses = STAGES.map((s, i) => stageStatus(s, i));
   const completedCount = statuses.filter(s => s === 'completed').length;
   const overallPct = Math.round((completedCount / STAGES.length) * 100);
 
   /* ---- Locking logic: Stage N is unlocked only if Stage N-1 is completed ---- */
   function isStageUnlocked(idx: number): boolean {
-    if (idx === 0) return true; // Stage 1 always unlocked
+    if (idx === 0) return true;
     return statuses[idx - 1] === 'completed';
   }
 
-  // The recommended stage is the first unlocked, non-completed stage
   const recommendedIdx = statuses.findIndex((s, i) => s !== 'completed' && isStageUnlocked(i));
 
   function handleLockedClick() {
