@@ -18,9 +18,8 @@ export default function SeasonView() {
   const { seasons, getParticipantId, getLatestCompanyState, getSubmission, getOutcomeReport, getCompanyStateHistory, getTeamForSeason, simulatorMode } = useSimulator();
 
   const season = seasons.find(s => s.id === id);
-  if (!season) return <div className="p-8 text-center text-muted-foreground">{t('Season not found', 'Сезонът не е намерен')}</div>;
 
-  const participantId = getParticipantId(season.id);
+  const participantId = season ? getParticipantId(season.id) : null;
   const latestState = participantId ? getLatestCompanyState(participantId) : null;
   const team = simulatorMode === 'team' ? getTeamForSeason(season.id) : null;
 
