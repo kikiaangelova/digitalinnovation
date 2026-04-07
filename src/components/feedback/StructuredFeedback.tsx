@@ -6,6 +6,19 @@ import MarkdownContent from '@/components/ui/markdown-content';
 import { Bot, Sparkles, Loader2, AlertTriangle } from 'lucide-react';
 import { toast } from 'sonner';
 
+export type FeedbackContext =
+  | { type: 'case_submission'; caseTitle: string; totalScore: number; maxScore: number }
+  | { type: 'simulator'; currentWeek: number; kpis: Record<string, any>; grade?: string; decisions?: any[] }
+  | { type: 'startup_project'; problem: string; customer: string; valueProp: string; businessModel: string; growthStrategy: string; finalPitch: string }
+  | { type: 'quiz_result'; moduleTitle: string; quizScore: number; quizMax: number; analyticalAnswer?: string; applicationAnswer?: string };
+
+interface Props {
+  context: FeedbackContext;
+  lang: 'en' | 'bg';
+  autoLoad?: boolean;
+  className?: string;
+}
+
 export default function StructuredFeedback({ context, lang, autoLoad = false, className = '' }: Props) {
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
   const [feedback, setFeedback] = useState<string | null>(null);
