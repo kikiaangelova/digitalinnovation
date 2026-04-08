@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -79,8 +80,9 @@ const DIFFICULTY_LABELS: Record<string, { en: string; bg: string }> = {
 };
 
 export default function AdminDashboard() {
-  const { isAdmin, user } = useAuth();
+  const { isAdmin, user, authLoading, roleLoading } = useAuth();
   const { lang } = useLang();
+  const navigate = useNavigate();
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
   const [cases, setCases] = useState<CaseStudyAdmin[]>([]);
   const [submissions, setSubmissions] = useState<SubmissionAdmin[]>([]);
@@ -116,7 +118,14 @@ export default function AdminDashboard() {
 
   const STARTUP_SECTIONS = ['problem', 'customer', 'value_proposition', 'digital_product', 'business_model', 'growth_strategy', 'final_pitch'];
 
+  const [fetchError, setFetchError] = useState<string | null>(null);
+
   useEffect(() => {
+    if (authLoading || roleLoading) return;
+    if (!user) {
+      navigate('/auth', { replace: true });
+      return;
+    }
     if (!isAdmin) return;
     const fetchData = async () => {
       try {
@@ -124,7 +133,10 @@ export default function AdminDashboard() {
           body: { scope: 'dashboard' },
         });
         if (error || !result) {
+          const msg = error?.message || t('Failed to load admin data', 'Грешка при зареждане на данните');
           console.error('[AdminDashboard] admin-data error:', error);
+          setFetchError(msg);
+          toast.error(msg);
           setLoading(false);
           return;
         }
@@ -231,7 +243,7 @@ export default function AdminDashboard() {
       }
     };
     fetchData();
-  }, [isAdmin]);
+  }, [isAdmin, user, authLoading, roleLoading]);
 
   const togglePublish = async (caseId: string, published: boolean) => {
     await supabase.from('case_studies').update({ published: !published }).eq('id', caseId);
@@ -302,12 +314,26 @@ export default function AdminDashboard() {
     toast.success(t('Grades exported', 'Оценките са експортирани'));
   };
 
-  if (!isAdmin) {
+  if (authLoading || roleLoading) {
     return (
       <div className="min-h-screen bg-background">
         <AppHeader />
         <div className="flex items-center justify-center py-20 text-muted-foreground">
-          {t('Admin access required. Contact your instructor.', 'Необходим е администраторски достъп. Свържете се с преподавателя си.')}
+          {t('Loading...', 'Зареждане...')}
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) return null; // redirect handled in useEffect
+
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen bg-background">
+        <AppHeader />
+        <div className="flex flex-col items-center justify-center py-20 gap-4">
+          <p className="text-destructive font-medium">{t('⚠ Admin access required', '⚠ Необходим е администраторски достъп')}</p>
+          <p className="text-muted-foreground text-sm">{t('You are logged in but do not have admin privileges.', 'Влезли сте в системата, но нямате администраторски права.')}</p>
         </div>
       </div>
     );
@@ -328,6 +354,14 @@ export default function AdminDashboard() {
             </Button>
           </div>
         </div>
+
+        {/* Fetch error banner */}
+        {fetchError && (
+          <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-4 text-center">
+            <p className="text-destructive font-medium">{fetchError}</p>
+            <p className="text-sm text-muted-foreground mt-1">{t('Please try logging out and back in.', 'Моля, излезте и влезте отново.')}</p>
+          </div>
+        )}
 
         {/* Platform-wide Stats */}
         {!loading && (
