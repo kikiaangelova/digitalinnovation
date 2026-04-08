@@ -45,7 +45,7 @@ const SECTIONS: SectionConfig[] = [
     labelEn: 'Problem',
     labelBg: 'Проблем',
     descEn: 'Describe the real problem your startup will solve.',
-    descBg: 'Опишете реалния проблем, който вашият стартъп ще реши.',
+    descBg: 'Опишете реалния проблем, който твоят стартъп ще реши.',
     prompts: [
       { en: '💡 What problem are you solving?', bg: '💡 Какъв проблем решавате?' },
       { en: '👥 Who experiences this problem?', bg: '👥 Кой изпитва този проблем?' },
@@ -60,7 +60,7 @@ const SECTIONS: SectionConfig[] = [
     descEn: 'Analyze the industry your startup operates in.',
     descBg: 'Анализирай индустрията, в която работи твоят стартъп.',
     prompts: [
-      { en: '🏭 Which industry does your startup belong to?', bg: '🏭 Към коя индустрия принадлежи вашият стартъп?' },
+      { en: '🏭 Which industry does your startup belong to?', bg: '🏭 Към коя индустрия принадлежи твоят стартъп?' },
       { en: '📈 What are the key trends in this industry?', bg: '📈 Какви са ключовите тенденции в тази индустрия?' },
       { en: '📊 How large is the market? (estimated size, growth rate)', bg: '📊 Колко голям е пазарът? (очакван размер, темп на растеж)' },
       { en: '⚖️ What regulations or barriers to entry exist?', bg: '⚖️ Какви регулации или бариери за навлизане съществуват?' },
@@ -152,7 +152,7 @@ const SECTIONS: SectionConfig[] = [
     descEn: 'Create a short, compelling pitch for your startup idea.',
     descBg: 'Създайте кратко и завладяващо представяне на стартъп идеята ви.',
     prompts: [
-      { en: '🏷️ What is the name of your startup?', bg: '🏷️ Как се казва вашият стартъп?' },
+      { en: '🏷️ What is the name of your startup?', bg: '🏷️ Как се казва твоят стартъп?' },
       { en: '📝 Summarize the problem and your solution in 2–3 sentences.', bg: '📝 Обобщете проблема и решението в 2–3 изречения.' },
       { en: '🌍 Who is your target market?', bg: '🌍 Кой е целевият ви пазар?' },
       { en: '💼 How does the business model work?', bg: '💼 Как работи бизнес моделът?' },

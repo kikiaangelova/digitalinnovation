@@ -21,7 +21,7 @@ const SECTIONS = [
     bgDesc: 'Дефинирайте стартъп идея, която решава реален проблем. Опишете: 1) Проблемът, 2) Целевият клиент, 3) Вашето ценностно предложение, 4) Как ще печелите пари.' },
   { key: 'strategic_decision', icon: BarChart3, enTitle: 'Strategic Decision', bgTitle: 'Стратегическо решение',
     enDesc: 'Your startup has a €50,000 budget and must choose between: A) Investing in marketing for rapid growth, B) Improving the product for higher satisfaction, C) Hiring a new team. Justify your decision, analyze risks, and expected outcomes.',
-    bgDesc: 'Вашият стартъп има 50,000 лв бюджет и трябва да избере между: A) Инвестиране в маркетинг за бърз растеж, B) Подобряване на продукта за по-висока задоволеност, C) Наемане на нов екип. Обосновете решението си, анализирайте рисковете и очакваните резултати.' },
+    bgDesc: 'Твоят стартъп има 50,000 лв бюджет и трябва да избере между: A) Инвестиране в маркетинг за бърз растеж, B) Подобряване на продукта за по-висока задоволеност, C) Наемане на нов екип. Обосновете решението си, анализирайте рисковете и очакваните резултати.' },
   { key: 'reflection', icon: Brain, enTitle: 'Reflection', bgTitle: 'Рефлексия',
     enDesc: 'What did you learn during the course? How has your thinking about innovation and business changed? What skills did you develop and how will you apply them in the future?',
     bgDesc: 'Какво научи по време на курса? Как се промени начинът ти на мислене за иновации и бизнес? Какви умения разви и как ще ги приложиш в бъдеще?' },

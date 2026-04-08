@@ -127,7 +127,7 @@ export default function ValuePropositionTemplate({ value, onChange, lang, disabl
           onChange={e => update('freeform', e.target.value)}
           placeholder={t(lang,
             'Add more context about why your solution is unique...',
-            'Добавете повече контекст защо вашето решение е уникално...'
+            'Добави повече контекст защо твоето решение е уникално...'
           )}
           disabled={disabled}
           className="min-h-[100px] text-sm"

@@ -240,7 +240,7 @@ Understanding network effects is essential for designing digital products that g
     analytical_question_en: 'Why are network effects considered one of the strongest competitive moats in the digital economy? Provide examples to support your reasoning.',
     analytical_question_bg: 'Защо мрежовите ефекти се считат за един от най-силните конкурентни защитни механизми в дигиталната икономика? Дайте примери.',
     application_question_en: 'How could you leverage network effects in your own startup idea? What type of network effect would be most relevant and how would you achieve critical mass?',
-    application_question_bg: 'Как бихте използвали мрежовите ефекти във вашата стартъп идея? Кой тип мрежови ефект би бил най-подходящ и как бихте постигнали критична маса?',
+    application_question_bg: 'Как би използвал мрежовите ефекти в твоята стартъп идея? Кой тип мрежови ефект би бил най-подходящ и как би постигнал критична маса?',
     display_order: 1,
     related_case_topic: 'Platform Economy',
     case_transition_en: 'You just learned about network effects. Now analyze how Uber used network effects to dominate the mobility market.',
@@ -248,7 +248,7 @@ Understanding network effects is essential for designing digital products that g
     related_sim_concepts_en: ['Network Effects', 'Platform Scaling'],
     related_sim_concepts_bg: ['Мрежови ефекти', 'Мащабиране на платформа'],
     sim_transition_en: 'Apply network effects strategy in the startup simulator to test how your platform can grow.',
-    sim_transition_bg: 'Приложете стратегия за мрежови ефекти в стартъп симулатора, за да тествате как вашата платформа може да расте.',
+    sim_transition_bg: 'Приложи стратегия за мрежови ефекти в стартъп симулатора, за да тестваш как твоята платформа може да расте.',
   },
   {
     slug: 'platform-business-models',
@@ -356,7 +356,7 @@ Examples include Airbnb (hosts and guests), YouTube (creators and viewers), and 
     analytical_question_en: 'Compare linear business models with platform business models. What are the key advantages and risks of each approach?',
     analytical_question_bg: 'Сравнете линейните бизнес модели с платформените бизнес модели. Какви са ключовите предимства и рискове на всеки подход?',
     application_question_en: 'If your startup were a platform, who would be the producers and consumers? How would you solve the chicken-and-egg problem?',
-    application_question_bg: 'Ако вашият стартъп беше платформа, кои биха били производителите и потребителите? Как бихте решили проблема кокошка и яйце?',
+    application_question_bg: 'Ако твоят стартъп беше платформа, кои биха били производителите и потребителите? Как би решил проблема кокошка и яйце?',
     display_order: 2,
     related_case_topic: 'Platform Economy',
     case_transition_en: 'You just learned about platform business models. Now analyze how real platforms solved the chicken-and-egg problem.',
@@ -364,7 +364,7 @@ Examples include Airbnb (hosts and guests), YouTube (creators and viewers), and 
     related_sim_concepts_en: ['Platform Business Models', 'Two-sided Markets'],
     related_sim_concepts_bg: ['Платформени бизнес модели', 'Двустранни пазари'],
     sim_transition_en: 'Test your platform strategy in the startup simulator.',
-    sim_transition_bg: 'Тествайте вашата платформена стратегия в стартъп симулатора.',
+    sim_transition_bg: 'Тествай твоята платформена стратегия в стартъп симулатора.',
   },
   {
     slug: 'customer-acquisition-cost',
@@ -395,7 +395,7 @@ Examples include Airbnb (hosts and guests), YouTube (creators and viewers), and 
         example_en: 'Netflix spends ~$50 to acquire a subscriber who stays for 25 months at $15/mo = $375 LTV. Their LTV:CAC ratio is ~7.5:1.',
         example_bg: 'Netflix харчи ~$50 за придобиване на абонат, който остава 25 месеца при $15/мес = $375 LTV. Съотношението LTV:CAC е ~7.5:1.',
         takeaway_en: 'If LTV:CAC < 1, you\'re losing money on every customer. If > 3, you have a sustainable growth engine.',
-        takeaway_bg: 'Ако LTV:CAC < 1, губите пари от всеки клиент. Ако > 3, имате устойчив двигател за растеж.',
+        takeaway_bg: 'Ако LTV:CAC < 1, губиш пари от всеки клиент. Ако > 3, имате устойчив двигател за растеж.',
       },
       {
         id: 'cac-concept-3',
@@ -411,7 +411,7 @@ Examples include Airbnb (hosts and guests), YouTube (creators and viewers), and 
     ],
     simulator_decision: {
       scenario_en: 'Your startup has $50,000 for marketing. Your current CAC is $80 and LTV is $200 (LTV:CAC = 2.5:1).',
-      scenario_bg: 'Вашият стартъп има $50,000 за маркетинг. Текущият CAC е $80 и LTV е $200 (LTV:CAC = 2.5:1).',
+      scenario_bg: 'Твоят стартъп има $50,000 за маркетинг. Текущият CAC е $80 и LTV е $200 (LTV:CAC = 2.5:1).',
       question_en: 'How do you allocate the marketing budget?',
       question_bg: 'Как разпределяте маркетинговия бюджет?',
       options: [
@@ -478,7 +478,7 @@ CAC е критичен, защото директно влияе на рент�
     analytical_question_en: 'Why is CAC critical for startup sustainability? What happens when CAC exceeds LTV?',
     analytical_question_bg: 'Защо CAC е критичен за устойчивостта на стартъпа? Какво се случва, когато CAC надвиши LTV?',
     application_question_en: 'How would you reduce CAC for your own startup idea? What acquisition channels would you prioritize and why?',
-    application_question_bg: 'Как бихте намалили CAC за вашата стартъп идея? Кои канали за привличане бихте приоритизирали и защо?',
+    application_question_bg: 'Как би намалил CAC за твоята стартъп идея? Кои канали за привличане би приоритизирал и защо?',
     display_order: 3,
     related_case_topic: 'FinTech',
     case_transition_en: 'You just learned about CAC. Now analyze how FinTech startups optimize customer acquisition in a regulated market.',
@@ -596,7 +596,7 @@ Once PMF is achieved, the focus shifts to scaling. But PMF is not permanent — 
     analytical_question_en: 'Why should startups avoid scaling before achieving Product-Market Fit? What are the consequences of premature scaling?',
     analytical_question_bg: 'Защо стартъпите трябва да избягват мащабирането преди постигане на продуктово-пазарно съответствие?',
     application_question_en: 'How would you test for Product-Market Fit in your startup idea? What metrics would you track and what experiments would you run?',
-    application_question_bg: 'Как бихте тествали за продуктово-пазарно съответствие във вашата стартъп идея? Какви метрики бихте проследявали?',
+    application_question_bg: 'Как би тествал за продуктово-пазарно съответствие в твоята стартъп идея? Какви метрики би проследявал?',
     display_order: 4,
     related_case_topic: 'EdTech',
     case_transition_en: 'You just learned about Product-Market Fit. Now analyze how EdTech platforms found PMF in the education market.',
@@ -651,11 +651,11 @@ Once PMF is achieved, the focus shifts to scaling. But PMF is not permanent — 
     ],
     simulator_decision: {
       scenario_en: 'Your SaaS product has gained traction. You can expand into an ecosystem or stay focused on one product.',
-      scenario_bg: 'Вашият SaaS продукт набра скорост. Можете да се разширите в екосистема или да останете фокусирани на един продукт.',
+      scenario_bg: 'Твоят SaaS продукт набра скорост. Можеш да се разшириш в екосистема или да останеш фокусиран на един продукт.',
       question_en: 'What\'s your ecosystem strategy?',
       question_bg: 'Каква е екосистемната ви стратегия?',
       options: [
-        { id: 'de-d1', label_en: 'Open API platform', label_bg: 'Отворена API платформа', description_en: 'Let third-party developers build on your platform. Slow to start but creates powerful lock-in.', description_bg: 'Позволете на трети страни да изграждат върху вашата платформа. Бавно начало, но създава мощно заключване.' },
+        { id: 'de-d1', label_en: 'Open API platform', label_bg: 'Отворена API платформа', description_en: 'Let third-party developers build on your platform. Slow to start but creates powerful lock-in.', description_bg: 'Позволи на трети страни да изграждат върху твоята платформа. Бавно начало, но създава мощно заключване.' },
         { id: 'de-d2', label_en: 'Build complementary products', label_bg: 'Изгради допълващи продукти', description_en: 'Create 2-3 products that work together. Higher cost but complete control over quality.', description_bg: 'Създай 2-3 продукта, които работят заедно. По-висока цена, но пълен контрол.' },
         { id: 'de-d3', label_en: 'Stay focused on one product', label_bg: 'Останете фокусирани на един продукт', description_en: 'Perfect your core product before expanding. Risk: competitors build the ecosystem first.', description_bg: 'Усъвършенствайте основния продукт преди разширяване. Риск: конкурентите изграждат екосистемата първи.' },
       ],
@@ -714,7 +714,7 @@ The future of competition is increasingly between ecosystems, not individual com
     analytical_question_en: 'How do digital ecosystems create stronger competitive advantages compared to standalone platforms? Use specific examples in your analysis.',
     analytical_question_bg: 'Как дигиталните екосистеми създават по-силни конкурентни предимства в сравнение със самостоятелните платформи?',
     application_question_en: 'Could your startup idea become part of or create a digital ecosystem? What complementary products or services would strengthen your value proposition?',
-    application_question_bg: 'Може ли вашата стартъп идея да стане част от или да създаде дигитална екосистема? Какви допълващи продукти или услуги биха укрепили вашето ценностно предложение?',
+    application_question_bg: 'Може ли твоята стартъп идея да стане част от или да създаде дигитална екосистема? Какви допълващи продукти или услуги биха укрепили твоето ценностно предложение?',
     display_order: 5,
     related_case_topic: 'AI',
     case_transition_en: 'You just learned about digital ecosystems. Now analyze how AI-powered smart cities create interconnected value.',
@@ -741,7 +741,7 @@ The future of competition is increasingly between ecosystems, not individual com
     ],
     simulator_decision: {
       scenario_en: 'Your startup launched 3 months ago. You have 200 users but growth is flat. Budget: $5,000/month.',
-      scenario_bg: 'Вашият стартъп стартира преди 3 месеца. Имате 200 потребители, но растежът е плосък. Бюджет: $5,000/месец.',
+      scenario_bg: 'Вашият стартъп стартира преди 3 месеца. Имаш 200 потребители, но растежът е плосък. Бюджет: $5,000/месец.',
       question_en: 'Which marketing strategy do you prioritize?',
       question_bg: 'Коя маркетингова стратегия приоритизирате?',
       options: [
@@ -780,7 +780,7 @@ Key metrics to track: **CAC** (cost to acquire), **LTV** (lifetime value), **con
     analytical_question_en: 'Compare content marketing with performance marketing. When should a startup prioritize each approach, and what are the trade-offs?',
     analytical_question_bg: 'Сравнете контент маркетинга с пърформанс маркетинга. Кога стартъп трябва да приоритизира всеки подход и какви са компромисите?',
     application_question_en: 'Design a marketing strategy for your startup idea. Which channels would you use in the first 6 months, and how would you measure success?',
-    application_question_bg: 'Проектирайте маркетингова стратегия за вашата стартъп идея. Кои канали бихте използвали в първите 6 месеца и как бихте измервали успеха?',
+    application_question_bg: 'Проектирай маркетингова стратегия за твоята стартъп идея. Кои канали би използвал в първите 6 месеца и как би измервал успеха?',
     display_order: 6,
     related_case_topic: 'FinTech',
     case_transition_en: 'You learned marketing fundamentals. Now analyze how FinTech startups acquire and retain customers in competitive markets.',
@@ -826,7 +826,7 @@ Additionally, Airbnb noticed that listings with professional photos got 2.5x mor
     level: 2,
     startup_field: 'business_model',
     concepts: [
-      { id: 'pr-c1', name_en: 'Unit Economics', name_bg: 'Юнит икономика', explanation_en: 'Revenue and costs associated with a single unit of your product (one customer, one transaction). Must be positive for sustainability.', explanation_bg: 'Приходите и разходите, свързани с единица от вашия продукт (един клиент, една транзакция). Трябва да са положителни.', example_en: 'Uber: Revenue per ride = $15. Cost per ride (driver pay + insurance + platform) = $18. Negative unit economics for years.', example_bg: 'Uber: Приход на пътуване = $15. Разход на пътуване (заплата на шофьор + застраховка + платформа) = $18. Негативна юнит икономика с години.', takeaway_en: 'If you lose money on every transaction, more scale = more losses. Fix unit economics before scaling.', takeaway_bg: 'Ако губите пари от всяка транзакция, повече мащаб = повече загуби. Поправете юнит икономиката преди мащабиране.' },
+      { id: 'pr-c1', name_en: 'Unit Economics', name_bg: 'Юнит икономика', explanation_en: 'Revenue and costs associated with a single unit of your product (one customer, one transaction). Must be positive for sustainability.', explanation_bg: 'Приходите и разходите, свързани с единица от твоя продукт (един клиент, една транзакция). Трябва да са положителни.', example_en: 'Uber: Revenue per ride = $15. Cost per ride (driver pay + insurance + platform) = $18. Negative unit economics for years.', example_bg: 'Uber: Приход на пътуване = $15. Разход на пътуване (заплата на шофьор + застраховка + платформа) = $18. Негативна юнит икономика с години.', takeaway_en: 'If you lose money on every transaction, more scale = more losses. Fix unit economics before scaling.', takeaway_bg: 'Ако губиш пари от всяка транзакция, повече мащаб = повече загуби. Поправи юнит икономиката преди мащабиране.' },
       { id: 'pr-c2', name_en: 'Freemium Model', name_bg: 'Фриймиъм модел', explanation_en: 'Offering a free basic version with paid premium features. Converts 2-5% of free users to paying customers.', explanation_bg: 'Предлагане на безплатна базова версия с платени премиум функции. Конвертира 2-5% от безплатните потребители.', example_en: 'Spotify: 600M free users, 220M paying ($10/mo). Free tier = acquisition engine. Premium = revenue engine.', example_bg: 'Spotify: 600M безплатни потребители, 220M плащащи ($10/мес). Безплатното ниво = двигател за привличане. Премиум = двигател за приходи.', takeaway_en: 'Freemium works when the free version is good enough to attract users but limited enough to motivate upgrading.', takeaway_bg: 'Фриймиъм работи, когато безплатната версия е достатъчно добра, но достатъчно ограничена за мотивиране на ъпгрейд.' },
     ],
     simulator_decision: {
@@ -907,7 +907,7 @@ The biggest pricing mistake startups make: **charging too little.** Most early-s
     analytical_question_en: 'Compare subscription, freemium, and usage-based pricing models. For which types of products is each model most appropriate?',
     analytical_question_bg: 'Сравнете абонаментен, фриймиъм и ценообразуване на база употреба. За кои типове продукти е подходящ всеки модел?',
     application_question_en: 'Design a pricing strategy for your startup. What model would you use, what would you charge, and how would you validate that the price is right?',
-    application_question_bg: 'Проектирайте ценова стратегия за вашия стартъп. Какъв модел бихте използвали и как бихте валидирали, че цената е правилна?',
+    application_question_bg: 'Проектирай ценова стратегия за твоя стартъп. Какъв модел би използвал и как би валидирал, че цената е правилна?',
     display_order: 7,
     sim_transition_en: 'Test your pricing strategy in the startup simulator to see how pricing affects revenue and growth.',
     sim_transition_bg: 'Тествайте ценовата си стратегия в стартъп симулатора, за да видите как влияе на приходите и растежа.',
@@ -928,7 +928,7 @@ The biggest pricing mistake startups make: **charging too little.** Most early-s
     ],
     simulator_decision: {
       scenario_en: 'Your startup has 3 co-founders and just got $100K in funding. You need to hire your first employee.',
-      scenario_bg: 'Вашият стартъп има 3 съоснователи и току-що получи $100K финансиране. Трябва да наемете първия си служител.',
+      scenario_bg: 'Твоят стартъп има 3 съоснователи и току-що получи $100K финансиране. Трябва да наемеш първия си служител.',
       question_en: 'Who do you hire first?',
       question_bg: 'Кого наемате първо?',
       options: [
@@ -974,7 +974,7 @@ Key principle: **Hire slow, fire fast.** A wrong hire at an early stage can dest
     analytical_question_en: 'Why do all-technical teams or all-business teams often fail? What makes a balanced founding team more likely to succeed?',
     analytical_question_bg: 'Защо изцяло технически или изцяло бизнес екипи често се провалят?',
     application_question_en: 'Define the key roles your startup needs in its first 6 months. Who would you hire first, and what skills would you prioritize? How would you split equity among co-founders?',
-    application_question_bg: 'Определете ключовите роли, от които вашият стартъп се нуждае. Кого бихте наели първо и как бихте разпределили дяловете?',
+    application_question_bg: 'Определи ключовите роли, от които твоят стартъп се нуждае. Кого би наел първо и как би разпределил дяловете?',
     display_order: 8,
     sim_transition_en: 'Apply your team-building insights in the startup simulator hiring decisions.',
     sim_transition_bg: 'Приложете знанията си за изграждане на екип в решенията за наемане в стартъп симулатора.',

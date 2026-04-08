@@ -87,7 +87,7 @@ export default function PasswordStrengthMeter({ password, nameOrEmail, lang }: P
     { key: 'minLength', en: 'At least 8 characters', bg: 'Поне 8 символа' },
     { key: 'complexityMet', en: '3 of 4: uppercase, lowercase, number, symbol', bg: '3 от 4: главна, малка, цифра, символ' },
     { key: 'notCommon', en: 'Not a common password', bg: 'Не е често срещана парола' },
-    { key: 'notContainsName', en: 'Does not contain your name/email', bg: 'Не съдържа вашето име/имейл' },
+    { key: 'notContainsName', en: 'Does not contain your name/email', bg: 'Не съдържа твоето име/имейл' },
   ];
 
   const bars = strength === 'none' ? 0 : strength === 'weak' ? 1 : strength === 'ok' ? 2 : 3;

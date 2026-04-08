@@ -41,7 +41,7 @@ const BLOCKS: Block[] = [
     key: 'bmc_key_partners', icon: Handshake,
     en: 'Key Partners', bg: 'Ключови партньори',
     descEn: 'Who are your strategic partners?',
-    descBg: 'Кои са вашите стратегически партньори?',
+    descBg: 'Кои са твоите стратегически партньори?',
     gridArea: 'kp',
   },
   {
@@ -83,7 +83,7 @@ const BLOCKS: Block[] = [
     key: 'bmc_customer_segments', icon: Users,
     en: 'Customer Segments', bg: 'Клиентски сегменти',
     descEn: 'Who are your target customers?',
-    descBg: 'Кои са вашите целеви клиенти?',
+    descBg: 'Кои са твоите целеви клиенти?',
     gridArea: 'cs',
   },
   {
@@ -97,7 +97,7 @@ const BLOCKS: Block[] = [
     key: 'bmc_revenue_streams', icon: DollarSign,
     en: 'Revenue Streams', bg: 'Приходни потоци',
     descEn: 'How will your startup make money?',
-    descBg: 'Как вашият стартъп ще генерира приходи?',
+    descBg: 'Как твоят стартъп ще генерира приходи?',
     gridArea: 'rs',
   },
 ];

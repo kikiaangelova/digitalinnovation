@@ -753,7 +753,7 @@ export default function IndustryProblemGenerator({ lang, onProblemSelected }: Pr
             onChange={e => setInnovationAnswer(e.target.value)}
             placeholder={t(
               'Describe how you would solve this problem using digital innovation...',
-              'Опишете как бихте решили този проблем чрез дигитални иновации...',
+              'Опишете как би решил този проблем чрез дигитални иновации...',
             )}
             className="min-h-[140px] text-sm resize-y"
           />
