@@ -53,6 +53,7 @@ interface ProgressSnapshot {
   startup_sections: number;
   startup_keys: Record<string, boolean>;
   startup_submitted: boolean;
+  bmc_keys: Record<string, boolean>;
   module_count: number;
   quiz_avg: number;
   recent_quizzes: QuizEntry[];
