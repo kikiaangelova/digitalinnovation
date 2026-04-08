@@ -67,7 +67,7 @@ export default function AppHeader() {
       ? []
       : isTeacher
         ? [
-            { to: '/dashboard', icon: LayoutDashboard, label: t.dashboard },
+            { to: '/teacher-dashboard', icon: LayoutDashboard, label: t.dashboard },
             { to: '/teacher', icon: GraduationCap, label: lang === 'bg' ? 'Клас' : 'Class' },
             { to: '/cases', icon: BookOpen, label: t.cases },
             { to: '/learn', icon: GraduationCap, label: lang === 'bg' ? 'Учи' : 'Learn' },
