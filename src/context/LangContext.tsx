@@ -602,6 +602,7 @@ const translations = {
     allLevels: 'Всички нива',
     beginner: 'Начинаещ',
     intermediate: 'Средно ниво',
+
     advanced: 'Напреднал',
     allTopics: 'Всички теми',
     loadingCases: 'Зареждане на казуси...',
