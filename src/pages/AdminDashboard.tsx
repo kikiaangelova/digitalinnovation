@@ -601,16 +601,6 @@ export default function AdminDashboard() {
             </table>
           </div>
         </div>
-                    </td>
-                  </tr>
-                ))}
-                {studentXpData.length === 0 && (
-                  <tr><td colSpan={4} className="px-4 py-8 text-center text-muted-foreground">{t('No student activity yet', 'Все още няма студентска активност')}</td></tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
       </main>
     </div>
   );
