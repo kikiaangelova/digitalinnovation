@@ -133,7 +133,10 @@ export default function AdminDashboard() {
           body: { scope: 'dashboard' },
         });
         if (error || !result) {
+          const msg = error?.message || t('Failed to load admin data', 'Грешка при зареждане на данните');
           console.error('[AdminDashboard] admin-data error:', error);
+          setFetchError(msg);
+          toast.error(msg);
           setLoading(false);
           return;
         }
