@@ -376,11 +376,12 @@ export default function TeacherDashboardPage() {
               accent={activeThisWeek > 0 ? 'text-emerald-600 dark:text-emerald-400' : undefined}
             />
           />
-          <StatCard
-            icon={AlertTriangle}
-            label={t('Need attention', 'Нуждаят се от внимание')}
-            value={struggling.length}
-            accent={struggling.length > 0 ? 'text-amber-600 dark:text-amber-400' : undefined}
+            <StatCard
+              icon={AlertTriangle}
+              label={t('Need attention', 'Нуждаят се от внимание')}
+              value={struggling.length}
+              accent={struggling.length > 0 ? 'text-amber-600 dark:text-amber-400' : undefined}
+            />
           />
           <StatCard icon={Target} label={t('Avg XP', 'Ср. XP')} value={avgXp} />
           <StatCard icon={ClipboardList} label={t('Assignments', 'Задачи')} value={assignmentCount} />
