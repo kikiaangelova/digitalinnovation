@@ -314,12 +314,26 @@ export default function AdminDashboard() {
     toast.success(t('Grades exported', 'Оценките са експортирани'));
   };
 
-  if (!isAdmin) {
+  if (authLoading || roleLoading) {
     return (
       <div className="min-h-screen bg-background">
         <AppHeader />
         <div className="flex items-center justify-center py-20 text-muted-foreground">
-          {t('Admin access required. Contact your instructor.', 'Необходим е администраторски достъп. Свържете се с преподавателя си.')}
+          {t('Loading...', 'Зареждане...')}
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) return null; // redirect handled in useEffect
+
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen bg-background">
+        <AppHeader />
+        <div className="flex flex-col items-center justify-center py-20 gap-4">
+          <p className="text-destructive font-medium">{t('⚠ Admin access required', '⚠ Необходим е администраторски достъп')}</p>
+          <p className="text-muted-foreground text-sm">{t('You are logged in but do not have admin privileges.', 'Влезли сте в системата, но нямате администраторски права.')}</p>
         </div>
       </div>
     );
