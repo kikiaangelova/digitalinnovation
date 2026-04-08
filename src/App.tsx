@@ -70,6 +70,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <XpCelebrationToaster />
+      <CelebrationOverlay />
       <LangProvider>
         <AuthProvider>
           <ProgressProvider>

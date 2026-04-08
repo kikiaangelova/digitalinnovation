@@ -474,8 +474,14 @@ export default function CasePlayer() {
         .eq('case_id', id);
 
       setSaveStatus('saved');
-      toast.success(tl('Case submitted successfully!', 'Казусът е изпратен успешно!'));
-      navigate(`/case/${id}/results`);
+      const { fireCelebration } = await import('@/components/ui/celebration-overlay');
+      fireCelebration({
+        xp: caseSession?.xp_earned || 0,
+        title: tl('Case Complete!', 'Браво! Завърши казуса!'),
+        subtitle: tl('Great analysis work', 'Страхотен анализ'),
+        ctaLabel: tl('View Results', 'Виж резултатите'),
+        onCta: () => navigate(`/case/${id}/results`),
+      });
     } catch {
       setSaveStatus('error');
       toast.error(tl('Failed to submit', 'Грешка при изпращане'));
