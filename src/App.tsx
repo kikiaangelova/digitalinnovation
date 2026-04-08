@@ -56,6 +56,8 @@ import Certificate from "./pages/Certificate";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfUse from "./pages/TermsOfUse";
 import PendingApproval from "./pages/PendingApproval";
+import TeacherClassroom from "./pages/TeacherClassroom";
+import JoinClassroom from "./pages/JoinClassroom";
 
 const queryClient = new QueryClient();
 
