@@ -938,6 +938,39 @@ export type Database = {
         }
         Relationships: []
       }
+      hypotheses: {
+        Row: {
+          context_id: string
+          context_type: string
+          created_at: string
+          hypothesis_text: string
+          id: string
+          user_id: string
+          validation_note: string | null
+          was_validated: boolean | null
+        }
+        Insert: {
+          context_id: string
+          context_type: string
+          created_at?: string
+          hypothesis_text: string
+          id?: string
+          user_id: string
+          validation_note?: string | null
+          was_validated?: boolean | null
+        }
+        Update: {
+          context_id?: string
+          context_type?: string
+          created_at?: string
+          hypothesis_text?: string
+          id?: string
+          user_id?: string
+          validation_note?: string | null
+          was_validated?: boolean | null
+        }
+        Relationships: []
+      }
       learning_module_responses: {
         Row: {
           analytical_answer: string
@@ -1179,6 +1212,8 @@ export type Database = {
           data_retention_until: string | null
           display_name: string | null
           full_name: string | null
+          hypotheses_failed: number
+          hypotheses_validated: number
           id: string
           institution: string | null
           interests: string[] | null
@@ -1207,6 +1242,8 @@ export type Database = {
           data_retention_until?: string | null
           display_name?: string | null
           full_name?: string | null
+          hypotheses_failed?: number
+          hypotheses_validated?: number
           id?: string
           institution?: string | null
           interests?: string[] | null
@@ -1235,6 +1272,8 @@ export type Database = {
           data_retention_until?: string | null
           display_name?: string | null
           full_name?: string | null
+          hypotheses_failed?: number
+          hypotheses_validated?: number
           id?: string
           institution?: string | null
           interests?: string[] | null
