@@ -44,6 +44,10 @@ export default function ProfilePage() {
   const [submissions, setSubmissions] = useState<any[]>([]);
   const [badges, setBadges] = useState<any[]>([]);
   const [teams, setTeams] = useState<any[]>([]);
+  const [quizHistory, setQuizHistory] = useState<any[]>([]);
+  const [simData, setSimData] = useState<any>(null);
+  const [startupData, setStartupData] = useState<any>(null);
+  const [totalXp, setTotalXp] = useState(0);
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
