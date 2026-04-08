@@ -510,42 +510,97 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* Student XP Verification */}
+        {/* Comprehensive User List */}
         <div>
           <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-            <Award className="h-5 w-5 text-primary" />
-            {t('Student XP Verification', 'Проверка на XP на студентите')}
+            <Users className="h-5 w-5 text-primary" />
+            {t('All Participants', 'Всички участници')} ({studentXpData.length})
           </h2>
-          <div className="rounded-xl border border-border overflow-hidden">
-            <table className="w-full">
+          <div className="rounded-xl border border-border overflow-x-auto">
+            <table className="w-full min-w-[1100px]">
               <thead className="bg-muted/50">
                 <tr>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">{t('Student', 'Студент')}</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">{t('Total XP', 'Общо XP')}</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">{t('Cases Completed', 'Завършени казуси')}</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">{t('Session XP Details', 'XP по сесии')}</th>
+                  <th className="px-3 py-3 text-left text-xs font-medium text-muted-foreground">{t('Name / Username', 'Име / Потребител')}</th>
+                  <th className="px-3 py-3 text-left text-xs font-medium text-muted-foreground">{t('Email', 'Имейл')}</th>
+                  <th className="px-3 py-3 text-left text-xs font-medium text-muted-foreground">{t('Role', 'Роля')}</th>
+                  <th className="px-3 py-3 text-right text-xs font-medium text-muted-foreground">XP</th>
+                  <th className="px-3 py-3 text-left text-xs font-medium text-muted-foreground">{t('Level', 'Ниво')}</th>
+                  <th className="px-3 py-3 text-right text-xs font-medium text-muted-foreground">{t('Quiz Avg', 'Ср. тест')}</th>
+                  <th className="px-3 py-3 text-right text-xs font-medium text-muted-foreground">{t('Cases', 'Казуси')}</th>
+                  <th className="px-3 py-3 text-left text-xs font-medium text-muted-foreground">{t('Simulator', 'Симулатор')}</th>
+                  <th className="px-3 py-3 text-right text-xs font-medium text-muted-foreground">{t('Startup %', 'Стартъп %')}</th>
+                  <th className="px-3 py-3 text-left text-xs font-medium text-muted-foreground">{t('Last Active', 'Последно активен')}</th>
                 </tr>
               </thead>
               <tbody>
-                {studentXpData.map(s => (
-                  <tr key={s.user_id} className="border-t border-border">
-                    <td className="px-4 py-3 text-sm font-medium text-foreground">{s.full_name}</td>
-                    <td className="px-4 py-3">
-                      <Badge className="bg-primary/10 text-primary border-0">{s.total_xp} XP</Badge>
-                    </td>
-                    <td className="px-4 py-3 text-sm text-muted-foreground">{s.cases_completed}</td>
-                    <td className="px-4 py-3">
-                      <div className="flex flex-wrap gap-1">
-                        {s.sessions.map((sess, i) => {
-                          const caseName = cases.find(c => c.id === sess.case_id)?.title || sess.case_id.slice(0, 8);
-                          return (
-                            <Badge key={i} variant="outline" className="text-xs">
-                              {caseName}: {sess.xp_earned} XP ({sess.completion_status})
-                            </Badge>
-                          );
-                        })}
-                        {s.sessions.length === 0 && <span className="text-xs text-muted-foreground">—</span>}
-                      </div>
+                {studentXpData.map(s => {
+                  const level = getLevel(s.total_xp);
+                  const roleLabel: Record<string, string> = {
+                    admin: 'Admin',
+                    teacher_verified: lang === 'bg' ? 'Учител' : 'Teacher',
+                    teacher_pending: lang === 'bg' ? 'Учител (чакащ)' : 'Teacher (pending)',
+                    student: lang === 'bg' ? 'Студент' : 'Student',
+                  };
+                  return (
+                    <tr key={s.user_id} className="border-t border-border hover:bg-muted/30 transition-colors">
+                      <td className="px-3 py-2.5">
+                        <div>
+                          <p className="text-sm font-medium text-foreground truncate max-w-[160px]">{s.full_name}</p>
+                          {s.display_name && <p className="text-xs text-muted-foreground truncate max-w-[160px]">@{s.display_name}</p>}
+                        </div>
+                      </td>
+                      <td className="px-3 py-2.5 text-xs text-muted-foreground truncate max-w-[180px]">{s.email}</td>
+                      <td className="px-3 py-2.5">
+                        <Badge variant={s.role === 'admin' ? 'default' : 'outline'} className="text-xs">
+                          {roleLabel[s.role] || s.role}
+                        </Badge>
+                      </td>
+                      <td className="px-3 py-2.5 text-right">
+                        <Badge className="bg-primary/10 text-primary border-0 text-xs">{s.total_xp}</Badge>
+                      </td>
+                      <td className="px-3 py-2.5">
+                        <span className="text-xs font-medium text-foreground">{level}</span>
+                      </td>
+                      <td className="px-3 py-2.5 text-right text-sm">
+                        {s.quiz_count > 0 ? (
+                          <span className="text-foreground">{s.quiz_avg}% <span className="text-muted-foreground text-xs">({s.quiz_count})</span></span>
+                        ) : (
+                          <span className="text-muted-foreground text-xs">—</span>
+                        )}
+                      </td>
+                      <td className="px-3 py-2.5 text-right text-sm text-foreground">{s.cases_completed}</td>
+                      <td className="px-3 py-2.5">
+                        {s.sim_week > 0 ? (
+                          <div className="text-xs">
+                            <span className="text-foreground">{t('Wk', 'Сд')} {s.sim_week}</span>
+                            {s.sim_complete && <Badge className="ml-1 bg-emerald-500/10 text-emerald-600 border-0 text-[10px]">{s.sim_grade || '✓'}</Badge>}
+                          </div>
+                        ) : (
+                          <span className="text-muted-foreground text-xs">—</span>
+                        )}
+                      </td>
+                      <td className="px-3 py-2.5 text-right">
+                        {s.startup_pct > 0 ? (
+                          <span className={`text-xs font-medium ${s.startup_submitted ? 'text-emerald-600' : 'text-foreground'}`}>
+                            {s.startup_pct}%{s.startup_submitted ? ' ✓' : ''}
+                          </span>
+                        ) : (
+                          <span className="text-muted-foreground text-xs">—</span>
+                        )}
+                      </td>
+                      <td className="px-3 py-2.5 text-xs text-muted-foreground">
+                        {s.last_active ? new Date(s.last_active).toLocaleDateString() : '—'}
+                      </td>
+                    </tr>
+                  );
+                })}
+                {studentXpData.length === 0 && (
+                  <tr><td colSpan={10} className="px-4 py-8 text-center text-muted-foreground">{loading ? t('Loading...', 'Зареждане...') : t('No participants yet', 'Все още няма участници')}</td></tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
                     </td>
                   </tr>
                 ))}
