@@ -33,10 +33,10 @@ interface Challenge {
 }
 
 const TYPE_CONFIG: Record<ChallengeType, { icon: typeof Zap; color: string; en: string; bg: string; descEn: string; descBg: string }> = {
-  daily: { icon: Sparkles, color: 'text-xp-gold', en: 'Daily Challenge', bg: 'Ежедневно', descEn: 'Quick 1-2 min decision', descBg: 'Бързо решение за 1-2 мин' },
-  weekly: { icon: Target, color: 'text-blue-500', en: 'Weekly Challenge', bg: 'Седмично', descEn: 'Complex strategic scenario', descBg: 'Сложен стратегически сценарий' },
-  crisis: { icon: AlertTriangle, color: 'text-red-500', en: 'Crisis Challenge', bg: 'Кризисно', descEn: 'Time pressure & limited info', descBg: 'Време и ограничена информация' },
-  strategic: { icon: TrendingUp, color: 'text-purple-500', en: 'Strategic Challenge', bg: 'Стратегическо', descEn: 'Long-term impact decision', descBg: 'Решение с дългосрочно влияние' },
+  daily: { icon: Sparkles, color: 'text-xp-gold', en: 'Daily Challenge', bg: 'Ежедневно предизвикателство', descEn: 'Quick 1-2 min decision', descBg: 'Бързо решение за 1-2 мин' },
+  weekly: { icon: Target, color: 'text-blue-500', en: 'Weekly Challenge', bg: 'Седмично предизвикателство', descEn: 'Complex strategic scenario', descBg: 'Сложен стратегически сценарий' },
+  crisis: { icon: AlertTriangle, color: 'text-red-500', en: 'Crisis Challenge', bg: 'Кризисно предизвикателство', descEn: 'Time pressure & limited info', descBg: 'Време и ограничена информация' },
+  strategic: { icon: TrendingUp, color: 'text-purple-500', en: 'Strategic Challenge', bg: 'Стратегическо предизвикателство', descEn: 'Long-term impact decision', descBg: 'Решение с дългосрочно влияние' },
 };
 
 const COMING_SOON: Record<string, { dateEn: string; dateBg: string }> = {
