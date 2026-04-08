@@ -554,7 +554,7 @@ export default function LearningModulePlayer() {
             <Textarea
               value={applicationAnswer}
               onChange={e => setApplicationAnswer(e.target.value)}
-              placeholder={t('Apply this concept to your startup idea...', 'Приложете тази концепция към вашата стартъп идея...')}
+              placeholder={t('Apply this concept to your startup idea...', 'Приложи тази концепция към твоята стартъп идея...')}
               className="min-h-[120px]"
               disabled={!!existingResponse?.completed_at}
             />
