@@ -592,7 +592,10 @@ export default function LearningModulePlayer() {
         {/* ANALYTICAL PHASE */}
         {phase === 'analytical' && (
           <div className="rounded-xl border border-border bg-card p-6 space-y-4">
-            <Badge variant="outline">{t('🔍 Analytical Question', '🔍 Аналитичен въпрос')}</Badge>
+            <div className="flex items-center justify-between">
+              <Badge variant="outline">{t('🔍 Analytical Question', '🔍 Аналитичен въпрос')}</Badge>
+              <SaveStatusIndicator />
+            </div>
             <p className="text-sm font-semibold text-foreground">
               {lang === 'bg' ? mod.analytical_question_bg : mod.analytical_question_en}
             </p>
@@ -612,17 +615,25 @@ export default function LearningModulePlayer() {
           </div>
         )}
 
-        {/* APPLICATION PHASE */}
+        {/* APPLICATION PHASE — Optional */}
         {phase === 'application' && (
           <div className="rounded-xl border border-border bg-card p-6 space-y-4">
-            <Badge variant="outline">{t('🚀 Apply to Your Startup', '🚀 Приложи към твоя стартъп')}</Badge>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Badge variant="outline">{t('🚀 Apply to Your Startup', '🚀 Приложи към твоя стартъп')}</Badge>
+                <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
+                  {t('Optional', 'По избор')}
+                </Badge>
+              </div>
+              <SaveStatusIndicator />
+            </div>
             {mod.startup_field && (
               <div className="rounded-lg bg-primary/5 border border-primary/20 p-3 flex items-start gap-2">
                 <Rocket className="h-4 w-4 text-primary shrink-0 mt-0.5" />
                 <p className="text-xs text-muted-foreground">
                   {t(
-                    'Your answer will automatically update your startup project. Build your real business step by step!',
-                    'Отговорът ти автоматично ще обнови стартъп проекта ти. Изграждай реалния си бизнес стъпка по стъпка!'
+                    'This step is optional. If you write an answer, you can transfer it to My Startup later.',
+                    'Тази стъпка е по избор. Ако напишеш отговор, можеш да го прехвърлиш в Моят стартъп по-късно.'
                   )}
                 </p>
               </div>
@@ -637,9 +648,12 @@ export default function LearningModulePlayer() {
               className="min-h-[120px]"
               disabled={!!existingResponse?.completed_at}
             />
-            <p className="text-xs text-muted-foreground">{applicationAnswer.length} {t('characters', 'знака')} ({t('min 20', 'мин. 20')})</p>
+            <p className="text-xs text-muted-foreground">{applicationAnswer.length} {t('characters', 'знака')}</p>
             {!existingResponse?.completed_at && (
-              <div className="flex justify-end">
+              <div className="flex items-center justify-between gap-3">
+                <Button variant="ghost" size="sm" onClick={handleSubmitAll} disabled={saving} className="text-muted-foreground">
+                  {t('Skip & Submit', 'Пропусни и изпрати')}
+                </Button>
                 <Button onClick={handleSubmitAll} disabled={saving}>
                   <Send className="h-4 w-4 mr-1" />
                   {saving ? t('Saving...', 'Запазване...') : t('Submit Module', 'Изпрати модул')}
@@ -686,7 +700,7 @@ export default function LearningModulePlayer() {
                         <cat.icon className="h-3.5 w-3.5 text-muted-foreground" />
                         <span className="text-xs font-medium text-foreground">{t(cat.en, cat.bg)}</span>
                       </div>
-                      <span className={`text-xs font-bold ${cat.score >= 70 ? 'text-primary' : cat.score >= 40 ? 'text-yellow-500' : 'text-muted-foreground'}`}>
+                      <span className={`text-xs font-bold ${cat.score >= 70 ? 'text-primary' : cat.score >= 40 ? 'text-warning' : 'text-muted-foreground'}`}>
                         {cat.score}%
                       </span>
                     </div>
@@ -703,11 +717,45 @@ export default function LearningModulePlayer() {
                 <p className="text-xs font-medium text-muted-foreground mb-1">{t('Analytical Answer', 'Аналитичен отговор')}</p>
                 <p className="text-xs text-foreground bg-accent/50 rounded-lg p-3">{analyticalAnswer || '—'}</p>
               </div>
-              <div>
-                <p className="text-xs font-medium text-muted-foreground mb-1">{t('Application Answer', 'Отговор за приложение')}</p>
-                <p className="text-xs text-foreground bg-accent/50 rounded-lg p-3">{applicationAnswer || '—'}</p>
-              </div>
+              {applicationAnswer && (
+                <div>
+                  <p className="text-xs font-medium text-muted-foreground mb-1">{t('Application Answer', 'Отговор за приложение')}</p>
+                  <p className="text-xs text-foreground bg-accent/50 rounded-lg p-3">{applicationAnswer}</p>
+                </div>
+              )}
             </div>
+
+            {/* "Use in My Startup" button — explicit action */}
+            {mod.startup_field && applicationAnswer.trim().length >= 10 && (
+              <div className="rounded-xl border-2 border-dashed border-primary/30 bg-primary/5 p-5 space-y-3">
+                <div className="flex items-center gap-2">
+                  <Rocket className="h-5 w-5 text-primary" />
+                  <span className="text-sm font-semibold text-foreground">
+                    {t('Use this in My Startup', 'Използвай в Моят стартъп')}
+                  </span>
+                  <Badge variant="secondary" className="text-[10px] px-1.5 py-0 ml-auto">
+                    {t('Recommended', 'Препоръчано')}
+                  </Badge>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  {t(
+                    'Transfer your application answer directly into your startup project.',
+                    'Прехвърли отговора за приложение директно в стартъп проекта си.'
+                  )}
+                </p>
+                {startupSynced ? (
+                  <div className="flex items-center gap-2 text-progress text-sm font-medium">
+                    <CheckCircle2 className="h-4 w-4" />
+                    {t('Added to My Startup!', 'Добавено в Моят стартъп!')}
+                  </div>
+                ) : (
+                  <Button variant="outline" onClick={handleUseInStartup} className="w-full">
+                    <Rocket className="h-4 w-4 mr-1" />
+                    {t('Add to My Startup', 'Добави в Моят стартъп')}
+                  </Button>
+                )}
+              </div>
+            )}
 
             {/* Skills improved */}
             <SkillsImproved
@@ -735,37 +783,61 @@ export default function LearningModulePlayer() {
               <TheoryToCaseCTA mod={mod} lang={lang} t={t} navigate={navigate} />
             )}
 
-            {/* Theory → Simulator CTA */}
-            <div className="rounded-xl border border-border bg-card p-5 space-y-3">
-              <div className="flex items-center gap-2">
-                <BarChart3 className="h-5 w-5 text-primary" />
-                <span className="text-sm font-semibold text-foreground">
-                  {t('Test your strategy', 'Тествай стратегията си')}
-                </span>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                {t(
-                  `Apply ${lang === 'bg' ? mod.title_bg : mod.title_en} concepts in the startup simulator to see real strategic trade-offs.`,
-                  `Приложи концепциите от ${mod.title_bg} в симулатора, за да видиш реални стратегически компромиси.`
+            {/* Optional Actions Section */}
+            <div className="rounded-xl border border-border bg-card p-5 space-y-4">
+              <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                <Zap className="h-4 w-4 text-primary" />
+                {t('What would you like to do next?', 'Какво искаш да направиш?')}
+              </h3>
+
+              {/* Primary: Continue */}
+              <div className="space-y-2">
+                {LEARNING_MODULES.findIndex(m => m.slug === slug) < LEARNING_MODULES.length - 1 ? (
+                  <Button
+                    className="w-full"
+                    onClick={() => {
+                      const nextIdx = LEARNING_MODULES.findIndex(m => m.slug === slug) + 1;
+                      navigate(`/learn/${LEARNING_MODULES[nextIdx].slug}`);
+                    }}
+                  >
+                    {t('Continue to Next Module', 'Продължи към следващия модул')} <ChevronRight className="h-4 w-4 ml-1" />
+                  </Button>
+                ) : (
+                  <Button className="w-full" onClick={() => navigate('/learn')}>
+                    {t('Back to All Modules', 'Обратно към всички модули')} <ChevronRight className="h-4 w-4 ml-1" />
+                  </Button>
                 )}
-              </p>
-              <Button variant="outline" onClick={() => navigate('/simulator')} className="w-full">
-                {t('Open Simulator →', 'Отвори симулатора →')}
-              </Button>
+              </div>
+
+              {/* Secondary: Optional paths */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 border-t border-border">
+                <button
+                  onClick={() => navigate('/simulator')}
+                  className="flex items-center gap-3 p-3 rounded-lg border border-border hover:border-primary/30 hover:bg-accent/50 transition-colors text-left"
+                >
+                  <BarChart3 className="h-5 w-5 text-muted-foreground shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-medium text-foreground">{t('Open Simulator', 'Отвори симулатора')}</p>
+                    <p className="text-[10px] text-muted-foreground">{t('Optional · Test strategy', 'По избор · Тествай стратегия')}</p>
+                  </div>
+                </button>
+                <button
+                  onClick={() => navigate('/my-startup')}
+                  className="flex items-center gap-3 p-3 rounded-lg border border-border hover:border-primary/30 hover:bg-accent/50 transition-colors text-left"
+                >
+                  <Rocket className="h-5 w-5 text-muted-foreground shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-medium text-foreground">{t('My Startup', 'Моят стартъп')}</p>
+                    <p className="text-[10px] text-muted-foreground">{t('Optional · Build your idea', 'По избор · Изгради идеята си')}</p>
+                  </div>
+                </button>
+              </div>
             </div>
 
-            <div className="flex justify-between">
+            <div className="flex justify-start">
               <Button variant="outline" onClick={() => navigate('/learn')}>
                 <ArrowLeft className="h-4 w-4 mr-1" /> {t('All Modules', 'Всички модули')}
               </Button>
-              {LEARNING_MODULES.findIndex(m => m.slug === slug) < LEARNING_MODULES.length - 1 && (
-                <Button onClick={() => {
-                  const nextIdx = LEARNING_MODULES.findIndex(m => m.slug === slug) + 1;
-                  navigate(`/learn/${LEARNING_MODULES[nextIdx].slug}`);
-                }}>
-                  {t('Next Module', 'Следващ модул')} <ChevronRight className="h-4 w-4 ml-1" />
-                </Button>
-              )}
             </div>
           </div>
         )}
