@@ -130,7 +130,7 @@ export const SIM_WEEKS: SimWeek[] = [
     titleEn: 'Industry Selection',
     titleBg: 'Избор на индустрия',
     descEn: 'Choose the industry your startup will operate in. Each industry has different innovation dynamics, market sizes, and risk profiles.',
-    descBg: 'Изберете индустрията, в която ще работи вашият стартъп. Всяка индустрия има различна динамика на иновациите, размер на пазара и рисков профил.',
+    descBg: 'Избери индустрията, в която ще работи твоят стартъп. Всяка индустрия има различна динамика на иновациите, размер на пазара и рисков профил.',
     icon: '🏭',
     theoryConceptEn: 'Digital Ecosystems',
     theoryConceptBg: 'Дигитални екосистеми',

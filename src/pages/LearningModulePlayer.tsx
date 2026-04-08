@@ -619,7 +619,7 @@ export default function LearningModulePlayer() {
 
             {/* Written Answers Summary */}
             <div className="rounded-xl border border-border bg-card p-5 space-y-3">
-              <h3 className="text-sm font-semibold text-foreground">{t('Your Answers', 'Вашите отговори')}</h3>
+              <h3 className="text-sm font-semibold text-foreground">{t('Your Answers', 'Твоите отговори')}</h3>
               <div>
                 <p className="text-xs font-medium text-muted-foreground mb-1">{t('Analytical Answer', 'Аналитичен отговор')}</p>
                 <p className="text-xs text-foreground bg-accent/50 rounded-lg p-3">{analyticalAnswer || '—'}</p>

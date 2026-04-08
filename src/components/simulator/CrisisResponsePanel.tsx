@@ -202,7 +202,7 @@ export default function CrisisResponsePanel({
 
             <div className="p-5 space-y-3">
               <p className="text-xs font-semibold text-sim-danger uppercase tracking-wider mb-2">
-                {t('Choose your crisis response:', 'Изберете кризисен отговор:')}
+                {t('Choose your crisis response:', 'Избери кризисен отговор:')}
               </p>
 
               <div className="grid gap-3">
