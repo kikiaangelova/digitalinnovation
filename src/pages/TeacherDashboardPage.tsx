@@ -319,48 +319,50 @@ export default function TeacherDashboardPage() {
       <AppHeader />
       <main className="container mx-auto px-4 py-6 max-w-7xl space-y-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <div>
-            <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
-              <GraduationCap className="h-6 w-6 text-primary" />
-              {t('Teacher Dashboard', 'Учителско табло')}
-            </h1>
-            <p className="text-sm text-muted-foreground mt-0.5">
-              {classroom
-                ? <>{classroom.name} · {t('Code:', 'Код:')} <span className="font-mono font-bold text-primary">{classroom.class_code}</span></>
-                : t('All students overview', 'Преглед на всички ученици')
-              }
-            </p>
-          </div>
-          <div className="flex items-center gap-2 flex-wrap">
-            {classroom && (
-              <>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => copyToClipboard(classroom.class_code, t('Code', 'Кодът'))}
-                >
-                  <Copy className="h-3.5 w-3.5 mr-1" />
-                  {t('Copy code', 'Копирай код')}
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() =>
-                    copyToClipboard(
-                      classroom.invite_link || `${siteUrl}/join/${classroom.class_code}`,
-                      t('Link', 'Линкът')
-                    )
-                  }
-                >
-                  <Link2 className="h-3.5 w-3.5 mr-1" />
-                  {t('Copy invite', 'Копирай покана')}
-                </Button>
-              </>
-            )}
-            <Button size="sm" onClick={() => navigate('/teacher')} className="gap-1">
-              {t('Manage Class', 'Управлявай класа')} <ArrowRight className="h-3.5 w-3.5" />
-            </Button>
+        <div className="rounded-2xl sim-gradient p-6 text-primary-foreground shadow-lg glow-primary">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div>
+              <h1 className="text-2xl font-display flex items-center gap-2">
+                <GraduationCap className="h-6 w-6" />
+                {t('Teacher Dashboard', 'Учителско табло')}
+              </h1>
+              <p className="text-sm text-primary-foreground/70 mt-0.5">
+                {classroom
+                  ? <>{classroom.name} · {t('Code:', 'Код:')} <span className="font-mono font-bold text-white">{classroom.class_code}</span></>
+                  : t('All students overview', 'Преглед на всички ученици')
+                }
+              </p>
+            </div>
+            <div className="flex items-center gap-2 flex-wrap">
+              {classroom && (
+                <>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => copyToClipboard(classroom.class_code, t('Code', 'Кодът'))}
+                  >
+                    <Copy className="h-3.5 w-3.5 mr-1" />
+                    {t('Copy code', 'Копирай код')}
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() =>
+                      copyToClipboard(
+                        classroom.invite_link || `${siteUrl}/join/${classroom.class_code}`,
+                        t('Link', 'Линкът')
+                      )
+                    }
+                  >
+                    <Link2 className="h-3.5 w-3.5 mr-1" />
+                    {t('Copy invite', 'Копирай покана')}
+                  </Button>
+                </>
+              )}
+              <Button size="sm" variant="secondary" onClick={() => navigate('/teacher')} className="gap-1">
+                {t('Manage Class', 'Управлявай класа')} <ArrowRight className="h-3.5 w-3.5" />
+              </Button>
+            </div>
           </div>
         </div>
 
