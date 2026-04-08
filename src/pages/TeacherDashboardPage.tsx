@@ -211,6 +211,26 @@ export default function TeacherDashboardPage() {
     return Math.round((casePct + simPct + startupPct + modPct) / 4);
   };
 
+  const STAGE_NAMES_EN = ['Discover', 'Analyze', 'Design', 'Build', 'Simulate', 'Pitch'];
+  const STAGE_NAMES_BG = ['Откривай', 'Анализирай', 'Проектирай', 'Изгради', 'Симулирай', 'Представи'];
+
+  const getStudentStage = (sid: string): { num: number; name: string } => {
+    const p = progressMap[sid];
+    if (!p) return { num: 0, name: t('Not started', 'Не е започнал') };
+    const statuses = deriveJourneyStatuses({
+      casesCompleted: p.cases_completed,
+      startupSections: p.startup_keys,
+      startupSubmitted: p.startup_submitted,
+      simWeek: p.sim_week,
+      simComplete: p.sim_complete,
+    });
+    // Current stage = last completed + 1 (capped at 6)
+    const completedCount = statuses.filter((s) => s === 'completed').length;
+    if (completedCount >= 6) return { num: 6, name: lang === 'bg' ? STAGE_NAMES_BG[5] : STAGE_NAMES_EN[5] };
+    const idx = completedCount; // 0-based index of current stage
+    return { num: idx + 1, name: lang === 'bg' ? STAGE_NAMES_BG[idx] : STAGE_NAMES_EN[idx] };
+  };
+
   const getName = (s: StudentData) => s.display_name || s.full_name || '—';
 
   const activeThisWeek = students.filter((s) => {
