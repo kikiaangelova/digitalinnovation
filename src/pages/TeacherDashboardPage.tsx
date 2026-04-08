@@ -120,7 +120,7 @@ export default function TeacherDashboardPage() {
     setStudents(studentList);
 
     // 4. Get progress data in parallel
-    const [subsRes, simRes, projRes, modRes, assignRes] = await Promise.all([
+    const [subsRes, simRes, projRes, modRes, assignRes, quizRes] = await Promise.all([
       supabase
         .from('submissions')
         .select('user_id')
@@ -142,6 +142,10 @@ export default function TeacherDashboardPage() {
         .from('classroom_assignments')
         .select('id')
         .eq('classroom_id', cls.id),
+      supabase
+        .from('quiz_results')
+        .select('user_id, score, max_score')
+        .in('user_id', studentIds),
     ]);
 
     setAssignmentCount(assignRes.data?.length || 0);
