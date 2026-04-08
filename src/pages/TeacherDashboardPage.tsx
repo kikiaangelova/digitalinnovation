@@ -69,6 +69,7 @@ export default function TeacherDashboardPage() {
   const [progress, setProgress] = useState<ProgressSnapshot[]>([]);
   const [assignmentCount, setAssignmentCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [expandedRow, setExpandedRow] = useState<string | null>(null);
 
   const fetchData = useCallback(async () => {
     if (!user) return;
