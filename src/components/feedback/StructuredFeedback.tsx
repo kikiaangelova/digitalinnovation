@@ -87,10 +87,10 @@ export default function StructuredFeedback({ context, lang, autoLoad = false, cl
         </div>
         <div className="flex-1">
           <h3 className="text-sm font-semibold text-foreground">
-            {t('AI Learning Feedback', 'AI обратна връзка за ученето')}
+            {t('AI Learning Feedback', 'AI обратна връзка за напредъка ти')}
           </h3>
           <p className="text-xs text-muted-foreground">
-            {t('Personalized guidance based on your performance', 'Персонализирани насоки на база резултатите ви')}
+            {t('Personalized guidance based on your performance', 'Персонализирани насоки на базата на твоите резултати')}
           </p>
         </div>
         <Sparkles className="h-4 w-4 text-primary" />
