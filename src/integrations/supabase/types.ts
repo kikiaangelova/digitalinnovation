@@ -1450,6 +1450,42 @@ export type Database = {
           },
         ]
       }
+      simulator_experiments: {
+        Row: {
+          cost_spent: number | null
+          created_at: string
+          cycle: number
+          experiment_type: string
+          id: string
+          result_detail: Json | null
+          result_type: string | null
+          simulation_id: string
+          user_id: string
+        }
+        Insert: {
+          cost_spent?: number | null
+          created_at?: string
+          cycle?: number
+          experiment_type: string
+          id?: string
+          result_detail?: Json | null
+          result_type?: string | null
+          simulation_id: string
+          user_id: string
+        }
+        Update: {
+          cost_spent?: number | null
+          created_at?: string
+          cycle?: number
+          experiment_type?: string
+          id?: string
+          result_detail?: Json | null
+          result_type?: string | null
+          simulation_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       simulator_progress: {
         Row: {
           created_at: string
