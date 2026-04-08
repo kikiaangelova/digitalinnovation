@@ -58,6 +58,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfUse from "./pages/TermsOfUse";
 import PendingApproval from "./pages/PendingApproval";
 import TeacherClassroom from "./pages/TeacherClassroom";
+import TeacherDashboardPage from "./pages/TeacherDashboardPage";
 import JoinClassroom from "./pages/JoinClassroom";
 
 const queryClient = new QueryClient();
@@ -122,6 +123,7 @@ const App = () => (
 
                       {/* Teacher-verified routes */}
                       <Route path="/teacher" element={<RoleGuard allowed={['teacher_verified', 'admin']} redirectTo="/dashboard"><TeacherClassroom /></RoleGuard>} />
+                      <Route path="/teacher-dashboard" element={<RoleGuard allowed={['teacher_verified', 'admin']} redirectTo="/dashboard"><TeacherDashboardPage /></RoleGuard>} />
 
                       {/* Join classroom route (students) */}
                       <Route path="/join/:code" element={<JoinClassroom />} />
