@@ -594,6 +594,115 @@ export type Database = {
         }
         Relationships: []
       }
+      classroom_assignments: {
+        Row: {
+          assigned_by: string
+          assignment_type: string
+          case_id: string | null
+          classroom_id: string
+          created_at: string
+          due_date: string | null
+          id: string
+          journey_stage: number | null
+          module_slug: string | null
+          note: string | null
+        }
+        Insert: {
+          assigned_by: string
+          assignment_type: string
+          case_id?: string | null
+          classroom_id: string
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          journey_stage?: number | null
+          module_slug?: string | null
+          note?: string | null
+        }
+        Update: {
+          assigned_by?: string
+          assignment_type?: string
+          case_id?: string | null
+          classroom_id?: string
+          created_at?: string
+          due_date?: string | null
+          id?: string
+          journey_stage?: number | null
+          module_slug?: string | null
+          note?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "classroom_assignments_classroom_id_fkey"
+            columns: ["classroom_id"]
+            isOneToOne: false
+            referencedRelation: "classrooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      classroom_students: {
+        Row: {
+          classroom_id: string
+          id: string
+          joined_at: string
+          student_id: string
+        }
+        Insert: {
+          classroom_id: string
+          id?: string
+          joined_at?: string
+          student_id: string
+        }
+        Update: {
+          classroom_id?: string
+          id?: string
+          joined_at?: string
+          student_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "classroom_students_classroom_id_fkey"
+            columns: ["classroom_id"]
+            isOneToOne: false
+            referencedRelation: "classrooms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      classrooms: {
+        Row: {
+          class_code: string
+          created_at: string
+          id: string
+          invite_link: string | null
+          is_active: boolean
+          name: string
+          teacher_id: string
+          updated_at: string
+        }
+        Insert: {
+          class_code: string
+          created_at?: string
+          id?: string
+          invite_link?: string | null
+          is_active?: boolean
+          name: string
+          teacher_id: string
+          updated_at?: string
+        }
+        Update: {
+          class_code?: string
+          created_at?: string
+          id?: string
+          invite_link?: string | null
+          is_active?: boolean
+          name?: string
+          teacher_id?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       cohort_members: {
         Row: {
           cohort_id: string
@@ -1672,6 +1781,7 @@ export type Database = {
     }
     Functions: {
       add_user_xp: { Args: { _user_id: string; _xp: number }; Returns: number }
+      generate_class_code: { Args: never; Returns: string }
       get_assessment_results_questions: {
         Args: { _assessment_id: string }
         Returns: {
