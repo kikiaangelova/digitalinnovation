@@ -555,6 +555,30 @@ export default function TeacherDashboardPage() {
                                           );
                                         })}
                                       </div>
+                                      {/* Recent quiz results */}
+                                      {p && p.recent_quizzes.length > 0 && (
+                                        <div className="mt-4">
+                                          <div className="text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wide">
+                                            {t('Last 3 Quiz Results', 'Последни 3 теста')}
+                                          </div>
+                                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                                            {p.recent_quizzes.map((q, qi) => {
+                                              const pct = q.max_score > 0 ? Math.round((q.score / q.max_score) * 100) : 0;
+                                              return (
+                                                <div key={qi} className="flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2">
+                                                  <div className="flex-1 min-w-0">
+                                                    <div className="text-xs font-medium text-foreground truncate">{q.category || t('General', 'Общо')}</div>
+                                                    <div className="text-[10px] text-muted-foreground">{new Date(q.created_at).toLocaleDateString(lang === 'bg' ? 'bg-BG' : 'en-US', { month: 'short', day: 'numeric' })}</div>
+                                                  </div>
+                                                  <span className={`text-xs font-bold ${pct >= 80 ? 'text-green-600 dark:text-green-400' : pct >= 50 ? 'text-yellow-600 dark:text-yellow-400' : 'text-destructive'}`}>
+                                                    {pct}%
+                                                  </span>
+                                                </div>
+                                              );
+                                            })}
+                                          </div>
+                                        </div>
+                                      )}
                                     </td>
                                   </tr>
                                 )}
