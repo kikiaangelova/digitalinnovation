@@ -76,6 +76,7 @@ export default function AuthPage() {
     setTeacherInstitution('');
     setTeacherClassName('');
     setTeacherInviteCode('');
+    setConsentChecked(false);
   }, [isLogin]);
 
   useEffect(() => {
