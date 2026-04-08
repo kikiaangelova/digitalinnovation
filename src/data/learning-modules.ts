@@ -136,6 +136,10 @@ export const LEARNING_MODULES: LearningModule[] = [
     slug: 'network-effects',
     title_en: 'Network Effects',
     title_bg: 'Мрежови ефекти',
+    hook: { en: 'If your app has 10 users and the competitor has 1,000, you\'re doomed — unless you understand how network effects work and how to build them from zero.', bg: 'Ако имаш приложение с 10 потребители и конкурентът има 1000, ти си обречен — освен ако не разбираш как мрежовите ефекти работят и как да ги изградиш от нулата.' },
+    metaphor: { en: '1 user = 1 connection. 10 users = 45 connections. 100 users = 4,950 connections. Value grows quadratically.', bg: 'Представи си: 1 потребител = 1 връзка. 10 потребители = 45 връзки. 100 потребители = 4950 връзки. Стойността расте квадратично.' },
+    framework: { name: "Metcalfe's Law", bullets_en: ['The value of a network is proportional to the square of the number of users (n²)', 'Explains why platforms become near-monopolies after reaching critical mass', 'Applies to social networks, marketplaces, and communication tools'], bullets_bg: ['Стойността на мрежата е пропорционална на квадрата на броя потребители (n²)', 'Обяснява защо платформите стават почти монополи след критична маса', 'Прилага се за социални мрежи, пазари и комуникационни инструменти'], apply_en: 'Calculate n² for your startup: what is your critical mass number?', apply_bg: 'Изчисли n² за стартъпа си: какъв е твоят брой за критична маса?' },
+    provocations: [{ en: 'When do network effects kill a platform instead of growing it?', bg: 'Кога мрежовият ефект убива платформата вместо да я развие?' }, { en: 'Why did WhatsApp refuse ads while Facebook embraced them?', bg: 'Защо WhatsApp отказа реклами, докато Facebook ги прие?' }],
     concepts: [
       {
         id: 'ne-concept-1',
