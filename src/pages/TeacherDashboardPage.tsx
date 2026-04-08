@@ -42,6 +42,8 @@ interface ProgressSnapshot {
   sim_complete: boolean;
   sim_grade: string | null;
   startup_sections: number;
+  startup_keys: Record<string, boolean>;
+  startup_submitted: boolean;
   module_count: number;
 }
 
