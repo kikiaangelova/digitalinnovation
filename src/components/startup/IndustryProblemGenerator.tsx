@@ -424,12 +424,12 @@ export default function IndustryProblemGenerator({ lang, onProblemSelected }: Pr
             {t('Industry Problem Generator', 'Генератор на индустриални проблеми')}
           </div>
           <h2 className="text-xl font-display font-bold text-foreground">
-            {t('Choose an Industry', 'Изберете индустрия')}
+            {t('Choose an Industry', 'Избери индустрия')}
           </h2>
           <p className="text-sm text-muted-foreground max-w-lg mx-auto">
             {t(
               'Start from a real industry problem instead of a random idea. Select an industry to explore digital innovation opportunities.',
-              'Започнете от реален индустриален проблем вместо случайна идея. Изберете индустрия, за да проучите възможностите за дигитални иновации.',
+              'Започни от реален индустриален проблем вместо случайна идея. Избери индустрия, за да проучиш възможностите за дигитални иновации.',
             )}
           </p>
         </div>

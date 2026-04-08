@@ -416,7 +416,7 @@ export default function MyStartupIdea() {
             <Link to="/industries" className="mt-3 flex items-center gap-2 rounded-lg border border-dashed border-primary/30 bg-primary/5 px-3 py-2 hover:bg-primary/10 transition-colors">
               <Globe className="h-4 w-4 text-primary" />
               <span className="text-sm text-primary font-medium">
-                {t('Choose an industry from the Innovation Map →', 'Изберете индустрия от картата на иновациите →')}
+                {t('Choose an industry from the Innovation Map →', 'Избери индустрия от картата на иновациите →')}
               </span>
             </Link>
           )}

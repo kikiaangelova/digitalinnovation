@@ -102,7 +102,7 @@ export default function StructuredFeedback({ context, lang, autoLoad = false, cl
             <p className="text-sm text-muted-foreground mb-4">
               {t(
                 'Get structured feedback on what you did well, what needs improvement, and your recommended next step.',
-                'Получете структурирана обратна връзка за силните ви страни, какво трябва да подобрите и препоръчителната следваща стъпка.'
+                'Получи структурирана обратна връзка за силните си страни, какво да подобриш и каква е следващата ти стъпка.'
               )}
             </p>
             <Button onClick={requestFeedback} className="gap-2">

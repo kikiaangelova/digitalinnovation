@@ -593,7 +593,7 @@ export default function LearningModulePlayer() {
 
             {/* Outcome Scores */}
             <div className="rounded-xl border border-border bg-card p-5">
-              <h3 className="text-sm font-semibold text-foreground mb-4">{t('Learning Outcome Scores', 'Оценки на учебните резултати')}</h3>
+              <h3 className="text-sm font-semibold text-foreground mb-4">{t('Learning Outcome Scores', 'Постижения по умения')}</h3>
               <div className="space-y-3">
                 {[
                   { key: 'concept', icon: Brain, en: 'Concept Understanding', bg: 'Разбиране на концепции', score: scores.concept },

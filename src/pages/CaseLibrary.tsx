@@ -528,7 +528,7 @@ export default function CaseLibrary() {
                     {count === 0 && (
                       <div className="absolute top-3 right-3">
                         <Badge variant="secondary" className="text-xs bg-muted text-muted-foreground">
-                          {tl('Coming Soon', 'Очаквайте скоро')}
+                          {tl('Coming Soon', 'Очаквай скоро')}
                         </Badge>
                       </div>
                     )}
