@@ -867,6 +867,68 @@ export default function CasePlayer() {
           </div>
         )}
 
+        {/* ── 5B. CONSEQUENCES PANEL ── */}
+        {consequences.length > 0 && currentStep === 4 && allStepQuestionsAnswered && (
+          <>
+            {/* If student hasn't chosen yet, detect from MC answer */}
+            {(() => {
+              // Auto-detect chosen strategy from the MC answer on step 4
+              if (!chosenStrategy && stepQuestions.length > 0) {
+                const mcQ = stepQuestions.find(q => q.type === 'multiple_choice');
+                if (mcQ && answers[mcQ.id]) {
+                  const ansStr = String(answers[mcQ.id]).trim();
+                  // Try to match "A", "B", "C" from the answer
+                  const match = ansStr.match(/^([A-C])\b/i) || ansStr.match(/Strategy\s+([A-C])/i) || ansStr.match(/Стратегия\s+([А-ВA-C])/i);
+                  if (match) {
+                    const key = match[1].toUpperCase().replace('А', 'A').replace('Б', 'B').replace('В', 'C');
+                    if (['A', 'B', 'C'].includes(key)) {
+                      // Set it via side effect - will be saved on next save
+                      setTimeout(() => {
+                        setChosenStrategy(key);
+                        // Persist to session
+                        if (user && id) {
+                          (supabase as any).from('case_sessions')
+                            .update({ chosen_strategy: key })
+                            .eq('user_id', user.id)
+                            .eq('case_id', id);
+                        }
+                      }, 0);
+                    }
+                  }
+                }
+              }
+              return null;
+            })()}
+            <ConsequencesPanel
+              consequences={consequences}
+              chosenStrategy={chosenStrategy}
+              lang={lang}
+            />
+            <ReflectionPanel
+              consequences={consequences}
+              chosenStrategy={chosenStrategy}
+              reflectionText={consequenceReflection}
+              onReflectionChange={(text) => {
+                setConsequenceReflection(text);
+                setHasUnsavedChanges(true);
+              }}
+              onSave={async () => {
+                if (!user || !id) return;
+                setSaving(true);
+                await (supabase as any).from('case_sessions')
+                  .update({ consequence_reflection: consequenceReflection })
+                  .eq('user_id', user.id)
+                  .eq('case_id', id);
+                setSaving(false);
+                toast.success(tl('Reflection saved', 'Рефлексията е запазена'));
+              }}
+              saving={saving}
+              isSubmitted={isSubmitted}
+              lang={lang}
+            />
+          </>
+        )}
+
         {/* ── 5. APPLY THIS CASE TO YOUR STARTUP ── */}
         {showStartupPanel && (
           <div className="rounded-lg border-2 border-primary/20 bg-accent p-6 space-y-5">
