@@ -93,27 +93,14 @@ export default function TeacherDashboardPage() {
 
     setClassroom(cls as Classroom | null);
 
-    // 2. Get ALL students (users with student role)
-    const { data: studentRoles } = await supabase
-      .from('user_roles')
-      .select('user_id')
-      .eq('role', 'student');
-
-    const studentIds = (studentRoles || []).map((r) => r.user_id).filter((id) => id !== user.id);
-
-    if (!studentIds.length) {
-      setStudents([]);
-      setProgress([]);
-      setLoading(false);
-      return;
-    }
-
-    // 3. Get profiles
+    // 2. Get ALL student profiles directly
     const { data: profiles } = await supabase
       .from('profiles')
       .select('user_id, display_name, full_name, total_xp, updated_at')
-      .in('user_id', studentIds);
+      .neq('user_id', user.id)
+      .order('total_xp', { ascending: false });
 
+    // Filter out non-students by excluding known teacher/admin users
     const studentList: StudentData[] = (profiles || []).map((p) => ({
       student_id: p.user_id,
       display_name: p.display_name,
@@ -122,6 +109,16 @@ export default function TeacherDashboardPage() {
       updated_at: p.updated_at,
       joined_at: p.updated_at,
     }));
+
+    const studentIds = studentList.map((s) => s.student_id);
+
+    if (!studentIds.length) {
+      setStudents([]);
+      setProgress([]);
+      setLoading(false);
+      return;
+    }
+
     setStudents(studentList);
 
     // 4. Get progress data in parallel
