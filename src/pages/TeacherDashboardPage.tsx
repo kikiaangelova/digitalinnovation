@@ -83,7 +83,7 @@ export default function TeacherDashboardPage() {
   const fetchData = useCallback(async () => {
     if (!user) return;
 
-    // 1. Get teacher's classroom
+    // 1. Try to get teacher's classroom (optional)
     const { data: cls } = await supabase
       .from('classrooms')
       .select('id, name, class_code, invite_link')
@@ -91,28 +91,22 @@ export default function TeacherDashboardPage() {
       .eq('is_active', true)
       .maybeSingle();
 
-    if (!cls) {
-      setClassroom(null);
-      setLoading(false);
-      return;
-    }
-    setClassroom(cls as Classroom);
+    setClassroom(cls as Classroom | null);
 
-    // 2. Get students
-    const { data: enrollments } = await supabase
-      .from('classroom_students')
-      .select('student_id, joined_at')
-      .eq('classroom_id', cls.id);
+    // 2. Get ALL students (users with student role)
+    const { data: studentRoles } = await supabase
+      .from('user_roles')
+      .select('user_id')
+      .eq('role', 'student');
 
-    if (!enrollments?.length) {
+    const studentIds = (studentRoles || []).map((r) => r.user_id).filter((id) => id !== user.id);
+
+    if (!studentIds.length) {
       setStudents([]);
       setProgress([]);
       setLoading(false);
       return;
     }
-
-    const studentIds = enrollments.map((e) => e.student_id);
-    const joinMap = Object.fromEntries(enrollments.map((e) => [e.student_id, e.joined_at]));
 
     // 3. Get profiles
     const { data: profiles } = await supabase
@@ -126,7 +120,7 @@ export default function TeacherDashboardPage() {
       full_name: p.full_name,
       total_xp: p.total_xp,
       updated_at: p.updated_at,
-      joined_at: joinMap[p.user_id] || '',
+      joined_at: p.updated_at,
     }));
     setStudents(studentList);
 
@@ -149,10 +143,9 @@ export default function TeacherDashboardPage() {
         .from('learning_module_responses')
         .select('user_id')
         .in('user_id', studentIds),
-      supabase
-        .from('classroom_assignments')
-        .select('id')
-        .eq('classroom_id', cls.id),
+      cls
+        ? supabase.from('classroom_assignments').select('id').eq('classroom_id', cls.id)
+        : Promise.resolve({ data: [] }),
       supabase
         .from('quiz_results')
         .select('user_id, score, max_score, category, created_at')
