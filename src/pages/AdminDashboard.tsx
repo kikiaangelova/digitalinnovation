@@ -80,8 +80,9 @@ const DIFFICULTY_LABELS: Record<string, { en: string; bg: string }> = {
 };
 
 export default function AdminDashboard() {
-  const { isAdmin, user } = useAuth();
+  const { isAdmin, user, authLoading, roleLoading } = useAuth();
   const { lang } = useLang();
+  const navigate = useNavigate();
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
   const [cases, setCases] = useState<CaseStudyAdmin[]>([]);
   const [submissions, setSubmissions] = useState<SubmissionAdmin[]>([]);
