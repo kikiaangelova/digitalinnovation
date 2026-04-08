@@ -3,6 +3,7 @@ import { LearningPhaseBar, WhatYouWillLearn, STARTUP_BUILDER_OUTCOMES } from '@/
 import StructuredFeedback from '@/components/feedback/StructuredFeedback';
 import SkillsImproved from '@/components/learning/SkillsImproved';
 import { Link } from 'react-router-dom';
+import HypothesisCard from '@/components/hypothesis/HypothesisCard';
 import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
 import { supabase } from '@/integrations/supabase/client';
