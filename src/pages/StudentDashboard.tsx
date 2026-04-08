@@ -6,6 +6,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 import AppHeader from '@/components/layout/AppHeader';
 import LearningNavigator from '@/components/dashboard/LearningNavigator';
+import NextStepHero from '@/components/dashboard/NextStepHero';
+import DailyGoalCard from '@/components/dashboard/DailyGoalCard';
 import QuickResumeCards from '@/components/dashboard/QuickResumeCards';
 import AchievementBadges from '@/components/dashboard/AchievementBadges';
 import TestInsights from '@/components/dashboard/TestInsights';
@@ -219,6 +221,18 @@ export default function StudentDashboard() {
           </div>
         </div>
 
+        {/* ═══ NEXT STEP HERO (read-only) ═══ */}
+        <NextStepHero
+          lang={lang}
+          casesCompleted={casesCompleted}
+          startupSectionMap={startupSectionMap}
+          startupSubmitted={startupProject?.is_submitted || false}
+          simWeek={simWeek}
+          simComplete={simComplete}
+          finalPitchSubmitted={finalPitchSubmitted}
+          stagesCompleted={progress.stagesCompleted}
+        />
+
         {/* ═══ SECTION 1: Learning Navigator (Hero) ═══ */}
         <LearningNavigator
           lang={lang}
@@ -231,7 +245,7 @@ export default function StudentDashboard() {
           outcomeScores={outcomeScores}
         />
 
-        {/* ═══ Quick Resume Cards ═══ */}
+        {/* ═══ Quick Resume Cards — "Продължи оттам, където спря" ═══ */}
         {(() => {
           // Find next incomplete module
           const nextMod = LEARNING_MODULES.find(m => !completedModuleSlugs.has(m.slug));
@@ -260,6 +274,8 @@ export default function StudentDashboard() {
             />
           );
         })()}
+        {/* ═══ Daily Goal (visual only, no XP changes) ═══ */}
+        <DailyGoalCard lang={lang} simComplete={simComplete} simWeek={simWeek} />
 
         {/* ═══ Theory Modules ═══ */}
         <Card className="p-5 border-border">
