@@ -62,27 +62,67 @@ serve(async (req) => {
       ]);
       result.profiles = profiles.data || [];
       result.cases = casesRes.data || [];
-      result.submissions = subsRes.data || [];
+      result.submissions = subsData(subsRes);
     }
 
     if (["all", "dashboard"].includes(scope)) {
-      const [sessionsRes] = await Promise.all([
+      const [sessionsRes, quizRes, simRes, startupRes, rolesRes] = await Promise.all([
         admin.from("case_sessions").select("user_id, case_id, xp_earned, current_step, completion_status, last_saved"),
+        admin.from("quiz_results").select("id, user_id, score, max_score, category, quiz_type, created_at"),
+        admin.from("simulator_progress").select("id, user_id, current_week, is_complete, grade, created_at"),
+        admin.from("startup_projects").select("id, user_id, problem, customer, value_proposition, digital_product, business_model, growth_strategy, final_pitch, is_submitted, created_at, updated_at"),
+        admin.from("user_roles").select("user_id, role"),
       ]);
       result.case_sessions = sessionsRes.data || [];
+      result.quiz_results = quizRes.data || [];
+      result.sim_progress = simRes.data || [];
+      result.startups = startupRes.data || [];
+      result.user_roles = rolesRes.data || [];
+
+      // Fetch auth user emails via admin API
+      try {
+        const allUsers: any[] = [];
+        let page = 1;
+        const perPage = 1000;
+        while (true) {
+          const { data: { users: pageUsers }, error: listErr } = await admin.auth.admin.listUsers({ page, perPage });
+          if (listErr || !pageUsers || pageUsers.length === 0) break;
+          allUsers.push(...pageUsers);
+          if (pageUsers.length < perPage) break;
+          page++;
+        }
+        result.auth_users = allUsers.map((u: any) => ({
+          id: u.id,
+          email: u.email,
+          last_sign_in_at: u.last_sign_in_at,
+          created_at: u.created_at,
+        }));
+      } catch (e) {
+        console.error("Failed to list auth users:", e);
+        result.auth_users = [];
+      }
     }
 
     if (["all", "analytics"].includes(scope)) {
-      const [startupsRes, simRes, cpRes, qrRes] = await Promise.all([
-        admin.from("startup_projects").select("id, user_id, created_at, is_submitted, submitted_at"),
-        admin.from("simulator_progress").select("id, user_id, is_complete, current_week, created_at, grade"),
-        admin.from("course_progress").select("id, user_id, module, status, completed_at, score, created_at"),
-        admin.from("quiz_results").select("id, user_id, score, category, xp_earned, created_at").eq("quiz_type", "dictionary"),
-      ]);
-      result.startups = startupsRes.data || [];
-      result.sim_progress = simRes.data || [];
-      result.course_progress = cpRes.data || [];
-      result.quiz_results = qrRes.data || [];
+      const fetchPromises: Promise<any>[] = [];
+      // Only fetch if not already fetched in dashboard scope
+      if (scope === "analytics") {
+        const [startupsRes, simRes, cpRes, qrRes] = await Promise.all([
+          admin.from("startup_projects").select("id, user_id, created_at, is_submitted, submitted_at"),
+          admin.from("simulator_progress").select("id, user_id, is_complete, current_week, created_at, grade"),
+          admin.from("course_progress").select("id, user_id, module, status, completed_at, score, created_at"),
+          admin.from("quiz_results").select("id, user_id, score, category, xp_earned, created_at").eq("quiz_type", "dictionary"),
+        ]);
+        result.startups = startupsRes.data || [];
+        result.sim_progress = simRes.data || [];
+        result.course_progress = cpRes.data || [];
+        result.quiz_results = qrRes.data || [];
+      } else {
+        const [cpRes] = await Promise.all([
+          admin.from("course_progress").select("id, user_id, module, status, completed_at, score, created_at"),
+        ]);
+        result.course_progress = cpRes.data || [];
+      }
     }
 
     if (["all", "teacher"].includes(scope)) {
@@ -110,3 +150,7 @@ serve(async (req) => {
     });
   }
 });
+
+function subsData(res: any) {
+  return res.data || [];
+}

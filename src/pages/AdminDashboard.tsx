@@ -18,9 +18,20 @@ import {
 interface StudentXpSummary {
   user_id: string;
   full_name: string;
+  display_name: string;
+  email: string;
   total_xp: number;
   cases_completed: number;
   sessions: { case_id: string; xp_earned: number; completion_status: string }[];
+  quiz_avg: number;
+  quiz_count: number;
+  sim_week: number;
+  sim_complete: boolean;
+  sim_grade: string | null;
+  startup_pct: number;
+  startup_submitted: boolean;
+  last_active: string | null;
+  role: string;
 }
 
 interface CaseStudyAdmin {
@@ -92,6 +103,19 @@ export default function AdminDashboard() {
   const [newReadingUrl, setNewReadingUrl] = useState('');
   const [newReadingLabel, setNewReadingLabel] = useState('');
 
+  const XP_LEVELS = [
+    { name: 'Explorer', min: 0 }, { name: 'Apprentice', min: 101 }, { name: 'Strategist', min: 251 },
+    { name: 'Innovator', min: 501 }, { name: 'Visionary', min: 1001 }, { name: 'Legend', min: 2001 },
+  ];
+  const getLevel = (xp: number) => {
+    for (let i = XP_LEVELS.length - 1; i >= 0; i--) {
+      if (xp >= XP_LEVELS[i].min) return XP_LEVELS[i].name;
+    }
+    return XP_LEVELS[0].name;
+  };
+
+  const STARTUP_SECTIONS = ['problem', 'customer', 'value_proposition', 'digital_product', 'business_model', 'growth_strategy', 'final_pitch'];
+
   useEffect(() => {
     if (!isAdmin) return;
     const fetchData = async () => {
@@ -109,6 +133,11 @@ export default function AdminDashboard() {
         const subsData = result.submissions || [];
         const profilesData = result.profiles || [];
         const sessionsData = result.case_sessions || [];
+        const quizData = result.quiz_results || [];
+        const simData = result.sim_progress || [];
+        const startupData = result.startups || [];
+        const authUsers = result.auth_users || [];
+        const rolesData = result.user_roles || [];
 
         setCases(casesData);
         setSubmissions(subsData);
@@ -116,19 +145,64 @@ export default function AdminDashboard() {
         profilesData.forEach((p: any) => { pm[p.user_id] = p.full_name || t('Unknown', 'Неизвестен'); });
         setProfiles(pm);
 
+        // Email map from auth users
+        const emailMap: Record<string, string> = {};
+        const lastSignInMap: Record<string, string | null> = {};
+        authUsers.forEach((u: any) => {
+          emailMap[u.id] = u.email || '';
+          lastSignInMap[u.id] = u.last_sign_in_at || null;
+        });
+
+        // Role map
+        const roleMap: Record<string, string> = {};
+        rolesData.forEach((r: any) => {
+          const existing = roleMap[r.user_id];
+          const priority: Record<string, number> = { admin: 4, teacher_verified: 3, teacher_pending: 2, student: 1 };
+          if (!existing || (priority[r.role] || 0) > (priority[existing] || 0)) {
+            roleMap[r.user_id] = r.role;
+          }
+        });
+
         const sm: Record<string, CaseSessionAdmin> = {};
         sessionsData.forEach((s: any) => {
           sm[`${s.user_id}:${s.case_id}`] = s;
         });
         setSessionMap(sm);
 
-        // Build per-student XP summary
+        // Build per-student summary with ALL data
         const xpSummaries: StudentXpSummary[] = profilesData.map((p: any) => {
           const userSessions = sessionsData.filter((s: any) => s.user_id === p.user_id);
           const completedSubs = subsData.filter((s: any) => s.user_id === p.user_id && !s.is_draft);
+          
+          // Quiz scores
+          const userQuizzes = quizData.filter((q: any) => q.user_id === p.user_id);
+          const quizAvg = userQuizzes.length > 0
+            ? Math.round(userQuizzes.reduce((sum: number, q: any) => sum + (q.max_score > 0 ? (q.score / q.max_score) * 100 : 0), 0) / userQuizzes.length)
+            : 0;
+
+          // Simulator
+          const userSim = simData.find((s: any) => s.user_id === p.user_id);
+
+          // Startup
+          const userStartup = startupData.find((s: any) => s.user_id === p.user_id);
+          let startupPct = 0;
+          if (userStartup) {
+            const filled = STARTUP_SECTIONS.filter(sec => ((userStartup[sec] || '').trim().length > 20)).length;
+            startupPct = Math.round((filled / STARTUP_SECTIONS.length) * 100);
+          }
+
+          // Last active = most recent of: profile updated_at, last_sign_in, session last_saved
+          const dates = [p.updated_at, lastSignInMap[p.user_id]].filter(Boolean);
+          userSessions.forEach((s: any) => { if (s.last_saved) dates.push(s.last_saved); });
+          const lastActive = dates.length > 0
+            ? dates.sort((a: string, b: string) => new Date(b).getTime() - new Date(a).getTime())[0]
+            : null;
+
           return {
             user_id: p.user_id,
             full_name: p.full_name || t('Unknown', 'Неизвестен'),
+            display_name: p.display_name || '',
+            email: emailMap[p.user_id] || '',
             total_xp: p.total_xp || 0,
             cases_completed: completedSubs.length,
             sessions: userSessions.map((s: any) => ({
@@ -136,8 +210,17 @@ export default function AdminDashboard() {
               xp_earned: s.xp_earned,
               completion_status: s.completion_status,
             })),
+            quiz_avg: quizAvg,
+            quiz_count: userQuizzes.length,
+            sim_week: userSim?.current_week || 0,
+            sim_complete: userSim?.is_complete || false,
+            sim_grade: userSim?.grade || null,
+            startup_pct: startupPct,
+            startup_submitted: userStartup?.is_submitted || false,
+            last_active: lastActive,
+            role: roleMap[p.user_id] || 'student',
           };
-        }).filter((s: any) => s.cases_completed > 0 || s.sessions.length > 0);
+        });
 
         xpSummaries.sort((a, b) => b.total_xp - a.total_xp);
         setStudentXpData(xpSummaries);
@@ -427,47 +510,92 @@ export default function AdminDashboard() {
           </div>
         </div>
 
-        {/* Student XP Verification */}
+        {/* Comprehensive User List */}
         <div>
           <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-            <Award className="h-5 w-5 text-primary" />
-            {t('Student XP Verification', 'Проверка на XP на студентите')}
+            <Users className="h-5 w-5 text-primary" />
+            {t('All Participants', 'Всички участници')} ({studentXpData.length})
           </h2>
-          <div className="rounded-xl border border-border overflow-hidden">
-            <table className="w-full">
+          <div className="rounded-xl border border-border overflow-x-auto">
+            <table className="w-full min-w-[1100px]">
               <thead className="bg-muted/50">
                 <tr>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">{t('Student', 'Студент')}</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">{t('Total XP', 'Общо XP')}</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">{t('Cases Completed', 'Завършени казуси')}</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground">{t('Session XP Details', 'XP по сесии')}</th>
+                  <th className="px-3 py-3 text-left text-xs font-medium text-muted-foreground">{t('Name / Username', 'Име / Потребител')}</th>
+                  <th className="px-3 py-3 text-left text-xs font-medium text-muted-foreground">{t('Email', 'Имейл')}</th>
+                  <th className="px-3 py-3 text-left text-xs font-medium text-muted-foreground">{t('Role', 'Роля')}</th>
+                  <th className="px-3 py-3 text-right text-xs font-medium text-muted-foreground">XP</th>
+                  <th className="px-3 py-3 text-left text-xs font-medium text-muted-foreground">{t('Level', 'Ниво')}</th>
+                  <th className="px-3 py-3 text-right text-xs font-medium text-muted-foreground">{t('Quiz Avg', 'Ср. тест')}</th>
+                  <th className="px-3 py-3 text-right text-xs font-medium text-muted-foreground">{t('Cases', 'Казуси')}</th>
+                  <th className="px-3 py-3 text-left text-xs font-medium text-muted-foreground">{t('Simulator', 'Симулатор')}</th>
+                  <th className="px-3 py-3 text-right text-xs font-medium text-muted-foreground">{t('Startup %', 'Стартъп %')}</th>
+                  <th className="px-3 py-3 text-left text-xs font-medium text-muted-foreground">{t('Last Active', 'Последно активен')}</th>
                 </tr>
               </thead>
               <tbody>
-                {studentXpData.map(s => (
-                  <tr key={s.user_id} className="border-t border-border">
-                    <td className="px-4 py-3 text-sm font-medium text-foreground">{s.full_name}</td>
-                    <td className="px-4 py-3">
-                      <Badge className="bg-primary/10 text-primary border-0">{s.total_xp} XP</Badge>
-                    </td>
-                    <td className="px-4 py-3 text-sm text-muted-foreground">{s.cases_completed}</td>
-                    <td className="px-4 py-3">
-                      <div className="flex flex-wrap gap-1">
-                        {s.sessions.map((sess, i) => {
-                          const caseName = cases.find(c => c.id === sess.case_id)?.title || sess.case_id.slice(0, 8);
-                          return (
-                            <Badge key={i} variant="outline" className="text-xs">
-                              {caseName}: {sess.xp_earned} XP ({sess.completion_status})
-                            </Badge>
-                          );
-                        })}
-                        {s.sessions.length === 0 && <span className="text-xs text-muted-foreground">—</span>}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
+                {studentXpData.map(s => {
+                  const level = getLevel(s.total_xp);
+                  const roleLabel: Record<string, string> = {
+                    admin: 'Admin',
+                    teacher_verified: lang === 'bg' ? 'Учител' : 'Teacher',
+                    teacher_pending: lang === 'bg' ? 'Учител (чакащ)' : 'Teacher (pending)',
+                    student: lang === 'bg' ? 'Студент' : 'Student',
+                  };
+                  return (
+                    <tr key={s.user_id} className="border-t border-border hover:bg-muted/30 transition-colors">
+                      <td className="px-3 py-2.5">
+                        <div>
+                          <p className="text-sm font-medium text-foreground truncate max-w-[160px]">{s.full_name}</p>
+                          {s.display_name && <p className="text-xs text-muted-foreground truncate max-w-[160px]">@{s.display_name}</p>}
+                        </div>
+                      </td>
+                      <td className="px-3 py-2.5 text-xs text-muted-foreground truncate max-w-[180px]">{s.email}</td>
+                      <td className="px-3 py-2.5">
+                        <Badge variant={s.role === 'admin' ? 'default' : 'outline'} className="text-xs">
+                          {roleLabel[s.role] || s.role}
+                        </Badge>
+                      </td>
+                      <td className="px-3 py-2.5 text-right">
+                        <Badge className="bg-primary/10 text-primary border-0 text-xs">{s.total_xp}</Badge>
+                      </td>
+                      <td className="px-3 py-2.5">
+                        <span className="text-xs font-medium text-foreground">{level}</span>
+                      </td>
+                      <td className="px-3 py-2.5 text-right text-sm">
+                        {s.quiz_count > 0 ? (
+                          <span className="text-foreground">{s.quiz_avg}% <span className="text-muted-foreground text-xs">({s.quiz_count})</span></span>
+                        ) : (
+                          <span className="text-muted-foreground text-xs">—</span>
+                        )}
+                      </td>
+                      <td className="px-3 py-2.5 text-right text-sm text-foreground">{s.cases_completed}</td>
+                      <td className="px-3 py-2.5">
+                        {s.sim_week > 0 ? (
+                          <div className="text-xs">
+                            <span className="text-foreground">{t('Wk', 'Сд')} {s.sim_week}</span>
+                            {s.sim_complete && <Badge className="ml-1 bg-emerald-500/10 text-emerald-600 border-0 text-[10px]">{s.sim_grade || '✓'}</Badge>}
+                          </div>
+                        ) : (
+                          <span className="text-muted-foreground text-xs">—</span>
+                        )}
+                      </td>
+                      <td className="px-3 py-2.5 text-right">
+                        {s.startup_pct > 0 ? (
+                          <span className={`text-xs font-medium ${s.startup_submitted ? 'text-emerald-600' : 'text-foreground'}`}>
+                            {s.startup_pct}%{s.startup_submitted ? ' ✓' : ''}
+                          </span>
+                        ) : (
+                          <span className="text-muted-foreground text-xs">—</span>
+                        )}
+                      </td>
+                      <td className="px-3 py-2.5 text-xs text-muted-foreground">
+                        {s.last_active ? new Date(s.last_active).toLocaleDateString() : '—'}
+                      </td>
+                    </tr>
+                  );
+                })}
                 {studentXpData.length === 0 && (
-                  <tr><td colSpan={4} className="px-4 py-8 text-center text-muted-foreground">{t('No student activity yet', 'Все още няма студентска активност')}</td></tr>
+                  <tr><td colSpan={10} className="px-4 py-8 text-center text-muted-foreground">{loading ? t('Loading...', 'Зареждане...') : t('No participants yet', 'Все още няма участници')}</td></tr>
                 )}
               </tbody>
             </table>
