@@ -70,12 +70,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const { data } = await supabase
       .from('user_roles')
       .select('role')
-      .eq('user_id', userId)
-      .maybeSingle();
-    if (data) {
-      const role = data.role as AppRole;
-      setUserRole(role);
-      setIsAdmin(role === 'admin');
+      .eq('user_id', userId);
+    if (data && data.length > 0) {
+      const roles = data.map(r => r.role as AppRole);
+      // Priority: admin > teacher_verified > teacher_pending > student
+      const priority: AppRole[] = ['admin', 'teacher_verified', 'teacher_pending', 'student'];
+      const bestRole = priority.find(r => roles.includes(r)) || 'student';
+      setUserRole(bestRole);
+      setIsAdmin(bestRole === 'admin');
     } else {
       setUserRole('student');
       setIsAdmin(false);
