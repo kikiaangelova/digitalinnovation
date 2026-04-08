@@ -13,6 +13,7 @@ import AppFooter from "@/components/layout/AppFooter";
 import AdminRoute from "@/components/layout/AdminRoute";
 import RoleGuard from "@/components/layout/RoleGuard";
 import CycleFAB from "@/components/layout/CycleFAB";
+import ScrollToTop from "@/components/ScrollToTop";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import AuthPage from "./pages/AuthPage";
@@ -72,8 +73,9 @@ const App = () => (
           <ProgressProvider>
             <SimulatorProvider>
               <BrowserRouter>
+                <ScrollToTop />
                 <ProfileGate>
-                <div className="flex min-h-screen flex-col">
+                <div className="flex min-h-screen flex-col overflow-x-hidden">
                   <div className="flex-1 pb-20 md:pb-0">
                     <Routes>
                       {/* Public routes */}
