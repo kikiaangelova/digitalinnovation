@@ -25,7 +25,7 @@ const translations = {
     // Landing
     heroTitle: 'DigiInnov Case Lab',
     heroSubtitle: 'Learn digital innovation and startup thinking through hands-on case studies, business simulation, and gamification.',
-    heroAudience: 'Built for business students, entrepreneurship educators, and future founders.',
+    heroAudience: 'Designed for ambitious students, entrepreneurship educators, and the next generation of founders.',
     getStarted: 'Get Started',
     goToDashboard: 'Go to Dashboard',
     startJourney: 'Start Free',
@@ -36,11 +36,11 @@ const translations = {
     accessClarity: 'Free for students. Contact us for schools and institutions.',
     gamifiedPlatform: 'Gamified Learning Platform',
     howItWorksTitle: 'How It Works',
-    howItWorksDesc: 'A guided journey from idea to pitch — no experience needed.',
-    howStep1: 'Explore real business cases and learn key concepts',
-    howStep2: 'Build your own startup idea step by step',
-    howStep3: 'Get AI-powered feedback and improve',
-    howStep4: 'Pitch your startup and earn your certificate',
+    howItWorksDesc: 'A structured pathway from raw idea to investor-ready pitch — no prior experience required.',
+    howStep1: 'Analyse real-world business cases and master foundational concepts',
+    howStep2: 'Develop your startup concept through a structured, stage-by-stage process',
+    howStep3: 'Receive AI-driven feedback and iterate with purpose',
+    howStep4: 'Present your venture and earn your certificate',
     howCta: 'Ready to start?',
 
     // Landing sections
@@ -395,7 +395,7 @@ const translations = {
     // Landing
     heroTitle: 'DigiInnov Case Lab',
     heroSubtitle: 'Научи дигитални иновации и стартъп мислене чрез практически казуси, бизнес симулация и геймификация.',
-    heroAudience: 'За бизнес ученици, учители по предприемачество и бъдещи основатели.',
+    heroAudience: 'Създадено за амбициозни ученици, преподаватели по предприемачество и следващото поколение основатели.',
     getStarted: 'Започни',
     goToDashboard: 'Започни сега',
     startJourney: 'Започни безплатно',
@@ -406,11 +406,11 @@ const translations = {
     accessClarity: 'Безплатно за ученици. За училища и организации — свържи се с нас.',
     gamifiedPlatform: 'Геймифицирана учебна платформа',
     howItWorksTitle: 'Как работи',
-    howItWorksDesc: 'Водено пътешествие от идея до представяне — без нужда от опит.',
-    howStep1: 'Разгледай реални бизнес казуси и научи ключови концепции',
-    howStep2: 'Изгради своята стартъп идея стъпка по стъпка',
-    howStep3: 'Получи обратна връзка от AI и се подобри',
-    howStep4: 'Представи стартъпа си и спечели сертификат',
+    howItWorksDesc: 'Структуриран път от сурова идея до представяне пред инвеститори — без нужда от предишен опит.',
+    howStep1: 'Анализирай реални бизнес казуси и овладей основни концепции',
+    howStep2: 'Развий стартъп концепцията си чрез структуриран, поетапен процес',
+    howStep3: 'Получи обратна връзка от AI и итерирай с цел',
+    howStep4: 'Представи проекта си и спечели сертификат',
     howCta: 'Готов ли си да започнеш?',
 
     // Landing sections
