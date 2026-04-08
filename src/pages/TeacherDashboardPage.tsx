@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
+import { deriveJourneyStatuses } from '@/lib/journey';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
@@ -42,6 +43,8 @@ interface ProgressSnapshot {
   sim_complete: boolean;
   sim_grade: string | null;
   startup_sections: number;
+  startup_keys: Record<string, boolean>;
+  startup_submitted: boolean;
   module_count: number;
 }
 
@@ -128,7 +131,7 @@ export default function TeacherDashboardPage() {
         .in('user_id', studentIds),
       supabase
         .from('startup_projects')
-        .select('user_id, problem, customer, value_proposition, digital_product, business_model, growth_strategy, final_pitch')
+        .select('user_id, problem, customer, value_proposition, digital_product, business_model, growth_strategy, final_pitch, is_submitted')
         .in('user_id', studentIds),
       supabase
         .from('learning_module_responses')
@@ -153,9 +156,15 @@ export default function TeacherDashboardPage() {
     );
 
     const STARTUP_KEYS = ['problem', 'customer', 'value_proposition', 'digital_product', 'business_model', 'growth_strategy', 'final_pitch'] as const;
-    const projMap: Record<string, number> = {};
+    const projMap: Record<string, { count: number; keys: Record<string, boolean>; submitted: boolean }> = {};
     (projRes.data || []).forEach((p: any) => {
-      projMap[p.user_id] = STARTUP_KEYS.filter((k) => (p[k] || '').trim().length > 10).length;
+      const keys: Record<string, boolean> = {};
+      STARTUP_KEYS.forEach((k) => { keys[k] = (p[k] || '').trim().length > 10; });
+      projMap[p.user_id] = {
+        count: STARTUP_KEYS.filter((k) => keys[k]).length,
+        keys,
+        submitted: !!p.is_submitted,
+      };
     });
 
     const modCountMap: Record<string, number> = {};
@@ -169,7 +178,9 @@ export default function TeacherDashboardPage() {
       sim_week: simMap[sid]?.current_week || 0,
       sim_complete: simMap[sid]?.is_complete || false,
       sim_grade: simMap[sid]?.grade || null,
-      startup_sections: projMap[sid] || 0,
+      startup_sections: projMap[sid]?.count || 0,
+      startup_keys: projMap[sid]?.keys || {},
+      startup_submitted: projMap[sid]?.submitted || false,
       module_count: modCountMap[sid] || 0,
     }));
     setProgress(snapshots);
@@ -198,6 +209,26 @@ export default function TeacherDashboardPage() {
     const startupPct = Math.min((p.startup_sections / 7) * 100, 100);
     const modPct = Math.min(p.module_count * 20, 100);
     return Math.round((casePct + simPct + startupPct + modPct) / 4);
+  };
+
+  const STAGE_NAMES_EN = ['Discover', 'Analyze', 'Design', 'Build', 'Simulate', 'Pitch'];
+  const STAGE_NAMES_BG = ['Откривай', 'Анализирай', 'Проектирай', 'Изгради', 'Симулирай', 'Представи'];
+
+  const getStudentStage = (sid: string): { num: number; name: string } => {
+    const p = progressMap[sid];
+    if (!p) return { num: 0, name: t('Not started', 'Не е започнал') };
+    const statuses = deriveJourneyStatuses({
+      casesCompleted: p.cases_completed,
+      startupSections: p.startup_keys,
+      startupSubmitted: p.startup_submitted,
+      simWeek: p.sim_week,
+      simComplete: p.sim_complete,
+    });
+    // Current stage = last completed + 1 (capped at 6)
+    const completedCount = statuses.filter((s) => s === 'completed').length;
+    if (completedCount >= 6) return { num: 6, name: lang === 'bg' ? STAGE_NAMES_BG[5] : STAGE_NAMES_EN[5] };
+    const idx = completedCount; // 0-based index of current stage
+    return { num: idx + 1, name: lang === 'bg' ? STAGE_NAMES_BG[idx] : STAGE_NAMES_EN[idx] };
   };
 
   const getName = (s: StudentData) => s.display_name || s.full_name || '—';
@@ -380,6 +411,7 @@ export default function TeacherDashboardPage() {
                       <thead>
                         <tr className="border-b">
                           <th className="text-left py-2 px-3 text-muted-foreground font-medium">{t('Student', 'Ученик')}</th>
+                          <th className="text-left py-2 px-2 text-muted-foreground font-medium">{t('Stage', 'Етап')}</th>
                           <th className="text-center py-2 px-2 text-muted-foreground font-medium">XP</th>
                           <th className="text-center py-2 px-2 text-muted-foreground font-medium">{t('Cases', 'Казуси')}</th>
                           <th className="text-center py-2 px-2 text-muted-foreground font-medium">{t('Sim', 'Сим.')}</th>
@@ -402,9 +434,14 @@ export default function TeacherDashboardPage() {
                                 ? { label: t('Idle', 'Неактивен'), cls: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' }
                                 : { label: t('Inactive', 'Спрял'), cls: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' };
 
+                            const stage = getStudentStage(s.student_id);
                             return (
                               <tr key={s.student_id} className="hover:bg-muted/30">
                                 <td className="py-2.5 px-3 font-medium text-foreground">{getName(s)}</td>
+                                <td className="py-2.5 px-2">
+                                  <span className="text-xs font-semibold text-primary">{stage.num}/6</span>
+                                  <span className="text-xs text-muted-foreground ml-1">{stage.name}</span>
+                                </td>
                                 <td className="text-center py-2.5 px-2 text-muted-foreground">{s.total_xp}</td>
                                 <td className="text-center py-2.5 px-2">{p?.cases_completed || 0}</td>
                                 <td className="text-center py-2.5 px-2">
