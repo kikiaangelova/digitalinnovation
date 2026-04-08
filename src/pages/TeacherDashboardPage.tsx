@@ -130,7 +130,7 @@ export default function TeacherDashboardPage() {
         .in('user_id', studentIds),
       supabase
         .from('startup_projects')
-        .select('user_id, problem, customer, value_proposition, digital_product, business_model, growth_strategy, final_pitch')
+        .select('user_id, problem, customer, value_proposition, digital_product, business_model, growth_strategy, final_pitch, is_submitted')
         .in('user_id', studentIds),
       supabase
         .from('learning_module_responses')
