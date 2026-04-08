@@ -360,7 +360,7 @@ Examples include Airbnb (hosts and guests), YouTube (creators and viewers), and 
     display_order: 2,
     related_case_topic: 'Platform Economy',
     case_transition_en: 'You just learned about platform business models. Now analyze how real platforms solved the chicken-and-egg problem.',
-    case_transition_bg: 'Току-що научихте за платформените бизнес модели. Сега анализирайте как реални платформи решиха проблема кокошка и яйце.',
+    case_transition_bg: 'Току-що научи за платформените бизнес модели. Сега анализирай как реални платформи решиха проблема кокошка и яйце.',
     related_sim_concepts_en: ['Platform Business Models', 'Two-sided Markets'],
     related_sim_concepts_bg: ['Платформени бизнес модели', 'Двустранни пазари'],
     sim_transition_en: 'Test your platform strategy in the startup simulator.',
