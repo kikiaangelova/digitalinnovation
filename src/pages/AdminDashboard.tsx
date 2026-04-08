@@ -243,7 +243,7 @@ export default function AdminDashboard() {
       }
     };
     fetchData();
-  }, [isAdmin]);
+  }, [isAdmin, user, authLoading, roleLoading]);
 
   const togglePublish = async (caseId: string, published: boolean) => {
     await supabase.from('case_studies').update({ published: !published }).eq('id', caseId);
