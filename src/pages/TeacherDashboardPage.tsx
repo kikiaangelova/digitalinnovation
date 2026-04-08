@@ -177,6 +177,14 @@ export default function TeacherDashboardPage() {
       modCountMap[m.user_id] = (modCountMap[m.user_id] || 0) + 1;
     });
 
+    const quizScores: Record<string, { total: number; count: number }> = {};
+    (quizRes.data || []).forEach((q) => {
+      if (!quizScores[q.user_id]) quizScores[q.user_id] = { total: 0, count: 0 };
+      const pct = q.max_score > 0 ? (q.score / q.max_score) * 100 : 0;
+      quizScores[q.user_id].total += pct;
+      quizScores[q.user_id].count += 1;
+    });
+
     const snapshots: ProgressSnapshot[] = studentIds.map((sid) => ({
       student_id: sid,
       cases_completed: subsCountMap[sid] || 0,
@@ -187,6 +195,7 @@ export default function TeacherDashboardPage() {
       startup_keys: projMap[sid]?.keys || {},
       startup_submitted: projMap[sid]?.submitted || false,
       module_count: modCountMap[sid] || 0,
+      quiz_avg: quizScores[sid] ? Math.round(quizScores[sid].total / quizScores[sid].count) : 0,
     }));
     setProgress(snapshots);
     setLoading(false);
