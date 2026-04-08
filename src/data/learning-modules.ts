@@ -819,6 +819,10 @@ Additionally, Airbnb noticed that listings with professional photos got 2.5x mor
     slug: 'pricing-and-revenue',
     title_en: 'Pricing & Revenue',
     title_bg: 'Ценообразуване и приходи',
+    hook: { en: 'Bird scooters charged $1 to unlock + $0.15/min. Each ride cost them $1.60 to operate. They raised $1B and still lost money.', bg: 'Bird скутерите таксуваха $1 за отключване + $0.15/мин. Всяко пътуване ги струваше $1.60. Привлякоха $1B и пак губеха пари.' },
+    metaphor: { en: 'Price is a triangle: what customers will pay (value), what it costs you (cost), what competitors charge (market). Find the sweet spot.', bg: 'Цената е триъгълник: какво ще платят клиентите (стойност), какво те струва (разход), какво таксуват конкурентите (пазар).' },
+    framework: { name: 'Value-Based Pricing Triangle', bullets_en: ['Value ceiling: maximum willingness to pay', 'Cost floor: minimum viable price', 'Competitive anchor: what alternatives cost'], bullets_bg: ['Таван на стойност: максимална готовност за плащане', 'Подова цена: минимална жизнеспособна цена', 'Конкурентна котва: колко струват алтернативите'], apply_en: 'Draw the pricing triangle for your product.', apply_bg: 'Начертай ценовия триъгълник за продукта си.' },
+    provocations: [{ en: 'When is charging $0 the best pricing strategy?', bg: 'Кога таксуването $0 е най-добрата ценова стратегия?' }, { en: 'Why did Spotify choose freemium instead of a pure subscription model?', bg: 'Защо Spotify избра freemium вместо чист абонаментен модел?' }],
     level: 2,
     startup_field: 'business_model',
     concepts: [
