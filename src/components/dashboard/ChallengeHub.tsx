@@ -352,7 +352,7 @@ export default function ChallengeHub({ lang, userId }: ChallengeHubProps) {
             <p className="text-sm text-foreground/80">
               {t(
                 `The ${TYPE_CONFIG[comingSoonType].en} mode is currently in development. Stay tuned!`,
-                `Режимът „${TYPE_CONFIG[comingSoonType].bg}" е в процес на разработка. Очаквайте!`
+                `Режимът „${TYPE_CONFIG[comingSoonType].bg}" е в процес на разработка. Очаквай!`
               )}
             </p>
             <div className="rounded-lg bg-primary/5 border border-primary/15 p-3 text-center">

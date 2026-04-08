@@ -96,7 +96,7 @@ export default function AIMentorWidget({ lang, startupData, onFeedbackReceived }
         </Button>
       </div>
       <p className="text-xs text-muted-foreground mt-2">
-        {t('Limited to 3 requests per day. Identical inputs use cached responses.', 'Лимит: 3 заявки на ден. Идентичните входове използват кеширани отговори.')}
+        {t('Limited to 3 uses per day. Asking the same question returns the same answer.', 'До 3 въпроса на ден. Ако питаш едно и също, получаваш същия отговор.')}
       </p>
     </div>
   );
