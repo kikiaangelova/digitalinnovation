@@ -319,48 +319,50 @@ export default function TeacherDashboardPage() {
       <AppHeader />
       <main className="container mx-auto px-4 py-6 max-w-7xl space-y-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <div>
-            <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
-              <GraduationCap className="h-6 w-6 text-primary" />
-              {t('Teacher Dashboard', 'Учителско табло')}
-            </h1>
-            <p className="text-sm text-muted-foreground mt-0.5">
-              {classroom
-                ? <>{classroom.name} · {t('Code:', 'Код:')} <span className="font-mono font-bold text-primary">{classroom.class_code}</span></>
-                : t('All students overview', 'Преглед на всички ученици')
-              }
-            </p>
-          </div>
-          <div className="flex items-center gap-2 flex-wrap">
-            {classroom && (
-              <>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => copyToClipboard(classroom.class_code, t('Code', 'Кодът'))}
-                >
-                  <Copy className="h-3.5 w-3.5 mr-1" />
-                  {t('Copy code', 'Копирай код')}
-                </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() =>
-                    copyToClipboard(
-                      classroom.invite_link || `${siteUrl}/join/${classroom.class_code}`,
-                      t('Link', 'Линкът')
-                    )
-                  }
-                >
-                  <Link2 className="h-3.5 w-3.5 mr-1" />
-                  {t('Copy invite', 'Копирай покана')}
-                </Button>
-              </>
-            )}
-            <Button size="sm" onClick={() => navigate('/teacher')} className="gap-1">
-              {t('Manage Class', 'Управлявай класа')} <ArrowRight className="h-3.5 w-3.5" />
-            </Button>
+        <div className="rounded-2xl sim-gradient p-6 text-primary-foreground shadow-lg glow-primary">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+            <div>
+              <h1 className="text-2xl font-display flex items-center gap-2">
+                <GraduationCap className="h-6 w-6" />
+                {t('Teacher Dashboard', 'Учителско табло')}
+              </h1>
+              <p className="text-sm text-primary-foreground/70 mt-0.5">
+                {classroom
+                  ? <>{classroom.name} · {t('Code:', 'Код:')} <span className="font-mono font-bold text-white">{classroom.class_code}</span></>
+                  : t('All students overview', 'Преглед на всички ученици')
+                }
+              </p>
+            </div>
+            <div className="flex items-center gap-2 flex-wrap">
+              {classroom && (
+                <>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() => copyToClipboard(classroom.class_code, t('Code', 'Кодът'))}
+                  >
+                    <Copy className="h-3.5 w-3.5 mr-1" />
+                    {t('Copy code', 'Копирай код')}
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    onClick={() =>
+                      copyToClipboard(
+                        classroom.invite_link || `${siteUrl}/join/${classroom.class_code}`,
+                        t('Link', 'Линкът')
+                      )
+                    }
+                  >
+                    <Link2 className="h-3.5 w-3.5 mr-1" />
+                    {t('Copy invite', 'Копирай покана')}
+                  </Button>
+                </>
+              )}
+              <Button size="sm" variant="secondary" onClick={() => navigate('/teacher')} className="gap-1">
+                {t('Manage Class', 'Управлявай класа')} <ArrowRight className="h-3.5 w-3.5" />
+              </Button>
+            </div>
           </div>
         </div>
 
@@ -371,7 +373,7 @@ export default function TeacherDashboardPage() {
             icon={Activity}
             label={t('Active this week', 'Активни тази седмица')}
             value={activeThisWeek}
-            accent={activeThisWeek > 0 ? 'text-green-600 dark:text-green-400' : undefined}
+            accent={activeThisWeek > 0 ? 'text-emerald-600 dark:text-emerald-400' : undefined}
           />
           <StatCard
             icon={AlertTriangle}
@@ -388,10 +390,12 @@ export default function TeacherDashboardPage() {
           {/* Left: Student engagement chart + struggling students */}
           <div className="md:col-span-2 space-y-6">
             {/* Activity chart */}
-            <Card>
+            <Card className="border-border/50">
               <CardHeader className="pb-2">
                 <CardTitle className="text-base flex items-center gap-2">
-                  <BarChart3 className="h-4 w-4 text-primary" />
+                  <div className="rounded-lg sim-gradient p-1.5">
+                    <BarChart3 className="h-3.5 w-3.5 text-primary-foreground" />
+                  </div>
                   {t('Student Engagement by Area', 'Ангажираност на учениците по области')}
                 </CardTitle>
               </CardHeader>
@@ -419,10 +423,12 @@ export default function TeacherDashboardPage() {
             </Card>
 
             {/* Student progress table */}
-            <Card>
+            <Card className="border-border/50">
               <CardHeader className="pb-2">
                 <CardTitle className="text-base flex items-center gap-2">
-                  <TrendingUp className="h-4 w-4 text-primary" />
+                  <div className="rounded-lg sim-gradient p-1.5">
+                    <TrendingUp className="h-3.5 w-3.5 text-primary-foreground" />
+                  </div>
                   {t('Student Progress', 'Напредък на учениците')}
                 </CardTitle>
               </CardHeader>
@@ -614,31 +620,38 @@ export default function TeacherDashboardPage() {
           {/* Right sidebar */}
           <div className="space-y-6">
             {/* Quick actions */}
-            <Card>
+            <Card className="border-border/50">
               <CardHeader className="pb-2">
-                <CardTitle className="text-base">{t('Quick Actions', 'Бързи действия')}</CardTitle>
+                <CardTitle className="text-base flex items-center gap-2">
+                  <div className="rounded-lg sim-gradient p-1.5">
+                    <Rocket className="h-3.5 w-3.5 text-primary-foreground" />
+                  </div>
+                  {t('Quick Actions', 'Бързи действия')}
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
-                <Button variant="outline" size="sm" className="w-full justify-start gap-2" onClick={() => navigate('/teacher')}>
-                  <Users className="h-4 w-4" /> {t('Manage Students', 'Управлявай ученици')}
+                <Button variant="outline" size="sm" className="w-full justify-start gap-2 hover:border-primary/30" onClick={() => navigate('/teacher')}>
+                  <Users className="h-4 w-4 text-primary" /> {t('Manage Students', 'Управлявай ученици')}
                 </Button>
-                <Button variant="outline" size="sm" className="w-full justify-start gap-2" onClick={() => navigate('/teacher')}>
-                  <ClipboardList className="h-4 w-4" /> {t('Assign Task', 'Назначи задача')}
+                <Button variant="outline" size="sm" className="w-full justify-start gap-2 hover:border-primary/30" onClick={() => navigate('/teacher')}>
+                  <ClipboardList className="h-4 w-4 text-primary" /> {t('Assign Task', 'Назначи задача')}
                 </Button>
-                <Button variant="outline" size="sm" className="w-full justify-start gap-2" onClick={() => navigate('/cases')}>
-                  <BookOpen className="h-4 w-4" /> {t('Browse Cases', 'Разгледай казуси')}
+                <Button variant="outline" size="sm" className="w-full justify-start gap-2 hover:border-primary/30" onClick={() => navigate('/cases')}>
+                  <BookOpen className="h-4 w-4 text-primary" /> {t('Browse Cases', 'Разгледай казуси')}
                 </Button>
-                <Button variant="outline" size="sm" className="w-full justify-start gap-2" onClick={() => navigate('/learn')}>
-                  <GraduationCap className="h-4 w-4" /> {t('Learning Modules', 'Учебни модули')}
+                <Button variant="outline" size="sm" className="w-full justify-start gap-2 hover:border-primary/30" onClick={() => navigate('/learn')}>
+                  <GraduationCap className="h-4 w-4 text-primary" /> {t('Learning Modules', 'Учебни модули')}
                 </Button>
               </CardContent>
             </Card>
 
             {/* Intervention Alerts */}
-            <Card className={struggling.length > 0 ? 'border-red-500/30' : ''}>
+            <Card className={`border-border/50 ${struggling.length > 0 ? 'border-destructive/30' : ''}`}>
               <CardHeader className="pb-2">
                 <CardTitle className="text-base flex items-center gap-2">
-                  <AlertTriangle className={`h-4 w-4 ${struggling.length > 0 ? 'text-red-500' : 'text-muted-foreground'}`} />
+                  <div className={`rounded-lg p-1.5 ${struggling.length > 0 ? 'bg-destructive/10' : 'bg-muted'}`}>
+                    <AlertTriangle className={`h-3.5 w-3.5 ${struggling.length > 0 ? 'text-destructive' : 'text-muted-foreground'}`} />
+                  </div>
                   {t('Intervention Alerts', 'Сигнали за намеса')}
                   {struggling.length > 0 && (
                     <Badge variant="destructive" className="text-[10px] px-1.5 py-0">{struggling.length}</Badge>
@@ -648,7 +661,7 @@ export default function TeacherDashboardPage() {
               <CardContent>
                 {struggling.length === 0 ? (
                   <div className="text-center py-4">
-                    <CheckCircle2 className="h-8 w-8 text-green-500 mx-auto mb-2" />
+                    <CheckCircle2 className="h-8 w-8 text-emerald-500 mx-auto mb-2" />
                     <p className="text-sm text-muted-foreground">
                       {t('All students are on track!', 'Всички ученици вървят по план!')}
                     </p>
@@ -699,10 +712,12 @@ export default function TeacherDashboardPage() {
             </Card>
 
             {/* Class insights */}
-            <Card>
+            <Card className="border-border/50">
               <CardHeader className="pb-2">
                 <CardTitle className="text-base flex items-center gap-2">
-                  <Rocket className="h-4 w-4 text-primary" />
+                  <div className="rounded-lg sim-gradient p-1.5">
+                    <Rocket className="h-3.5 w-3.5 text-primary-foreground" />
+                  </div>
                   {t('Class Insights', 'Обзор на класа')}
                 </CardTitle>
               </CardHeader>
@@ -771,13 +786,13 @@ function StatCard({
   accent?: string;
 }) {
   return (
-    <Card className="p-4">
+    <Card className="p-4 border-border/50 hover:shadow-md hover:border-primary/20 transition-all">
       <div className="flex items-center gap-3">
-        <div className="rounded-lg bg-primary/10 p-2">
-          <Icon className="h-4 w-4 text-primary" />
+        <div className="rounded-xl sim-gradient p-2.5 shadow-sm">
+          <Icon className="h-4 w-4 text-primary-foreground" />
         </div>
         <div>
-          <p className={`text-xl font-bold ${accent || 'text-foreground'}`}>{value}</p>
+          <p className={`text-xl font-bold font-display ${accent || 'text-foreground'}`}>{value}</p>
           <p className="text-xs text-muted-foreground">{label}</p>
         </div>
       </div>
