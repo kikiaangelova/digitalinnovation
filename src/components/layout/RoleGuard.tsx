@@ -8,15 +8,14 @@ interface RoleGuardProps {
 }
 
 export default function RoleGuard({ children, allowed, redirectTo }: RoleGuardProps) {
-  const { user, userRole, loading } = useAuth();
+  const { user, userRole, authLoading, roleLoading } = useAuth();
 
-  if (loading) return null;
+  // Wait for both auth and role resolution
+  if (authLoading || roleLoading) return null;
   if (!user) return <Navigate to="/auth" replace />;
-
-  if (!userRole) return null; // still loading role
+  if (!userRole) return null;
 
   if (!allowed.includes(userRole)) {
-    // Role-based redirect
     if (userRole === 'teacher_pending') {
       return <Navigate to="/pending" replace />;
     }

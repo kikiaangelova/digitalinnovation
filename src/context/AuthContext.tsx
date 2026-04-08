@@ -10,7 +10,9 @@ interface AuthContextType {
   profile: { full_name: string; display_name: string | null; avatar_url: string | null; avatar_style: string } | null;
   isAdmin: boolean;
   userRole: AppRole | null;
-  loading: boolean;
+  loading: boolean;       // combined: true until BOTH auth and role are resolved
+  authLoading: boolean;
+  roleLoading: boolean;
   signUp: (email: string, password: string, fullName: string, displayName?: string, meta?: Record<string, string>) => Promise<{ error: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
@@ -25,37 +27,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<{ full_name: string; display_name: string | null; avatar_url: string | null; avatar_style: string } | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [userRole, setUserRole] = useState<AppRole | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [authLoading, setAuthLoading] = useState(true);
+  const [roleLoading, setRoleLoading] = useState(true);
 
-  useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        setTimeout(() => {
-          fetchProfile(session.user.id);
-          fetchRole(session.user.id);
-        }, 0);
-      } else {
-        setProfile(null);
-        setIsAdmin(false);
-        setUserRole(null);
-      }
-      setLoading(false);
-    });
-
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      setUser(session?.user ?? null);
-      if (session?.user) {
-        fetchProfile(session.user.id);
-        fetchRole(session.user.id);
-      }
-      setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
+  // Combined loading: true until both auth AND role are resolved
+  const loading = authLoading || roleLoading;
 
   const fetchProfile = async (userId: string) => {
     const { data } = await supabase
@@ -66,23 +42,87 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (data) setProfile({ ...data, avatar_style: data.avatar_style || '' });
   };
 
+  const resolveRole = (data: { role: string }[] | null): AppRole => {
+    if (!data || data.length === 0) return 'student';
+    const roles = data.map(r => r.role as AppRole);
+    const priority: AppRole[] = ['admin', 'teacher_verified', 'teacher_pending', 'student'];
+    return priority.find(r => roles.includes(r)) || 'student';
+  };
+
   const fetchRole = async (userId: string) => {
-    const { data } = await supabase
-      .from('user_roles')
-      .select('role')
-      .eq('user_id', userId);
-    if (data && data.length > 0) {
-      const roles = data.map(r => r.role as AppRole);
-      // Priority: admin > teacher_verified > teacher_pending > student
-      const priority: AppRole[] = ['admin', 'teacher_verified', 'teacher_pending', 'student'];
-      const bestRole = priority.find(r => roles.includes(r)) || 'student';
+    console.log('[AuthContext] fetchRole START for', userId);
+    setRoleLoading(true);
+    try {
+      const { data, error } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', userId);
+
+      if (error) {
+        console.error('[AuthContext] fetchRole error:', error);
+      }
+
+      const bestRole = resolveRole(data);
+      console.log('[AuthContext] fetchRole DONE — bestRole:', bestRole, 'raw:', data);
       setUserRole(bestRole);
       setIsAdmin(bestRole === 'admin');
-    } else {
+    } catch (err) {
+      console.error('[AuthContext] fetchRole exception:', err);
       setUserRole('student');
       setIsAdmin(false);
+    } finally {
+      setRoleLoading(false);
     }
   };
+
+  const handleUserSession = async (currentSession: Session | null) => {
+    setSession(currentSession);
+    setUser(currentSession?.user ?? null);
+
+    if (currentSession?.user) {
+      // Kick off profile fetch (non-blocking for loading)
+      fetchProfile(currentSession.user.id);
+      // Role fetch IS blocking — roleLoading stays true until done
+      await fetchRole(currentSession.user.id);
+    } else {
+      setProfile(null);
+      setIsAdmin(false);
+      setUserRole(null);
+      setRoleLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    let mounted = true;
+
+    // 1. Restore session on mount
+    const initSession = async () => {
+      console.log('[AuthContext] initSession START');
+      const { data: { session: restoredSession } } = await supabase.auth.getSession();
+      if (!mounted) return;
+      console.log('[AuthContext] initSession — session user:', restoredSession?.user?.id ?? 'none');
+      await handleUserSession(restoredSession);
+      if (mounted) {
+        setAuthLoading(false);
+        console.log('[AuthContext] initSession COMPLETE — authLoading=false, roleLoading=false');
+      }
+    };
+
+    initSession();
+
+    // 2. Listen for auth changes (login, logout, token refresh)
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, newSession) => {
+      if (!mounted) return;
+      console.log('[AuthContext] onAuthStateChange event:', _event, 'user:', newSession?.user?.id ?? 'none');
+      await handleUserSession(newSession);
+      if (mounted) setAuthLoading(false);
+    });
+
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
+  }, []);
 
   const refreshRole = async () => {
     if (user) await fetchRole(user.id);
@@ -114,7 +154,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, profile, isAdmin, userRole, loading, signUp, signIn, signOut, refreshRole }}>
+    <AuthContext.Provider value={{ user, session, profile, isAdmin, userRole, loading, authLoading, roleLoading, signUp, signIn, signOut, refreshRole }}>
       {children}
     </AuthContext.Provider>
   );
