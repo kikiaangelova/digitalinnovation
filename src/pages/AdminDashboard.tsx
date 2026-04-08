@@ -329,6 +329,25 @@ export default function AdminDashboard() {
           </div>
         </div>
 
+        {/* Platform-wide Stats */}
+        {!loading && (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+            {[
+              { label: t('Total Users', 'Общо потребители'), value: studentXpData.length, icon: <Users className="h-4 w-4" /> },
+              { label: t('Total XP Earned', 'Общо XP'), value: studentXpData.reduce((s, u) => s + u.total_xp, 0).toLocaleString(), icon: <Award className="h-4 w-4" /> },
+              { label: t('Avg Quiz Score', 'Ср. тест оценка'), value: (() => { const withQuiz = studentXpData.filter(u => u.quiz_count > 0); return withQuiz.length > 0 ? Math.round(withQuiz.reduce((s, u) => s + u.quiz_avg, 0) / withQuiz.length) + '%' : '—'; })(), icon: <BarChart3 className="h-4 w-4" /> },
+              { label: t('Cases Solved', 'Решени казуси'), value: studentXpData.reduce((s, u) => s + u.cases_completed, 0), icon: <BookOpen className="h-4 w-4" /> },
+              { label: t('Simulator Sessions', 'Симулатор сесии'), value: studentXpData.filter(u => u.sim_week > 0).length, icon: <FileText className="h-4 w-4" /> },
+              { label: t('Startup Projects', 'Стартъп проекти'), value: studentXpData.filter(u => u.startup_pct > 0).length, icon: <Plus className="h-4 w-4" /> },
+            ].map((stat, i) => (
+              <div key={i} className="rounded-xl border border-border bg-card p-4 flex flex-col gap-1">
+                <div className="flex items-center gap-2 text-muted-foreground">{stat.icon}<span className="text-xs">{stat.label}</span></div>
+                <p className="text-xl font-bold text-foreground">{stat.value}</p>
+              </div>
+            ))}
+          </div>
+        )}
+
         {/* Create form */}
         {showCreate && (
           <div className="rounded-xl border border-border bg-card p-6 space-y-4">
