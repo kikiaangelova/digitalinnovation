@@ -168,6 +168,26 @@ export default function ProfilePage() {
     ? Math.round(submissions.reduce((a, s) => a + ((s.total_score || 0) / (s.max_score || 1)) * 100, 0) / completedCount)
     : 0;
 
+  const XP_LEVELS = [
+    { name: 'Explorer', min: 0 }, { name: 'Apprentice', min: 101 }, { name: 'Strategist', min: 251 },
+    { name: 'Innovator', min: 501 }, { name: 'Visionary', min: 1001 }, { name: 'Legend', min: 2001 },
+  ];
+  const currentLevel = (() => {
+    for (let i = XP_LEVELS.length - 1; i >= 0; i--) {
+      if (totalXp >= XP_LEVELS[i].min) return XP_LEVELS[i];
+    }
+    return XP_LEVELS[0];
+  })();
+  const nextLevel = XP_LEVELS[XP_LEVELS.indexOf(currentLevel) + 1];
+  const levelProgress = nextLevel ? Math.round(((totalXp - currentLevel.min) / (nextLevel.min - currentLevel.min)) * 100) : 100;
+
+  const STARTUP_SECTIONS = ['problem', 'customer', 'value_proposition', 'digital_product', 'business_model', 'growth_strategy', 'final_pitch'];
+  const BMC_FIELDS = ['bmc_customer_segments', 'bmc_value_proposition', 'bmc_channels', 'bmc_customer_relationships', 'bmc_revenue_streams', 'bmc_key_resources', 'bmc_key_activities', 'bmc_key_partners', 'bmc_cost_structure'];
+  const startupFilledSections = startupData ? STARTUP_SECTIONS.filter(s => ((startupData[s] || '').trim().length > 20)).length : 0;
+  const startupPct = Math.round((startupFilledSections / STARTUP_SECTIONS.length) * 100);
+  const bmcFilled = startupData ? BMC_FIELDS.filter(f => ((startupData[f] || '').trim().length > 10)).length : 0;
+  const bmcPct = Math.round((bmcFilled / BMC_FIELDS.length) * 100);
+
   if (loading) {
     return <div className="min-h-screen bg-background"><AppHeader /><div className="flex items-center justify-center py-20 text-muted-foreground">{t.loading}</div></div>;
   }
