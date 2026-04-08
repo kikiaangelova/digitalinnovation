@@ -266,7 +266,7 @@ export default function CasePlayer() {
         STARTUP_FIELDS.forEach((f) => { if (meta[f.key]) loadedStartupNotes[f.key] = String(meta[f.key]); });
       }
 
-      const sessionData = sessionRes.data as CaseSessionState | null;
+      const sessionData = sessionRes.data as (CaseSessionState & { chosen_strategy?: string; consequence_reflection?: string }) | null;
       if (sessionData) {
         const sessionAnswers = (sessionData.answers || {}) as Record<string, any>;
         responseMap = { ...responseMap, ...Object.fromEntries(Object.entries(sessionAnswers).filter(([k]) => !k.startsWith(STARTUP_PREFIX))) };
@@ -274,6 +274,8 @@ export default function CasePlayer() {
         const safeStep = Math.max(0, Math.min(sessionData.current_step || 0, Math.max(nextSteps.length - 1, 0)));
         setCurrentStep(safeStep);
         setCaseSession(sessionData);
+        if (sessionData.chosen_strategy) setChosenStrategy(sessionData.chosen_strategy);
+        if (sessionData.consequence_reflection) setConsequenceReflection(sessionData.consequence_reflection);
       } else {
         setCaseSession({
           user_id: user.id,
@@ -284,6 +286,11 @@ export default function CasePlayer() {
           completion_status: 'in_progress',
           last_saved: null,
         });
+      }
+
+      // Load consequences
+      if (consequencesRes.data && consequencesRes.data.length > 0) {
+        setConsequences(consequencesRes.data);
       }
 
       setAnswers(responseMap);
