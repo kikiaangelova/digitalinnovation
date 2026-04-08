@@ -274,6 +274,8 @@ export default function StudentDashboard() {
             />
           );
         })()}
+        {/* ═══ Daily Goal (visual only, no XP changes) ═══ */}
+        <DailyGoalCard lang={lang} simComplete={simComplete} simWeek={simWeek} />
 
         {/* ═══ Theory Modules ═══ */}
         <Card className="p-5 border-border">
