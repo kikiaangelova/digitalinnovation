@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { LearningPhaseBar, WhatYouWillLearn, THEORY_MODULE_OUTCOMES } from '@/components/learning/LearningStructure';
 import StructuredFeedback from '@/components/feedback/StructuredFeedback';
 import SkillsImproved from '@/components/learning/SkillsImproved';
@@ -20,9 +20,12 @@ import { AutoTermTooltips } from '@/components/ui/term-tooltip';
 import {
   ArrowLeft, BookOpen, CheckCircle2, XCircle, Brain, Target,
   Lightbulb, Rocket, Send, ChevronRight, FileText, Zap, BarChart3,
+  Save, Clock, Loader2,
 } from 'lucide-react';
 
 type Phase = 'theory' | 'quiz' | 'case_study' | 'sim_decision' | 'analytical' | 'application' | 'results';
+
+type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
 
 export default function LearningModulePlayer() {
   const { slug } = useParams<{ slug: string }>();
@@ -43,6 +46,12 @@ export default function LearningModulePlayer() {
   const [existingResponse, setExistingResponse] = useState<any>(null);
   const [dbModuleId, setDbModuleId] = useState<string | null>(null);
   const [scores, setScores] = useState({ concept: 0, analytical: 0, strategic: 0, application: 0 });
+
+  // Auto-save state
+  const [autoSaveStatus, setAutoSaveStatus] = useState<SaveStatus>('idle');
+  const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
+  const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [startupSynced, setStartupSynced] = useState(false);
 
   // Ensure module exists in DB
   useEffect(() => {
