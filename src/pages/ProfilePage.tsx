@@ -99,11 +99,6 @@ export default function ProfilePage() {
         .select('classroom_id')
         .eq('student_id', user.id)
         .maybeSingle();
-      const { data: membership } = await supabase
-        .from('classroom_students')
-        .select('classroom_id')
-        .eq('student_id', user.id)
-        .maybeSingle();
       if (membership) {
         const { data: cr } = await supabase
           .from('classrooms')
