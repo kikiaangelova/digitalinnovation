@@ -661,7 +661,7 @@ export default function TeacherDashboardPage() {
               <CardContent>
                 {struggling.length === 0 ? (
                   <div className="text-center py-4">
-                    <CheckCircle2 className="h-8 w-8 text-green-500 mx-auto mb-2" />
+                    <CheckCircle2 className="h-8 w-8 text-emerald-500 mx-auto mb-2" />
                     <p className="text-sm text-muted-foreground">
                       {t('All students are on track!', 'Всички ученици вървят по план!')}
                     </p>
