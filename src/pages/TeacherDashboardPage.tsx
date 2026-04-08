@@ -442,12 +442,13 @@ export default function TeacherDashboardPage() {
                             const p = progressMap[s.student_id];
                             const overall = getOverall(s.student_id);
                             const daysSince = (Date.now() - new Date(s.updated_at).getTime()) / 86400000;
+                            const quizAvg = p?.quiz_avg || 0;
                             const status =
-                              daysSince <= 7
-                                ? { label: t('Active', 'Активен'), cls: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' }
-                                : daysSince <= 14
-                                ? { label: t('Idle', 'Неактивен'), cls: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' }
-                                : { label: t('Inactive', 'Спрял'), cls: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' };
+                              (quizAvg < 40 || daysSince > 7)
+                                ? { label: t('Needs Help', 'Нужда от помощ'), cls: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' }
+                                : quizAvg < 60
+                                ? { label: t('At Risk', 'В риск'), cls: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' }
+                                : { label: t('On Track', 'На път'), cls: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' };
 
                             const stage = getStudentStage(s.student_id);
                             return (
