@@ -178,7 +178,7 @@ export default function TeacherDashboard() {
     if (!isAdmin) return;
     const load = async () => {
       const [profRes, projRes, simRes, subRes, caseRes, fbRes, modRespRes, modRes] = await Promise.all([
-        supabase.from('profiles').select('user_id, full_name, bio, skills_tags, interests, cohort_id, links_json, updated_at'),
+        supabase.from('profiles').select('user_id, full_name, skills_tags, interests, cohort_id, links_json, updated_at'),
         supabase.from('startup_projects').select('*').order('created_at', { ascending: false }),
         supabase.from('simulator_progress').select('*'),
         supabase.from('submissions').select('id, user_id, case_study_id, total_score, max_score, submitted_at, is_draft').eq('is_draft', false),
