@@ -123,6 +123,7 @@ const App = () => (
 
                       {/* Teacher-verified routes */}
                       <Route path="/teacher" element={<RoleGuard allowed={['teacher_verified', 'admin']} redirectTo="/dashboard"><TeacherClassroom /></RoleGuard>} />
+                      <Route path="/teacher-dashboard" element={<RoleGuard allowed={['teacher_verified', 'admin']} redirectTo="/dashboard"><TeacherDashboardPage /></RoleGuard>} />
 
                       {/* Join classroom route (students) */}
                       <Route path="/join/:code" element={<JoinClassroom />} />
