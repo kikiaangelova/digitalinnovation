@@ -492,6 +492,10 @@ CAC е критичен, защото директно влияе на рент�
     slug: 'product-market-fit',
     title_en: 'Product-Market Fit',
     title_bg: 'Продуктово-пазарно съответствие',
+    hook: { en: 'Marc Andreessen says PMF is the only thing that matters. Without it, nothing else you do matters. With it, everything becomes easier.', bg: 'Марк Андрийсън казва, че PMF е единственото, което има значение. Без него нищо друго няма значение. С него всичко става по-лесно.' },
+    metaphor: { en: 'PMF is when you stop pushing a boulder uphill and it starts rolling downhill by itself.', bg: 'PMF е моментът, в който спираш да буташ камък нагоре и той започва да се търкаля надолу сам.' },
+    framework: { name: 'Sean Ellis Test', bullets_en: ['Ask users: "How would you feel if you could no longer use this product?"', 'If >40% answer "Very disappointed" — you have PMF', 'Below 40% means iterate on the product, not marketing'], bullets_bg: ['Попитай потребителите: „Как бихте се почувствали, ако не можехте да използвате продукта?"', 'Ако >40% отговорят „Много разочарован" — имаш PMF', 'Под 40% означава итерирай продукта, не маркетинга'], apply_en: 'Design a Sean Ellis survey for your startup MVP.', apply_bg: 'Създай Sean Ellis анкета за MVP-то на стартъпа си.' },
+    provocations: [{ en: 'Can you have PMF in one market segment and not in another?', bg: 'Можеш ли да имаш PMF в един пазарен сегмент, а в друг не?' }, { en: 'What happens if you scale before PMF? Name a real example.', bg: 'Какво се случва, ако мащабираш преди PMF? Дай реален пример.' }],
     concepts: [
       {
         id: 'pmf-concept-1',
