@@ -95,52 +95,57 @@ export default function AdminDashboard() {
   useEffect(() => {
     if (!isAdmin) return;
     const fetchData = async () => {
-      const [casesRes, subsRes, profsRes, sessionsRes] = await Promise.all([
-        supabase.from('case_studies').select('id, title, topic, difficulty, published, created_at').order('created_at', { ascending: false }),
-        supabase.from('submissions').select('id, case_study_id, user_id, is_draft, total_score, max_score, submitted_at').eq('is_draft', false).order('submitted_at', { ascending: false }),
-        supabase.from('profiles').select('user_id, full_name'),
-        (supabase as any).from('case_sessions').select('user_id, case_id, xp_earned, current_step, completion_status, last_saved'),
-      ]);
-      setCases(casesRes.data || []);
-      setSubmissions(subsRes.data || []);
-      const pm: Record<string, string> = {};
-      profsRes.data?.forEach(p => { pm[p.user_id] = p.full_name || t('Unknown', 'Неизвестен'); });
-      setProfiles(pm);
+      try {
+        const { data: result, error } = await supabase.functions.invoke('admin-data', {
+          body: { scope: 'dashboard' },
+        });
+        if (error || !result) {
+          console.error('[AdminDashboard] admin-data error:', error);
+          setLoading(false);
+          return;
+        }
 
-      const sm: Record<string, CaseSessionAdmin> = {};
-      const sessionsList = (sessionsRes.data as CaseSessionAdmin[] | null) || [];
-      sessionsList.forEach((s) => {
-        sm[`${s.user_id}:${s.case_id}`] = s;
-      });
-      setSessionMap(sm);
+        const casesData = result.cases || [];
+        const subsData = result.submissions || [];
+        const profilesData = result.profiles || [];
+        const sessionsData = result.case_sessions || [];
 
-      // Build per-student XP summary
-      const profilesList = profsRes.data || [];
-      const xpSummaries: StudentXpSummary[] = profilesList.map((p: any) => {
-        const userSessions = sessionsList.filter(s => s.user_id === p.user_id);
-        const completedSubs = (subsRes.data || []).filter((s: any) => s.user_id === p.user_id && !s.is_draft);
-        return {
-          user_id: p.user_id,
-          full_name: p.full_name || t('Unknown', 'Неизвестен'),
-          total_xp: 0, // will be fetched from profiles
-          cases_completed: completedSubs.length,
-          sessions: userSessions.map(s => ({
-            case_id: s.case_id,
-            xp_earned: s.xp_earned,
-            completion_status: s.completion_status,
-          })),
-        };
-      }).filter(s => s.cases_completed > 0 || s.sessions.length > 0);
+        setCases(casesData);
+        setSubmissions(subsData);
+        const pm: Record<string, string> = {};
+        profilesData.forEach((p: any) => { pm[p.user_id] = p.full_name || t('Unknown', 'Неизвестен'); });
+        setProfiles(pm);
 
-      // Fetch actual total_xp from profiles
-      const profilesWithXp = await supabase.from('profiles').select('user_id, total_xp');
-      const xpMap: Record<string, number> = {};
-      (profilesWithXp.data || []).forEach((p: any) => { xpMap[p.user_id] = p.total_xp || 0; });
-      xpSummaries.forEach(s => { s.total_xp = xpMap[s.user_id] || 0; });
-      xpSummaries.sort((a, b) => b.total_xp - a.total_xp);
-      setStudentXpData(xpSummaries);
+        const sm: Record<string, CaseSessionAdmin> = {};
+        sessionsData.forEach((s: any) => {
+          sm[`${s.user_id}:${s.case_id}`] = s;
+        });
+        setSessionMap(sm);
 
-      setLoading(false);
+        // Build per-student XP summary
+        const xpSummaries: StudentXpSummary[] = profilesData.map((p: any) => {
+          const userSessions = sessionsData.filter((s: any) => s.user_id === p.user_id);
+          const completedSubs = subsData.filter((s: any) => s.user_id === p.user_id && !s.is_draft);
+          return {
+            user_id: p.user_id,
+            full_name: p.full_name || t('Unknown', 'Неизвестен'),
+            total_xp: p.total_xp || 0,
+            cases_completed: completedSubs.length,
+            sessions: userSessions.map((s: any) => ({
+              case_id: s.case_id,
+              xp_earned: s.xp_earned,
+              completion_status: s.completion_status,
+            })),
+          };
+        }).filter((s: any) => s.cases_completed > 0 || s.sessions.length > 0);
+
+        xpSummaries.sort((a, b) => b.total_xp - a.total_xp);
+        setStudentXpData(xpSummaries);
+      } catch (err) {
+        console.error('[AdminDashboard] fetch error:', err);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchData();
   }, [isAdmin]);

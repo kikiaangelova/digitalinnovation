@@ -177,25 +177,28 @@ export default function TeacherDashboard() {
   useEffect(() => {
     if (!isAdmin) return;
     const load = async () => {
-      const [profRes, projRes, simRes, subRes, caseRes, fbRes, modRespRes, modRes] = await Promise.all([
-        supabase.from('profiles').select('user_id, full_name, skills_tags, interests, cohort_id, links_json, updated_at'),
-        supabase.from('startup_projects').select('*').order('created_at', { ascending: false }),
-        supabase.from('simulator_progress').select('*'),
-        supabase.from('submissions').select('id, user_id, case_study_id, total_score, max_score, submitted_at, is_draft').eq('is_draft', false),
-        supabase.from('case_studies').select('id, title, topic'),
-        supabase.from('teacher_feedback').select('*').order('created_at', { ascending: false }),
-        supabase.from('learning_module_responses').select('*'),
-        supabase.from('learning_modules').select('id, slug, title_en, title_bg'),
-      ]);
-      setProfiles(profRes.data || []);
-      setProjects((projRes.data || []) as StartupProject[]);
-      setSimProgress((simRes.data || []) as SimProgress[]);
-      setSubmissions(subRes.data || []);
-      setCases(caseRes.data || []);
-      setFeedbacks((fbRes.data || []) as FeedbackRow[]);
-      setModuleResponses(modRespRes.data || []);
-      setDbModules(modRes.data || []);
-      setLoading(false);
+      try {
+        const { data: result, error } = await supabase.functions.invoke('admin-data', {
+          body: { scope: 'teacher' },
+        });
+        if (error || !result) {
+          console.error('[TeacherDashboard] admin-data error:', error);
+          setLoading(false);
+          return;
+        }
+        setProfiles(result.profiles || []);
+        setProjects((result.projects || []) as StartupProject[]);
+        setSimProgress((result.sim_progress_full || []) as SimProgress[]);
+        setSubmissions(result.submissions || []);
+        setCases(result.cases || []);
+        setFeedbacks((result.feedbacks || []) as FeedbackRow[]);
+        setModuleResponses(result.module_responses || []);
+        setDbModules(result.modules || []);
+      } catch (err) {
+        console.error('[TeacherDashboard] fetch error:', err);
+      } finally {
+        setLoading(false);
+      }
     };
     load();
   }, [isAdmin]);
