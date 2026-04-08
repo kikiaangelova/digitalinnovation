@@ -298,6 +298,7 @@ export default function StudentDashboard() {
           </div>
         </Card>
 
+        <HypothesisTracker lang={lang} />
         <ChallengeHub lang={lang} userId={user?.id} />
         <TestInsights lang={lang} userId={user?.id} />
 
