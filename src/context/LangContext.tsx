@@ -688,7 +688,7 @@ const translations = {
     interests: 'Интереси',
     addInterest: 'Добави интерес...',
     add: 'Добави',
-    visibleToClassmates: 'Видим за съученици в моята кохорта',
+    visibleToClassmates: 'Видим за съучениците ми в класа',
     saveProfile: 'Запази профил',
     saving: 'Запазване...',
     profileSaved: 'Профилът е запазен',
