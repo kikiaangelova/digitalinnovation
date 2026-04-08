@@ -342,8 +342,8 @@ export default function ChallengeHub({ lang, userId }: ChallengeHubProps) {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <CalendarClock className="h-5 w-5 text-primary" />
-              {t('Coming Soon', 'Очаквайте скоро')}
-            </DialogTitle>
+               {t('Coming Soon', 'Очаквай скоро')}
+             </DialogTitle>
             <DialogDescription>
               {lang === 'bg' ? TYPE_CONFIG[comingSoonType].bg : TYPE_CONFIG[comingSoonType].en}
             </DialogDescription>
