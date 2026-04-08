@@ -189,11 +189,16 @@ export default function TeacherDashboardPage() {
     });
 
     const quizScores: Record<string, { total: number; count: number }> = {};
-    (quizRes.data || []).forEach((q) => {
+    const recentQuizzes: Record<string, QuizEntry[]> = {};
+    (quizRes.data || []).forEach((q: any) => {
       if (!quizScores[q.user_id]) quizScores[q.user_id] = { total: 0, count: 0 };
       const pct = q.max_score > 0 ? (q.score / q.max_score) * 100 : 0;
       quizScores[q.user_id].total += pct;
       quizScores[q.user_id].count += 1;
+      if (!recentQuizzes[q.user_id]) recentQuizzes[q.user_id] = [];
+      if (recentQuizzes[q.user_id].length < 3) {
+        recentQuizzes[q.user_id].push({ category: q.category, score: q.score, max_score: q.max_score, created_at: q.created_at });
+      }
     });
 
     const snapshots: ProgressSnapshot[] = studentIds.map((sid) => ({
