@@ -155,9 +155,15 @@ export default function TeacherDashboardPage() {
     );
 
     const STARTUP_KEYS = ['problem', 'customer', 'value_proposition', 'digital_product', 'business_model', 'growth_strategy', 'final_pitch'] as const;
-    const projMap: Record<string, number> = {};
+    const projMap: Record<string, { count: number; keys: Record<string, boolean>; submitted: boolean }> = {};
     (projRes.data || []).forEach((p: any) => {
-      projMap[p.user_id] = STARTUP_KEYS.filter((k) => (p[k] || '').trim().length > 10).length;
+      const keys: Record<string, boolean> = {};
+      STARTUP_KEYS.forEach((k) => { keys[k] = (p[k] || '').trim().length > 10; });
+      projMap[p.user_id] = {
+        count: STARTUP_KEYS.filter((k) => keys[k]).length,
+        keys,
+        submitted: !!p.is_submitted,
+      };
     });
 
     const modCountMap: Record<string, number> = {};
@@ -171,7 +177,9 @@ export default function TeacherDashboardPage() {
       sim_week: simMap[sid]?.current_week || 0,
       sim_complete: simMap[sid]?.is_complete || false,
       sim_grade: simMap[sid]?.grade || null,
-      startup_sections: projMap[sid] || 0,
+      startup_sections: projMap[sid]?.count || 0,
+      startup_keys: projMap[sid]?.keys || {},
+      startup_submitted: projMap[sid]?.submitted || false,
       module_count: modCountMap[sid] || 0,
     }));
     setProgress(snapshots);
