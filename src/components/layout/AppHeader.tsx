@@ -58,27 +58,47 @@ export default function AppHeader() {
     setDropdownOpen(false);
   }, [location.pathname]);
 
+  const isTeacher = userRole === 'teacher_verified';
+  const isPending = userRole === 'teacher_pending';
+
   // ─── Primary nav links (desktop left side) ───
   const primaryLinks = user
-    ? [
-        { to: '/dashboard', icon: LayoutDashboard, label: t.dashboard },
-        { to: '/journey', icon: Map, label: lang === 'bg' ? 'Пътешествие' : 'Journey' },
-        { to: '/cases', icon: BookOpen, label: t.cases },
-        { to: '/learn', icon: GraduationCap, label: lang === 'bg' ? 'Учи' : 'Learn' },
-        { to: '/simulator', icon: Play, label: t.simulator },
-      ]
+    ? isPending
+      ? []
+      : isTeacher
+        ? [
+            { to: '/dashboard', icon: LayoutDashboard, label: t.dashboard },
+            { to: '/teacher', icon: GraduationCap, label: lang === 'bg' ? 'Клас' : 'Class' },
+            { to: '/cases', icon: BookOpen, label: t.cases },
+            { to: '/learn', icon: GraduationCap, label: lang === 'bg' ? 'Учи' : 'Learn' },
+          ]
+        : [
+            { to: '/dashboard', icon: LayoutDashboard, label: t.dashboard },
+            { to: '/journey', icon: Map, label: lang === 'bg' ? 'Пътешествие' : 'Journey' },
+            { to: '/cases', icon: BookOpen, label: t.cases },
+            { to: '/learn', icon: GraduationCap, label: lang === 'bg' ? 'Учи' : 'Learn' },
+            { to: '/simulator', icon: Play, label: t.simulator },
+          ]
     : [
         { to: '/dictionary', icon: Book, label: t.dictionary },
       ];
 
   // ─── Bottom tab bar items (mobile, logged-in) ───
-  const bottomTabs = [
-    { to: '/dashboard', icon: LayoutDashboard, label: lang === 'bg' ? 'Начало' : 'Home' },
-    { to: '/cases', icon: BookOpen, label: t.cases },
-    { to: '/my-startup', icon: Rocket, label: lang === 'bg' ? 'Стартъп' : 'Startup' },
-    { to: '/simulator', icon: Play, label: t.simulator },
-    { to: '__more__', icon: Menu, label: lang === 'bg' ? 'Още' : 'More' },
-  ];
+  const bottomTabs = isTeacher
+    ? [
+        { to: '/dashboard', icon: LayoutDashboard, label: lang === 'bg' ? 'Начало' : 'Home' },
+        { to: '/teacher', icon: GraduationCap, label: lang === 'bg' ? 'Клас' : 'Class' },
+        { to: '/cases', icon: BookOpen, label: t.cases },
+        { to: '/learn', icon: GraduationCap, label: lang === 'bg' ? 'Учи' : 'Learn' },
+        { to: '__more__', icon: Menu, label: lang === 'bg' ? 'Още' : 'More' },
+      ]
+    : [
+        { to: '/dashboard', icon: LayoutDashboard, label: lang === 'bg' ? 'Начало' : 'Home' },
+        { to: '/cases', icon: BookOpen, label: t.cases },
+        { to: '/my-startup', icon: Rocket, label: lang === 'bg' ? 'Стартъп' : 'Startup' },
+        { to: '/simulator', icon: Play, label: t.simulator },
+        { to: '__more__', icon: Menu, label: lang === 'bg' ? 'Още' : 'More' },
+      ];
 
   const level = getCurrentLevel(userXp);
 
