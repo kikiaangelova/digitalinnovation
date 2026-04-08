@@ -329,31 +329,38 @@ export default function TeacherDashboardPage() {
               {t('Teacher Dashboard', 'Учителско табло')}
             </h1>
             <p className="text-sm text-muted-foreground mt-0.5">
-              {classroom.name} · {t('Code:', 'Код:')} <span className="font-mono font-bold text-primary">{classroom.class_code}</span>
+              {classroom
+                ? <>{classroom.name} · {t('Code:', 'Код:')} <span className="font-mono font-bold text-primary">{classroom.class_code}</span></>
+                : t('All students overview', 'Преглед на всички ученици')
+              }
             </p>
           </div>
           <div className="flex items-center gap-2 flex-wrap">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => copyToClipboard(classroom.class_code, t('Code', 'Кодът'))}
-            >
-              <Copy className="h-3.5 w-3.5 mr-1" />
-              {t('Copy code', 'Копирай код')}
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() =>
-                copyToClipboard(
-                  classroom.invite_link || `${siteUrl}/join/${classroom.class_code}`,
-                  t('Link', 'Линкът')
-                )
-              }
-            >
-              <Link2 className="h-3.5 w-3.5 mr-1" />
-              {t('Copy invite', 'Копирай покана')}
-            </Button>
+            {classroom && (
+              <>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => copyToClipboard(classroom.class_code, t('Code', 'Кодът'))}
+                >
+                  <Copy className="h-3.5 w-3.5 mr-1" />
+                  {t('Copy code', 'Копирай код')}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() =>
+                    copyToClipboard(
+                      classroom.invite_link || `${siteUrl}/join/${classroom.class_code}`,
+                      t('Link', 'Линкът')
+                    )
+                  }
+                >
+                  <Link2 className="h-3.5 w-3.5 mr-1" />
+                  {t('Copy invite', 'Копирай покана')}
+                </Button>
+              </>
+            )}
             <Button size="sm" onClick={() => navigate('/teacher')} className="gap-1">
               {t('Manage Class', 'Управлявай класа')} <ArrowRight className="h-3.5 w-3.5" />
             </Button>
