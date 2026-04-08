@@ -729,6 +729,10 @@ The future of competition is increasingly between ecosystems, not individual com
     slug: 'marketing-fundamentals',
     title_en: 'Marketing Fundamentals',
     title_bg: 'Основи на маркетинга',
+    hook: { en: 'Airbnb spent $0 on marketing in its first year and grew to 10,000 listings. How? By understanding the AARRR funnel.', bg: 'Airbnb похарчи $0 за маркетинг в първата си година и достигна 10 000 обяви. Как? Чрез разбиране на AARRR фунията.' },
+    metaphor: { en: 'Marketing is not a megaphone. It\'s a funnel: 1000 people see you → 100 click → 10 try → 3 pay → 1 stays forever.', bg: 'Маркетингът не е мегафон. Той е фуния: 1000 те виждат → 100 кликват → 10 опитват → 3 плащат → 1 остава завинаги.' },
+    framework: { name: 'AARRR Pirate Metrics', bullets_en: ['Acquisition: how do users find you?', 'Activation: do they have a great first experience?', 'Retention, Revenue, Referral: do they stay, pay, and invite friends?'], bullets_bg: ['Acquisition: как те намират потребителите?', 'Activation: имат ли страхотно първо изживяване?', 'Retention, Revenue, Referral: остават ли, плащат ли и канят ли приятели?'], apply_en: 'Map your startup\'s AARRR metrics: what is your weakest stage?', apply_bg: 'Начертай AARRR метриките на стартъпа си: кой е най-слабият етап?' },
+    provocations: [{ en: 'Is it possible to build a successful product without any marketing at all?', bg: 'Възможно ли е да изградиш успешен продукт без никакъв маркетинг?' }, { en: 'Why do some viral products die after 6 months?', bg: 'Защо някои вирусни продукти умират след 6 месеца?' }],
     level: 2,
     startup_field: 'customer',
     concepts: [
