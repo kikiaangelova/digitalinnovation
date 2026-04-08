@@ -514,6 +514,23 @@ export default function TeacherDashboardPage() {
               </CardHeader>
               <CardContent className="space-y-3 text-sm">
                 <InsightRow
+                  label={t('Avg stage completion', 'Ср. завършени етапи')}
+                  value={
+                    progress.length
+                      ? `${(progress.reduce((a, p) => {
+                          let stages = 0;
+                          if (p.cases_completed >= 1) stages++;
+                          if (p.cases_completed >= 2) stages++;
+                          if (p.startup_sections >= 3) stages++;
+                          if (p.startup_sections >= 5) stages++;
+                          if (p.sim_week >= 3) stages++;
+                          if (p.sim_complete) stages++;
+                          return a + stages;
+                        }, 0) / progress.length).toFixed(1)} / 6 ${t('stages', 'етапа')}`
+                      : '0 / 6'
+                  }
+                />
+                <InsightRow
                   label={t('Completed simulations', 'Завършени симулации')}
                   value={`${progress.filter((p) => p.sim_complete).length}/${students.length}`}
                 />
