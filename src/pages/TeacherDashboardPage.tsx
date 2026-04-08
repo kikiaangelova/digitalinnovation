@@ -173,14 +173,18 @@ export default function TeacherDashboardPage() {
     );
 
     const STARTUP_KEYS = ['problem', 'customer', 'value_proposition', 'digital_product', 'business_model', 'growth_strategy', 'final_pitch'] as const;
-    const projMap: Record<string, { count: number; keys: Record<string, boolean>; submitted: boolean }> = {};
+    const BMC_KEYS = ['bmc_customer_segments', 'bmc_value_proposition', 'bmc_channels', 'bmc_customer_relationships', 'bmc_revenue_streams', 'bmc_key_resources', 'bmc_key_activities', 'bmc_key_partners', 'bmc_cost_structure'] as const;
+    const projMap: Record<string, { count: number; keys: Record<string, boolean>; submitted: boolean; bmcKeys: Record<string, boolean> }> = {};
     (projRes.data || []).forEach((p: any) => {
       const keys: Record<string, boolean> = {};
       STARTUP_KEYS.forEach((k) => { keys[k] = (p[k] || '').trim().length > 10; });
+      const bmcKeys: Record<string, boolean> = {};
+      BMC_KEYS.forEach((k) => { bmcKeys[k] = (p[k] || '').trim().length > 10; });
       projMap[p.user_id] = {
         count: STARTUP_KEYS.filter((k) => keys[k]).length,
         keys,
         submitted: !!p.is_submitted,
+        bmcKeys,
       };
     });
 
