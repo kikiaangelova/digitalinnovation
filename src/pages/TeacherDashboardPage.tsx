@@ -467,6 +467,9 @@ export default function TeacherDashboardPage() {
                                   )}
                                 </td>
                                 <td className="text-center py-2.5 px-2">
+                                  <span className={`text-xs font-medium ${(p?.quiz_avg || 0) < 50 ? 'text-destructive' : 'text-muted-foreground'}`}>{p?.quiz_avg || 0}%</span>
+                                </td>
+                                <td className="text-center py-2.5 px-2">
                                   <span className="text-muted-foreground">{p?.startup_sections || 0}/7</span>
                                 </td>
                                 <td className="py-2.5 px-2">
