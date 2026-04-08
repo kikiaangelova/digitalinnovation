@@ -214,7 +214,31 @@ export function ProgressProvider({ children }: { children: ReactNode }) {
     };
 
     fetchAll();
-    return () => { cancelled = true; };
+
+    // Realtime subscriptions for live updates
+    const channel = supabase
+      .channel(`progress-${user.id}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles', filter: `user_id=eq.${user.id}` }, () => {
+        if (!cancelled) refresh();
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'xp_ledger', filter: `user_id=eq.${user.id}` }, () => {
+        if (!cancelled) refresh();
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'submissions', filter: `user_id=eq.${user.id}` }, () => {
+        if (!cancelled) refresh();
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'simulator_progress', filter: `user_id=eq.${user.id}` }, () => {
+        if (!cancelled) refresh();
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'quiz_results', filter: `user_id=eq.${user.id}` }, () => {
+        if (!cancelled) refresh();
+      })
+      .subscribe();
+
+    return () => {
+      cancelled = true;
+      supabase.removeChannel(channel);
+    };
   }, [user, version, refresh]);
 
   return (
