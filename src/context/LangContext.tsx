@@ -25,7 +25,7 @@ const translations = {
     // Landing
     heroTitle: 'DigiInnov Case Lab',
     heroSubtitle: 'Learn digital innovation and startup thinking through hands-on case studies, business simulation, and gamification.',
-    heroAudience: 'Built for business students, entrepreneurship educators, and future founders.',
+    heroAudience: 'Designed for ambitious students, entrepreneurship educators, and the next generation of founders.',
     getStarted: 'Get Started',
     goToDashboard: 'Go to Dashboard',
     startJourney: 'Start Free',
