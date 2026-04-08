@@ -25,6 +25,7 @@ import CaseAnswerMentor from '@/components/case/CaseAnswerMentor';
 import UncertaintyBanner from '@/components/case/UncertaintyBanner';
 import ConsequencesPanel from '@/components/case/ConsequencesPanel';
 import ReflectionPanel from '@/components/case/ReflectionPanel';
+import HypothesisCard from '@/components/hypothesis/HypothesisCard';
 
 /* ── Types ── */
 interface CaseStudy {
