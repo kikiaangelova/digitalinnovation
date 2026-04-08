@@ -53,6 +53,7 @@ interface ProgressSnapshot {
   startup_sections: number;
   startup_keys: Record<string, boolean>;
   startup_submitted: boolean;
+  bmc_keys: Record<string, boolean>;
   module_count: number;
   quiz_avg: number;
   recent_quizzes: QuizEntry[];
@@ -142,7 +143,7 @@ export default function TeacherDashboardPage() {
         .in('user_id', studentIds),
       supabase
         .from('startup_projects')
-        .select('user_id, problem, customer, value_proposition, digital_product, business_model, growth_strategy, final_pitch, is_submitted')
+        .select('user_id, problem, customer, value_proposition, digital_product, business_model, growth_strategy, final_pitch, is_submitted, bmc_customer_segments, bmc_value_proposition, bmc_channels, bmc_customer_relationships, bmc_revenue_streams, bmc_key_resources, bmc_key_activities, bmc_key_partners, bmc_cost_structure')
         .in('user_id', studentIds),
       supabase
         .from('learning_module_responses')
@@ -172,14 +173,18 @@ export default function TeacherDashboardPage() {
     );
 
     const STARTUP_KEYS = ['problem', 'customer', 'value_proposition', 'digital_product', 'business_model', 'growth_strategy', 'final_pitch'] as const;
-    const projMap: Record<string, { count: number; keys: Record<string, boolean>; submitted: boolean }> = {};
+    const BMC_KEYS = ['bmc_customer_segments', 'bmc_value_proposition', 'bmc_channels', 'bmc_customer_relationships', 'bmc_revenue_streams', 'bmc_key_resources', 'bmc_key_activities', 'bmc_key_partners', 'bmc_cost_structure'] as const;
+    const projMap: Record<string, { count: number; keys: Record<string, boolean>; submitted: boolean; bmcKeys: Record<string, boolean> }> = {};
     (projRes.data || []).forEach((p: any) => {
       const keys: Record<string, boolean> = {};
       STARTUP_KEYS.forEach((k) => { keys[k] = (p[k] || '').trim().length > 10; });
+      const bmcKeys: Record<string, boolean> = {};
+      BMC_KEYS.forEach((k) => { bmcKeys[k] = (p[k] || '').trim().length > 10; });
       projMap[p.user_id] = {
         count: STARTUP_KEYS.filter((k) => keys[k]).length,
         keys,
         submitted: !!p.is_submitted,
+        bmcKeys,
       };
     });
 
@@ -210,6 +215,7 @@ export default function TeacherDashboardPage() {
       startup_sections: projMap[sid]?.count || 0,
       startup_keys: projMap[sid]?.keys || {},
       startup_submitted: projMap[sid]?.submitted || false,
+      bmc_keys: projMap[sid]?.bmcKeys || {},
       module_count: modCountMap[sid] || 0,
       quiz_avg: quizScores[sid] ? Math.round(quizScores[sid].total / quizScores[sid].count) : 0,
       recent_quizzes: recentQuizzes[sid] || [],
@@ -579,6 +585,44 @@ export default function TeacherDashboardPage() {
                                           </div>
                                         </div>
                                       )}
+                                      {/* BMC completion per section */}
+                                      {p && Object.keys(p.bmc_keys).length > 0 && (
+                                        <div className="mt-4">
+                                          <div className="text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wide">
+                                            {t('Business Model Canvas', 'Бизнес модел канвас')}
+                                          </div>
+                                          <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-9 gap-1.5">
+                                            {[
+                                              { key: 'bmc_customer_segments', en: 'Customers', bg: 'Клиенти' },
+                                              { key: 'bmc_value_proposition', en: 'Value Prop', bg: 'Стойност' },
+                                              { key: 'bmc_channels', en: 'Channels', bg: 'Канали' },
+                                              { key: 'bmc_customer_relationships', en: 'Relations', bg: 'Връзки' },
+                                              { key: 'bmc_revenue_streams', en: 'Revenue', bg: 'Приходи' },
+                                              { key: 'bmc_key_resources', en: 'Resources', bg: 'Ресурси' },
+                                              { key: 'bmc_key_activities', en: 'Activities', bg: 'Дейности' },
+                                              { key: 'bmc_key_partners', en: 'Partners', bg: 'Партньори' },
+                                              { key: 'bmc_cost_structure', en: 'Costs', bg: 'Разходи' },
+                                            ].map((sec) => {
+                                              const done = p.bmc_keys[sec.key];
+                                              return (
+                                                <div
+                                                  key={sec.key}
+                                                  className={`rounded border px-2 py-1.5 text-center text-[10px] font-medium ${
+                                                    done
+                                                      ? 'border-green-300 bg-green-50 text-green-700 dark:border-green-700 dark:bg-green-950/30 dark:text-green-400'
+                                                      : 'border-border bg-muted/30 text-muted-foreground'
+                                                  }`}
+                                                >
+                                                  {done ? '✓ ' : ''}{t(sec.en, sec.bg)}
+                                                </div>
+                                              );
+                                            })}
+                                          </div>
+                                          <div className="mt-1.5 text-[10px] text-muted-foreground">
+                                            {Object.values(p.bmc_keys).filter(Boolean).length}/9 {t('sections filled', 'секции попълнени')}
+                                          </div>
+                                        </div>
+                                      )}
                                     </td>
                                   </tr>
                                 )}
@@ -616,12 +660,15 @@ export default function TeacherDashboardPage() {
               </CardContent>
             </Card>
 
-            {/* Students needing attention */}
-            <Card className={struggling.length > 0 ? 'border-amber-500/30' : ''}>
+            {/* Intervention Alerts */}
+            <Card className={struggling.length > 0 ? 'border-red-500/30' : ''}>
               <CardHeader className="pb-2">
                 <CardTitle className="text-base flex items-center gap-2">
-                  <AlertTriangle className={`h-4 w-4 ${struggling.length > 0 ? 'text-amber-500' : 'text-muted-foreground'}`} />
-                  {t('Need Attention', 'Нуждаят се от внимание')}
+                  <AlertTriangle className={`h-4 w-4 ${struggling.length > 0 ? 'text-red-500' : 'text-muted-foreground'}`} />
+                  {t('Intervention Alerts', 'Сигнали за намеса')}
+                  {struggling.length > 0 && (
+                    <Badge variant="destructive" className="text-[10px] px-1.5 py-0">{struggling.length}</Badge>
+                  )}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -633,27 +680,37 @@ export default function TeacherDashboardPage() {
                     </p>
                   </div>
                 ) : (
-                  <div className="space-y-2">
-                    {struggling.slice(0, 5).map((s) => {
-                      const overall = getOverall(s.student_id);
+                  <div className="space-y-3">
+                    {struggling.slice(0, 6).map((s) => {
+                      const p = progressMap[s.student_id];
+                      const quizAvg = p?.quiz_avg || 0;
                       const daysSince = Math.round((Date.now() - new Date(s.updated_at).getTime()) / 86400000);
+                      const isNeedsHelp = quizAvg < 40 || daysSince > 7;
+                      const reasons: string[] = [];
+                      if (daysSince > 7) reasons.push(t(`${daysSince}d inactive`, `${daysSince}д неактивен`));
+                      if (quizAvg < 40) reasons.push(t(`Quiz avg ${quizAvg}%`, `Тест ср. ${quizAvg}%`));
+                      else if (quizAvg < 60) reasons.push(t(`Quiz avg ${quizAvg}%`, `Тест ср. ${quizAvg}%`));
+                      if ((p?.cases_completed || 0) === 0) reasons.push(t('No cases done', 'Няма казуси'));
+                      if ((p?.startup_sections || 0) === 0) reasons.push(t('No startup work', 'Няма стартъп'));
                       return (
-                        <div key={s.student_id} className="flex items-center justify-between text-sm">
-                          <div>
-                            <p className="font-medium text-foreground">{getName(s)}</p>
-                            <p className="text-xs text-muted-foreground">
-                              {overall}% · {daysSince > 14 ? t(`${daysSince}d inactive`, `${daysSince}д неактивен`) : t('low progress', 'нисък напредък')}
-                            </p>
+                        <div key={s.student_id} className={`rounded-lg border p-3 ${isNeedsHelp ? 'border-red-300 bg-red-50/50 dark:border-red-800 dark:bg-red-950/20' : 'border-yellow-300 bg-yellow-50/50 dark:border-yellow-800 dark:bg-yellow-950/20'}`}>
+                          <div className="flex items-center justify-between mb-1">
+                            <p className="text-sm font-medium text-foreground">{getName(s)}</p>
+                            <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-semibold ${isNeedsHelp ? 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400' : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-400'}`}>
+                              {isNeedsHelp ? t('Needs Help', 'Нужда от помощ') : t('At Risk', 'В риск')}
+                            </span>
                           </div>
-                          <Badge variant="outline" className="text-xs text-amber-600 border-amber-300">
-                            {overall}%
-                          </Badge>
+                          <div className="flex flex-wrap gap-1">
+                            {reasons.map((r, i) => (
+                              <span key={i} className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">{r}</span>
+                            ))}
+                          </div>
                         </div>
                       );
                     })}
-                    {struggling.length > 5 && (
+                    {struggling.length > 6 && (
                       <p className="text-xs text-muted-foreground text-center">
-                        +{struggling.length - 5} {t('more', 'още')}
+                        +{struggling.length - 6} {t('more', 'още')}
                       </p>
                     )}
                   </div>
