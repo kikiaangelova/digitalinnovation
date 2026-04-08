@@ -300,31 +300,100 @@ export default function ProfilePage() {
           )}
         </div>
 
-        {/* Stats row */}
-        <div className="grid grid-cols-3 gap-4">
-          <div className="rounded-lg border border-border bg-card p-4 text-center">
-            <BookOpen className="h-5 w-5 text-primary mx-auto mb-1" />
-            <p className="text-2xl font-bold text-foreground">{completedCount}</p>
-            <p className="text-xs text-muted-foreground">{t.casesDone}</p>
-            {completedCount === 0 && (
-              <p className="text-xs text-primary mt-1">{tx('Start from the Journey →', 'Започни от Пътешествието →')}</p>
+        {/* ═══ Complete Statistics ═══ */}
+        <div className="rounded-xl border border-border bg-card p-5 space-y-5">
+          <h3 className="font-display font-semibold text-foreground flex items-center gap-2">
+            <TrendingUp className="h-5 w-5 text-primary" />
+            {tx('My Statistics', 'Моята статистика')}
+          </h3>
+
+          {/* XP & Level */}
+          <div className="rounded-lg bg-muted/40 p-4 space-y-2">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Zap className="h-5 w-5 text-primary" />
+                <span className="text-lg font-bold text-foreground">{totalXp} XP</span>
+              </div>
+              <Badge className="bg-primary/10 text-primary border-0">{currentLevel.name}</Badge>
+            </div>
+            <div className="w-full bg-muted rounded-full h-2">
+              <div className="bg-primary h-2 rounded-full transition-all" style={{ width: `${levelProgress}%` }} />
+            </div>
+            {nextLevel && (
+              <p className="text-xs text-muted-foreground">{nextLevel.min - totalXp} XP {tx('to', 'до')} {nextLevel.name}</p>
             )}
           </div>
-          <div className="rounded-lg border border-border bg-card p-4 text-center">
-            <BarChart3 className="h-5 w-5 text-sim-info mx-auto mb-1" />
-            <p className="text-2xl font-bold text-foreground">{avgScore}%</p>
-            <p className="text-xs text-muted-foreground">{t.avgScore}</p>
-            {avgScore === 0 && (
-              <p className="text-xs text-muted-foreground mt-1">{tx('Complete a case to see your score', 'Завърши казус, за да видиш резултат')}</p>
+
+          {/* Quick stats grid */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="rounded-lg border border-border p-3 text-center">
+              <BookOpen className="h-4 w-4 text-primary mx-auto mb-1" />
+              <p className="text-xl font-bold text-foreground">{completedCount}</p>
+              <p className="text-xs text-muted-foreground">{tx('Cases Solved', 'Решени казуси')}</p>
+            </div>
+            <div className="rounded-lg border border-border p-3 text-center">
+              <BarChart3 className="h-4 w-4 text-primary mx-auto mb-1" />
+              <p className="text-xl font-bold text-foreground">{avgScore}%</p>
+              <p className="text-xs text-muted-foreground">{tx('Avg Case Score', 'Ср. оценка казуси')}</p>
+            </div>
+            <div className="rounded-lg border border-border p-3 text-center">
+              <Target className="h-4 w-4 text-primary mx-auto mb-1" />
+              <p className="text-xl font-bold text-foreground">{simData ? (simData.is_complete ? tx('Done', 'Готово') : `${tx('Wk', 'Сд')} ${simData.current_week}`) : '—'}</p>
+              <p className="text-xs text-muted-foreground">{tx('Simulator', 'Симулатор')}</p>
+              {simData?.grade && <Badge variant="outline" className="text-[10px] mt-1">{simData.grade}</Badge>}
+            </div>
+            <div className="rounded-lg border border-border p-3 text-center">
+              <Rocket className="h-4 w-4 text-primary mx-auto mb-1" />
+              <p className="text-xl font-bold text-foreground">{startupPct}%</p>
+              <p className="text-xs text-muted-foreground">{tx('Startup Progress', 'Стартъп напредък')}</p>
+              {startupData?.is_submitted && <Badge className="bg-emerald-500/10 text-emerald-600 border-0 text-[10px] mt-1">{tx('Submitted', 'Подаден')}</Badge>}
+            </div>
+          </div>
+
+          {/* BMC Completion */}
+          {startupData && (
+            <div className="space-y-1">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground">{tx('Business Model Canvas', 'Бизнес модел канвас')}</span>
+                <span className="font-medium text-foreground">{bmcFilled}/{BMC_FIELDS.length} ({bmcPct}%)</span>
+              </div>
+              <div className="w-full bg-muted rounded-full h-1.5">
+                <div className="bg-primary h-1.5 rounded-full transition-all" style={{ width: `${bmcPct}%` }} />
+              </div>
+            </div>
+          )}
+
+          {/* Quiz History */}
+          <div className="space-y-2">
+            <h4 className="text-sm font-semibold text-foreground">{tx('Quiz History', 'История на тестовете')} ({quizHistory.length})</h4>
+            {quizHistory.length > 0 ? (
+              <div className="space-y-1 max-h-48 overflow-y-auto">
+                {quizHistory.slice(0, 20).map((q: any) => {
+                  const pct = q.max_score > 0 ? Math.round((q.score / q.max_score) * 100) : 0;
+                  return (
+                    <div key={q.id} className="flex items-center justify-between py-1.5 px-2 rounded-md bg-muted/30 text-sm">
+                      <div className="flex items-center gap-2">
+                        <span className="text-muted-foreground text-xs">{new Date(q.created_at).toLocaleDateString()}</span>
+                        {q.category && <Badge variant="outline" className="text-[10px]">{q.category}</Badge>}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className={`font-medium ${pct >= 80 ? 'text-emerald-600' : pct >= 50 ? 'text-foreground' : 'text-destructive'}`}>{pct}%</span>
+                        <span className="text-xs text-muted-foreground">({q.score}/{q.max_score})</span>
+                        {q.xp_earned > 0 && <span className="text-xs text-primary">+{q.xp_earned} XP</span>}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <p className="text-xs text-muted-foreground">{tx('No quizzes taken yet. Try the Dictionary!', 'Все още няма тестове. Пробвай Речника!')}</p>
             )}
           </div>
-          <div className="rounded-lg border border-border bg-card p-4 text-center">
-            <Award className="h-5 w-5 text-sim-warning mx-auto mb-1" />
-            <p className="text-2xl font-bold text-foreground">{badges.length}</p>
-            <p className="text-xs text-muted-foreground">{t.badges}</p>
-            {badges.length === 0 && (
-              <p className="text-xs text-xp-gold mt-1">{tx('Earn your first badge today', 'Спечели първата си значка днес')}</p>
-            )}
+
+          {/* Badges count */}
+          <div className="flex items-center justify-between text-sm">
+            <span className="text-muted-foreground flex items-center gap-1"><Award className="h-4 w-4" /> {tx('Badges Earned', 'Спечелени значки')}</span>
+            <span className="font-medium text-foreground">{badges.length}</span>
           </div>
         </div>
 
