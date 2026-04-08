@@ -369,19 +369,17 @@ export default function TeacherDashboardPage() {
         {/* Stats cards */}
         <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
           <StatCard icon={Users} label={t('Students', 'Ученици')} value={students.length} />
-            <StatCard
-              icon={Activity}
-              label={t('Active this week', 'Активни тази седмица')}
-              value={activeThisWeek}
-              accent={activeThisWeek > 0 ? 'text-emerald-600 dark:text-emerald-400' : undefined}
-            />
+          <StatCard
+            icon={Activity}
+            label={t('Active this week', 'Активни тази седмица')}
+            value={activeThisWeek}
+            accent={activeThisWeek > 0 ? 'text-emerald-600 dark:text-emerald-400' : undefined}
           />
-            <StatCard
-              icon={AlertTriangle}
-              label={t('Need attention', 'Нуждаят се от внимание')}
-              value={struggling.length}
-              accent={struggling.length > 0 ? 'text-amber-600 dark:text-amber-400' : undefined}
-            />
+          <StatCard
+            icon={AlertTriangle}
+            label={t('Need attention', 'Нуждаят се от внимание')}
+            value={struggling.length}
+            accent={struggling.length > 0 ? 'text-amber-600 dark:text-amber-400' : undefined}
           />
           <StatCard icon={Target} label={t('Avg XP', 'Ср. XP')} value={avgXp} />
           <StatCard icon={ClipboardList} label={t('Assignments', 'Задачи')} value={assignmentCount} />
