@@ -718,7 +718,7 @@ The future of competition is increasingly between ecosystems, not individual com
     display_order: 5,
     related_case_topic: 'AI',
     case_transition_en: 'You just learned about digital ecosystems. Now analyze how AI-powered smart cities create interconnected value.',
-    case_transition_bg: 'Току-що научихте за дигиталните екосистеми. Сега анализирайте как умните градове с AI създават взаимосвързана стойност.',
+    case_transition_bg: 'Току-що научи за дигиталните екосистеми. Сега анализирай как умните градове с AI създават взаимосвързана стойност.',
     related_sim_concepts_en: ['Digital Ecosystems', 'API Strategy'],
     related_sim_concepts_bg: ['Дигитални екосистеми', 'API стратегия'],
     sim_transition_en: 'Apply ecosystem thinking in the startup simulator to build a stronger product.',
