@@ -94,7 +94,7 @@ const STARTUP_FIELDS = [
     labelEn: 'Competitor Analysis',
     labelBg: 'Анализ на конкуренцията',
     promptEn: 'Who are the main competitors in your market? List at least two and briefly describe what they do.',
-    promptBg: 'Кои са основните конкуренти на вашия пазар? Посочете поне двама и опишете накратко какво правят.',
+    promptBg: 'Кои са основните конкуренти на твоя пазар? Посочете поне двама и опишете накратко какво правят.',
     placeholderEn: 'List at least 2 competitors and describe their products/services...',
     placeholderBg: 'Посочете поне 2 конкуренти и опишете техните продукти/услуги...',
   },
@@ -116,9 +116,9 @@ const STARTUP_FIELDS = [
     labelEn: 'Unique Advantage',
     labelBg: 'Уникално предимство',
     promptEn: 'What is your startup\'s unique advantage compared to these competitors?',
-    promptBg: 'Какво е уникалното предимство на вашия стартъп в сравнение с тези конкуренти?',
+    promptBg: 'Какво е уникалното предимство на твоя стартъп в сравнение с тези конкуренти?',
     placeholderEn: 'Explain what makes your solution different and better...',
-    placeholderBg: 'Обяснете какво прави вашето решение различно и по-добро...',
+    placeholderBg: 'Обясни какво прави твоето решение различно и по-добро...',
   },
 ] as const;
 const MIN_FIELD_LENGTH = 30;

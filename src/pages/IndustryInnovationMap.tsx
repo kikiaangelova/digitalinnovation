@@ -38,7 +38,7 @@ export default function IndustryInnovationMap() {
     }
     toast.success(
       lang === 'bg'
-        ? `Индустрия "${industry.nameBg}" е свързана с вашия стартъп проект!`
+        ? `Индустрия "${industry.nameBg}" е свързана с твоя стартъп проект!`
         : `Industry "${industry.nameEn}" linked to your startup project!`
     );
     navigate('/my-startup');

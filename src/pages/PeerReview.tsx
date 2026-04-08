@@ -167,7 +167,7 @@ export default function PeerReview() {
 
           <div className="flex items-center gap-2 mb-2">
             <EyeOff className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm text-muted-foreground">{t('Anonymous review — the author will not see your name', 'Анонимна рецензия — авторът няма да види вашето име')}</span>
+            <span className="text-sm text-muted-foreground">{t('Anonymous review — the author will not see your name', 'Анонимна рецензия — авторът няма да види твоето име')}</span>
           </div>
 
           {/* Content to review */}

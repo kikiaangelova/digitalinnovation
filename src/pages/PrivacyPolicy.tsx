@@ -48,8 +48,8 @@ export default function PrivacyPolicy() {
               {isBg ? 'При регистрация (незадължителни, предоставяте по избор):' : 'At registration (optional, provided at your choice):'}
             </p>
             <ul className="text-sm text-muted-foreground list-disc pl-5 space-y-1">
-              <li>{isBg ? 'Пълно име — видимо само за вас и вашия учител, никога публично' : 'Full name — visible only to you and your teacher, never public'}</li>
-              <li>{isBg ? 'Училище / университет — за свързване с вашия клас' : 'School / university — for connecting to your class'}</li>
+              <li>{isBg ? 'Пълно име — видимо само за теб и учителя ти, никога публично' : 'Full name — visible only to you and your teacher, never public'}</li>
+              <li>{isBg ? 'Училище / университет — за свързване с твоя клас' : 'School / university — for connecting to your class'}</li>
               <li>{isBg ? 'Клас / курс — за организиране в учебни групи' : 'Class / grade — for organizing into study groups'}</li>
               <li>{isBg ? 'Държава — за образователна статистика' : 'Country — for educational statistics'}</li>
             </ul>
@@ -58,9 +58,9 @@ export default function PrivacyPolicy() {
             </p>
             <ul className="text-sm text-muted-foreground list-disc pl-5 space-y-1">
               <li>{isBg ? 'Учебен напредък (XP, ниво, завършени модули и казуси)' : 'Learning progress (XP, level, completed modules and cases)'}</li>
-              <li>{isBg ? 'Отговори на тестове и писмени задачи — видими само за вас и вашия учител' : 'Test and written assignment answers — visible only to you and your teacher'}</li>
+              <li>{isBg ? 'Отговори на тестове и писмени задачи — видими само за теб и учителя ти' : 'Test and written assignment answers — visible only to you and your teacher'}</li>
               <li>{isBg ? 'Данни за използване на симулатора и стартъп проекта' : 'Simulator and startup project usage data'}</li>
-              <li>{isBg ? 'AI обратна връзка — генерирана автоматично въз основа на вашите отговори' : 'AI feedback — automatically generated based on your answers'}</li>
+              <li>{isBg ? 'AI обратна връзка — генерирана автоматично въз основа на твоите отговори' : 'AI feedback — automatically generated based on your answers'}</li>
             </ul>
             <p className="text-sm text-muted-foreground leading-relaxed mt-3 font-medium">
               {isBg ? 'НЕ събираме: телефонен номер, адрес, финансови данни, снимки.' : 'We do NOT collect: phone number, address, financial data, photos.'}
@@ -97,7 +97,7 @@ export default function PrivacyPolicy() {
               <li>{isBg ? 'Генериране на AI обратна връзка върху учебните ви отговори' : 'Generating AI feedback on your learning answers'}</li>
               <li>{isBg ? 'Издаване на сертификат при успешно завършване' : 'Issuing a certificate upon successful completion'}</li>
               <li>{isBg ? 'Показване в класацията (само псевдоним, само ако сте избрали тази опция)' : 'Leaderboard display (nickname only, only if you opted in)'}</li>
-              <li>{isBg ? 'Достъп на вашия учител до вашия напредък (само ако сте в клас с верифициран учител)' : 'Your teacher\'s access to your progress (only if you are in a class with a verified teacher)'}</li>
+              <li>{isBg ? 'Достъп на учителя ти до твоя напредък (само ако сте в клас с верифициран учител)' : 'Your teacher\'s access to your progress (only if you are in a class with a verified teacher)'}</li>
             </ul>
             <p className="text-sm text-muted-foreground leading-relaxed mt-3 font-medium">
               {isBg

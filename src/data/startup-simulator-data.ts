@@ -190,7 +190,7 @@ export const SIM_WEEKS: SimWeek[] = [
     decisions: [
       {
         questionEn: 'How crowded is your market?',
-        questionBg: 'Колко наситен е вашият пазар?',
+        questionBg: 'Колко наситен е твоят пазар?',
         options: [
           { id: 's3-blue', labelEn: 'Blue ocean — no direct competitors', labelBg: 'Син океан — без преки конкуренти', descEn: 'First mover advantage but must educate the market.', descBg: 'Предимство на първия навлизащ, но трябва да обучите пазара.', effects: { innovation: 15, marketPotential: 5, riskLevel: 12, growthPotential: 10 } },
           { id: 's3-moderate', labelEn: 'Moderate competition — 3-5 players', labelBg: 'Умерена конкуренция — 3-5 играча', descEn: 'Validated market with room for differentiation.', descBg: 'Валидиран пазар с място за диференциация.', effects: { innovation: 5, marketPotential: 10, scalability: 5, riskLevel: -3, growthPotential: 8 } },

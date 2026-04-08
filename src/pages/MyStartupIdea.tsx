@@ -77,7 +77,7 @@ const SECTIONS: SectionConfig[] = [
       { en: '🔍 Identify at least 3 competitors (direct or indirect).', bg: '🔍 Идентифицирайте поне 3 конкуренти (преки или косвени).' },
       { en: '💪 What are their strengths?', bg: '💪 Какви са техните силни страни?' },
       { en: '⚠️ What are their weaknesses?', bg: '⚠️ Какви са техните слаби страни?' },
-      { en: '🎯 How is your solution different and better?', bg: '🎯 Как вашето решение е различно и по-добро?' },
+      { en: '🎯 How is your solution different and better?', bg: '🎯 Как твоето решение е различно и по-добро?' },
     ],
   },
   {
@@ -86,7 +86,7 @@ const SECTIONS: SectionConfig[] = [
     labelEn: 'Customer Segments',
     labelBg: 'Клиентски сегменти',
     descEn: 'Identify and describe your target users.',
-    descBg: 'Идентифицирайте и опишете вашите целеви потребители.',
+    descBg: 'Идентифицирай и опиши твоите целеви потребители.',
     prompts: [
       { en: '🎯 Who is your primary customer?', bg: '🎯 Кой е основният ви клиент?' },
       { en: '👥 Do you have secondary customers?', bg: '👥 Имате ли вторични клиенти?' },
@@ -99,7 +99,7 @@ const SECTIONS: SectionConfig[] = [
     labelEn: 'Value Proposition',
     labelBg: 'Стойностно предложение',
     descEn: 'Explain why your solution is valuable and unique.',
-    descBg: 'Обяснете защо вашето решение е ценно и уникално.',
+    descBg: 'Обясни защо твоето решение е ценно и уникално.',
     prompts: [
       { en: '⚡ What makes your solution unique?', bg: '⚡ Какво прави решението ви уникално?' },
       { en: '🏆 Why will customers choose you over alternatives?', bg: '🏆 Защо клиентите ще изберат вас пред алтернативите?' },
@@ -111,10 +111,10 @@ const SECTIONS: SectionConfig[] = [
     labelEn: 'Product (MVP)',
     labelBg: 'Продукт (MVP)',
     descEn: 'Describe your minimum viable product — app, platform, AI tool, or marketplace.',
-    descBg: 'Опишете вашия минимален жизнеспособен продукт — приложение, платформа, AI инструмент или marketplace.',
+    descBg: 'Опиши твоя минимален жизнеспособен продукт — приложение, платформа, AI инструмент или marketplace.',
     prompts: [
-      { en: '📱 What is your product? (app, platform, AI tool, marketplace…)', bg: '📱 Какъв е вашият продукт? (приложение, платформа, AI инструмент, marketplace…)' },
-      { en: '✨ What are the key features of your MVP?', bg: '✨ Какви са основните функции на вашия MVP?' },
+      { en: '📱 What is your product? (app, platform, AI tool, marketplace…)', bg: '📱 Какъв е твоят продукт? (приложение, платформа, AI инструмент, marketplace…)' },
+      { en: '✨ What are the key features of your MVP?', bg: '✨ Какви са основните функции на твоя MVP?' },
       { en: '🔧 What technology will you use?', bg: '🔧 Каква технология ще използвате?' },
     ],
   },
@@ -434,7 +434,7 @@ export default function MyStartupIdea() {
               <div className="mt-3 rounded-lg bg-[hsl(var(--sim-success))]/10 border border-[hsl(var(--sim-success))]/30 p-3 flex items-center gap-2">
                 <Check className="h-4 w-4 text-[hsl(var(--sim-success))]" />
                 <span className="text-sm font-medium text-foreground">
-                  {t('All sections complete! Your startup is ready for evaluation. +50 XP earned. 🎉', 'Всички секции са завършени! Вашият стартъп е готов за оценка. +50 XP спечелени. 🎉')}
+                  {t('All sections complete! Your startup is ready for evaluation. +50 XP earned. 🎉', 'Всички секции са завършени! Твоят стартъп е готов за оценка. +50 XP спечелени. 🎉')}
                 </span>
               </div>
             )}
@@ -611,7 +611,7 @@ export default function MyStartupIdea() {
                   <Textarea
                     value={(data as any)[section.key] || ''}
                     onChange={e => handleChange(section.key, e.target.value)}
-                    placeholder={t('Write your answer here...', 'Напишете вашия отговор тук...')}
+                    placeholder={t('Write your answer here...', 'Напиши отговора си тук...')}
                     className="min-h-[220px] text-base leading-relaxed resize-y"
                     disabled={data.is_submitted}
                   />

@@ -220,7 +220,7 @@ export default function CaseResults() {
             <p className="text-sm text-muted-foreground">
               {tx(
                 `${pendingGrade} question(s) may be reviewed by an instructor later. Your score and XP have already been awarded.`,
-                `${pendingGrade} въпрос(а) могат да бъдат прегледани от преподавател по-късно. Вашият резултат и XP вече са присъдени.`
+                `${pendingGrade} въпрос(а) могат да бъдат прегледани от преподавател по-късно. Твоят резултат и XP вече са присъдени.`
               )}
             </p>
           </div>
@@ -263,7 +263,7 @@ export default function CaseResults() {
           </div>
           <div className="flex-1">
             <h3 className="font-display font-semibold text-foreground mb-1">
-              {tx('Apply to Your Startup', 'Приложете към вашия стартъп')}
+              {tx('Apply to Your Startup', 'Приложи към твоя стартъп')}
             </h3>
             <p className="text-sm text-muted-foreground">
               {tx(
@@ -318,7 +318,7 @@ export default function CaseResults() {
               <div className="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-border">
                 <div className="p-6">
                   <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 font-sans">
-                    {tx('Your Answer', 'Вашият отговор')}
+                    {tx('Your Answer', 'Твоят отговор')}
                   </p>
                   <div className="text-sm text-foreground leading-relaxed">
                     {r.answer

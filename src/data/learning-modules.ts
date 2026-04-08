@@ -741,7 +741,7 @@ The future of competition is increasingly between ecosystems, not individual com
     ],
     simulator_decision: {
       scenario_en: 'Your startup launched 3 months ago. You have 200 users but growth is flat. Budget: $5,000/month.',
-      scenario_bg: 'Вашият стартъп стартира преди 3 месеца. Имаш 200 потребители, но растежът е плосък. Бюджет: $5,000/месец.',
+      scenario_bg: 'Твоят стартъп стартира преди 3 месеца. Имаш 200 потребители, но растежът е плосък. Бюджет: $5,000/месец.',
       question_en: 'Which marketing strategy do you prioritize?',
       question_bg: 'Коя маркетингова стратегия приоритизирате?',
       options: [
