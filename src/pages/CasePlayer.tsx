@@ -230,13 +230,14 @@ export default function CasePlayer() {
     if (!user) { navigate(`/auth?redirect=${encodeURIComponent(`/case/${id}`)}`); return; }
 
     const fetchCase = async () => {
-      const [caseRes, stepsRes, qRes, subRes, progressRes, sessionRes] = await Promise.all([
+      const [caseRes, stepsRes, qRes, subRes, progressRes, sessionRes, consequencesRes] = await Promise.all([
         supabase.from('case_studies').select('id, title, title_bg, description, description_bg, topic, topic_bg, difficulty, reading_url, reading_button_label, reading_title').eq('id', id).maybeSingle(),
         supabase.from('case_steps').select('id, step_order, title, title_bg, narrative, narrative_bg, exhibit_text, exhibit_text_bg').eq('case_study_id', id).order('step_order'),
         supabase.rpc('get_player_questions', { _case_study_id: id }),
         supabase.from('submissions').select('id, is_draft').eq('case_study_id', id).eq('user_id', user.id).maybeSingle(),
         supabase.from('course_progress').select('metadata').eq('user_id', user.id).eq('module', 'case_startup_notes').eq('module_id', id).maybeSingle(),
-        (supabase as any).from('case_sessions').select('user_id, case_id, current_step, answers, xp_earned, completion_status, last_saved').eq('user_id', user.id).eq('case_id', id).maybeSingle(),
+        (supabase as any).from('case_sessions').select('user_id, case_id, current_step, answers, xp_earned, completion_status, last_saved, chosen_strategy, consequence_reflection').eq('user_id', user.id).eq('case_id', id).maybeSingle(),
+        (supabase as any).from('case_consequences').select('*').eq('case_id', id),
       ]);
 
       if (caseRes.data) setCaseStudy(caseRes.data as CaseStudy);
