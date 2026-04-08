@@ -36,11 +36,11 @@ const translations = {
     accessClarity: 'Free for students. Contact us for schools and institutions.',
     gamifiedPlatform: 'Gamified Learning Platform',
     howItWorksTitle: 'How It Works',
-    howItWorksDesc: 'A guided journey from idea to pitch — no experience needed.',
-    howStep1: 'Explore real business cases and learn key concepts',
-    howStep2: 'Build your own startup idea step by step',
-    howStep3: 'Get AI-powered feedback and improve',
-    howStep4: 'Pitch your startup and earn your certificate',
+    howItWorksDesc: 'A structured pathway from raw idea to investor-ready pitch — no prior experience required.',
+    howStep1: 'Analyse real-world business cases and master foundational concepts',
+    howStep2: 'Develop your startup concept through a structured, stage-by-stage process',
+    howStep3: 'Receive AI-driven feedback and iterate with purpose',
+    howStep4: 'Present your venture and earn your certificate',
     howCta: 'Ready to start?',
 
     // Landing sections
