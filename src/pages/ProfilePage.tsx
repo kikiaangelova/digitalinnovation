@@ -1,16 +1,26 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
 import { supabase } from '@/integrations/supabase/client';
 import AppHeader from '@/components/layout/AppHeader';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { User, Save, Award, BookOpen, Users, BarChart3 } from 'lucide-react';
+import { User, Save, Award, BookOpen, Users, BarChart3, Lock, X, AlertTriangle, Shield } from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 const SKILL_OPTIONS = ['UX', 'Data', 'Strategy', 'PM', 'Marketing', 'AI', 'Engineering', 'Design', 'Finance', 'Operations'];
 
@@ -22,11 +32,9 @@ export default function ProfilePage() {
   const navigate = useNavigate();
   const [fullName, setFullName] = useState('');
   const [displayName, setDisplayName] = useState('');
-  const [bio, setBio] = useState('');
   const [skillsTags, setSkillsTags] = useState<string[]>([]);
   const [interests, setInterests] = useState<string[]>([]);
   const [interestInput, setInterestInput] = useState('');
-  const [linkedIn, setLinkedIn] = useState('');
   const [portfolio, setPortfolio] = useState('');
   const [school, setSchool] = useState('');
   const [classGrade, setClassGrade] = useState('');
@@ -38,19 +46,23 @@ export default function ProfilePage() {
   const [teams, setTeams] = useState<any[]>([]);
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [deleting, setDeleting] = useState(false);
+  const [showGdprBanner, setShowGdprBanner] = useState(() => {
+    return localStorage.getItem('gdpr_banner_dismissed') !== 'true';
+  });
+
+  const tx = (en: string, bg: string) => lang === 'bg' ? bg : en;
 
   useEffect(() => {
     if (!user) return;
-    const fetch = async () => {
+    const fetchData = async () => {
       const { data: p } = await supabase.from('profiles').select('*').eq('user_id', user.id).maybeSingle();
       if (p) {
         setFullName(p.full_name || '');
         setDisplayName((p as any).display_name || '');
-        setBio((p as any).bio || '');
         setSkillsTags((p as any).skills_tags || []);
         setInterests((p as any).interests || []);
         const links = (p as any).links_json || {};
-        setLinkedIn(links.linkedin || '');
         setPortfolio(links.portfolio || '');
         setSchool(links.school || '');
         setClassGrade(links.class_grade || '');
@@ -66,25 +78,39 @@ export default function ProfilePage() {
       setTeams(tm || []);
       setLoading(false);
     };
-    fetch();
+    fetchData();
   }, [user]);
 
   const handleSave = async () => {
     if (!user) return;
     setSaving(true);
     const { error } = await supabase.from('profiles').update({
-      full_name: fullName,
+      full_name: fullName || null,
       display_name: displayName,
-      bio,
       skills_tags: skillsTags,
       interests,
-      links_json: { linkedin: linkedIn, portfolio, school, class_grade: classGrade, country },
+      links_json: { portfolio, school, class_grade: classGrade, country },
       profile_visible: profileVisible,
       leaderboard_visible: leaderboardVisible,
     } as any).eq('user_id', user.id);
     if (error) toast.error(t.profileSaveFailed);
     else toast.success(t.profileSaved);
     setSaving(false);
+  };
+
+  const handleDeleteAccount = async () => {
+    if (!user) return;
+    setDeleting(true);
+    try {
+      const { error } = await supabase.functions.invoke('delete-account');
+      if (error) throw error;
+      await supabase.auth.signOut();
+      navigate('/');
+      toast.success(tx('Account deleted successfully.', 'Акаунтът беше изтрит успешно.'));
+    } catch (err: any) {
+      toast.error(tx('Failed to delete account. Please try again.', 'Неуспешно изтриване. Моля, опитай отново.'));
+    }
+    setDeleting(false);
   };
 
   const toggleSkill = (skill: string) => {
@@ -96,6 +122,11 @@ export default function ProfilePage() {
       setInterests(prev => [...prev, interestInput.trim()]);
       setInterestInput('');
     }
+  };
+
+  const dismissGdprBanner = () => {
+    localStorage.setItem('gdpr_banner_dismissed', 'true');
+    setShowGdprBanner(false);
   };
 
   const completedCount = submissions.length;
@@ -113,14 +144,35 @@ export default function ProfilePage() {
       <main className="container mx-auto px-4 py-8 max-w-3xl space-y-8">
         <h1 className="typo-h1">{t.myProfile}</h1>
 
+        {/* GDPR Info Banner */}
+        {showGdprBanner && (
+          <div className="relative rounded-lg border border-primary/30 bg-primary/5 p-4 flex items-start gap-3">
+            <Shield className="h-5 w-5 text-primary mt-0.5 shrink-0" />
+            <div className="flex-1">
+              <p className="text-sm text-foreground">
+                {tx(
+                  '🔒 Your profile data is protected. Only your nickname is shown publicly. Your full name is visible only to you and your teacher.',
+                  '🔒 Данните в профила ти са защитени. Публично се показва само псевдонимът ти. Пълното ти име е видимо само за теб и твоя учител.'
+                )}
+              </p>
+              <Link to="/privacy" className="text-xs text-primary hover:underline mt-1 inline-block">
+                {tx('Read the Privacy Policy →', 'Прочети политиката за поверителност →')}
+              </Link>
+            </div>
+            <button onClick={dismissGdprBanner} className="text-muted-foreground hover:text-foreground shrink-0">
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+        )}
+
         {/* Stats row */}
         <div className="grid grid-cols-3 gap-4">
           <div className="rounded-lg border border-border bg-card p-4 text-center">
             <BookOpen className="h-5 w-5 text-primary mx-auto mb-1" />
             <p className="text-2xl font-bold text-foreground">{completedCount}</p>
-             <p className="text-xs text-muted-foreground">{t.casesDone}</p>
+            <p className="text-xs text-muted-foreground">{t.casesDone}</p>
             {completedCount === 0 && (
-              <p className="text-xs text-primary mt-1">{lang === 'bg' ? 'Започни от Пътешествието →' : 'Start from the Journey →'}</p>
+              <p className="text-xs text-primary mt-1">{tx('Start from the Journey →', 'Започни от Пътешествието →')}</p>
             )}
           </div>
           <div className="rounded-lg border border-border bg-card p-4 text-center">
@@ -128,7 +180,7 @@ export default function ProfilePage() {
             <p className="text-2xl font-bold text-foreground">{avgScore}%</p>
             <p className="text-xs text-muted-foreground">{t.avgScore}</p>
             {avgScore === 0 && (
-              <p className="text-xs text-muted-foreground mt-1">{lang === 'bg' ? 'Завърши казус, за да видиш резултат' : 'Complete a case to see your score'}</p>
+              <p className="text-xs text-muted-foreground mt-1">{tx('Complete a case to see your score', 'Завърши казус, за да видиш резултат')}</p>
             )}
           </div>
           <div className="rounded-lg border border-border bg-card p-4 text-center">
@@ -136,7 +188,7 @@ export default function ProfilePage() {
             <p className="text-2xl font-bold text-foreground">{badges.length}</p>
             <p className="text-xs text-muted-foreground">{t.badges}</p>
             {badges.length === 0 && (
-              <p className="text-xs text-xp-gold mt-1">{lang === 'bg' ? 'Спечели първата си значка днес' : 'Earn your first badge today'}</p>
+              <p className="text-xs text-xp-gold mt-1">{tx('Earn your first badge today', 'Спечели първата си значка днес')}</p>
             )}
           </div>
         </div>
@@ -178,37 +230,35 @@ export default function ProfilePage() {
           <h3 className="font-display font-semibold text-foreground">{t.editProfile}</h3>
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <Label>{t.fullName} <span className="text-xs text-muted-foreground">({lang === 'bg' ? 'видимо само за теб и учителя' : 'visible only to you and the teacher'})</span></Label>
+              <Label className="flex items-center gap-1.5">
+                {tx('Full Name (optional)', 'Пълно име (по избор)')}
+                <Lock className="h-3 w-3 text-muted-foreground" />
+              </Label>
               <Input value={fullName} onChange={e => setFullName(e.target.value)} />
+              <p className="text-xs text-muted-foreground mt-1">
+                {tx('Visible only to you and your teacher. Never public.', 'Видимо само за теб и твоя учител. Никога публично.')}
+              </p>
             </div>
             <div>
-              <Label>{lang === 'bg' ? 'Псевдоним (за класацията)' : 'Display Name (for leaderboard)'}</Label>
-              <Input value={displayName} onChange={e => setDisplayName(e.target.value)} placeholder={lang === 'bg' ? 'напр. ИноваторБГ' : 'e.g. CoolInnovator'} />
-              <p className="text-xs text-muted-foreground mt-1">{lang === 'bg' ? 'Това име се показва публично в класацията' : 'This name is shown publicly on the leaderboard'}</p>
+              <Label>{tx('Nickname (for leaderboard)', 'Псевдоним (за класацията)')}</Label>
+              <Input value={displayName} onChange={e => setDisplayName(e.target.value)} placeholder={tx('e.g. CoolInnovator', 'напр. ИноваторБГ')} />
+              <p className="text-xs text-muted-foreground mt-1">{tx('This name is shown publicly on the leaderboard', 'Това име се показва публично в класацията')}</p>
             </div>
             <div>
-              <Label>{lang === 'bg' ? 'Училище / Университет' : 'School / University'} <span className="text-xs text-muted-foreground">({lang === 'bg' ? 'по избор' : 'optional'})</span></Label>
-              <Input value={school} onChange={e => setSchool(e.target.value)} placeholder={lang === 'bg' ? 'напр. СУ Св. Климент Охридски' : 'e.g. Sofia University'} />
+              <Label>{tx('School / University (optional)', 'Училище / Университет (по избор)')}</Label>
+              <Input value={school} onChange={e => setSchool(e.target.value)} placeholder={tx('e.g. Sofia University', 'напр. СУ Св. Климент Охридски')} />
             </div>
             <div>
-              <Label>{lang === 'bg' ? 'Клас / Курс' : 'Class / Grade'} <span className="text-xs text-muted-foreground">({lang === 'bg' ? 'по избор' : 'optional'})</span></Label>
-              <Input value={classGrade} onChange={e => setClassGrade(e.target.value)} placeholder={lang === 'bg' ? 'напр. 11 клас' : 'e.g. 11th grade'} />
+              <Label>{tx('Class / Grade (optional)', 'Клас / Курс (по избор)')}</Label>
+              <Input value={classGrade} onChange={e => setClassGrade(e.target.value)} placeholder={tx('e.g. 11th grade', 'напр. 11 клас')} />
             </div>
             <div>
-              <Label>{lang === 'bg' ? 'Държава' : 'Country'} <span className="text-xs text-muted-foreground">({lang === 'bg' ? 'по избор' : 'optional'})</span></Label>
+              <Label>{tx('Country (optional)', 'Държава (по избор)')}</Label>
               <select value={country} onChange={e => setCountry(e.target.value)} className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
-                <option value="">{lang === 'bg' ? '— Избери —' : '— Select —'}</option>
+                <option value="">{tx('— Select —', '— Избери —')}</option>
                 {COUNTRY_OPTIONS.map(c => <option key={c} value={c}>{c}</option>)}
               </select>
             </div>
-          </div>
-          <div>
-            <Label>{t.linkedInUrl}</Label>
-            <Input value={linkedIn} onChange={e => setLinkedIn(e.target.value)} placeholder="https://linkedin.com/in/..." />
-          </div>
-          <div>
-            <Label>{t.bio}</Label>
-            <Textarea value={bio} onChange={e => setBio(e.target.value)} placeholder={t.bioPlaceholder} className="min-h-[80px]" />
           </div>
           <div>
             <Label>{t.portfolioUrl}</Label>
@@ -249,12 +299,57 @@ export default function ProfilePage() {
             </div>
             <div className="flex items-center gap-3">
               <input type="checkbox" checked={leaderboardVisible} onChange={e => setLeaderboardVisible(e.target.checked)} className="rounded" />
-              <Label>{lang === 'bg' ? 'Покажи ме в публичната класация' : 'Show me on public leaderboard'}</Label>
+              <Label>{tx('Show me on public leaderboard', 'Покажи ме в публичната класация')}</Label>
             </div>
           </div>
           <Button onClick={handleSave} disabled={saving} className="sim-gradient border-0">
             <Save className="h-4 w-4 mr-1" /> {saving ? t.saving : t.saveProfile}
           </Button>
+        </div>
+
+        {/* Delete Account — Danger Zone */}
+        <div className="rounded-lg border border-destructive/30 bg-destructive/5 p-6 space-y-3">
+          <h3 className="font-display font-semibold text-destructive flex items-center gap-2">
+            <AlertTriangle className="h-4 w-4" />
+            {tx('Danger Zone', 'Опасна зона')}
+          </h3>
+          <p className="text-sm text-muted-foreground">
+            {tx(
+              'Deleting your account is permanent. All data, progress, and XP will be lost forever.',
+              'Изтриването на акаунта е необратимо. Всички данни, напредък и XP ще бъдат загубени завинаги.'
+            )}
+          </p>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="outline" className="text-destructive border-destructive/50 hover:bg-destructive/10">
+                <AlertTriangle className="h-4 w-4 mr-1" />
+                {tx('Delete my account', 'Изтрий профила ми')}
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>
+                  {tx('Are you sure?', 'Сигурен ли си?')}
+                </AlertDialogTitle>
+                <AlertDialogDescription>
+                  {tx(
+                    'All data, progress, and XP will be permanently deleted. This action cannot be undone.',
+                    'Всички данни, напредък и XP ще бъдат изтрити завинаги. Това действие е необратимо.'
+                  )}
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>{tx('Cancel', 'Отказ')}</AlertDialogCancel>
+                <AlertDialogAction
+                  onClick={handleDeleteAccount}
+                  disabled={deleting}
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                >
+                  {deleting ? tx('Deleting...', 'Изтриване...') : tx('Yes, delete my account', 'Да, изтрий акаунта ми')}
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       </main>
     </div>
