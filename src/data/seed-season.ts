@@ -346,7 +346,7 @@ export const SEED_SEASON: SimulationSeason = {
         category: 'competitor_entry',
         severity: 3,
         concept_lesson: '💡 Adaptability: When competitors appear, your differentiation becomes critical. Focus on what makes you unique rather than reacting to their moves.',
-        concept_lesson_bg: '💡 Адаптивност: Когато се появят конкуренти, вашата диференциация става критична.',
+        concept_lesson_bg: '💡 Адаптивност: Когато се появят конкуренти, твоята диференциация става критична.',
       },
       decisions: [
         {
