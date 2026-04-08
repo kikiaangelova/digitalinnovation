@@ -56,6 +56,8 @@ import Certificate from "./pages/Certificate";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfUse from "./pages/TermsOfUse";
 import PendingApproval from "./pages/PendingApproval";
+import TeacherClassroom from "./pages/TeacherClassroom";
+import JoinClassroom from "./pages/JoinClassroom";
 
 const queryClient = new QueryClient();
 
@@ -116,8 +118,11 @@ const App = () => (
                       {/* Student-only routes */}
                       <Route path="/my-startup" element={<RoleGuard allowed={['student', 'admin']}><MyStartupIdea /></RoleGuard>} />
 
-                      {/* Teacher-verified route */}
-                      <Route path="/teacher" element={<RoleGuard allowed={['teacher_verified', 'admin']} redirectTo="/dashboard"><TeacherDashboard /></RoleGuard>} />
+                      {/* Teacher-verified routes */}
+                      <Route path="/teacher" element={<RoleGuard allowed={['teacher_verified', 'admin']} redirectTo="/dashboard"><TeacherClassroom /></RoleGuard>} />
+
+                      {/* Join classroom route (students) */}
+                      <Route path="/join/:code" element={<JoinClassroom />} />
 
                       {/* Admin routes */}
                       <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />

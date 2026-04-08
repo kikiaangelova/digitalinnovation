@@ -9,7 +9,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
-import { User, Save, Award, BookOpen, Users, BarChart3, Lock, X, AlertTriangle, Shield } from 'lucide-react';
+import { User, Save, Award, BookOpen, Users, BarChart3, Lock, X, AlertTriangle, Shield, School } from 'lucide-react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -47,6 +47,9 @@ export default function ProfilePage() {
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
+  const [classroomInfo, setClassroomInfo] = useState<{ id: string; name: string; teacher_name: string | null } | null>(null);
+  const [joinCode, setJoinCode] = useState('');
+  const [joinLoading, setJoinLoading] = useState(false);
   const [showGdprBanner, setShowGdprBanner] = useState(() => {
     return localStorage.getItem('gdpr_banner_dismissed') !== 'true';
   });
@@ -76,6 +79,23 @@ export default function ProfilePage() {
       setBadges(ub || []);
       const { data: tm } = await supabase.from('team_members').select('team_id, role, teams(name, cohort_id)').eq('user_id', user.id);
       setTeams(tm || []);
+      // Fetch classroom membership
+      const { data: membership } = await supabase
+        .from('classroom_students')
+        .select('classroom_id')
+        .eq('student_id', user.id)
+        .maybeSingle();
+      if (membership) {
+        const { data: cr } = await supabase
+          .from('classrooms')
+          .select('id, name, teacher_id')
+          .eq('id', membership.classroom_id)
+          .maybeSingle();
+        if (cr) {
+          const { data: tp } = await supabase.from('profiles').select('display_name, full_name').eq('user_id', cr.teacher_id).maybeSingle();
+          setClassroomInfo({ id: cr.id, name: cr.name, teacher_name: tp?.display_name || tp?.full_name || null });
+        }
+      }
       setLoading(false);
     };
     fetchData();
@@ -164,6 +184,87 @@ export default function ProfilePage() {
             </button>
           </div>
         )}
+
+        {/* Classroom Section */}
+        <div className="rounded-lg border border-border bg-card p-5 space-y-3">
+          <h3 className="font-display font-semibold text-foreground flex items-center gap-2">
+            <School className="h-4 w-4 text-primary" />
+            {tx('My Classroom', 'Моят клас')}
+          </h3>
+          {classroomInfo ? (
+            <div className="space-y-2">
+              <p className="text-sm text-foreground">
+                {tx('Class:', 'Клас:')} <strong>{classroomInfo.name}</strong>
+                {classroomInfo.teacher_name && <> · {tx('Teacher:', 'Учител:')} {classroomInfo.teacher_name}</>}
+              </p>
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <button className="text-xs text-destructive hover:underline">
+                    {tx('Leave classroom', 'Напусни класа')}
+                  </button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>{tx('Leave classroom?', 'Напусни класа?')}</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      {tx('You will lose access to class assignments but keep your progress.', 'Ще загубиш достъп до задачите на класа, но ще запазиш прогреса си.')}
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>{tx('Cancel', 'Отказ')}</AlertDialogCancel>
+                    <AlertDialogAction
+                      className="bg-destructive text-destructive-foreground"
+                      onClick={async () => {
+                        if (!user || !classroomInfo) return;
+                        await supabase.from('classroom_students').delete().eq('classroom_id', classroomInfo.id).eq('student_id', user.id);
+                        setClassroomInfo(null);
+                        toast.success(tx('Left the classroom', 'Напусна класа'));
+                      }}
+                    >
+                      {tx('Leave', 'Напусни')}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            </div>
+          ) : (
+            <div className="space-y-2">
+              <p className="text-sm text-muted-foreground">
+                {tx("You're not in a classroom. Have a code from your teacher?", 'Нямаш класна стая. Имаш ли код от учителя си?')}
+              </p>
+              <div className="flex gap-2">
+                <Input
+                  value={joinCode}
+                  onChange={e => setJoinCode(e.target.value.toUpperCase().slice(0, 6))}
+                  placeholder={tx('Class code (6 chars)', 'Код на класа (6 знака)')}
+                  maxLength={6}
+                  className="max-w-[200px] font-mono uppercase"
+                />
+                <Button
+                  size="sm"
+                  disabled={joinCode.length !== 6 || joinLoading}
+                  onClick={async () => {
+                    if (!user) return;
+                    setJoinLoading(true);
+                    const { data: cr } = await supabase.from('classrooms').select('id, name, teacher_id').eq('class_code', joinCode).eq('is_active', true).maybeSingle();
+                    if (!cr) { toast.error(tx('Invalid or expired code.', 'Невалиден или изтекъл код.')); setJoinLoading(false); return; }
+                    const { data: existing } = await supabase.from('classroom_students').select('id').eq('classroom_id', cr.id).eq('student_id', user.id).maybeSingle();
+                    if (existing) { toast.error(tx('Already in this class.', 'Вече си в този клас.')); setJoinLoading(false); return; }
+                    const { error } = await supabase.from('classroom_students').insert({ classroom_id: cr.id, student_id: user.id });
+                    if (error) { toast.error(error.message); setJoinLoading(false); return; }
+                    const { data: tp } = await supabase.from('profiles').select('display_name, full_name').eq('user_id', cr.teacher_id).maybeSingle();
+                    setClassroomInfo({ id: cr.id, name: cr.name, teacher_name: tp?.display_name || tp?.full_name || null });
+                    setJoinCode('');
+                    toast.success(tx(`Joined ${cr.name}!`, `Присъедини се към ${cr.name}!`));
+                    setJoinLoading(false);
+                  }}
+                >
+                  {joinLoading ? '...' : tx('Join', 'Присъедини се')}
+                </Button>
+              </div>
+            </div>
+          )}
+        </div>
 
         {/* Stats row */}
         <div className="grid grid-cols-3 gap-4">
