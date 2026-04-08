@@ -58,6 +58,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfUse from "./pages/TermsOfUse";
 import PendingApproval from "./pages/PendingApproval";
 import TeacherClassroom from "./pages/TeacherClassroom";
+import TeacherDashboardPage from "./pages/TeacherDashboardPage";
 import JoinClassroom from "./pages/JoinClassroom";
 
 const queryClient = new QueryClient();
