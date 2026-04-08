@@ -773,13 +773,13 @@ function StatCard({
   accent?: string;
 }) {
   return (
-    <Card className="p-4">
+    <Card className="p-4 border-border/50 hover:shadow-md hover:border-primary/20 transition-all">
       <div className="flex items-center gap-3">
-        <div className="rounded-lg bg-primary/10 p-2">
-          <Icon className="h-4 w-4 text-primary" />
+        <div className="rounded-xl sim-gradient p-2.5 shadow-sm">
+          <Icon className="h-4 w-4 text-primary-foreground" />
         </div>
         <div>
-          <p className={`text-xl font-bold ${accent || 'text-foreground'}`}>{value}</p>
+          <p className={`text-xl font-bold font-display ${accent || 'text-foreground'}`}>{value}</p>
           <p className="text-xs text-muted-foreground">{label}</p>
         </div>
       </div>
