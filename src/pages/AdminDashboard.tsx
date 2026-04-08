@@ -355,6 +355,14 @@ export default function AdminDashboard() {
           </div>
         </div>
 
+        {/* Fetch error banner */}
+        {fetchError && (
+          <div className="rounded-xl border border-destructive/30 bg-destructive/5 p-4 text-center">
+            <p className="text-destructive font-medium">{fetchError}</p>
+            <p className="text-sm text-muted-foreground mt-1">{t('Please try logging out and back in.', 'Моля, излезте и влезте отново.')}</p>
+          </div>
+        )}
+
         {/* Platform-wide Stats */}
         {!loading && (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
