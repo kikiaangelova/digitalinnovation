@@ -143,7 +143,7 @@ export default function TeacherDashboardPage() {
         .in('user_id', studentIds),
       supabase
         .from('startup_projects')
-        .select('user_id, problem, customer, value_proposition, digital_product, business_model, growth_strategy, final_pitch, is_submitted')
+        .select('user_id, problem, customer, value_proposition, digital_product, business_model, growth_strategy, final_pitch, is_submitted, bmc_customer_segments, bmc_value_proposition, bmc_channels, bmc_customer_relationships, bmc_revenue_streams, bmc_key_resources, bmc_key_activities, bmc_key_partners, bmc_cost_structure')
         .in('user_id', studentIds),
       supabase
         .from('learning_module_responses')
