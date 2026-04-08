@@ -600,7 +600,7 @@ Once PMF is achieved, the focus shifts to scaling. But PMF is not permanent — 
     display_order: 4,
     related_case_topic: 'EdTech',
     case_transition_en: 'You just learned about Product-Market Fit. Now analyze how EdTech platforms found PMF in the education market.',
-    case_transition_bg: 'Току-що научихте за продуктово-пазарно съответствие. Сега анализирайте как EdTech платформи намериха PMF.',
+    case_transition_bg: 'Току-що научи за продуктово-пазарно съответствие. Сега анализирай как EdTech платформи намериха PMF.',
     related_sim_concepts_en: ['Product-Market Fit', 'MVP Strategy'],
     related_sim_concepts_bg: ['Продуктово-пазарно съответствие', 'MVP стратегия'],
     sim_transition_en: 'Test your product-market fit strategy in the startup simulator.',
