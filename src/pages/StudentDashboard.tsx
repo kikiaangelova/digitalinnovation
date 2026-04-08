@@ -6,6 +6,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useNavigate } from 'react-router-dom';
 import AppHeader from '@/components/layout/AppHeader';
 import LearningNavigator from '@/components/dashboard/LearningNavigator';
+import NextStepHero from '@/components/dashboard/NextStepHero';
+import DailyGoalCard from '@/components/dashboard/DailyGoalCard';
 import QuickResumeCards from '@/components/dashboard/QuickResumeCards';
 import AchievementBadges from '@/components/dashboard/AchievementBadges';
 import TestInsights from '@/components/dashboard/TestInsights';
