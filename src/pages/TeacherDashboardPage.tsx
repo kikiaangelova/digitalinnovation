@@ -293,8 +293,8 @@ export default function TeacherDashboardPage() {
     if (!p) return true;
     const overall = getOverall(s.student_id);
     const daysSinceUpdate = (Date.now() - new Date(s.updated_at).getTime()) / 86400000;
-    // Intervention criteria: score below 50% OR stuck (no activity for 7+ days)
-    return overall < 50 || daysSinceUpdate > 7;
+    const quizAvg = p.quiz_avg || 0;
+    return overall < 50 || daysSinceUpdate > 7 || (quizAvg > 0 && quizAvg < 50);
   });
 
   const avgXp = students.length
