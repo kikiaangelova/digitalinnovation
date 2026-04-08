@@ -240,12 +240,25 @@ export default function TeacherDashboardPage() {
       simWeek: p.sim_week,
       simComplete: p.sim_complete,
     });
-    // Current stage = last completed + 1 (capped at 6)
     const completedCount = statuses.filter((s) => s === 'completed').length;
     if (completedCount >= 6) return { num: 6, name: lang === 'bg' ? STAGE_NAMES_BG[5] : STAGE_NAMES_EN[5] };
-    const idx = completedCount; // 0-based index of current stage
+    const idx = completedCount;
     return { num: idx + 1, name: lang === 'bg' ? STAGE_NAMES_BG[idx] : STAGE_NAMES_EN[idx] };
   };
+
+  const getStudentStageStatuses = (sid: string) => {
+    const p = progressMap[sid];
+    if (!p) return Array(6).fill('not_started');
+    return deriveJourneyStatuses({
+      casesCompleted: p.cases_completed,
+      startupSections: p.startup_keys,
+      startupSubmitted: p.startup_submitted,
+      simWeek: p.sim_week,
+      simComplete: p.sim_complete,
+    });
+  };
+
+  const STAGE_ICONS = [Search, Lightbulb, PenTool, Wrench, Gauge, Presentation];
 
   const getName = (s: StudentData) => s.display_name || s.full_name || '—';
 
