@@ -411,6 +411,7 @@ export default function TeacherDashboardPage() {
                       <thead>
                         <tr className="border-b">
                           <th className="text-left py-2 px-3 text-muted-foreground font-medium">{t('Student', 'Ученик')}</th>
+                          <th className="text-left py-2 px-2 text-muted-foreground font-medium">{t('Stage', 'Етап')}</th>
                           <th className="text-center py-2 px-2 text-muted-foreground font-medium">XP</th>
                           <th className="text-center py-2 px-2 text-muted-foreground font-medium">{t('Cases', 'Казуси')}</th>
                           <th className="text-center py-2 px-2 text-muted-foreground font-medium">{t('Sim', 'Сим.')}</th>
