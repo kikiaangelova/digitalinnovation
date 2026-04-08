@@ -3,6 +3,7 @@ import { LearningPhaseBar, WhatYouWillLearn, STARTUP_BUILDER_OUTCOMES } from '@/
 import StructuredFeedback from '@/components/feedback/StructuredFeedback';
 import SkillsImproved from '@/components/learning/SkillsImproved';
 import { Link } from 'react-router-dom';
+import HypothesisCard from '@/components/hypothesis/HypothesisCard';
 import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
 import { supabase } from '@/integrations/supabase/client';
@@ -451,6 +452,18 @@ export default function MyStartupIdea() {
             </div>
           </div>
         </div>
+
+        {/* Hypothesis prompt before value proposition */}
+        {activeSection === SECTIONS.findIndex(s => s.key === 'value_proposition') && user && (
+          <HypothesisCard
+            contextType="startup"
+            contextId="my-startup"
+            label={t('What is your key customer hypothesis?', 'Каква е ключовата ти хипотеза за клиента?')}
+            placeholder={t('"I believe tourists want personalized experiences because standard tours don\'t match their interests."', '"Вярвам, че туристите искат персонализирани изживявания, защото стандартните турове не отговарят на интересите им."')}
+            linkTo="/simulator"
+            linkLabel={t('Test this hypothesis in the simulator →', 'Тествай тази хипотеза в симулатора →')}
+          />
+        )}
 
         {/* Tabs: Sections | Business Model Canvas */}
         <Tabs defaultValue="problems" className="space-y-6">

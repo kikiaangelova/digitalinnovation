@@ -66,6 +66,33 @@ export interface SimulatorDecision {
   options: SimDecisionOption[];
 }
 
+/** Theory Block 1: Hook — why this matters */
+export interface TheoryHook {
+  en: string;
+  bg: string;
+}
+
+/** Theory Block 3: Named framework */
+export interface TheoryFramework {
+  name: string;
+  bullets_en: string[];
+  bullets_bg: string[];
+  apply_en: string;
+  apply_bg: string;
+}
+
+/** Theory Block 2: Visual metaphor */
+export interface TheoryMetaphor {
+  en: string;
+  bg: string;
+}
+
+/** Theory Block 4: Provocative questions */
+export interface TheoryProvocation {
+  en: string;
+  bg: string;
+}
+
 export interface LearningModule {
   slug: string;
   title_en: string;
@@ -97,6 +124,11 @@ export interface LearningModule {
   related_sim_concepts_bg?: string[];
   sim_transition_en?: string;
   sim_transition_bg?: string;
+  // Theory redesign blocks
+  hook?: TheoryHook;
+  framework?: TheoryFramework;
+  metaphor?: TheoryMetaphor;
+  provocations?: TheoryProvocation[];
 }
 
 export const LEARNING_MODULES: LearningModule[] = [
@@ -104,6 +136,10 @@ export const LEARNING_MODULES: LearningModule[] = [
     slug: 'network-effects',
     title_en: 'Network Effects',
     title_bg: 'Мрежови ефекти',
+    hook: { en: 'If your app has 10 users and the competitor has 1,000, you\'re doomed — unless you understand how network effects work and how to build them from zero.', bg: 'Ако имаш приложение с 10 потребители и конкурентът има 1000, ти си обречен — освен ако не разбираш как мрежовите ефекти работят и как да ги изградиш от нулата.' },
+    metaphor: { en: '1 user = 1 connection. 10 users = 45 connections. 100 users = 4,950 connections. Value grows quadratically.', bg: 'Представи си: 1 потребител = 1 връзка. 10 потребители = 45 връзки. 100 потребители = 4950 връзки. Стойността расте квадратично.' },
+    framework: { name: "Metcalfe's Law", bullets_en: ['The value of a network is proportional to the square of the number of users (n²)', 'Explains why platforms become near-monopolies after reaching critical mass', 'Applies to social networks, marketplaces, and communication tools'], bullets_bg: ['Стойността на мрежата е пропорционална на квадрата на броя потребители (n²)', 'Обяснява защо платформите стават почти монополи след критична маса', 'Прилага се за социални мрежи, пазари и комуникационни инструменти'], apply_en: 'Calculate n² for your startup: what is your critical mass number?', apply_bg: 'Изчисли n² за стартъпа си: какъв е твоят брой за критична маса?' },
+    provocations: [{ en: 'When do network effects kill a platform instead of growing it?', bg: 'Кога мрежовият ефект убива платформата вместо да я развие?' }, { en: 'Why did WhatsApp refuse ads while Facebook embraced them?', bg: 'Защо WhatsApp отказа реклами, докато Facebook ги прие?' }],
     concepts: [
       {
         id: 'ne-concept-1',
@@ -218,6 +254,10 @@ Understanding network effects is essential for designing digital products that g
     slug: 'platform-business-models',
     title_en: 'Platform Business Models',
     title_bg: 'Платформени бизнес модели',
+    hook: { en: 'The 5 most valuable companies in the world are all platforms. Zero of them produce physical products. Why?', bg: 'Петте най-скъпи компании в света са платформи. Нито една не произвежда физически продукти. Защо?' },
+    metaphor: { en: 'A platform is a nightclub: producers are the DJs, consumers are the dancers, and you set the rules.', bg: 'Платформата е нощен клуб: производителите са DJ-тата, потребителите са танцуващите, а ти определяш правилата.' },
+    framework: { name: 'Platform Canvas', bullets_en: ['Producers: who creates value on the platform?', 'Consumers: who consumes and pays?', 'Platform: what rules, filters, and trust mechanisms do you provide?'], bullets_bg: ['Производители: кой създава стойност?', 'Потребители: кой консумира и плаща?', 'Платформа: какви правила и механизми за доверие предоставяш?'], apply_en: 'Map your startup on the Platform Canvas.', apply_bg: 'Начертай стартъпа си на Platform Canvas.' },
+    provocations: [{ en: 'Can every business become a platform? When is it a bad idea?', bg: 'Може ли всеки бизнес да стане платформа? Кога е лоша идея?' }, { en: 'Why did Amazon allow competitors to sell on its marketplace?', bg: 'Защо Amazon позволи на конкуренти да продават в маркетплейса му?' }],
     concepts: [
       {
         id: 'pb-concept-1',
@@ -330,6 +370,10 @@ Examples include Airbnb (hosts and guests), YouTube (creators and viewers), and 
     slug: 'customer-acquisition-cost',
     title_en: 'Customer Acquisition Cost',
     title_bg: 'Цена за привличане на клиент (CAC)',
+    hook: { en: 'You can build the best product in the world. If it costs €50 to get each user and each user pays you €30, you\'re bankrupt.', bg: 'Можеш да създадеш най-добрия продукт в света. Ако привличането на всеки потребител струва €50, а той плаща €30, си банкрутирал.' },
+    metaphor: { en: 'CAC is the price of a fishing rod. LTV is the total fish you catch. If the rod costs more than the fish, stop fishing.', bg: 'CAC е цената на въдицата. LTV е общата риба, която хващаш. Ако въдицата струва повече от рибата, спри да ловиш.' },
+    framework: { name: 'LTV:CAC Ratio', bullets_en: ['LTV (Lifetime Value) / CAC should be > 3:1', 'Below 1:1 = losing money on every customer', 'Payback period: how fast do you recoup CAC?'], bullets_bg: ['LTV / CAC трябва да е > 3:1', 'Под 1:1 = губиш пари с всеки клиент', 'Период на изплащане: колко бързо връщаш CAC?'], apply_en: 'Calculate LTV:CAC for your startup idea.', apply_bg: 'Изчисли LTV:CAC за стартъп идеята си.' },
+    provocations: [{ en: 'Is it possible for a startup with high CAC to succeed? Under what conditions?', bg: 'Възможно ли е стартъп с висок CAC да успее? При какви условия?' }, { en: 'Why do some companies give away products for free and still make billions?', bg: 'Защо някои компании раздават продукти безплатно и въпреки това печелят милиарди?' }],
     concepts: [
       {
         id: 'cac-concept-1',
@@ -448,6 +492,10 @@ CAC е критичен, защото директно влияе на рент�
     slug: 'product-market-fit',
     title_en: 'Product-Market Fit',
     title_bg: 'Продуктово-пазарно съответствие',
+    hook: { en: 'Marc Andreessen says PMF is the only thing that matters. Without it, nothing else you do matters. With it, everything becomes easier.', bg: 'Марк Андрийсън казва, че PMF е единственото, което има значение. Без него нищо друго няма значение. С него всичко става по-лесно.' },
+    metaphor: { en: 'PMF is when you stop pushing a boulder uphill and it starts rolling downhill by itself.', bg: 'PMF е моментът, в който спираш да буташ камък нагоре и той започва да се търкаля надолу сам.' },
+    framework: { name: 'Sean Ellis Test', bullets_en: ['Ask users: "How would you feel if you could no longer use this product?"', 'If >40% answer "Very disappointed" — you have PMF', 'Below 40% means iterate on the product, not marketing'], bullets_bg: ['Попитай потребителите: „Как бихте се почувствали, ако не можехте да използвате продукта?"', 'Ако >40% отговорят „Много разочарован" — имаш PMF', 'Под 40% означава итерирай продукта, не маркетинга'], apply_en: 'Design a Sean Ellis survey for your startup MVP.', apply_bg: 'Създай Sean Ellis анкета за MVP-то на стартъпа си.' },
+    provocations: [{ en: 'Can you have PMF in one market segment and not in another?', bg: 'Можеш ли да имаш PMF в един пазарен сегмент, а в друг не?' }, { en: 'What happens if you scale before PMF? Name a real example.', bg: 'Какво се случва, ако мащабираш преди PMF? Дай реален пример.' }],
     concepts: [
       {
         id: 'pmf-concept-1',
@@ -562,6 +610,10 @@ Once PMF is achieved, the focus shifts to scaling. But PMF is not permanent — 
     slug: 'digital-ecosystems',
     title_en: 'Digital Ecosystems',
     title_bg: 'Дигитални екосистеми',
+    hook: { en: 'Amazon started as a bookstore. Now it\'s a cloud provider, bank, grocery store, and entertainment studio. That\'s an ecosystem.', bg: 'Amazon започна като книжарница. Сега е облачен доставчик, банка, хранителен магазин и развлекателно студио. Това е екосистема.' },
+    metaphor: { en: 'An ecosystem is like a flywheel: each service feeds the next. More Prime members → more sellers → more data → better recommendations → more members.', bg: 'Екосистемата е като маховик: всяка услуга захранва следващата. Повече Prime членове → повече продавачи → повече данни → по-добри препоръки → повече членове.' },
+    framework: { name: 'Amazon Flywheel', bullets_en: ['Lower prices → more customers', 'More customers → more sellers', 'More sellers → better selection → more customers'], bullets_bg: ['По-ниски цени → повече клиенти', 'Повече клиенти → повече продавачи', 'Повече продавачи → по-добър избор → повече клиенти'], apply_en: 'Draw the flywheel for your startup: what reinforcing loops can you create?', apply_bg: 'Начертай маховика за стартъпа си: какви самоподсилващи се цикли можеш да създадеш?' },
+    provocations: [{ en: 'Is building an ecosystem always better than building a single product?', bg: 'Изграждането на екосистема винаги ли е по-добро от един продукт?' }, { en: 'How can a small startup compete with an established ecosystem like Apple?', bg: 'Как малък стартъп може да се конкурира с установена екосистема като Apple?' }],
     concepts: [
       {
         id: 'de-concept-1',
@@ -677,6 +729,10 @@ The future of competition is increasingly between ecosystems, not individual com
     slug: 'marketing-fundamentals',
     title_en: 'Marketing Fundamentals',
     title_bg: 'Основи на маркетинга',
+    hook: { en: 'Airbnb spent $0 on marketing in its first year and grew to 10,000 listings. How? By understanding the AARRR funnel.', bg: 'Airbnb похарчи $0 за маркетинг в първата си година и достигна 10 000 обяви. Как? Чрез разбиране на AARRR фунията.' },
+    metaphor: { en: 'Marketing is not a megaphone. It\'s a funnel: 1000 people see you → 100 click → 10 try → 3 pay → 1 stays forever.', bg: 'Маркетингът не е мегафон. Той е фуния: 1000 те виждат → 100 кликват → 10 опитват → 3 плащат → 1 остава завинаги.' },
+    framework: { name: 'AARRR Pirate Metrics', bullets_en: ['Acquisition: how do users find you?', 'Activation: do they have a great first experience?', 'Retention, Revenue, Referral: do they stay, pay, and invite friends?'], bullets_bg: ['Acquisition: как те намират потребителите?', 'Activation: имат ли страхотно първо изживяване?', 'Retention, Revenue, Referral: остават ли, плащат ли и канят ли приятели?'], apply_en: 'Map your startup\'s AARRR metrics: what is your weakest stage?', apply_bg: 'Начертай AARRR метриките на стартъпа си: кой е най-слабият етап?' },
+    provocations: [{ en: 'Is it possible to build a successful product without any marketing at all?', bg: 'Възможно ли е да изградиш успешен продукт без никакъв маркетинг?' }, { en: 'Why do some viral products die after 6 months?', bg: 'Защо някои вирусни продукти умират след 6 месеца?' }],
     level: 2,
     startup_field: 'customer',
     concepts: [
@@ -763,6 +819,10 @@ Additionally, Airbnb noticed that listings with professional photos got 2.5x mor
     slug: 'pricing-and-revenue',
     title_en: 'Pricing & Revenue',
     title_bg: 'Ценообразуване и приходи',
+    hook: { en: 'Bird scooters charged $1 to unlock + $0.15/min. Each ride cost them $1.60 to operate. They raised $1B and still lost money.', bg: 'Bird скутерите таксуваха $1 за отключване + $0.15/мин. Всяко пътуване ги струваше $1.60. Привлякоха $1B и пак губеха пари.' },
+    metaphor: { en: 'Price is a triangle: what customers will pay (value), what it costs you (cost), what competitors charge (market). Find the sweet spot.', bg: 'Цената е триъгълник: какво ще платят клиентите (стойност), какво те струва (разход), какво таксуват конкурентите (пазар).' },
+    framework: { name: 'Value-Based Pricing Triangle', bullets_en: ['Value ceiling: maximum willingness to pay', 'Cost floor: minimum viable price', 'Competitive anchor: what alternatives cost'], bullets_bg: ['Таван на стойност: максимална готовност за плащане', 'Подова цена: минимална жизнеспособна цена', 'Конкурентна котва: колко струват алтернативите'], apply_en: 'Draw the pricing triangle for your product.', apply_bg: 'Начертай ценовия триъгълник за продукта си.' },
+    provocations: [{ en: 'When is charging $0 the best pricing strategy?', bg: 'Кога таксуването $0 е най-добрата ценова стратегия?' }, { en: 'Why did Spotify choose freemium instead of a pure subscription model?', bg: 'Защо Spotify избра freemium вместо чист абонаментен модел?' }],
     level: 2,
     startup_field: 'business_model',
     concepts: [
@@ -856,6 +916,10 @@ The biggest pricing mistake startups make: **charging too little.** Most early-s
     slug: 'team-and-roles',
     title_en: 'Team & Roles',
     title_bg: 'Екип и роли',
+    hook: { en: 'Juicero raised $120M for a WiFi juicer. The team had zero food industry experience. The product was a joke. Team matters more than idea.', bg: 'Juicero привлече $120M за WiFi сокоизстисквачка. Екипът нямаше опит в храните. Продуктът беше шега. Екипът е по-важен от идеята.' },
+    metaphor: { en: 'A startup team is a band: you need a drummer (ops), guitarist (tech), and vocalist (sales). Three vocalists = no band.', bg: 'Стартъп екипът е група: трябва ти барабанист (операции), китарист (технологии) и вокалист (продажби). Три вокалисти = няма група.' },
+    framework: { name: 'RACI Matrix', bullets_en: ['Responsible: who does the work?', 'Accountable: who makes the final call?', 'Consulted & Informed: who gives input and who needs updates?'], bullets_bg: ['Responsible: кой прави работата?', 'Accountable: кой взема крайното решение?', 'Consulted & Informed: кой дава мнение и кой трябва да е информиран?'], apply_en: 'Create a RACI matrix for your startup\'s top 3 tasks.', apply_bg: 'Създай RACI матрица за топ 3 задачи на стартъпа си.' },
+    provocations: [{ en: 'Should co-founders be friends? What are the risks?', bg: 'Трябва ли съоснователите да са приятели? Какви са рисковете?' }, { en: 'Is it better to hire generalists or specialists in an early-stage startup?', bg: 'По-добре ли е да наемеш генералисти или специалисти в ранен стартъп?' }],
     level: 2,
     startup_field: 'bmc_key_activities',
     concepts: [
@@ -950,6 +1014,10 @@ In April 2017, Bloomberg reporters discovered: **you could squeeze the juice pac
     slug: 'operations-fundamentals',
     title_en: 'Operations & Processes',
     title_bg: 'Операции и процеси',
+    hook: { en: 'Tesla builds 5,000 cars per week. Their factory runs 24/7. One wrong process and the entire line stops. Operations is boring — until it breaks everything.', bg: 'Tesla произвежда 5000 коли седмично. Фабриката работи 24/7. Един грешен процес и цялата линия спира. Операциите са скучни — докато не счупят всичко.' },
+    metaphor: { en: 'Operations is the engine of a car. Nobody sees it, but without it, the shiny exterior is just an expensive sculpture.', bg: 'Операциите са двигателят на колата. Никой не го вижда, но без него лъскавата каросерия е просто скъпа скулптура.' },
+    framework: { name: 'OKR Framework', bullets_en: ['Objective: what do you want to achieve? (qualitative)', 'Key Results: how do you measure success? (quantitative)', 'Review weekly, reset quarterly'], bullets_bg: ['Objective: какво искаш да постигнеш? (качествено)', 'Key Results: как измерваш успеха? (количествено)', 'Преглеждай седмично, ресетвай на тримесечие'], apply_en: 'Set 3 OKRs for your startup\'s next quarter.', apply_bg: 'Задай 3 OKR-а за следващото тримесечие на стартъпа си.' },
+    provocations: [{ en: 'Can a startup succeed with terrible operations but great marketing?', bg: 'Може ли стартъп да успее с ужасни операции, но страхотен маркетинг?' }, { en: 'When should a founder stop doing operations themselves and hire someone?', bg: 'Кога основателят трябва да спре да прави операциите сам и да наеме някого?' }],
     level: 2,
     startup_field: 'bmc_key_resources',
     concepts: [
@@ -1008,6 +1076,10 @@ For digital startups, **key operational processes** include:
     slug: 'supply-chain-basics',
     title_en: 'Supply Chain Basics',
     title_bg: 'Основи на веригата за доставки',
+    hook: { en: 'In 2021, one stuck ship in the Suez Canal caused $9.6B in daily trade losses. Supply chains are invisible — until they break.', bg: 'През 2021 г. един заседнал кораб в Суецкия канал причини $9.6B дневни загуби. Веригите за доставки са невидими — докато не се счупят.' },
+    metaphor: { en: 'Just-in-Time is like cooking fresh food for each customer. Buffer stock is like a freezer full of pre-made meals. One is efficient, the other is safe.', bg: 'Just-in-Time е като готвене на прясна храна за всеки клиент. Буферен запас е като фризер с готови ястия. Едното е ефективно, другото е безопасно.' },
+    framework: { name: 'JIT vs Buffer Model', bullets_en: ['JIT: zero inventory, maximum efficiency, fragile to disruptions', 'Buffer: safety stock, higher costs, resilient to shocks', 'Best practice: hybrid approach based on risk assessment'], bullets_bg: ['JIT: нулев инвентар, максимална ефективност, крехък при прекъсвания', 'Буфер: предпазен запас, по-високи разходи, устойчив на шокове', 'Най-добра практика: хибриден подход базиран на оценка на риска'], apply_en: 'Which model fits your startup: JIT, buffer, or hybrid?', apply_bg: 'Кой модел пасва на стартъпа ти: JIT, буфер или хибрид?' },
+    provocations: [{ en: 'Should every startup care about supply chain, even digital-only products?', bg: 'Трябва ли всеки стартъп да се интересува от веригата за доставки, дори при чисто дигитални продукти?' }, { en: 'How did COVID-19 change the global approach to inventory management?', bg: 'Как COVID-19 промени глобалния подход към управлението на инвентара?' }],
     level: 2,
     startup_field: 'bmc_channels',
     concepts: [

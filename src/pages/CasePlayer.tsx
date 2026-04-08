@@ -25,6 +25,7 @@ import CaseAnswerMentor from '@/components/case/CaseAnswerMentor';
 import UncertaintyBanner from '@/components/case/UncertaintyBanner';
 import ConsequencesPanel from '@/components/case/ConsequencesPanel';
 import ReflectionPanel from '@/components/case/ReflectionPanel';
+import HypothesisCard from '@/components/hypothesis/HypothesisCard';
 
 /* ── Types ── */
 interface CaseStudy {
@@ -735,6 +736,16 @@ export default function CasePlayer() {
             </div>
           );
         })()}
+
+        {/* ── Hypothesis prompt before strategic question (step 4) ── */}
+        {currentStep === 4 && id && (
+          <HypothesisCard
+            contextType="case"
+            contextId={id}
+            label={tl('Before you decide: what is your hypothesis?', 'Преди да решиш: каква е твоята хипотеза?')}
+            placeholder={tl('"I believe strategy B is best because..."', '"Вярвам, че стратегия Б е най-добра, защото..."')}
+          />
+        )}
 
         {/* ── 3. ANALYSIS QUESTIONS ── */}
         {stepQuestions.length > 0 && (

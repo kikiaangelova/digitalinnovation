@@ -268,14 +268,59 @@ export default function LearningModulePlayer() {
           ))}
         </div>
 
-        {/* THEORY PHASE */}
+        {/* THEORY PHASE — 4-block structure */}
         {phase === 'theory' && (
-          <div className="rounded-xl border border-border bg-card p-6 space-y-4">
-            <Badge variant="outline" className="mb-2">{t('📖 Theory', '📖 Теория')}</Badge>
-            <div className="prose prose-sm max-w-none text-foreground dark:prose-invert">
-              <ReactMarkdown>{lang === 'bg' ? mod.theory_bg : mod.theory_en}</ReactMarkdown>
+          <div className="space-y-4">
+            {/* Block 1: Hook */}
+            {mod.hook && (
+              <div className="rounded-xl border-2 border-amber-200 dark:border-amber-800 bg-amber-50/50 dark:bg-amber-950/20 p-5">
+                <p className="text-sm font-bold text-foreground mb-1">🔥 {t('Why this matters', 'Защо важи това?')}</p>
+                <p className="text-sm text-foreground/90 leading-relaxed">{lang === 'bg' ? mod.hook.bg : mod.hook.en}</p>
+              </div>
+            )}
+
+            {/* Block 2: Concept (trimmed theory + metaphor) */}
+            <div className="rounded-xl border border-border bg-card p-6 space-y-4">
+              <Badge variant="outline" className="mb-2">📐 {t('The Concept', 'Концепцията')}</Badge>
+              <div className="prose prose-sm max-w-none text-foreground dark:prose-invert">
+                <ReactMarkdown>{lang === 'bg' ? mod.theory_bg : mod.theory_en}</ReactMarkdown>
+              </div>
+              {mod.metaphor && (
+                <div className="rounded-lg bg-accent/60 p-4 text-sm text-foreground/80 italic">
+                  {lang === 'bg' ? mod.metaphor.bg : mod.metaphor.en}
+                </div>
+              )}
             </div>
-            <div className="flex justify-end pt-4">
+
+            {/* Block 3: Framework */}
+            {mod.framework && (
+              <div className="rounded-xl border border-primary/20 bg-primary/5 p-5 space-y-3">
+                <p className="text-sm font-bold text-foreground">🗺️ {t('Framework', 'Рамката')}: <span className="text-primary">{mod.framework.name}</span></p>
+                <ul className="space-y-1.5">
+                  {(lang === 'bg' ? mod.framework.bullets_bg : mod.framework.bullets_en).map((b, i) => (
+                    <li key={i} className="text-sm text-foreground/80 flex items-start gap-2">
+                      <span className="text-primary mt-0.5">•</span>{b}
+                    </li>
+                  ))}
+                </ul>
+                <p className="text-xs text-primary font-medium pt-1">
+                  🚀 {lang === 'bg' ? mod.framework.apply_bg : mod.framework.apply_en}
+                </p>
+              </div>
+            )}
+
+            {/* Block 4: Provocations */}
+            {mod.provocations && mod.provocations.length > 0 && (
+              <div className="rounded-xl bg-accent/40 p-5 space-y-2">
+                <p className="text-sm font-bold text-foreground flex items-center gap-1.5">💭 {t('Think before you continue', 'Помисли преди да продължиш')}</p>
+                {mod.provocations.map((p, i) => (
+                  <p key={i} className="text-sm text-foreground/80 italic">"{lang === 'bg' ? p.bg : p.en}"</p>
+                ))}
+                <p className="text-xs text-muted-foreground pt-1">{t('These questions have no correct answer. Think like a founder.', 'Тези въпроси нямат правилен отговор. Мисли като основател.')}</p>
+              </div>
+            )}
+
+            <div className="flex justify-end pt-2">
               <Button onClick={() => setPhase('quiz')}>
                 {t('Continue to Quiz', 'Продължи към тест')} <ChevronRight className="h-4 w-4 ml-1" />
               </Button>

@@ -24,7 +24,8 @@ export type XpAction =
   | 'theory_quiz_pass'
   | 'onboarding_profile'
   | 'onboarding_journey'
-  | 'startup_all_sections';
+  | 'startup_all_sections'
+  | 'hypothesis_saved';
 
 export const XP_VALUES: Record<XpAction, number> = {
   case_open: 5,
@@ -51,6 +52,7 @@ export const XP_VALUES: Record<XpAction, number> = {
   onboarding_profile: 5,
   onboarding_journey: 10,
   startup_all_sections: 50,
+  hypothesis_saved: 2,
 };
 
 interface AwardXpResult {
