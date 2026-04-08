@@ -646,10 +646,12 @@ export default function TeacherDashboardPage() {
             </Card>
 
             {/* Intervention Alerts */}
-            <Card className={struggling.length > 0 ? 'border-red-500/30' : ''}>
+            <Card className={`border-border/50 ${struggling.length > 0 ? 'border-destructive/30' : ''}`}>
               <CardHeader className="pb-2">
                 <CardTitle className="text-base flex items-center gap-2">
-                  <AlertTriangle className={`h-4 w-4 ${struggling.length > 0 ? 'text-red-500' : 'text-muted-foreground'}`} />
+                  <div className={`rounded-lg p-1.5 ${struggling.length > 0 ? 'bg-destructive/10' : 'bg-muted'}`}>
+                    <AlertTriangle className={`h-3.5 w-3.5 ${struggling.length > 0 ? 'text-destructive' : 'text-muted-foreground'}`} />
+                  </div>
                   {t('Intervention Alerts', 'Сигнали за намеса')}
                   {struggling.length > 0 && (
                     <Badge variant="destructive" className="text-[10px] px-1.5 py-0">{struggling.length}</Badge>
