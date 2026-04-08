@@ -11,7 +11,7 @@ import { GraduationCap, LogIn, UserPlus, Eye, EyeOff, ArrowLeft } from 'lucide-r
 import PasswordStrengthMeter, { checkPassword, getStrength } from '@/components/auth/PasswordStrengthMeter';
 
 const MAX_ATTEMPTS = 5;
-const LOCKOUT_MS = 10 * 60 * 1000; // 10 min
+const LOCKOUT_MS = 10 * 60 * 1000;
 
 function getLoginAttempts(): { count: number; lockedUntil: number } {
   try {
@@ -24,6 +24,8 @@ function getLoginAttempts(): { count: number; lockedUntil: number } {
 function setLoginAttempts(data: { count: number; lockedUntil: number }) {
   sessionStorage.setItem('auth_attempts', JSON.stringify(data));
 }
+
+type SignupRole = 'student' | 'teacher_pending';
 
 export default function AuthPage() {
   const [searchParams] = useSearchParams();
@@ -43,14 +45,21 @@ export default function AuthPage() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-  const { signIn, signUp, user } = useAuth();
+
+  // Role selection state
+  const [signupRole, setSignupRole] = useState<SignupRole | null>(null);
+  // Teacher-specific fields
+  const [teacherInstitution, setTeacherInstitution] = useState('');
+  const [teacherClassName, setTeacherClassName] = useState('');
+  const [teacherInviteCode, setTeacherInviteCode] = useState('');
+
+  const { signIn, signUp, user, userRole } = useAuth();
   const { t, lang } = useLang();
   const navigate = useNavigate();
   const tx = (en: string, bg: string) => lang === 'bg' ? bg : en;
 
   const redirectTo = searchParams.get('redirect') || '/dashboard';
 
-  // Clear all form fields on mount and mode switch
   useEffect(() => {
     setEmail('');
     setPassword('');
@@ -63,11 +72,21 @@ export default function AuthPage() {
     setDisplayName('');
     setShowPassword(false);
     setShowConfirm(false);
+    setSignupRole(null);
+    setTeacherInstitution('');
+    setTeacherClassName('');
+    setTeacherInviteCode('');
   }, [isLogin]);
 
   useEffect(() => {
-    if (user) navigate(redirectTo, { replace: true });
-  }, [user]);
+    if (user && userRole) {
+      if (userRole === 'teacher_pending') {
+        navigate('/pending', { replace: true });
+      } else {
+        navigate(redirectTo, { replace: true });
+      }
+    }
+  }, [user, userRole]);
 
   useEffect(() => {
     setIsLogin(searchParams.get('mode') !== 'signup');
@@ -76,11 +95,10 @@ export default function AuthPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Brute-force check
     const attempts = getLoginAttempts();
     if (attempts.lockedUntil > Date.now()) {
       const mins = Math.ceil((attempts.lockedUntil - Date.now()) / 60000);
-      toast.error(tx(`Account locked. Try again in ${mins} minutes.`, `Акаунтът е заключен. Опитайте отново след ${mins} минути.`));
+      toast.error(tx(`Account locked. Try again in ${mins} minutes.`, `Акаунтът е заключен. Опитай отново след ${mins} минути.`));
       return;
     }
 
@@ -92,13 +110,16 @@ export default function AuthPage() {
 
     if (isLogin) {
       if (password.length < 1) {
-        toast.error(tx('Please enter your password', 'Моля, въведете паролата'));
+        toast.error(tx('Please enter your password', 'Моля, въведи паролата'));
         return;
       }
     } else {
-      // Registration password validation
+      if (!signupRole) {
+        toast.error(tx('Please select your role', 'Моля, избери ролята си'));
+        return;
+      }
+
       const checks = checkPassword(password, fullName || trimmedEmail);
-      const strength = getStrength(checks);
       if (!checks.minLength) {
         toast.error(tx('Password must be at least 8 characters', 'Паролата трябва да бъде поне 8 символа'));
         return;
@@ -108,11 +129,11 @@ export default function AuthPage() {
         return;
       }
       if (!checks.notCommon) {
-        toast.error(tx('This password is too common. Choose a stronger one.', 'Тази парола е прекалено често срещана. Изберете по-силна.'));
+        toast.error(tx('This password is too common. Choose a stronger one.', 'Тази парола е прекалено често срещана. Избери по-силна.'));
         return;
       }
       if (!checks.notContainsName) {
-        toast.error(tx('Password must not contain your name or email.', 'Паролата не трябва да съдържа вашето име или имейл.'));
+        toast.error(tx('Password must not contain your name or email.', 'Паролата не трябва да съдържа името ти или имейл.'));
         return;
       }
       if (password !== confirmPassword) {
@@ -122,6 +143,25 @@ export default function AuthPage() {
       if (password.length > 128) {
         toast.error(t.passwordTooLong);
         return;
+      }
+
+      // Teacher validation
+      if (signupRole === 'teacher_pending') {
+        const trimmedInstitution = teacherInstitution.trim();
+        const trimmedClass = teacherClassName.trim();
+        const trimmedName = fullName.trim();
+        if (!trimmedName || trimmedName.length < 2) {
+          toast.error(tx('Full name must be at least 2 characters', 'Пълното име трябва да бъде поне 2 символа'));
+          return;
+        }
+        if (!trimmedInstitution || trimmedInstitution.length < 3) {
+          toast.error(tx('Institution must be at least 3 characters', 'Институцията трябва да бъде поне 3 символа'));
+          return;
+        }
+        if (!trimmedClass || trimmedClass.length < 1) {
+          toast.error(tx('Class/Group is required', 'Клас/Група е задължително'));
+          return;
+        }
       }
     }
 
@@ -141,42 +181,73 @@ export default function AuthPage() {
       } else {
         setLoginAttempts({ count: 0, lockedUntil: 0 });
         toast.success(t.welcomeBack + '!');
-        navigate(redirectTo);
       }
     } else {
-      const trimmedName = fullName.trim();
-      const trimmedLastName = lastName.trim();
-      if (!trimmedName || trimmedName.length < 2) {
-        toast.error(t.nameTooShort);
-        setLoading(false);
-        return;
-      }
-      if (!trimmedLastName || trimmedLastName.length < 2) {
-        toast.error(tx('Last name must be at least 2 characters', 'Фамилията трябва да бъде поне 2 символа'));
-        setLoading(false);
-        return;
-      }
-      if (trimmedName.length > 100 || trimmedLastName.length > 100) {
-        toast.error(t.nameTooLong);
-        setLoading(false);
-        return;
-      }
-      const trimmedDisplayName = displayName.trim();
-      if (!trimmedDisplayName || trimmedDisplayName.length < 2) {
-        toast.error(tx('Display name must be at least 2 characters', 'Псевдонимът трябва да бъде поне 2 символа'));
-        setLoading(false);
-        return;
-      }
-      const fullDisplayName = `${trimmedName} ${trimmedLastName}`;
-      const { error } = await signUp(trimmedEmail, password, fullDisplayName, trimmedDisplayName);
-      if (error) {
-        toast.error(error.message);
+      if (signupRole === 'student') {
+        const trimmedName = fullName.trim();
+        const trimmedLastName = lastName.trim();
+        if (!trimmedName || trimmedName.length < 2) {
+          toast.error(t.nameTooShort);
+          setLoading(false);
+          return;
+        }
+        if (!trimmedLastName || trimmedLastName.length < 2) {
+          toast.error(tx('Last name must be at least 2 characters', 'Фамилията трябва да бъде поне 2 символа'));
+          setLoading(false);
+          return;
+        }
+        if (trimmedName.length > 100 || trimmedLastName.length > 100) {
+          toast.error(t.nameTooLong);
+          setLoading(false);
+          return;
+        }
+        const trimmedDisplayName = displayName.trim();
+        if (!trimmedDisplayName || trimmedDisplayName.length < 2) {
+          toast.error(tx('Display name must be at least 2 characters', 'Псевдонимът трябва да бъде поне 2 символа'));
+          setLoading(false);
+          return;
+        }
+        const fullDisplayName = `${trimmedName} ${trimmedLastName}`;
+        const { error } = await signUp(trimmedEmail, password, fullDisplayName, trimmedDisplayName, {
+          signup_role: 'student',
+          class_name: studentClass.trim(),
+          school_name: school.trim(),
+        });
+        if (error) toast.error(error.message);
+        else toast.success(t.accountCreated);
       } else {
-        toast.success(t.accountCreated);
+        // Teacher signup
+        const trimmedName = fullName.trim();
+        const { error } = await signUp(trimmedEmail, password, trimmedName, trimmedName, {
+          signup_role: 'teacher_pending',
+          institution: teacherInstitution.trim(),
+          class_name: teacherClassName.trim(),
+        });
+        if (error) toast.error(error.message);
+        else toast.success(tx('Application submitted! Check your email to verify your account.', 'Заявката е изпратена! Провери имейла си, за да потвърдиш акаунта.'));
       }
     }
     setLoading(false);
   };
+
+  const roleCards: { value: SignupRole; icon: string; titleEn: string; titleBg: string; subtitleEn: string; subtitleBg: string }[] = [
+    {
+      value: 'student',
+      icon: '🎓',
+      titleEn: "I'm a student",
+      titleBg: 'Аз съм ученик / студент',
+      subtitleEn: 'I learn, solve cases and build my startup idea',
+      subtitleBg: 'Уча, решавам казуси и изграждам идея за стартъп',
+    },
+    {
+      value: 'teacher_pending',
+      icon: '👩‍🏫',
+      titleEn: "I'm a teacher / instructor",
+      titleBg: 'Аз съм учител / преподавател',
+      subtitleEn: 'I manage a class and track student progress',
+      subtitleBg: 'Управлявам клас и следя напредъка на учениците',
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-background flex">
@@ -189,7 +260,7 @@ export default function AuthPage() {
       </div>
 
       <div className="flex-1 flex items-center justify-center p-8">
-        <div className="w-full max-w-sm">
+        <div className="w-full max-w-md">
           <div className="lg:hidden flex items-center gap-3 mb-8 justify-center">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg sim-gradient">
               <GraduationCap className="h-5 w-5 text-primary-foreground" />
@@ -205,121 +276,183 @@ export default function AuthPage() {
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            {/* ═══ ROLE SELECTION (signup only) ═══ */}
             {!isLogin && (
+              <div className="space-y-3">
+                <Label className="text-base font-semibold">
+                  {tx('Who are you joining as?', 'Как се присъединяваш?')}
+                </Label>
+                <div className="grid grid-cols-1 gap-3">
+                  {roleCards.map(card => (
+                    <button
+                      key={card.value}
+                      type="button"
+                      onClick={() => setSignupRole(card.value)}
+                      className={`w-full text-left p-4 rounded-xl border-2 transition-all ${
+                        signupRole === card.value
+                          ? 'border-primary bg-primary/5'
+                          : 'border-border bg-card hover:border-muted-foreground/30'
+                      }`}
+                    >
+                      <div className="flex items-start gap-3">
+                        <span className="text-2xl">{card.icon}</span>
+                        <div>
+                          <p className="font-semibold text-foreground">
+                            {lang === 'bg' ? card.titleBg : card.titleEn}
+                          </p>
+                          <p className="text-sm text-muted-foreground mt-0.5">
+                            {lang === 'bg' ? card.subtitleBg : card.subtitleEn}
+                          </p>
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* ═══ STUDENT FIELDS ═══ */}
+            {!isLogin && signupRole === 'student' && (
               <>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <Label htmlFor="fullName">{tx('First Name', 'Име')}</Label>
-                    <Input id="fullName" value={fullName} onChange={e => setFullName(e.target.value)} placeholder={tx('e.g. Maria', 'напр. Мария')} required={!isLogin} />
+                    <Input id="fullName" value={fullName} onChange={e => setFullName(e.target.value)} placeholder={tx('e.g. Maria', 'напр. Мария')} required />
                   </div>
                   <div>
                     <Label htmlFor="lastName">{tx('Last Name', 'Фамилия')}</Label>
-                    <Input id="lastName" value={lastName} onChange={e => setLastName(e.target.value)} placeholder={tx('e.g. Ivanova', 'напр. Иванова')} required={!isLogin} />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <Label htmlFor="studentClass">{tx('Class', 'Клас')}</Label>
-                    <Input id="studentClass" value={studentClass} onChange={e => setStudentClass(e.target.value)} placeholder={tx('e.g. 11A', 'напр. 11А')} required={!isLogin} />
-                  </div>
-                  <div>
-                    <Label htmlFor="country">{tx('Country', 'Държава')}</Label>
-                    <Input id="country" value={country} onChange={e => setCountry(e.target.value)} placeholder={tx('e.g. Bulgaria', 'напр. България')} required={!isLogin} />
+                    <Input id="lastName" value={lastName} onChange={e => setLastName(e.target.value)} placeholder={tx('e.g. Ivanova', 'напр. Иванова')} required />
                   </div>
                 </div>
                 <div>
-                  <Label htmlFor="school">{tx('School (optional)', 'Училище (незадължително)')}</Label>
+                  <Label htmlFor="displayName">{tx('Username / Display Name', 'Псевдоним за класацията')}</Label>
+                  <Input id="displayName" value={displayName} onChange={e => setDisplayName(e.target.value)} placeholder={tx('Visible publicly as nickname only', 'Видим публично само като псевдоним')} required />
+                </div>
+                <div>
+                  <Label htmlFor="school">{tx('School / University (optional)', 'Училище / Университет (незадължително)')}</Label>
                   <Input id="school" value={school} onChange={e => setSchool(e.target.value)} placeholder={tx('e.g. Sofia High School', 'напр. СМГ')} />
                 </div>
                 <div>
-                  <Label htmlFor="displayName">{tx('Username / Display Name', 'Псевдоним')}</Label>
-                  <Input id="displayName" value={displayName} onChange={e => setDisplayName(e.target.value)} placeholder={tx('e.g. CoolInnovator', 'напр. ИноваторБГ')} required={!isLogin} />
+                  <Label htmlFor="studentClass">{tx('Class / Grade (optional)', 'Клас / Курс (незадължително)')}</Label>
+                  <Input id="studentClass" value={studentClass} onChange={e => setStudentClass(e.target.value)} placeholder={tx('e.g. 11A', 'напр. 11А')} />
+                </div>
+              </>
+            )}
+
+            {/* ═══ TEACHER FIELDS ═══ */}
+            {!isLogin && signupRole === 'teacher_pending' && (
+              <>
+                <div>
+                  <Label htmlFor="teacherName">{tx('Full Name', 'Пълно име')}</Label>
+                  <Input id="teacherName" value={fullName} onChange={e => setFullName(e.target.value)} placeholder={tx('e.g. Maria Ivanova', 'напр. Мария Иванова')} required />
+                </div>
+                <div>
+                  <Label htmlFor="teacherInstitution">{tx('Institution', 'Училище / Университет')}</Label>
+                  <Input id="teacherInstitution" value={teacherInstitution} onChange={e => setTeacherInstitution(e.target.value)} placeholder={tx('e.g. Sofia University', 'напр. СУ Св. Климент Охридски')} required />
+                </div>
+                <div>
+                  <Label htmlFor="teacherClass">{tx('Class / Group', 'Клас / Група')}</Label>
+                  <Input id="teacherClass" value={teacherClassName} onChange={e => setTeacherClassName(e.target.value)} placeholder={tx('e.g. 12A, Business 2026', 'напр. 12А, Бизнес 2026')} required />
+                </div>
+                <div>
+                  <Label htmlFor="teacherInviteCode">{tx('Invite Code (optional)', 'Код за покана (по избор)')}</Label>
+                  <Input id="teacherInviteCode" value={teacherInviteCode} onChange={e => setTeacherInviteCode(e.target.value)} placeholder={tx('Enter code if you have one', 'Въведи код, ако имаш такъв')} />
                   <p className="text-xs text-muted-foreground mt-1">
-                    {tx('Choose a display name for the leaderboard', 'Избери псевдоним за класацията')}
+                    {tx("Don't have a code? Your account will be reviewed manually.", 'Нямаш код? Акаунтът ти ще бъде прегледан ръчно.')}
                   </p>
                 </div>
               </>
             )}
-            <div>
-              <Label htmlFor="email">{t.email}</Label>
-              <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="example@email.com" autoComplete="off" required />
-            </div>
-            <div>
-              <Label htmlFor="password">{t.password}</Label>
-              <div className="relative">
-                <Input
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  placeholder={isLogin ? '••••••••••••' : tx('Enter a strong password', 'Въведете силна парола')}
-                  autoComplete={isLogin ? 'current-password' : 'new-password'}
-                  required
-                  className="pr-10"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                  tabIndex={-1}
+
+            {/* ═══ EMAIL & PASSWORD ═══ */}
+            {(isLogin || signupRole) && (
+              <>
+                <div>
+                  <Label htmlFor="email">{t.email}</Label>
+                  <Input id="email" type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder="example@email.com" autoComplete="off" required />
+                </div>
+                <div>
+                  <Label htmlFor="password">{t.password}</Label>
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      type={showPassword ? 'text' : 'password'}
+                      value={password}
+                      onChange={e => setPassword(e.target.value)}
+                      placeholder={isLogin ? '••••••••••••' : tx('Enter a strong password', 'Въведи силна парола')}
+                      autoComplete={isLogin ? 'current-password' : 'new-password'}
+                      required
+                      className="pr-10"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                      tabIndex={-1}
+                    >
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
+                  {!isLogin && (
+                    <PasswordStrengthMeter password={password} nameOrEmail={fullName || email} lang={lang} />
+                  )}
+                </div>
+                {!isLogin && (
+                  <div>
+                    <Label htmlFor="confirmPassword">{tx('Confirm Password', 'Потвърди паролата')}</Label>
+                    <div className="relative">
+                      <Input
+                        id="confirmPassword"
+                        type={showConfirm ? 'text' : 'password'}
+                        value={confirmPassword}
+                        onChange={e => setConfirmPassword(e.target.value)}
+                        placeholder={tx('Repeat your password', 'Повтори паролата')}
+                        autoComplete="new-password"
+                        required
+                        className="pr-10"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirm(!showConfirm)}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                        tabIndex={-1}
+                      >
+                        {showConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                      </button>
+                    </div>
+                    {confirmPassword && password !== confirmPassword && (
+                      <p className="text-xs text-destructive mt-1">{tx('Passwords do not match', 'Паролите не съвпадат')}</p>
+                    )}
+                  </div>
+                )}
+                <Button
+                  type="submit"
+                  className="w-full sim-gradient border-0"
+                  disabled={loading || (!isLogin && !signupRole)}
                 >
-                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </button>
-              </div>
-              {!isLogin && (
-                <PasswordStrengthMeter password={password} nameOrEmail={fullName || email} lang={lang} />
-              )}
-            </div>
-            {!isLogin && (
-              <div>
-                <Label htmlFor="confirmPassword">{tx('Confirm Password', 'Потвърдете паролата')}</Label>
-                <div className="relative">
-                  <Input
-                    id="confirmPassword"
-                    type={showConfirm ? 'text' : 'password'}
-                    value={confirmPassword}
-                    onChange={e => setConfirmPassword(e.target.value)}
-                    placeholder={tx('Repeat your password', 'Повторете паролата')}
-                    autoComplete="new-password"
-                    required
-                    className="pr-10"
-                  />
+                  {loading ? t.pleaseWait : isLogin ? (
+                    <><LogIn className="h-4 w-4 mr-2" /> {t.signIn}</>
+                  ) : (
+                    <><UserPlus className="h-4 w-4 mr-2" /> {t.createAccount}</>
+                  )}
+                </Button>
+
+                {!isLogin && (
+                  <p className="text-xs text-muted-foreground text-center mt-2">
+                    {tx('We collect only minimal information to create your account.', 'Събираме само минимална информация за създаване на акаунта ти.')}
+                  </p>
+                )}
+
+                {isLogin && (
                   <button
                     type="button"
-                    onClick={() => setShowConfirm(!showConfirm)}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                    tabIndex={-1}
+                    onClick={() => setShowForgot(true)}
+                    className="block w-full text-center text-xs text-primary hover:underline mt-2"
                   >
-                    {showConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    {tx('Forgot password?', 'Забравена парола?')}
                   </button>
-                </div>
-                {confirmPassword && password !== confirmPassword && (
-                  <p className="text-xs text-destructive mt-1">{tx('Passwords do not match', 'Паролите не съвпадат')}</p>
                 )}
-              </div>
-            )}
-            <Button type="submit" className="w-full sim-gradient border-0" disabled={loading}>
-              {loading ? t.pleaseWait : isLogin ? (
-                <><LogIn className="h-4 w-4 mr-2" /> {t.signIn}</>
-              ) : (
-                <><UserPlus className="h-4 w-4 mr-2" /> {t.createAccount}</>
-              )}
-            </Button>
-
-            {!isLogin && (
-              <p className="text-xs text-muted-foreground text-center mt-2">
-                {tx('We collect only minimal information to create your account.', 'Събираме само минимална информация за създаване на акаунта ви.')}
-              </p>
-            )}
-
-            {isLogin && (
-              <button
-                type="button"
-                onClick={() => setShowForgot(true)}
-                className="block w-full text-center text-xs text-primary hover:underline mt-2"
-              >
-                {tx('Forgot password?', 'Забравена парола?')}
-              </button>
+              </>
             )}
           </form>
 
@@ -333,13 +466,13 @@ export default function AuthPage() {
                 </button>
               </div>
               <p className="text-xs text-muted-foreground">
-                {tx('Enter your email and we\'ll send you a reset link.', 'Въведете имейла си и ще ви изпратим линк за смяна.')}
+                {tx("Enter your email and we'll send you a reset link.", 'Въведи имейла си и ще ти изпратим линк за смяна.')}
               </p>
               <Input
                 type="email"
                 value={forgotEmail}
                 onChange={e => setForgotEmail(e.target.value)}
-                placeholder={tx('Your email', 'Вашият имейл')}
+                placeholder={tx('Your email', 'Твоят имейл')}
               />
               <Button
                 className="w-full"
