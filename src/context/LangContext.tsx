@@ -416,7 +416,7 @@ const translations = {
     // Landing sections
     skillsCount: '5 Умения',
     whatYouLearn: 'Какво ще научиш',
-    whatYouLearnDesc: 'Овладей уменията, от които всеки дигитален иноватор се нуждае.',
+    whatYouLearnDesc: 'Овладей уменията, с които всеки дигитален иноватор работи.',
     stepsCount: '4 Стъпки',
     whatYouBuild: 'Какво ще създадеш',
     whatYouBuildDesc: 'От откриването на проблем до представянето на реална стартъп концепция.',
