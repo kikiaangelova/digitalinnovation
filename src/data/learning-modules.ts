@@ -916,6 +916,10 @@ The biggest pricing mistake startups make: **charging too little.** Most early-s
     slug: 'team-and-roles',
     title_en: 'Team & Roles',
     title_bg: 'Екип и роли',
+    hook: { en: 'Juicero raised $120M for a WiFi juicer. The team had zero food industry experience. The product was a joke. Team matters more than idea.', bg: 'Juicero привлече $120M за WiFi сокоизстисквачка. Екипът нямаше опит в храните. Продуктът беше шега. Екипът е по-важен от идеята.' },
+    metaphor: { en: 'A startup team is a band: you need a drummer (ops), guitarist (tech), and vocalist (sales). Three vocalists = no band.', bg: 'Стартъп екипът е група: трябва ти барабанист (операции), китарист (технологии) и вокалист (продажби). Три вокалисти = няма група.' },
+    framework: { name: 'RACI Matrix', bullets_en: ['Responsible: who does the work?', 'Accountable: who makes the final call?', 'Consulted & Informed: who gives input and who needs updates?'], bullets_bg: ['Responsible: кой прави работата?', 'Accountable: кой взема крайното решение?', 'Consulted & Informed: кой дава мнение и кой трябва да е информиран?'], apply_en: 'Create a RACI matrix for your startup\'s top 3 tasks.', apply_bg: 'Създай RACI матрица за топ 3 задачи на стартъпа си.' },
+    provocations: [{ en: 'Should co-founders be friends? What are the risks?', bg: 'Трябва ли съоснователите да са приятели? Какви са рисковете?' }, { en: 'Is it better to hire generalists or specialists in an early-stage startup?', bg: 'По-добре ли е да наемеш генералисти или специалисти в ранен стартъп?' }],
     level: 2,
     startup_field: 'bmc_key_activities',
     concepts: [
