@@ -616,22 +616,27 @@ export default function TeacherDashboardPage() {
           {/* Right sidebar */}
           <div className="space-y-6">
             {/* Quick actions */}
-            <Card>
+            <Card className="border-border/50">
               <CardHeader className="pb-2">
-                <CardTitle className="text-base">{t('Quick Actions', 'Бързи действия')}</CardTitle>
+                <CardTitle className="text-base flex items-center gap-2">
+                  <div className="rounded-lg sim-gradient p-1.5">
+                    <Rocket className="h-3.5 w-3.5 text-primary-foreground" />
+                  </div>
+                  {t('Quick Actions', 'Бързи действия')}
+                </CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
-                <Button variant="outline" size="sm" className="w-full justify-start gap-2" onClick={() => navigate('/teacher')}>
-                  <Users className="h-4 w-4" /> {t('Manage Students', 'Управлявай ученици')}
+                <Button variant="outline" size="sm" className="w-full justify-start gap-2 hover:border-primary/30" onClick={() => navigate('/teacher')}>
+                  <Users className="h-4 w-4 text-primary" /> {t('Manage Students', 'Управлявай ученици')}
                 </Button>
-                <Button variant="outline" size="sm" className="w-full justify-start gap-2" onClick={() => navigate('/teacher')}>
-                  <ClipboardList className="h-4 w-4" /> {t('Assign Task', 'Назначи задача')}
+                <Button variant="outline" size="sm" className="w-full justify-start gap-2 hover:border-primary/30" onClick={() => navigate('/teacher')}>
+                  <ClipboardList className="h-4 w-4 text-primary" /> {t('Assign Task', 'Назначи задача')}
                 </Button>
-                <Button variant="outline" size="sm" className="w-full justify-start gap-2" onClick={() => navigate('/cases')}>
-                  <BookOpen className="h-4 w-4" /> {t('Browse Cases', 'Разгледай казуси')}
+                <Button variant="outline" size="sm" className="w-full justify-start gap-2 hover:border-primary/30" onClick={() => navigate('/cases')}>
+                  <BookOpen className="h-4 w-4 text-primary" /> {t('Browse Cases', 'Разгледай казуси')}
                 </Button>
-                <Button variant="outline" size="sm" className="w-full justify-start gap-2" onClick={() => navigate('/learn')}>
-                  <GraduationCap className="h-4 w-4" /> {t('Learning Modules', 'Учебни модули')}
+                <Button variant="outline" size="sm" className="w-full justify-start gap-2 hover:border-primary/30" onClick={() => navigate('/learn')}>
+                  <GraduationCap className="h-4 w-4 text-primary" /> {t('Learning Modules', 'Учебни модули')}
                 </Button>
               </CardContent>
             </Card>
