@@ -585,6 +585,44 @@ export default function TeacherDashboardPage() {
                                           </div>
                                         </div>
                                       )}
+                                      {/* BMC completion per section */}
+                                      {p && Object.keys(p.bmc_keys).length > 0 && (
+                                        <div className="mt-4">
+                                          <div className="text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wide">
+                                            {t('Business Model Canvas', 'Бизнес модел канвас')}
+                                          </div>
+                                          <div className="grid grid-cols-3 sm:grid-cols-5 md:grid-cols-9 gap-1.5">
+                                            {[
+                                              { key: 'bmc_customer_segments', en: 'Customers', bg: 'Клиенти' },
+                                              { key: 'bmc_value_proposition', en: 'Value Prop', bg: 'Стойност' },
+                                              { key: 'bmc_channels', en: 'Channels', bg: 'Канали' },
+                                              { key: 'bmc_customer_relationships', en: 'Relations', bg: 'Връзки' },
+                                              { key: 'bmc_revenue_streams', en: 'Revenue', bg: 'Приходи' },
+                                              { key: 'bmc_key_resources', en: 'Resources', bg: 'Ресурси' },
+                                              { key: 'bmc_key_activities', en: 'Activities', bg: 'Дейности' },
+                                              { key: 'bmc_key_partners', en: 'Partners', bg: 'Партньори' },
+                                              { key: 'bmc_cost_structure', en: 'Costs', bg: 'Разходи' },
+                                            ].map((sec) => {
+                                              const done = p.bmc_keys[sec.key];
+                                              return (
+                                                <div
+                                                  key={sec.key}
+                                                  className={`rounded border px-2 py-1.5 text-center text-[10px] font-medium ${
+                                                    done
+                                                      ? 'border-green-300 bg-green-50 text-green-700 dark:border-green-700 dark:bg-green-950/30 dark:text-green-400'
+                                                      : 'border-border bg-muted/30 text-muted-foreground'
+                                                  }`}
+                                                >
+                                                  {done ? '✓ ' : ''}{t(sec.en, sec.bg)}
+                                                </div>
+                                              );
+                                            })}
+                                          </div>
+                                          <div className="mt-1.5 text-[10px] text-muted-foreground">
+                                            {Object.values(p.bmc_keys).filter(Boolean).length}/9 {t('sections filled', 'секции попълнени')}
+                                          </div>
+                                        </div>
+                                      )}
                                     </td>
                                   </tr>
                                 )}
