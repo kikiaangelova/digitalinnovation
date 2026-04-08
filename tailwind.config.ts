@@ -62,6 +62,12 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        progress: {
+          DEFAULT: "hsl(var(--progress))",
+        },
+        "accent-orange": {
+          DEFAULT: "hsl(25 95% 53%)",
+        },
         sim: {
           success: "hsl(var(--sim-success))",
           warning: "hsl(var(--sim-warning))",

@@ -15,7 +15,7 @@
     --popover: 40 20% 100%;
     --popover-foreground: 220 30% 12%;
 
-    --primary: 210 78% 46%;
+    --primary: 255 74% 64%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 36 30% 93%;
@@ -24,28 +24,28 @@
     --muted: 36 14% 91%;
     --muted-foreground: 220 9% 46%;
 
-    --accent: 210 60% 94%;
-    --accent-foreground: 210 78% 36%;
+    --accent: 25 90% 94%;
+    --accent-foreground: 25 95% 40%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
     --border: 36 15% 86%;
     --input: 36 15% 86%;
-    --ring: 210 78% 46%;
+    --ring: 255 74% 64%;
 
     --radius: 0.75rem;
 
     --sidebar-background: 220 30% 10%;
     --sidebar-foreground: 36 15% 90%;
-    --sidebar-primary: 210 78% 50%;
+    --sidebar-primary: 255 74% 68%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 220 25% 16%;
     --sidebar-accent-foreground: 36 15% 90%;
     --sidebar-border: 220 20% 18%;
-    --sidebar-ring: 210 78% 50%;
+    --sidebar-ring: 255 74% 68%;
 
-    --sim-success: 152 68% 38%;
+    --sim-success: 142 71% 45%;
     --sim-warning: 38 92% 50%;
     --xp-gold: 38 92% 50%;
     --xp-gold-glow: 38 92% 50%;
@@ -55,10 +55,12 @@
     --sim-danger: 0 72% 51%;
     --sim-info: 210 78% 46%;
     --sim-surface: 36 20% 96%;
-    --sim-kpi-bg: 210 40% 96%;
+    --sim-kpi-bg: 255 30% 96%;
 
-    --chart-1: 210 78% 46%;
-    --chart-2: 152 68% 38%;
+    --progress: 142 71% 45%;
+
+    --chart-1: 255 74% 64%;
+    --chart-2: 142 71% 45%;
     --chart-3: 38 92% 50%;
     --chart-4: 280 55% 52%;
     --chart-5: 0 72% 51%;
@@ -74,7 +76,7 @@
     --popover: 220 25% 9%;
     --popover-foreground: 36 15% 92%;
 
-    --primary: 210 78% 55%;
+    --primary: 255 74% 70%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 220 20% 16%;
@@ -83,26 +85,26 @@
     --muted: 220 18% 16%;
     --muted-foreground: 220 9% 55%;
 
-    --accent: 210 40% 18%;
-    --accent-foreground: 210 78% 70%;
+    --accent: 25 60% 18%;
+    --accent-foreground: 25 95% 65%;
 
     --destructive: 0 62% 30%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 220 18% 18%;
     --input: 220 18% 18%;
-    --ring: 210 78% 55%;
+    --ring: 255 74% 70%;
 
     --sidebar-background: 220 25% 5%;
     --sidebar-foreground: 36 15% 90%;
-    --sidebar-primary: 210 78% 55%;
+    --sidebar-primary: 255 74% 72%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 220 20% 12%;
     --sidebar-accent-foreground: 36 15% 90%;
     --sidebar-border: 220 18% 14%;
-    --sidebar-ring: 210 78% 55%;
+    --sidebar-ring: 255 74% 72%;
 
-    --sim-success: 152 68% 42%;
+    --sim-success: 142 71% 50%;
     --sim-warning: 38 92% 50%;
     --xp-gold: 43 96% 56%;
     --xp-gold-glow: 43 96% 56%;
@@ -112,10 +114,12 @@
     --sim-danger: 0 72% 51%;
     --sim-info: 210 78% 55%;
     --sim-surface: 220 20% 11%;
-    --sim-kpi-bg: 210 25% 13%;
+    --sim-kpi-bg: 255 20% 13%;
 
-    --chart-1: 210 78% 55%;
-    --chart-2: 152 68% 45%;
+    --progress: 142 71% 50%;
+
+    --chart-1: 255 74% 70%;
+    --chart-2: 142 71% 50%;
     --chart-3: 38 92% 50%;
     --chart-4: 280 55% 58%;
     --chart-5: 0 72% 55%;
@@ -138,10 +142,10 @@
 
 @layer utilities {
   .sim-gradient {
-    background: linear-gradient(135deg, hsl(210 78% 46%), hsl(195 80% 40%));
+    background: linear-gradient(135deg, hsl(255 74% 64%), hsl(220 70% 50%));
   }
   .sim-gradient-text {
-    background: linear-gradient(135deg, hsl(210 78% 46%), hsl(195 80% 40%));
+    background: linear-gradient(135deg, hsl(255 74% 64%), hsl(220 70% 50%));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -151,11 +155,14 @@
     font-weight: 700;
   }
   .glow-primary {
-    box-shadow: 0 0 20px hsl(210 78% 46% / 0.25), 0 0 60px hsl(210 78% 46% / 0.1);
+    box-shadow: 0 0 20px hsl(255 74% 64% / 0.25), 0 0 60px hsl(255 74% 64% / 0.1);
   }
-  .gradient-explorer { background: linear-gradient(135deg, hsl(210 78% 46%), hsl(195 80% 50%)); }
+  .glow-hover {
+    box-shadow: 0 0 20px hsl(255 74% 64% / 0.3), 0 0 40px hsl(255 74% 64% / 0.1);
+  }
+  .gradient-explorer { background: linear-gradient(135deg, hsl(255 74% 64%), hsl(220 70% 55%)); }
   .gradient-strategist { background: linear-gradient(135deg, hsl(280 55% 52%), hsl(250 60% 50%)); }
-  .gradient-builder { background: linear-gradient(135deg, hsl(152 68% 38%), hsl(170 60% 36%)); }
+  .gradient-builder { background: linear-gradient(135deg, hsl(142 71% 45%), hsl(170 60% 36%)); }
   .gradient-designer { background: linear-gradient(135deg, hsl(38 92% 50%), hsl(25 90% 50%)); }
   .gradient-founder { background: linear-gradient(135deg, hsl(0 72% 51%), hsl(330 70% 50%)); }
   .gradient-legend { background: linear-gradient(135deg, hsl(280 80% 55%), hsl(320 85% 50%)); }
@@ -216,6 +223,11 @@
     0% { transform: scale(1); }
     40% { transform: scale(1.08); }
     100% { transform: scale(1); }
+  }
+
+  @keyframes progress-shine {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(200%); }
   }
 
   /* Dashboard section dividers */
