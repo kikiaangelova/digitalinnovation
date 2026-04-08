@@ -13,6 +13,7 @@ import AppFooter from "@/components/layout/AppFooter";
 import AdminRoute from "@/components/layout/AdminRoute";
 import RoleGuard from "@/components/layout/RoleGuard";
 import CycleFAB from "@/components/layout/CycleFAB";
+import ScrollToTop from "@/components/ScrollToTop";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import AuthPage from "./pages/AuthPage";
