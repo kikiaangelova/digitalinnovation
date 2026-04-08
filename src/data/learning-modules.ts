@@ -784,7 +784,7 @@ Key metrics to track: **CAC** (cost to acquire), **LTV** (lifetime value), **con
     display_order: 6,
     related_case_topic: 'FinTech',
     case_transition_en: 'You learned marketing fundamentals. Now analyze how FinTech startups acquire and retain customers in competitive markets.',
-    case_transition_bg: 'Научихте основите на маркетинга. Сега анализирайте как FinTech стартъпите привличат и задържат клиенти.',
+    case_transition_bg: 'Научи основите на маркетинга. Сега анализирай как FinTech стартъпите привличат и задържат клиенти.',
     sim_transition_en: 'Apply your marketing strategy in the startup simulator to see how channel choices affect growth.',
     sim_transition_bg: 'Приложете маркетинговата си стратегия в стартъп симулатора, за да видите как изборът на канал влияе на растежа.',
     embedded_case: {
