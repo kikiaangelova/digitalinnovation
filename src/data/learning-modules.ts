@@ -66,6 +66,33 @@ export interface SimulatorDecision {
   options: SimDecisionOption[];
 }
 
+/** Theory Block 1: Hook — why this matters */
+export interface TheoryHook {
+  en: string;
+  bg: string;
+}
+
+/** Theory Block 3: Named framework */
+export interface TheoryFramework {
+  name: string;
+  bullets_en: string[];
+  bullets_bg: string[];
+  apply_en: string;
+  apply_bg: string;
+}
+
+/** Theory Block 2: Visual metaphor */
+export interface TheoryMetaphor {
+  en: string;
+  bg: string;
+}
+
+/** Theory Block 4: Provocative questions */
+export interface TheoryProvocation {
+  en: string;
+  bg: string;
+}
+
 export interface LearningModule {
   slug: string;
   title_en: string;
@@ -97,6 +124,11 @@ export interface LearningModule {
   related_sim_concepts_bg?: string[];
   sim_transition_en?: string;
   sim_transition_bg?: string;
+  // Theory redesign blocks
+  hook?: TheoryHook;
+  framework?: TheoryFramework;
+  metaphor?: TheoryMetaphor;
+  provocations?: TheoryProvocation[];
 }
 
 export const LEARNING_MODULES: LearningModule[] = [
