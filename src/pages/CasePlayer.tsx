@@ -23,6 +23,8 @@ import {
 import type { Json } from '@/integrations/supabase/types';
 import CaseAnswerMentor from '@/components/case/CaseAnswerMentor';
 import UncertaintyBanner from '@/components/case/UncertaintyBanner';
+import ConsequencesPanel from '@/components/case/ConsequencesPanel';
+import ReflectionPanel from '@/components/case/ReflectionPanel';
 
 /* ── Types ── */
 interface CaseStudy {
@@ -202,6 +204,9 @@ export default function CasePlayer() {
   const [startupTouched, setStartupTouched] = useState<Record<string, boolean>>({});
   const [showInsight, setShowInsight] = useState<Record<number, boolean>>({});
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [consequences, setConsequences] = useState<any[]>([]);
+  const [chosenStrategy, setChosenStrategy] = useState<string | null>(null);
+  const [consequenceReflection, setConsequenceReflection] = useState('');
   const autosaveRef = useRef<NodeJS.Timeout | null>(null);
   const saveStatusTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const pendingHistoryRef = useRef<Record<string, string>>({});
@@ -225,13 +230,14 @@ export default function CasePlayer() {
     if (!user) { navigate(`/auth?redirect=${encodeURIComponent(`/case/${id}`)}`); return; }
 
     const fetchCase = async () => {
-      const [caseRes, stepsRes, qRes, subRes, progressRes, sessionRes] = await Promise.all([
+      const [caseRes, stepsRes, qRes, subRes, progressRes, sessionRes, consequencesRes] = await Promise.all([
         supabase.from('case_studies').select('id, title, title_bg, description, description_bg, topic, topic_bg, difficulty, reading_url, reading_button_label, reading_title').eq('id', id).maybeSingle(),
         supabase.from('case_steps').select('id, step_order, title, title_bg, narrative, narrative_bg, exhibit_text, exhibit_text_bg').eq('case_study_id', id).order('step_order'),
         supabase.rpc('get_player_questions', { _case_study_id: id }),
         supabase.from('submissions').select('id, is_draft').eq('case_study_id', id).eq('user_id', user.id).maybeSingle(),
         supabase.from('course_progress').select('metadata').eq('user_id', user.id).eq('module', 'case_startup_notes').eq('module_id', id).maybeSingle(),
-        (supabase as any).from('case_sessions').select('user_id, case_id, current_step, answers, xp_earned, completion_status, last_saved').eq('user_id', user.id).eq('case_id', id).maybeSingle(),
+        (supabase as any).from('case_sessions').select('user_id, case_id, current_step, answers, xp_earned, completion_status, last_saved, chosen_strategy, consequence_reflection').eq('user_id', user.id).eq('case_id', id).maybeSingle(),
+        (supabase as any).from('case_consequences').select('*').eq('case_id', id),
       ]);
 
       if (caseRes.data) setCaseStudy(caseRes.data as CaseStudy);
@@ -260,7 +266,7 @@ export default function CasePlayer() {
         STARTUP_FIELDS.forEach((f) => { if (meta[f.key]) loadedStartupNotes[f.key] = String(meta[f.key]); });
       }
 
-      const sessionData = sessionRes.data as CaseSessionState | null;
+      const sessionData = sessionRes.data as (CaseSessionState & { chosen_strategy?: string; consequence_reflection?: string }) | null;
       if (sessionData) {
         const sessionAnswers = (sessionData.answers || {}) as Record<string, any>;
         responseMap = { ...responseMap, ...Object.fromEntries(Object.entries(sessionAnswers).filter(([k]) => !k.startsWith(STARTUP_PREFIX))) };
@@ -268,6 +274,8 @@ export default function CasePlayer() {
         const safeStep = Math.max(0, Math.min(sessionData.current_step || 0, Math.max(nextSteps.length - 1, 0)));
         setCurrentStep(safeStep);
         setCaseSession(sessionData);
+        if (sessionData.chosen_strategy) setChosenStrategy(sessionData.chosen_strategy);
+        if (sessionData.consequence_reflection) setConsequenceReflection(sessionData.consequence_reflection);
       } else {
         setCaseSession({
           user_id: user.id,
@@ -278,6 +286,11 @@ export default function CasePlayer() {
           completion_status: 'in_progress',
           last_saved: null,
         });
+      }
+
+      // Load consequences
+      if (consequencesRes.data && consequencesRes.data.length > 0) {
+        setConsequences(consequencesRes.data);
       }
 
       setAnswers(responseMap);
@@ -852,6 +865,68 @@ export default function CasePlayer() {
               </p>
             )}
           </div>
+        )}
+
+        {/* ── 5B. CONSEQUENCES PANEL ── */}
+        {consequences.length > 0 && currentStep === 4 && allStepQuestionsAnswered && (
+          <>
+            {/* If student hasn't chosen yet, detect from MC answer */}
+            {(() => {
+              // Auto-detect chosen strategy from the MC answer on step 4
+              if (!chosenStrategy && stepQuestions.length > 0) {
+                const mcQ = stepQuestions.find(q => q.type === 'multiple_choice');
+                if (mcQ && answers[mcQ.id]) {
+                  const ansStr = String(answers[mcQ.id]).trim();
+                  // Try to match "A", "B", "C" from the answer
+                  const match = ansStr.match(/^([A-C])\b/i) || ansStr.match(/Strategy\s+([A-C])/i) || ansStr.match(/Стратегия\s+([А-ВA-C])/i);
+                  if (match) {
+                    const key = match[1].toUpperCase().replace('А', 'A').replace('Б', 'B').replace('В', 'C');
+                    if (['A', 'B', 'C'].includes(key)) {
+                      // Set it via side effect - will be saved on next save
+                      setTimeout(() => {
+                        setChosenStrategy(key);
+                        // Persist to session
+                        if (user && id) {
+                          (supabase as any).from('case_sessions')
+                            .update({ chosen_strategy: key })
+                            .eq('user_id', user.id)
+                            .eq('case_id', id);
+                        }
+                      }, 0);
+                    }
+                  }
+                }
+              }
+              return null;
+            })()}
+            <ConsequencesPanel
+              consequences={consequences}
+              chosenStrategy={chosenStrategy}
+              lang={lang}
+            />
+            <ReflectionPanel
+              consequences={consequences}
+              chosenStrategy={chosenStrategy}
+              reflectionText={consequenceReflection}
+              onReflectionChange={(text) => {
+                setConsequenceReflection(text);
+                setHasUnsavedChanges(true);
+              }}
+              onSave={async () => {
+                if (!user || !id) return;
+                setSaving(true);
+                await (supabase as any).from('case_sessions')
+                  .update({ consequence_reflection: consequenceReflection })
+                  .eq('user_id', user.id)
+                  .eq('case_id', id);
+                setSaving(false);
+                toast.success(tl('Reflection saved', 'Рефлексията е запазена'));
+              }}
+              saving={saving}
+              isSubmitted={isSubmitted}
+              lang={lang}
+            />
+          </>
         )}
 
         {/* ── 5. APPLY THIS CASE TO YOUR STARTUP ── */}
