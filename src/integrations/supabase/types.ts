@@ -1450,6 +1450,33 @@ export type Database = {
           },
         ]
       }
+      role_change_log: {
+        Row: {
+          changed_at: string
+          changed_by: string | null
+          id: string
+          new_role: string | null
+          old_role: string | null
+          target_user_id: string
+        }
+        Insert: {
+          changed_at?: string
+          changed_by?: string | null
+          id?: string
+          new_role?: string | null
+          old_role?: string | null
+          target_user_id: string
+        }
+        Update: {
+          changed_at?: string
+          changed_by?: string | null
+          id?: string
+          new_role?: string | null
+          old_role?: string | null
+          target_user_id?: string
+        }
+        Relationships: []
+      }
       simulator_experiments: {
         Row: {
           cost_spent: number | null
