@@ -2,15 +2,19 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 
+export type AppRole = 'student' | 'teacher_pending' | 'teacher_verified' | 'admin';
+
 interface AuthContextType {
   user: User | null;
   session: Session | null;
   profile: { full_name: string; display_name: string | null; avatar_url: string | null; avatar_style: string } | null;
   isAdmin: boolean;
+  userRole: AppRole | null;
   loading: boolean;
-  signUp: (email: string, password: string, fullName: string, displayName?: string) => Promise<{ error: any }>;
+  signUp: (email: string, password: string, fullName: string, displayName?: string, meta?: Record<string, string>) => Promise<{ error: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
   signOut: () => Promise<void>;
+  refreshRole: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -20,6 +24,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<{ full_name: string; display_name: string | null; avatar_url: string | null; avatar_style: string } | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [userRole, setUserRole] = useState<AppRole | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -27,14 +32,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(session);
       setUser(session?.user ?? null);
       if (session?.user) {
-        // Defer profile/role fetch to avoid blocking
         setTimeout(() => {
           fetchProfile(session.user.id);
-          checkAdmin(session.user.id);
+          fetchRole(session.user.id);
         }, 0);
       } else {
         setProfile(null);
         setIsAdmin(false);
+        setUserRole(null);
       }
       setLoading(false);
     });
@@ -44,7 +49,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(session?.user ?? null);
       if (session?.user) {
         fetchProfile(session.user.id);
-        checkAdmin(session.user.id);
+        fetchRole(session.user.id);
       }
       setLoading(false);
     });
@@ -61,21 +66,38 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (data) setProfile({ ...data, avatar_style: data.avatar_style || '' });
   };
 
-  const checkAdmin = async (userId: string) => {
+  const fetchRole = async (userId: string) => {
     const { data } = await supabase
       .from('user_roles')
       .select('role')
       .eq('user_id', userId)
-      .eq('role', 'admin')
       .maybeSingle();
-    setIsAdmin(!!data);
+    if (data) {
+      const role = data.role as AppRole;
+      setUserRole(role);
+      setIsAdmin(role === 'admin');
+    } else {
+      setUserRole('student');
+      setIsAdmin(false);
+    }
   };
 
-  const signUp = async (email: string, password: string, fullName: string, displayName?: string) => {
+  const refreshRole = async () => {
+    if (user) await fetchRole(user.id);
+  };
+
+  const signUp = async (email: string, password: string, fullName: string, displayName?: string, meta?: Record<string, string>) => {
     const { error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { full_name: fullName, display_name: displayName || fullName }, emailRedirectTo: window.location.origin },
+      options: {
+        data: {
+          full_name: fullName,
+          display_name: displayName || fullName,
+          ...(meta || {}),
+        },
+        emailRedirectTo: window.location.origin,
+      },
     });
     return { error };
   };
@@ -90,7 +112,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, profile, isAdmin, loading, signUp, signIn, signOut }}>
+    <AuthContext.Provider value={{ user, session, profile, isAdmin, userRole, loading, signUp, signIn, signOut, refreshRole }}>
       {children}
     </AuthContext.Provider>
   );
