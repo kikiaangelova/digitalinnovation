@@ -118,7 +118,14 @@ export default function AdminDashboard() {
 
   const STARTUP_SECTIONS = ['problem', 'customer', 'value_proposition', 'digital_product', 'business_model', 'growth_strategy', 'final_pitch'];
 
+  const [fetchError, setFetchError] = useState<string | null>(null);
+
   useEffect(() => {
+    if (authLoading || roleLoading) return;
+    if (!user) {
+      navigate('/auth', { replace: true });
+      return;
+    }
     if (!isAdmin) return;
     const fetchData = async () => {
       try {
