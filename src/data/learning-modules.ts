@@ -181,10 +181,10 @@ export const LEARNING_MODULES: LearningModule[] = [
       question_en: 'Which growth strategy do you choose?',
       question_bg: 'Коя стратегия за растеж избирате?',
       options: [
-        { id: 'ne-d1', label_en: 'Subsidize one side', label_bg: 'Субсидирайте една страна', description_en: 'Offer free premium features to creators to attract supply, then monetize demand.', description_bg: 'Предложете безплатни премиум функции на създателите, за да привлечете предлагане, след което монетизирайте търсенето.' },
-        { id: 'ne-d2', label_en: 'Viral referral program', label_bg: 'Вирусна програма за препоръки', description_en: 'Give both referrer and referred users extra features. Focus on organic word-of-mouth.', description_bg: 'Дайте на препоръчващия и препоръчания потребител допълнителни функции. Фокусирайте се върху органично разпространение.' },
+        { id: 'ne-d1', label_en: 'Subsidize one side', label_bg: 'Субсидирай една страна', description_en: 'Offer free premium features to creators to attract supply, then monetize demand.', description_bg: 'Предложи безплатни премиум функции на създателите, за да привлечеш предлагане, след което монетизирай търсенето.' },
+        { id: 'ne-d2', label_en: 'Viral referral program', label_bg: 'Вирусна програма за препоръки', description_en: 'Give both referrer and referred users extra features. Focus on organic word-of-mouth.', description_bg: 'Дай на препоръчващия и препоръчания потребител допълнителни функции. Фокусирай се върху органично разпространение.' },
         { id: 'ne-d3', label_en: 'Paid advertising blitz', label_bg: 'Блиц платена реклама', description_en: 'Spend heavily on ads to rapidly acquire users. Risk: high CAC, users may not stick.', description_bg: 'Харчете значително за реклами за бързо привличане. Риск: висок CAC, потребителите може да не останат.' },
-        { id: 'ne-d4', label_en: 'Niche-first strategy', label_bg: 'Стратегия „нишата първо"', description_en: 'Dominate one specific community before expanding. Slower but more sustainable.', description_bg: 'Доминирайте в една конкретна общност преди разширяване. По-бавно, но по-устойчиво.' },
+        { id: 'ne-d4', label_en: 'Niche-first strategy', label_bg: 'Стратегия „нишата първо"', description_en: 'Dominate one specific community before expanding. Slower but more sustainable.', description_bg: 'Доминирай в една конкретна общност преди разширяване. По-бавно, но по-устойчиво.' },
       ],
     },
     embedded_case: {
@@ -299,9 +299,9 @@ Understanding network effects is essential for designing digital products that g
       question_en: 'How do you solve the chicken-and-egg problem?',
       question_bg: 'Как решавате проблема кокошка и яйце?',
       options: [
-        { id: 'pb-d1', label_en: 'Subsidize buyers', label_bg: 'Субсидирайте купувачите', description_en: 'Offer free credits or discounts to attract demand. Risk: unsustainable without funding.', description_bg: 'Предложете безплатни кредити или отстъпки. Риск: неустойчиво без финансиране.' },
+        { id: 'pb-d1', label_en: 'Subsidize buyers', label_bg: 'Субсидирай купувачите', description_en: 'Offer free credits or discounts to attract demand. Risk: unsustainable without funding.', description_bg: 'Предложи безплатни кредити или отстъпки. Риск: неустойчиво без финансиране.' },
         { id: 'pb-d2', label_en: 'Create standalone value', label_bg: 'Създай самостоятелна стойност', description_en: 'Build a useful tool for buyers (like a review site) that works without sellers. Convert users later.', description_bg: 'Изгради полезен инструмент за купувачите, който работи без продавачи. Конвертирай потребителите по-късно.' },
-        { id: 'pb-d3', label_en: 'Focus on one niche', label_bg: 'Фокусирайте се в една ниша', description_en: 'Narrow to one product category and dominate it before expanding.', description_bg: 'Стеснете се до една продуктова категория и я доминирайте преди разширяване.' },
+        { id: 'pb-d3', label_en: 'Focus on one niche', label_bg: 'Фокусирай се в една ниша', description_en: 'Narrow to one product category and dominate it before expanding.', description_bg: 'Стесни се до една продуктова категория и я доминирай преди разширяване.' },
       ],
     },
     embedded_case: {
@@ -384,7 +384,7 @@ Examples include Airbnb (hosts and guests), YouTube (creators and viewers), and 
         example_en: 'Dropbox reduced CAC to near-zero by using a referral program where both users got free storage — growing 3900% in 15 months.',
         example_bg: 'Dropbox намали CAC до почти нула чрез програма за препоръки, където и двамата потребители получаваха безплатно пространство — растеж от 3900% за 15 месеца.',
         takeaway_en: 'CAC determines whether your business model is sustainable. Always know your CAC by channel.',
-        takeaway_bg: 'CAC определя дали бизнес моделът ви е устойчив. Винаги знайте CAC по канал.',
+        takeaway_bg: 'CAC определя дали бизнес моделът ти е устойчив. Винаги знай CAC по канал.',
       },
       {
         id: 'cac-concept-2',
@@ -416,7 +416,7 @@ Examples include Airbnb (hosts and guests), YouTube (creators and viewers), and 
       question_bg: 'Как разпределяте маркетинговия бюджет?',
       options: [
         { id: 'cac-d1', label_en: 'All on paid ads', label_bg: 'Всичко в платена реклама', description_en: 'Predictable but expensive. Acquire 625 customers immediately at $80 CAC.', description_bg: 'Предвидимо, но скъпо. Привлечете 625 клиенти незабавно при $80 CAC.' },
-        { id: 'cac-d2', label_en: '70% organic, 30% paid', label_bg: '70% органично, 30% платено', description_en: 'Invest in content, SEO, and community. Slower but builds a moat. CAC drops over time.', description_bg: 'Инвестирайте в съдържание, SEO и общност. По-бавно, но изгражда защита. CAC намалява с времето.' },
+        { id: 'cac-d2', label_en: '70% organic, 30% paid', label_bg: '70% органично, 30% платено', description_en: 'Invest in content, SEO, and community. Slower but builds a moat. CAC drops over time.', description_bg: 'Инвестирай в съдържание, SEO и общност. По-бавно, но изгражда защита. CAC намалява с времето.' },
         { id: 'cac-d3', label_en: 'Build referral program', label_bg: 'Изгради програма за препоръки', description_en: 'Invest $20K in building a viral referral system. If it works, CAC drops to ~$10.', description_bg: 'Инвестирай $20K в изграждане на вирусна система за препоръки. Ако работи, CAC пада до ~$10.' },
         { id: 'cac-d4', label_en: 'Improve product first', label_bg: 'Подобрете продукта първо', description_en: 'Spend $40K on product, $10K on marketing. Better product = higher retention = better LTV:CAC.', description_bg: 'Харчете $40K за продукт, $10K за маркетинг. По-добър продукт = по-добро LTV:CAC.' },
       ],
@@ -513,11 +513,11 @@ CAC е критичен, защото директно влияе на рент�
         name_en: 'Sean Ellis Test',
         name_bg: 'Тест на Шон Елис',
         explanation_en: 'Ask users: "How would you feel if you could no longer use this product?" If 40%+ say "very disappointed," you have PMF.',
-        explanation_bg: 'Попитайте потребителите: „Как бихте се почувствали, ако не можете повече да използвате този продукт?" Ако 40%+ казват „много разочарован/а" — имате PMF.',
+        explanation_bg: 'Попитай потребителите: „Как бихте се почувствали, ако не можете повече да използвате този продукт?" Ако 40%+ казват „много разочарован/а" — имате PMF.',
         example_en: 'Superhuman (email app) used this test and found only 22% said "very disappointed." They iterated until reaching 58%, then scaled.',
         example_bg: 'Superhuman (имейл приложение) използва този тест и откри, че само 22% казват „много разочарован". Итерираха, докато достигнаха 58%, след което мащабираха.',
         takeaway_en: 'PMF is measurable, not just a feeling. Use the Sean Ellis test to make data-driven decisions about when to scale.',
-        takeaway_bg: 'PMF е измеримо, не просто усещане. Използвайте теста на Шон Елис за решения, базирани на данни.',
+        takeaway_bg: 'PMF е измеримо, не просто усещане. Използвай теста на Шон Елис за решения, базирани на данни.',
       },
       {
         id: 'pmf-concept-3',
@@ -528,7 +528,7 @@ CAC е критичен, защото директно влияе на рент�
         example_en: 'Quibi raised $1.75B and launched with massive marketing before validating that people wanted short-form premium video. It shut down in 6 months.',
         example_bg: 'Quibi привлече $1.75B и стартира с масивен маркетинг, преди да валидира, че хората искат кратко премиум видео. Затвори за 6 месеца.',
         takeaway_en: 'Before PMF: iterate fast, spend little. After PMF: scale aggressively. Never reverse this order.',
-        takeaway_bg: 'Преди PMF: итерирайте бързо, харчете малко. След PMF: мащабирайте агресивно. Никога не обръщайте тази последователност.',
+        takeaway_bg: 'Преди PMF: итерирай бързо, харчи малко. След PMF: мащабирай агресивно. Никога не обръщай тази последователност.',
       },
     ],
     simulator_decision: {
@@ -537,9 +537,9 @@ CAC е критичен, защото директно влияе на рент�
       question_en: 'What do you do next?',
       question_bg: 'Какво правите следващо?',
       options: [
-        { id: 'pmf-d1', label_en: 'Scale now — launch paid ads', label_bg: 'Мащабирайте сега — стартирайте реклами', description_en: '28% is close enough. Speed is everything in competitive markets.', description_bg: '28% е достатъчно близо. Скоростта е всичко в конкурентни пазари.' },
-        { id: 'pmf-d2', label_en: 'Iterate on the product', label_bg: 'Итерирайте продукта', description_en: 'Talk to the 72% who are NOT very disappointed. Find out what\'s missing and fix it.', description_bg: 'Говорете с 72%, които НЕ са много разочаровани. Разберете какво липсва и го поправете.' },
-        { id: 'pmf-d3', label_en: 'Pivot to a new segment', label_bg: 'Пивотирайте към нов сегмент', description_en: 'Maybe the current audience is wrong. Test with a different customer segment.', description_bg: 'Може би текущата аудитория е грешна. Тествайте с различен клиентски сегмент.' },
+        { id: 'pmf-d1', label_en: 'Scale now — launch paid ads', label_bg: 'Мащабирай сега — стартирай реклами', description_en: '28% is close enough. Speed is everything in competitive markets.', description_bg: '28% е достатъчно близо. Скоростта е всичко в конкурентни пазари.' },
+        { id: 'pmf-d2', label_en: 'Iterate on the product', label_bg: 'Итерирай продукта', description_en: 'Talk to the 72% who are NOT very disappointed. Find out what\'s missing and fix it.', description_bg: 'Говори с 72%, които НЕ са много разочаровани. Разбери какво липсва и го поправи.' },
+        { id: 'pmf-d3', label_en: 'Pivot to a new segment', label_bg: 'Пивотирай към нов сегмент', description_en: 'Maybe the current audience is wrong. Test with a different customer segment.', description_bg: 'Може би текущата аудитория е грешна. Тествай с различен клиентски сегмент.' },
         { id: 'pmf-d4', label_en: 'Double down on power users', label_bg: 'Фокусирайте се върху „силните" потребители', description_en: 'Study the 28% who love it. Build exclusively for them and ignore the rest.', description_bg: 'Проучи 28%, които го обичат. Изгради изцяло за тях и игнорирай останалите.' },
       ],
     },
@@ -563,7 +563,7 @@ In October 2010, Systrom and co-founder Mike Krieger made a radical decision: st
       key_decision_en: 'Systrom killed 80% of Burbn\'s features and focused entirely on the one thing users actually loved. This required courage — throwing away months of development work. The pivot was guided by data (usage analytics), not ego.',
       key_decision_bg: 'Систром премахна 80% от функциите на Burbn и се фокусира изцяло върху единственото нещо, което потребителите обичаха. Това изискваше смелост — изхвърляне на месеци работа. Пивотът беше воден от данни, не от его.',
       outcome_en: 'Instagram gained 25,000 users on launch day. Within 2 months: 1 million users. Within 2 years: 100 million users. Facebook acquired Instagram for $1 billion in 2012. **Lesson: PMF often hides in the data — look at what users actually do, not what you built for them. The willingness to pivot based on evidence is a founder\'s superpower.**',
-      outcome_bg: 'Instagram спечели 25,000 потребители в деня на стартиране. В рамките на 2 месеца: 1 милион. В рамките на 2 години: 100 милиона. Facebook придоби Instagram за $1 милиард през 2012 г. **Урок: PMF често се крие в данните — гледайте какво потребителите наистина правят, а не какво сте построили за тях.**',
+      outcome_bg: 'Instagram спечели 25,000 потребители в деня на стартиране. В рамките на 2 месеца: 1 милион. В рамките на 2 години: 100 милиона. Facebook придоби Instagram за $1 милиард през 2012 г. **Урок: PMF често се крие в данните — гледайте какво потребителите наистина правят, а не какво си построил за тях.**',
       outcome_type: 'success',
       analytical_questions: [
         { id: 'ig1', question_en: 'What specific data signals should a founder look for to decide between pivoting and iterating? Apply this framework to the Instagram case.', question_bg: 'Какви специфични сигнали от данните трябва да търси основателят, за да реши дали да пивотира или итерира? Приложете тази рамка към случая на Instagram.' },
@@ -604,7 +604,7 @@ Once PMF is achieved, the focus shifts to scaling. But PMF is not permanent — 
     related_sim_concepts_en: ['Product-Market Fit', 'MVP Strategy'],
     related_sim_concepts_bg: ['Продуктово-пазарно съответствие', 'MVP стратегия'],
     sim_transition_en: 'Test your product-market fit strategy in the startup simulator.',
-    sim_transition_bg: 'Тествайте стратегията си за продуктово-пазарно съответствие в стартъп симулатора.',
+    sim_transition_bg: 'Тествай стратегията си за продуктово-пазарно съответствие в стартъп симулатора.',
   },
   {
     slug: 'digital-ecosystems',
@@ -657,7 +657,7 @@ Once PMF is achieved, the focus shifts to scaling. But PMF is not permanent — 
       options: [
         { id: 'de-d1', label_en: 'Open API platform', label_bg: 'Отворена API платформа', description_en: 'Let third-party developers build on your platform. Slow to start but creates powerful lock-in.', description_bg: 'Позволи на трети страни да изграждат върху твоята платформа. Бавно начало, но създава мощно заключване.' },
         { id: 'de-d2', label_en: 'Build complementary products', label_bg: 'Изгради допълващи продукти', description_en: 'Create 2-3 products that work together. Higher cost but complete control over quality.', description_bg: 'Създай 2-3 продукта, които работят заедно. По-висока цена, но пълен контрол.' },
-        { id: 'de-d3', label_en: 'Stay focused on one product', label_bg: 'Останете фокусирани на един продукт', description_en: 'Perfect your core product before expanding. Risk: competitors build the ecosystem first.', description_bg: 'Усъвършенствайте основния продукт преди разширяване. Риск: конкурентите изграждат екосистемата първи.' },
+        { id: 'de-d3', label_en: 'Stay focused on one product', label_bg: 'Остани фокусиран на един продукт', description_en: 'Perfect your core product before expanding. Risk: competitors build the ecosystem first.', description_bg: 'Усъвършенствай основния продукт преди разширяване. Риск: конкурентите изграждат екосистемата първи.' },
       ],
     },
     embedded_case: {
@@ -745,7 +745,7 @@ The future of competition is increasingly between ecosystems, not individual com
       question_en: 'Which marketing strategy do you prioritize?',
       question_bg: 'Коя маркетингова стратегия приоритизирате?',
       options: [
-        { id: 'mf-d1', label_en: 'Content marketing', label_bg: 'Контент маркетинг', description_en: 'Create blog posts, guides, and videos. Takes 6+ months but compounds over time.', description_bg: 'Създайте статии, ръководства и видеоклипове. Отнема 6+ месеца, но се натрупва с времето.' },
+        { id: 'mf-d1', label_en: 'Content marketing', label_bg: 'Контент маркетинг', description_en: 'Create blog posts, guides, and videos. Takes 6+ months but compounds over time.', description_bg: 'Създай статии, ръководства и видеоклипове. Отнема 6+ месеца, но се натрупва с времето.' },
         { id: 'mf-d2', label_en: 'Paid social ads', label_bg: 'Платена реклама в социални медии', description_en: 'Immediate traffic but expensive. $5K/month gets ~60-100 users at $50-80 CAC.', description_bg: 'Незабавен трафик, но скъпо. $5K/месец = ~60-100 потребители при $50-80 CAC.' },
         { id: 'mf-d3', label_en: 'Community building', label_bg: 'Изграждане на общност', description_en: 'Build a Discord/Slack community. Free acquisition but requires daily engagement.', description_bg: 'Изгради Discord/Slack общност. Безплатно привличане, но изисква ежедневен ангажимент.' },
       ],
@@ -837,7 +837,7 @@ Additionally, Airbnb noticed that listings with professional photos got 2.5x mor
       options: [
         { id: 'pr-d1', label_en: 'Freemium ($0 free / $19 premium)', label_bg: 'Фриймиъм ($0 безплатно / $19 премиум)', description_en: 'Keep free tier to maintain growth. Need 5% conversion to break even (50 paying users).', description_bg: 'Запазете безплатно ниво за растеж. Нужни 5% конверсия за нулева печалба (50 плащащи потребители).' },
         { id: 'pr-d2', label_en: 'All paid ($9/month)', label_bg: 'Изцяло платено ($9/месец)', description_en: 'Simpler model. Risk losing 80% of users but those who stay are committed.', description_bg: 'По-прост модел. Риск да загубите 80% от потребителите, но останалите са ангажирани.' },
-        { id: 'pr-d3', label_en: 'Usage-based pricing', label_bg: 'Ценообразуване на база употреба', description_en: 'Charge per API call or action. Fair for users but revenue is unpredictable.', description_bg: 'Таксувайте на API извикване или действие. Справедливо, но приходите са непредсказуеми.' },
+        { id: 'pr-d3', label_en: 'Usage-based pricing', label_bg: 'Ценообразуване на база употреба', description_en: 'Charge per API call or action. Fair for users but revenue is unpredictable.', description_bg: 'Таксувай на API извикване или действие. Справедливо, но приходите са непредсказуеми.' },
       ],
     },
     embedded_case: {
@@ -869,7 +869,7 @@ The math was devastating: **Revenue per scooter lifetime ≈ $300-450. Cost per 
       analytical_questions: [
         { id: 'bc1', question_en: 'What was the real problem at Bird — was it pricing too low, scooter durability, operational costs, or all three? Which factor was most critical and why?', question_bg: 'Какъв беше истинският проблем на Bird — прекалено ниски цени, издръжливост на тротинетките, оперативни разходи, или и трите?' },
         { id: 'bc2', question_en: 'Evaluate Bird\'s decision to prioritize growth over profitability. In what situations is this a valid strategy, and when does it become dangerous?', question_bg: 'Оценете решението на Bird да приоритизира растежа пред рентабилността. Кога тази стратегия е валидна и кога е опасна?' },
-        { id: 'bc3', question_en: 'Redesign Bird\'s pricing model to achieve profitability. Consider subscription plans, surge pricing, premium tiers, or partnership models.', question_bg: 'Редизайнирайте ценовия модел на Bird за постигане на рентабилност. Помислете за абонаментни планове или динамично ценообразуване.' },
+        { id: 'bc3', question_en: 'Redesign Bird\'s pricing model to achieve profitability. Consider subscription plans, surge pricing, premium tiers, or partnership models.', question_bg: 'Редизайнирай ценовия модел на Bird за постигане на рентабилност. Помисли за абонаментни планове или динамично ценообразуване.' },
       ],
     },
     theory_en: `Pricing is one of the most powerful levers a startup has. A 1% improvement in pricing can increase profits by 11%, while 1% more volume only increases profits by 3.3%.
@@ -910,7 +910,7 @@ The biggest pricing mistake startups make: **charging too little.** Most early-s
     application_question_bg: 'Проектирай ценова стратегия за твоя стартъп. Какъв модел би използвал и как би валидирал, че цената е правилна?',
     display_order: 7,
     sim_transition_en: 'Test your pricing strategy in the startup simulator to see how pricing affects revenue and growth.',
-    sim_transition_bg: 'Тествайте ценовата си стратегия в стартъп симулатора, за да видите как влияе на приходите и растежа.',
+    sim_transition_bg: 'Тествай ценовата си стратегия в стартъп симулатора, за да видите как влияе на приходите и растежа.',
   },
   {
     slug: 'team-and-roles',

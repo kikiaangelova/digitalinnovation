@@ -284,7 +284,7 @@ export const TERMS: DictionaryTerm[] = [
     term: 'Design Thinking',
     termBg: 'Дизайн мислене',
     definition: 'A creative problem-solving approach that puts people first. It follows 5 steps: understand the user (Empathize), define the problem, brainstorm ideas, build a prototype, and test it.',
-    definitionBg: 'Творчески подход за решаване на проблеми, който поставя хората на първо място. Следва 5 стъпки: разберете потребителя (Съпричастност), дефинирайте проблема, генерирайте идеи, създайте прототип и го тествайте.',
+    definitionBg: 'Творчески подход за решаване на проблеми, който поставя хората на първо място. Следва 5 стъпки: разбери потребителя (Съпричастност), дефинирай проблема, генерирай идеи, създай прототип и го тествай.',
     category: 'Product',
   },
   {

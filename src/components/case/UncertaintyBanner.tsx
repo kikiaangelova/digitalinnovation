@@ -35,7 +35,7 @@ export function getStepUncertaintyIndicators(stepIndex: number): UncertaintyIndi
       labelEn: 'Incomplete Data',
       labelBg: 'Непълни данни',
       hintEn: 'Some market data is estimated or unavailable. You must make assumptions — state them clearly.',
-      hintBg: 'Някои пазарни данни са приблизителни или липсват. Трябва да направите допускания — формулирайте ги ясно.',
+      hintBg: 'Някои пазарни данни са приблизителни или липсват. Трябва да направите допускания — формулирай ги ясно.',
     });
   }
 
@@ -68,14 +68,14 @@ export function getStepUncertaintyIndicators(stepIndex: number): UncertaintyIndi
       labelEn: 'Risk vs. Reward',
       labelBg: 'Риск срещу награда',
       hintEn: 'Every strategic recommendation involves trade-offs. Acknowledge risks and explain why the reward justifies them.',
-      hintBg: 'Всяка стратегическа препоръка включва компромиси. Признайте рисковете и обяснете защо ползите ги оправдават.',
+      hintBg: 'Всяка стратегическа препоръка включва компромиси. Признай рисковете и обясни защо ползите ги оправдават.',
     });
     indicators.push({
       type: 'multiple_valid',
       labelEn: 'No Perfect Answer',
       labelBg: 'Няма перфектен отговор',
       hintEn: 'Real-world strategy has no "right" answer. Focus on the quality of your reasoning, not finding the one correct solution.',
-      hintBg: 'Реалната стратегия няма "правилен" отговор. Фокусирайте се върху качеството на аргументацията, а не върху единствено вярно решение.',
+      hintBg: 'Реалната стратегия няма "правилен" отговор. Фокусирай се върху качеството на аргументацията, а не върху единствено вярно решение.',
     });
   }
 
