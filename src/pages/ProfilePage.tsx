@@ -79,6 +79,23 @@ export default function ProfilePage() {
       setBadges(ub || []);
       const { data: tm } = await supabase.from('team_members').select('team_id, role, teams(name, cohort_id)').eq('user_id', user.id);
       setTeams(tm || []);
+      // Fetch classroom membership
+      const { data: membership } = await supabase
+        .from('classroom_students')
+        .select('classroom_id')
+        .eq('student_id', user.id)
+        .maybeSingle();
+      if (membership) {
+        const { data: cr } = await supabase
+          .from('classrooms')
+          .select('id, name, teacher_id')
+          .eq('id', membership.classroom_id)
+          .maybeSingle();
+        if (cr) {
+          const { data: tp } = await supabase.from('profiles').select('display_name, full_name').eq('user_id', cr.teacher_id).maybeSingle();
+          setClassroomInfo({ id: cr.id, name: cr.name, teacher_name: tp?.display_name || tp?.full_name || null });
+        }
+      }
       setLoading(false);
     };
     fetchData();
