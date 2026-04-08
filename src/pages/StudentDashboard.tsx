@@ -221,6 +221,18 @@ export default function StudentDashboard() {
           </div>
         </div>
 
+        {/* ═══ NEXT STEP HERO (read-only) ═══ */}
+        <NextStepHero
+          lang={lang}
+          casesCompleted={casesCompleted}
+          startupSectionMap={startupSectionMap}
+          startupSubmitted={startupProject?.is_submitted || false}
+          simWeek={simWeek}
+          simComplete={simComplete}
+          finalPitchSubmitted={finalPitchSubmitted}
+          stagesCompleted={progress.stagesCompleted}
+        />
+
         {/* ═══ SECTION 1: Learning Navigator (Hero) ═══ */}
         <LearningNavigator
           lang={lang}
@@ -233,7 +245,7 @@ export default function StudentDashboard() {
           outcomeScores={outcomeScores}
         />
 
-        {/* ═══ Quick Resume Cards ═══ */}
+        {/* ═══ Quick Resume Cards — "Продължи оттам, където спря" ═══ */}
         {(() => {
           // Find next incomplete module
           const nextMod = LEARNING_MODULES.find(m => !completedModuleSlugs.has(m.slug));
