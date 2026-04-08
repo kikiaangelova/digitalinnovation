@@ -610,6 +610,10 @@ Once PMF is achieved, the focus shifts to scaling. But PMF is not permanent — 
     slug: 'digital-ecosystems',
     title_en: 'Digital Ecosystems',
     title_bg: 'Дигитални екосистеми',
+    hook: { en: 'Amazon started as a bookstore. Now it\'s a cloud provider, bank, grocery store, and entertainment studio. That\'s an ecosystem.', bg: 'Amazon започна като книжарница. Сега е облачен доставчик, банка, хранителен магазин и развлекателно студио. Това е екосистема.' },
+    metaphor: { en: 'An ecosystem is like a flywheel: each service feeds the next. More Prime members → more sellers → more data → better recommendations → more members.', bg: 'Екосистемата е като маховик: всяка услуга захранва следващата. Повече Prime членове → повече продавачи → повече данни → по-добри препоръки → повече членове.' },
+    framework: { name: 'Amazon Flywheel', bullets_en: ['Lower prices → more customers', 'More customers → more sellers', 'More sellers → better selection → more customers'], bullets_bg: ['По-ниски цени → повече клиенти', 'Повече клиенти → повече продавачи', 'Повече продавачи → по-добър избор → повече клиенти'], apply_en: 'Draw the flywheel for your startup: what reinforcing loops can you create?', apply_bg: 'Начертай маховика за стартъпа си: какви самоподсилващи се цикли можеш да създадеш?' },
+    provocations: [{ en: 'Is building an ecosystem always better than building a single product?', bg: 'Изграждането на екосистема винаги ли е по-добро от един продукт?' }, { en: 'How can a small startup compete with an established ecosystem like Apple?', bg: 'Как малък стартъп може да се конкурира с установена екосистема като Apple?' }],
     concepts: [
       {
         id: 'de-concept-1',
