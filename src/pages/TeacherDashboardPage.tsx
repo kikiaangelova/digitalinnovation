@@ -429,6 +429,7 @@ export default function TeacherDashboardPage() {
                           <th className="text-center py-2 px-2 text-muted-foreground font-medium">XP</th>
                           <th className="text-center py-2 px-2 text-muted-foreground font-medium">{t('Cases', 'Казуси')}</th>
                           <th className="text-center py-2 px-2 text-muted-foreground font-medium">{t('Sim', 'Сим.')}</th>
+                          <th className="text-center py-2 px-2 text-muted-foreground font-medium">{t('Quiz Avg', 'Средна тест')}</th>
                           <th className="text-center py-2 px-2 text-muted-foreground font-medium">{t('Startup', 'Стартъп')}</th>
                           <th className="py-2 px-2 text-muted-foreground font-medium">{t('Overall', 'Общо')}</th>
                           <th className="py-2 px-2 text-muted-foreground font-medium">{t('Status', 'Статус')}</th>
