@@ -1014,6 +1014,10 @@ In April 2017, Bloomberg reporters discovered: **you could squeeze the juice pac
     slug: 'operations-fundamentals',
     title_en: 'Operations & Processes',
     title_bg: 'Операции и процеси',
+    hook: { en: 'Tesla builds 5,000 cars per week. Their factory runs 24/7. One wrong process and the entire line stops. Operations is boring — until it breaks everything.', bg: 'Tesla произвежда 5000 коли седмично. Фабриката работи 24/7. Един грешен процес и цялата линия спира. Операциите са скучни — докато не счупят всичко.' },
+    metaphor: { en: 'Operations is the engine of a car. Nobody sees it, but without it, the shiny exterior is just an expensive sculpture.', bg: 'Операциите са двигателят на колата. Никой не го вижда, но без него лъскавата каросерия е просто скъпа скулптура.' },
+    framework: { name: 'OKR Framework', bullets_en: ['Objective: what do you want to achieve? (qualitative)', 'Key Results: how do you measure success? (quantitative)', 'Review weekly, reset quarterly'], bullets_bg: ['Objective: какво искаш да постигнеш? (качествено)', 'Key Results: как измерваш успеха? (количествено)', 'Преглеждай седмично, ресетвай на тримесечие'], apply_en: 'Set 3 OKRs for your startup\'s next quarter.', apply_bg: 'Задай 3 OKR-а за следващото тримесечие на стартъпа си.' },
+    provocations: [{ en: 'Can a startup succeed with terrible operations but great marketing?', bg: 'Може ли стартъп да успее с ужасни операции, но страхотен маркетинг?' }, { en: 'When should a founder stop doing operations themselves and hire someone?', bg: 'Кога основателят трябва да спре да прави операциите сам и да наеме някого?' }],
     level: 2,
     startup_field: 'bmc_key_resources',
     concepts: [
