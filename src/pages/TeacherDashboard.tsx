@@ -29,7 +29,7 @@ import {
 interface ProfileData {
   user_id: string;
   full_name: string | null;
-  bio: string | null;
+  
   skills_tags: string[] | null;
   interests: string[] | null;
   cohort_id: string | null;
