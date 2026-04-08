@@ -107,7 +107,7 @@ export default function LearningModules() {
             <PhaseBadge phase="learn" lang={lang as 'en' | 'bg'} />
           </h1>
           <p className="typo-helper mt-1">
-            {t('Master key concepts in digital innovation and entrepreneurship', 'Овладейте ключови концепции в дигиталните иновации и предприемачеството')}
+            {t('Master key concepts in digital innovation and entrepreneurship', 'Овладей ключови концепции в дигиталните иновации и предприемачеството')}
           </p>
         </div>
 
@@ -160,7 +160,7 @@ export default function LearningModules() {
             !level2Unlocked
               ? t(
                   `Complete all ${level1Total} Level 1 modules to unlock (${level1Completed}/${level1Total} done)`,
-                  `Завършете всичките ${level1Total} модула от Ниво 1 за отключване (${level1Completed}/${level1Total} готови)`
+                  `Завърши всичките ${level1Total} модула от Ниво 1, за да отключиш (${level1Completed}/${level1Total} готови)`
                 )
               : undefined
           }

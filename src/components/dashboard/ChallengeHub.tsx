@@ -33,10 +33,10 @@ interface Challenge {
 }
 
 const TYPE_CONFIG: Record<ChallengeType, { icon: typeof Zap; color: string; en: string; bg: string; descEn: string; descBg: string }> = {
-  daily: { icon: Sparkles, color: 'text-xp-gold', en: 'Daily Challenge', bg: 'Ежедневно', descEn: 'Quick 1-2 min decision', descBg: 'Бързо решение за 1-2 мин' },
-  weekly: { icon: Target, color: 'text-blue-500', en: 'Weekly Challenge', bg: 'Седмично', descEn: 'Complex strategic scenario', descBg: 'Сложен стратегически сценарий' },
-  crisis: { icon: AlertTriangle, color: 'text-red-500', en: 'Crisis Challenge', bg: 'Кризисно', descEn: 'Time pressure & limited info', descBg: 'Време и ограничена информация' },
-  strategic: { icon: TrendingUp, color: 'text-purple-500', en: 'Strategic Challenge', bg: 'Стратегическо', descEn: 'Long-term impact decision', descBg: 'Решение с дългосрочно влияние' },
+  daily: { icon: Sparkles, color: 'text-xp-gold', en: 'Daily Challenge', bg: 'Ежедневно предизвикателство', descEn: 'Quick 1-2 min decision', descBg: 'Бързо решение за 1-2 мин' },
+  weekly: { icon: Target, color: 'text-blue-500', en: 'Weekly Challenge', bg: 'Седмично предизвикателство', descEn: 'Complex strategic scenario', descBg: 'Сложен стратегически сценарий' },
+  crisis: { icon: AlertTriangle, color: 'text-red-500', en: 'Crisis Challenge', bg: 'Кризисно предизвикателство', descEn: 'Time pressure & limited info', descBg: 'Време и ограничена информация' },
+  strategic: { icon: TrendingUp, color: 'text-purple-500', en: 'Strategic Challenge', bg: 'Стратегическо предизвикателство', descEn: 'Long-term impact decision', descBg: 'Решение с дългосрочно влияние' },
 };
 
 const COMING_SOON: Record<string, { dateEn: string; dateBg: string }> = {
@@ -342,8 +342,8 @@ export default function ChallengeHub({ lang, userId }: ChallengeHubProps) {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <CalendarClock className="h-5 w-5 text-primary" />
-              {t('Coming Soon', 'Очаквайте скоро')}
-            </DialogTitle>
+               {t('Coming Soon', 'Очаквай скоро')}
+             </DialogTitle>
             <DialogDescription>
               {lang === 'bg' ? TYPE_CONFIG[comingSoonType].bg : TYPE_CONFIG[comingSoonType].en}
             </DialogDescription>
@@ -352,7 +352,7 @@ export default function ChallengeHub({ lang, userId }: ChallengeHubProps) {
             <p className="text-sm text-foreground/80">
               {t(
                 `The ${TYPE_CONFIG[comingSoonType].en} mode is currently in development. Stay tuned!`,
-                `Режимът „${TYPE_CONFIG[comingSoonType].bg}" е в процес на разработка. Очаквайте!`
+                `Режимът „${TYPE_CONFIG[comingSoonType].bg}" е в процес на разработка. Очаквай!`
               )}
             </p>
             <div className="rounded-lg bg-primary/5 border border-primary/15 p-3 text-center">

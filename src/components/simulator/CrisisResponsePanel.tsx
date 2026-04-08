@@ -156,7 +156,7 @@ export default function CrisisResponsePanel({
         <p className="text-sm text-foreground/80">
           {t(
             'Your business is in the chaos zone. Market turbulence has pushed your stability below critical levels. You must make emergency decisions NOW. These choices will determine whether your startup survives or fails.',
-            'Вашият бизнес е в зоната на хаоса. Пазарната турбулентност е свалила стабилността ви под критичните нива. Трябва да вземете спешни решения СЕГА.'
+            'Бизнесът ти е в зоната на хаоса. Пазарната турбулентност е свалила стабилността ти под критичните нива. Трябва да вземеш спешни решения СЕГА.'
           )}
         </p>
         <div className="mt-3 rounded-lg bg-primary/5 border border-primary/20 p-3">
@@ -202,7 +202,7 @@ export default function CrisisResponsePanel({
 
             <div className="p-5 space-y-3">
               <p className="text-xs font-semibold text-sim-danger uppercase tracking-wider mb-2">
-                {t('Choose your crisis response:', 'Изберете кризисен отговор:')}
+                {t('Choose your crisis response:', 'Избери кризисен отговор:')}
               </p>
 
               <div className="grid gap-3">

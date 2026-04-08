@@ -94,7 +94,7 @@ const STARTUP_FIELDS = [
     labelEn: 'Competitor Analysis',
     labelBg: 'Анализ на конкуренцията',
     promptEn: 'Who are the main competitors in your market? List at least two and briefly describe what they do.',
-    promptBg: 'Кои са основните конкуренти на вашия пазар? Посочете поне двама и опишете накратко какво правят.',
+    promptBg: 'Кои са основните конкуренти на твоя пазар? Посочете поне двама и опишете накратко какво правят.',
     placeholderEn: 'List at least 2 competitors and describe their products/services...',
     placeholderBg: 'Посочете поне 2 конкуренти и опишете техните продукти/услуги...',
   },
@@ -116,9 +116,9 @@ const STARTUP_FIELDS = [
     labelEn: 'Unique Advantage',
     labelBg: 'Уникално предимство',
     promptEn: 'What is your startup\'s unique advantage compared to these competitors?',
-    promptBg: 'Какво е уникалното предимство на вашия стартъп в сравнение с тези конкуренти?',
+    promptBg: 'Какво е уникалното предимство на твоя стартъп в сравнение с тези конкуренти?',
     placeholderEn: 'Explain what makes your solution different and better...',
-    placeholderBg: 'Обяснете какво прави вашето решение различно и по-добро...',
+    placeholderBg: 'Обясни какво прави твоето решение различно и по-добро...',
   },
 ] as const;
 const MIN_FIELD_LENGTH = 30;
@@ -525,7 +525,7 @@ export default function CasePlayer() {
           {tl('This case study content is currently being prepared. Please check back later or try another case.',
              'Съдържанието на този казус се подготвя. Моля, проверете по-късно или опитайте друг казус.')}
         </p>
-        <Button variant="outline" onClick={() => navigate('/cases')}>{tl('Browse Other Cases', 'Разгледайте други казуси')}</Button>
+        <Button variant="outline" onClick={() => navigate('/cases')}>{tl('Browse Other Cases', 'Разгледай други казуси')}</Button>
       </div>
     </div>
   );
@@ -728,7 +728,7 @@ export default function CasePlayer() {
               </div>
               <p className="text-xs text-muted-foreground mb-3">
                 {tl('Analyze the data below carefully — you will need it to answer the strategic questions.',
-                   'Анализирайте данните внимателно — ще ви трябват за отговорите на стратегическите въпроси.')}
+                   'Анализирай данните внимателно — ще ти трябват за отговорите на стратегическите въпроси.')}
               </p>
               <div className="bg-background/50 rounded-md p-4 border border-border/50 overflow-x-auto">
                 <MarkdownContent content={exhibitContent || ''} />
@@ -871,7 +871,7 @@ export default function CasePlayer() {
               <p className="text-sm text-muted-foreground">
                 {tl(
                   'Complete all analysis questions above to unlock the case insight and learning outcome.',
-                  'Завършете всички въпроси за анализ, за да отключите извода и учебния резултат.'
+                  'Завърши всички въпроси за анализ, за да отключиш извода и учебния резултат.'
                 )}
               </p>
             )}
@@ -957,7 +957,7 @@ export default function CasePlayer() {
                 <p className="text-xs text-muted-foreground mt-1">
                   {tl(
                     'Optional – connect this case to your startup idea if relevant. Complete fields (30+ characters each) to earn bonus XP.',
-                    'По избор – свържете този казус със стартъп идеята си, ако е уместно. Попълнете полетата (30+ символа всяко), за да спечелите бонус XP.'
+                    'По избор – свържи този казус със стартъп идеята си, ако е уместно. Попълни полетата (30+ символа всяко), за да спечелиш бонус XP.'
                   )}
                 </p>
               </div>

@@ -424,12 +424,12 @@ export default function IndustryProblemGenerator({ lang, onProblemSelected }: Pr
             {t('Industry Problem Generator', 'Генератор на индустриални проблеми')}
           </div>
           <h2 className="text-xl font-display font-bold text-foreground">
-            {t('Choose an Industry', 'Изберете индустрия')}
+            {t('Choose an Industry', 'Избери индустрия')}
           </h2>
           <p className="text-sm text-muted-foreground max-w-lg mx-auto">
             {t(
               'Start from a real industry problem instead of a random idea. Select an industry to explore digital innovation opportunities.',
-              'Започнете от реален индустриален проблем вместо случайна идея. Изберете индустрия, за да проучите възможностите за дигитални иновации.',
+              'Започни от реален индустриален проблем вместо случайна идея. Избери индустрия, за да проучиш възможностите за дигитални иновации.',
             )}
           </p>
         </div>
@@ -479,7 +479,7 @@ export default function IndustryProblemGenerator({ lang, onProblemSelected }: Pr
         <p className="text-sm text-muted-foreground">
           {t(
             'Select a problem that interests you. You will then validate it before building your startup solution.',
-            'Изберете проблем, който ви интересува. След това ще го валидирате преди да изградите стартъп решение.',
+            'Избери проблем, който те интересува. След това ще го валидираш, преди да изградиш стартъп решение.',
           )}
         </p>
 
@@ -525,7 +525,7 @@ export default function IndustryProblemGenerator({ lang, onProblemSelected }: Pr
               </div>
 
               <div className="pt-1 flex items-center gap-1 text-xs text-primary font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-                {t('Select this problem', 'Изберете този проблем')} <ChevronRight className="h-3 w-3" />
+                {t('Select this problem', 'Избери този проблем')} <ChevronRight className="h-3 w-3" />
               </div>
             </button>
           ))}
@@ -753,7 +753,7 @@ export default function IndustryProblemGenerator({ lang, onProblemSelected }: Pr
             onChange={e => setInnovationAnswer(e.target.value)}
             placeholder={t(
               'Describe how you would solve this problem using digital innovation...',
-              'Опишете как бихте решили този проблем чрез дигитални иновации...',
+              'Опишете как би решил този проблем чрез дигитални иновации...',
             )}
             className="min-h-[140px] text-sm resize-y"
           />

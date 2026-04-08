@@ -126,7 +126,7 @@ export default function AssessmentResults() {
               </div>
               <div className="grid md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-border">
                 <div className="p-5">
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">{t('Your Answer', 'Вашият отговор')}</p>
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">{t('Your Answer', 'Твоят отговор')}</p>
                   <p className="text-sm text-foreground">{r.answer ? (typeof r.answer === 'string' ? r.answer : JSON.stringify(r.answer)) : t('No answer', 'Няма отговор')}</p>
                   {r.feedback && <p className="text-xs text-muted-foreground mt-2 italic">{r.feedback}</p>}
                 </div>

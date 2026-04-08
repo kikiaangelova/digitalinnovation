@@ -429,7 +429,7 @@ export default function CaseLibrary() {
             <p className="typo-helper">
               {tl(
                 'Explore case studies organized by industry domain. Select an industry to understand its context and analyze related cases.',
-                'Разгледайте казуси, организирани по индустриални области. Изберете индустрия, за да разберете контекста и анализирате свързаните казуси.'
+                'Разгледай казуси, организирани по индустриални области. Избери индустрия, за да разбереш контекста и да анализираш свързаните казуси.'
               )}
             </p>
           </div>
@@ -528,7 +528,7 @@ export default function CaseLibrary() {
                     {count === 0 && (
                       <div className="absolute top-3 right-3">
                         <Badge variant="secondary" className="text-xs bg-muted text-muted-foreground">
-                          {tl('Coming Soon', 'Очаквайте скоро')}
+                          {tl('Coming Soon', 'Очаквай скоро')}
                         </Badge>
                       </div>
                     )}

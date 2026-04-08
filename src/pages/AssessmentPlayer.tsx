@@ -170,10 +170,10 @@ export default function AssessmentPlayer() {
             </div>
             {settings.timed && (
               <div className="flex items-center gap-2 justify-center text-sm text-sim-warning">
-                <AlertTriangle className="h-4 w-4" /> {t('This is a timed assessment. The timer starts when you begin.', 'Това е оценка с времево ограничение. Таймерът започва, когато започнете.')}
+                <AlertTriangle className="h-4 w-4" /> {t('This is a timed assessment. The timer starts when you begin.', 'Това е оценка с времево ограничение. Таймерът започва, когато започнеш.')}
               </div>
             )}
-            <Button onClick={startAssessment} size="lg" className="sim-gradient border-0">{t('Begin Assessment', 'Започнете оценката')}</Button>
+            <Button onClick={startAssessment} size="lg" className="sim-gradient border-0">{t('Begin Assessment', 'Започни оценката')}</Button>
             <Button variant="ghost" size="sm" asChild><Link to="/dashboard"><ArrowLeft className="h-4 w-4 mr-1" /> {t('Back', 'Назад')}</Link></Button>
           </div>
         </main>

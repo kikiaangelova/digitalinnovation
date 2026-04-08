@@ -796,7 +796,7 @@ export default function StartupSimulator() {
 
           {isMulti && (
             <p className="text-xs text-muted-foreground mb-4">
-              {t('Select one or more options, then confirm your choices.', 'Изберете една или повече опции, след което потвърдете избора си.')}
+              {t('Select one or more options, then confirm your choices.', 'Избери една или повече опции, след което потвърди избора си.')}
             </p>
           )}
 

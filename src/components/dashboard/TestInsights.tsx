@@ -94,10 +94,10 @@ export default function TestInsights({ lang, userId }: TestInsightsProps) {
       <div className="flex items-center justify-between mb-3">
         <h3 className="typo-card-title flex items-center gap-2">
           <Brain className="h-4 w-4 text-primary" />
-          {t('Test Learning Insights', 'Анализ на тестовете')}
+          {t('Check What You Know', 'Провери знанията си')}
         </h3>
         <Button variant="outline" size="sm" onClick={() => navigate('/dictionary')}>
-          {t('Take Test', 'Направи тест')}
+          {t('Take a Quiz', 'Направи тест')}
         </Button>
       </div>
 

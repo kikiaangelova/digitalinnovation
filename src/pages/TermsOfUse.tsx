@@ -107,7 +107,7 @@ export default function TermsOfUse() {
             <h2 className="typo-h2 text-lg">{isBg ? '7. ПРЕКРАТЯВАНЕ НА ДОСТЪПА' : '7. Termination of Access'}</h2>
             <p className="text-sm text-muted-foreground leading-relaxed">
               {isBg
-                ? 'Запазваме правото да прекратим или ограничим достъпа ви при нарушение на тези условия. При неправомерни действия може да бъде уведомена вашата образователна институция.'
+                ? 'Запазваме правото да прекратим или ограничим достъпа ти при нарушение на тези условия. При неправомерни действия може да бъде уведомена твоята образователна институция.'
                 : 'We reserve the right to terminate or restrict your access if you violate these terms. In cases of misconduct, your educational institution may be notified.'}
             </p>
             <p className="text-sm text-muted-foreground leading-relaxed mt-2">

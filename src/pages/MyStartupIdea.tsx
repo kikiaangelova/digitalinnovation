@@ -45,7 +45,7 @@ const SECTIONS: SectionConfig[] = [
     labelEn: 'Problem',
     labelBg: 'Проблем',
     descEn: 'Describe the real problem your startup will solve.',
-    descBg: 'Опишете реалния проблем, който вашият стартъп ще реши.',
+    descBg: 'Опишете реалния проблем, който твоят стартъп ще реши.',
     prompts: [
       { en: '💡 What problem are you solving?', bg: '💡 Какъв проблем решавате?' },
       { en: '👥 Who experiences this problem?', bg: '👥 Кой изпитва този проблем?' },
@@ -58,9 +58,9 @@ const SECTIONS: SectionConfig[] = [
     labelEn: 'Industry Analysis',
     labelBg: 'Анализ на индустрията',
     descEn: 'Analyze the industry your startup operates in.',
-    descBg: 'Анализирайте индустрията, в която работи вашият стартъп.',
+    descBg: 'Анализирай индустрията, в която работи твоят стартъп.',
     prompts: [
-      { en: '🏭 Which industry does your startup belong to?', bg: '🏭 Към коя индустрия принадлежи вашият стартъп?' },
+      { en: '🏭 Which industry does your startup belong to?', bg: '🏭 Към коя индустрия принадлежи твоят стартъп?' },
       { en: '📈 What are the key trends in this industry?', bg: '📈 Какви са ключовите тенденции в тази индустрия?' },
       { en: '📊 How large is the market? (estimated size, growth rate)', bg: '📊 Колко голям е пазарът? (очакван размер, темп на растеж)' },
       { en: '⚖️ What regulations or barriers to entry exist?', bg: '⚖️ Какви регулации или бариери за навлизане съществуват?' },
@@ -77,7 +77,7 @@ const SECTIONS: SectionConfig[] = [
       { en: '🔍 Identify at least 3 competitors (direct or indirect).', bg: '🔍 Идентифицирайте поне 3 конкуренти (преки или косвени).' },
       { en: '💪 What are their strengths?', bg: '💪 Какви са техните силни страни?' },
       { en: '⚠️ What are their weaknesses?', bg: '⚠️ Какви са техните слаби страни?' },
-      { en: '🎯 How is your solution different and better?', bg: '🎯 Как вашето решение е различно и по-добро?' },
+      { en: '🎯 How is your solution different and better?', bg: '🎯 Как твоето решение е различно и по-добро?' },
     ],
   },
   {
@@ -86,7 +86,7 @@ const SECTIONS: SectionConfig[] = [
     labelEn: 'Customer Segments',
     labelBg: 'Клиентски сегменти',
     descEn: 'Identify and describe your target users.',
-    descBg: 'Идентифицирайте и опишете вашите целеви потребители.',
+    descBg: 'Идентифицирай и опиши твоите целеви потребители.',
     prompts: [
       { en: '🎯 Who is your primary customer?', bg: '🎯 Кой е основният ви клиент?' },
       { en: '👥 Do you have secondary customers?', bg: '👥 Имате ли вторични клиенти?' },
@@ -99,7 +99,7 @@ const SECTIONS: SectionConfig[] = [
     labelEn: 'Value Proposition',
     labelBg: 'Стойностно предложение',
     descEn: 'Explain why your solution is valuable and unique.',
-    descBg: 'Обяснете защо вашето решение е ценно и уникално.',
+    descBg: 'Обясни защо твоето решение е ценно и уникално.',
     prompts: [
       { en: '⚡ What makes your solution unique?', bg: '⚡ Какво прави решението ви уникално?' },
       { en: '🏆 Why will customers choose you over alternatives?', bg: '🏆 Защо клиентите ще изберат вас пред алтернативите?' },
@@ -111,10 +111,10 @@ const SECTIONS: SectionConfig[] = [
     labelEn: 'Product (MVP)',
     labelBg: 'Продукт (MVP)',
     descEn: 'Describe your minimum viable product — app, platform, AI tool, or marketplace.',
-    descBg: 'Опишете вашия минимален жизнеспособен продукт — приложение, платформа, AI инструмент или marketplace.',
+    descBg: 'Опиши твоя минимален жизнеспособен продукт — приложение, платформа, AI инструмент или marketplace.',
     prompts: [
-      { en: '📱 What is your product? (app, platform, AI tool, marketplace…)', bg: '📱 Какъв е вашият продукт? (приложение, платформа, AI инструмент, marketplace…)' },
-      { en: '✨ What are the key features of your MVP?', bg: '✨ Какви са основните функции на вашия MVP?' },
+      { en: '📱 What is your product? (app, platform, AI tool, marketplace…)', bg: '📱 Какъв е твоят продукт? (приложение, платформа, AI инструмент, marketplace…)' },
+      { en: '✨ What are the key features of your MVP?', bg: '✨ Какви са основните функции на твоя MVP?' },
       { en: '🔧 What technology will you use?', bg: '🔧 Каква технология ще използвате?' },
     ],
   },
@@ -152,7 +152,7 @@ const SECTIONS: SectionConfig[] = [
     descEn: 'Create a short, compelling pitch for your startup idea.',
     descBg: 'Създайте кратко и завладяващо представяне на стартъп идеята ви.',
     prompts: [
-      { en: '🏷️ What is the name of your startup?', bg: '🏷️ Как се казва вашият стартъп?' },
+      { en: '🏷️ What is the name of your startup?', bg: '🏷️ Как се казва твоят стартъп?' },
       { en: '📝 Summarize the problem and your solution in 2–3 sentences.', bg: '📝 Обобщете проблема и решението в 2–3 изречения.' },
       { en: '🌍 Who is your target market?', bg: '🌍 Кой е целевият ви пазар?' },
       { en: '💼 How does the business model work?', bg: '💼 Как работи бизнес моделът?' },
@@ -391,7 +391,7 @@ export default function MyStartupIdea() {
                 <PhaseBadge phase="apply" lang={lang as 'en' | 'bg'} />
               </h1>
               <p className="typo-helper">
-                {t('Build your startup idea step by step', 'Изградете стартъп идеята си стъпка по стъпка')}
+                {t('Build your startup idea step by step', 'Изгради стартъп идеята си стъпка по стъпка')}
               </p>
             </div>
           </div>
@@ -416,7 +416,7 @@ export default function MyStartupIdea() {
             <Link to="/industries" className="mt-3 flex items-center gap-2 rounded-lg border border-dashed border-primary/30 bg-primary/5 px-3 py-2 hover:bg-primary/10 transition-colors">
               <Globe className="h-4 w-4 text-primary" />
               <span className="text-sm text-primary font-medium">
-                {t('Choose an industry from the Innovation Map →', 'Изберете индустрия от картата на иновациите →')}
+                {t('Choose an industry from the Innovation Map →', 'Избери индустрия от картата на иновациите →')}
               </span>
             </Link>
           )}
@@ -434,7 +434,7 @@ export default function MyStartupIdea() {
               <div className="mt-3 rounded-lg bg-[hsl(var(--sim-success))]/10 border border-[hsl(var(--sim-success))]/30 p-3 flex items-center gap-2">
                 <Check className="h-4 w-4 text-[hsl(var(--sim-success))]" />
                 <span className="text-sm font-medium text-foreground">
-                  {t('All sections complete! Your startup is ready for evaluation. +50 XP earned. 🎉', 'Всички секции са завършени! Вашият стартъп е готов за оценка. +50 XP спечелени. 🎉')}
+                  {t('All sections complete! Your startup is ready for evaluation. +50 XP earned. 🎉', 'Всички секции са завършени! Твоят стартъп е готов за оценка. +50 XP спечелени. 🎉')}
                 </span>
               </div>
             )}
@@ -611,7 +611,7 @@ export default function MyStartupIdea() {
                   <Textarea
                     value={(data as any)[section.key] || ''}
                     onChange={e => handleChange(section.key, e.target.value)}
-                    placeholder={t('Write your answer here...', 'Напишете вашия отговор тук...')}
+                    placeholder={t('Write your answer here...', 'Напиши отговора си тук...')}
                     className="min-h-[220px] text-base leading-relaxed resize-y"
                     disabled={data.is_submitted}
                   />

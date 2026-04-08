@@ -87,10 +87,10 @@ export default function StructuredFeedback({ context, lang, autoLoad = false, cl
         </div>
         <div className="flex-1">
           <h3 className="text-sm font-semibold text-foreground">
-            {t('AI Learning Feedback', 'AI обратна връзка за ученето')}
+            {t('AI Learning Feedback', 'AI обратна връзка за напредъка ти')}
           </h3>
           <p className="text-xs text-muted-foreground">
-            {t('Personalized guidance based on your performance', 'Персонализирани насоки на база резултатите ви')}
+            {t('Personalized guidance based on your performance', 'Персонализирани насоки на базата на твоите резултати')}
           </p>
         </div>
         <Sparkles className="h-4 w-4 text-primary" />
@@ -102,7 +102,7 @@ export default function StructuredFeedback({ context, lang, autoLoad = false, cl
             <p className="text-sm text-muted-foreground mb-4">
               {t(
                 'Get structured feedback on what you did well, what needs improvement, and your recommended next step.',
-                'Получете структурирана обратна връзка за силните ви страни, какво трябва да подобрите и препоръчителната следваща стъпка.'
+                'Получи структурирана обратна връзка за силните си страни, какво да подобриш и каква е следващата ти стъпка.'
               )}
             </p>
             <Button onClick={requestFeedback} className="gap-2">

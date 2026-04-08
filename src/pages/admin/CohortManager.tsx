@@ -83,7 +83,7 @@ export default function CohortManager() {
   };
 
   const createAssignment = async () => {
-    if (!assignCohort || (!assignCase && !assignAssessment)) { toast.error(t('Select cohort and case/assessment', 'Изберете кохорта и казус/оценка')); return; }
+    if (!assignCohort || (!assignCase && !assignAssessment)) { toast.error(t('Select cohort and case/assessment', 'Избери кохорта и казус/оценка')); return; }
     const { error } = await supabase.from('assignments').insert({
       cohort_id: assignCohort,
       case_study_id: assignCase || null,
@@ -125,21 +125,21 @@ export default function CohortManager() {
                 <div>
                   <Label>{t('Cohort', 'Кохорта')}</Label>
                   <Select value={assignCohort} onValueChange={setAssignCohort}>
-                    <SelectTrigger><SelectValue placeholder={t('Select cohort', 'Изберете кохорта')} /></SelectTrigger>
+                    <SelectTrigger><SelectValue placeholder={t('Select cohort', 'Избери кохорта')} /></SelectTrigger>
                     <SelectContent>{cohorts.map(c => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}</SelectContent>
                   </Select>
                 </div>
                 <div>
                   <Label>{t('Case Study (optional)', 'Казус (незадължително)')}</Label>
                   <Select value={assignCase} onValueChange={v => { setAssignCase(v); setAssignAssessment(''); }}>
-                    <SelectTrigger><SelectValue placeholder={t('Select case', 'Изберете казус')} /></SelectTrigger>
+                    <SelectTrigger><SelectValue placeholder={t('Select case', 'Избери казус')} /></SelectTrigger>
                     <SelectContent>{cases.filter(c => c.published).map(c => <SelectItem key={c.id} value={c.id}>{c.title}</SelectItem>)}</SelectContent>
                   </Select>
                 </div>
                 <div>
                   <Label>{t('Assessment (optional)', 'Оценка (незадължително)')}</Label>
                   <Select value={assignAssessment} onValueChange={v => { setAssignAssessment(v); setAssignCase(''); }}>
-                    <SelectTrigger><SelectValue placeholder={t('Select assessment', 'Изберете оценка')} /></SelectTrigger>
+                    <SelectTrigger><SelectValue placeholder={t('Select assessment', 'Избери оценка')} /></SelectTrigger>
                     <SelectContent>{assessments.filter(a => a.published).map(a => <SelectItem key={a.id} value={a.id}>{a.title}</SelectItem>)}</SelectContent>
                   </Select>
                 </div>
@@ -198,7 +198,7 @@ export default function CohortManager() {
           <div className="flex gap-2 flex-wrap">
             <Input value={newTeamName} onChange={e => setNewTeamName(e.target.value)} placeholder={t('Team name', 'Име на екип')} className="w-48" />
             <Select value={newTeamCohort} onValueChange={setNewTeamCohort}>
-              <SelectTrigger className="w-48"><SelectValue placeholder={t('Select cohort', 'Изберете кохорта')} /></SelectTrigger>
+              <SelectTrigger className="w-48"><SelectValue placeholder={t('Select cohort', 'Избери кохорта')} /></SelectTrigger>
               <SelectContent>{cohorts.map(c => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}</SelectContent>
             </Select>
             <Button onClick={createTeam} className="sim-gradient border-0">{t('Create Team', 'Създай екип')}</Button>

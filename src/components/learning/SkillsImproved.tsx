@@ -58,7 +58,7 @@ export default function SkillsImproved({ activityType, scorePercent = 75, lang, 
       <div className="flex items-center gap-2 mb-3">
         <TrendingUp className="h-4 w-4 text-primary" />
         <h3 className={`${compact ? 'text-sm' : 'text-base'} font-semibold text-foreground`}>
-          {t('You improved:', 'Подобрихте:')}
+          {t('You improved:', 'Подобри:')}
         </h3>
       </div>
       <div className={`grid ${compact ? 'gap-2' : 'gap-3'} ${!compact && relevantSkills.length > 3 ? 'sm:grid-cols-2' : ''}`}>

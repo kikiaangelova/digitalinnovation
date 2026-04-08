@@ -520,7 +520,7 @@ export default function LearningModulePlayer() {
             <Textarea
               value={analyticalAnswer}
               onChange={e => setAnalyticalAnswer(e.target.value)}
-              placeholder={t('Write your analysis here...', 'Напишете вашия анализ тук...')}
+              placeholder={t('Write your analysis here...', 'Напиши анализа си тук...')}
               className="min-h-[120px]"
               disabled={!!existingResponse?.completed_at}
             />
@@ -554,7 +554,7 @@ export default function LearningModulePlayer() {
             <Textarea
               value={applicationAnswer}
               onChange={e => setApplicationAnswer(e.target.value)}
-              placeholder={t('Apply this concept to your startup idea...', 'Приложете тази концепция към вашата стартъп идея...')}
+              placeholder={t('Apply this concept to your startup idea...', 'Приложи тази концепция към твоята стартъп идея...')}
               className="min-h-[120px]"
               disabled={!!existingResponse?.completed_at}
             />
@@ -593,7 +593,7 @@ export default function LearningModulePlayer() {
 
             {/* Outcome Scores */}
             <div className="rounded-xl border border-border bg-card p-5">
-              <h3 className="text-sm font-semibold text-foreground mb-4">{t('Learning Outcome Scores', 'Оценки на учебните резултати')}</h3>
+              <h3 className="text-sm font-semibold text-foreground mb-4">{t('Learning Outcome Scores', 'Постижения по умения')}</h3>
               <div className="space-y-3">
                 {[
                   { key: 'concept', icon: Brain, en: 'Concept Understanding', bg: 'Разбиране на концепции', score: scores.concept },
@@ -619,7 +619,7 @@ export default function LearningModulePlayer() {
 
             {/* Written Answers Summary */}
             <div className="rounded-xl border border-border bg-card p-5 space-y-3">
-              <h3 className="text-sm font-semibold text-foreground">{t('Your Answers', 'Вашите отговори')}</h3>
+              <h3 className="text-sm font-semibold text-foreground">{t('Your Answers', 'Твоите отговори')}</h3>
               <div>
                 <p className="text-xs font-medium text-muted-foreground mb-1">{t('Analytical Answer', 'Аналитичен отговор')}</p>
                 <p className="text-xs text-foreground bg-accent/50 rounded-lg p-3">{analyticalAnswer || '—'}</p>

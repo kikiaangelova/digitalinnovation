@@ -48,7 +48,7 @@ export default function QuickResumeCards({
     items.push({
       type: 'module',
       label: nextModuleTitle,
-      sublabel: t('Continue learning', 'Продължи ученето'),
+      sublabel: t('Continue learning', 'Продължи да учиш'),
       path: `/learn/${nextModuleSlug}`,
     });
   }

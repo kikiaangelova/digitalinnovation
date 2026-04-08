@@ -299,7 +299,7 @@ export default function CasePreview() {
               { icon: Building2, en: '1. Context — Company, industry & situation', bg: '1. Контекст — Компания, индустрия и ситуация' },
               { icon: Target, en: '2. Strategic Problem — Key decision to make', bg: '2. Стратегически проблем — Ключово решение' },
               { icon: Brain, en: '3. Analysis — Competitors, strengths, risks & opportunities', bg: '3. Анализ — Конкуренти, силни страни, рискове и възможности' },
-              { icon: PenTool, en: '4. Decision — Your strategic choice', bg: '4. Решение — Вашият стратегически избор' },
+              { icon: PenTool, en: '4. Decision — Your strategic choice', bg: '4. Решение — Твоят стратегически избор' },
               { icon: Lightbulb, en: '5. Case Insight — Key lesson & learning outcome', bg: '5. Извод — Ключов урок и учебен резултат' },
             ].map((item, i) => (
               <Card key={i} className="flex items-center gap-3 p-4 border-border hover:border-primary/30 transition-colors">
@@ -424,7 +424,7 @@ export default function CasePreview() {
           <Button size="lg" className="w-full sim-gradient border-0 text-base font-semibold py-6"
             onClick={handleStart} disabled={steps.length === 0}>
             {steps.length === 0
-              ? tl('Coming Soon', 'Очаквайте скоро')
+              ? tl('Coming Soon', 'Очаквай скоро')
               : completionStatus === 'completed'
                 ? <>{tl('Retake Case', 'Повтори казуса')} <ArrowRight className="ml-2 h-5 w-5" /></>
                 : completionStatus === 'in_progress'

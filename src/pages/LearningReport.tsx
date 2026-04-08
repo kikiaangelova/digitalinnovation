@@ -70,7 +70,7 @@ export default function LearningReport() {
 
   // Recommendations
   const recommendations: { en: string; bg: string }[] = [];
-  if (casesCompleted < cases.length) recommendations.push({ en: `Complete more case studies (${casesCompleted}/${cases.length} done)`, bg: `Завършете повече казуси (${casesCompleted}/${cases.length} завършени)` });
+  if (casesCompleted < cases.length) recommendations.push({ en: `Complete more case studies (${casesCompleted}/${cases.length} done)`, bg: `Завърши повече казуси (${casesCompleted}/${cases.length} завършени)` });
   if (!simComplete) recommendations.push({ en: `Continue the simulator (Week ${simWeek}/6)`, bg: `Продължете симулатора (Седмица ${simWeek}/6)` });
   if (startupPct < 100) recommendations.push({ en: `Fill in missing startup project sections (${startupPct}% complete)`, bg: `Попълнете липсващи секции от стартъп проекта (${startupPct}% завършен)` });
   if (weaknesses.length > 0) recommendations.push({ en: `Focus on: ${weaknesses.map(w => w.en).join(', ')}`, bg: `Фокусирайте се върху: ${weaknesses.map(w => w.bg).join(', ')}` });
@@ -196,7 +196,7 @@ export default function LearningReport() {
                 {t('Strengths', 'Силни страни')}
               </h3>
               {strengths.length === 0 ? (
-                <p className="text-xs text-muted-foreground">{t('Complete more activities to identify strengths', 'Завършете повече дейности, за да идентифицирате силни страни')}</p>
+                <p className="text-xs text-muted-foreground">{t('Complete more activities to identify strengths', 'Завърши повече дейности, за да идентифицираш силни страни')}</p>
               ) : (
                 <div className="space-y-2">
                   {strengths.map(s => (

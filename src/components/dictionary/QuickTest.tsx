@@ -308,9 +308,9 @@ export default function QuickTest() {
           }
         }
 
-        if (history.length === 0) unlockedBadges.push(t('Quiz Starter', 'Начало на теста'));
-        if (projectedCount >= 5 && history.length < 5) unlockedBadges.push(t('Knowledge Builder', 'Строител на знания'));
-        if (projectedHighScores >= 3 && history.filter(r => r.score >= 80).length < 3) unlockedBadges.push(t('Sharp Analyst', 'Остър Анализатор'));
+        if (history.length === 0) unlockedBadges.push(t('Quiz Starter', 'Пръв тест'));
+        if (projectedCount >= 5 && history.length < 5) unlockedBadges.push(t('Knowledge Builder', 'Събирач на знания'));
+        if (projectedHighScores >= 3 && history.filter(r => r.score >= 80).length < 3) unlockedBadges.push(t('Sharp Analyst', 'Остър анализатор'));
         if (projectedCategories >= 3 && new Set(history.map(r => r.category).filter(Boolean)).size < 3) unlockedBadges.push(t('Test Explorer', 'Изследовател на тестове'));
         if (projectedConsecutiveImprovements >= 3) unlockedBadges.push(t('Consistency Master', 'Майстор на постоянството'));
       } catch {

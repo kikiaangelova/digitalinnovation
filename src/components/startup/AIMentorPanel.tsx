@@ -95,7 +95,7 @@ export default function AIMentorPanel({ data, lang }: Props) {
             {t('AI Startup Mentor', 'AI Стартъп Ментор')}
           </h3>
           <p className="text-xs text-muted-foreground">
-            {t('Get intelligent feedback on your Business Model Canvas', 'Получете интелигентна обратна връзка за вашия Business Model Canvas')}
+            {t('Get intelligent feedback on your Business Model Canvas', 'Получи интелигентна обратна връзка за твоя Business Model Canvas')}
           </p>
         </div>
         <div className="flex items-center gap-2">

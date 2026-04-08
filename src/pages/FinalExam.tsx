@@ -15,16 +15,16 @@ import { Award, BookOpen, Rocket, BarChart3, Brain, CheckCircle2, AlertTriangle,
 const SECTIONS = [
   { key: 'case_analysis', icon: BookOpen, enTitle: 'Case Analysis', bgTitle: 'Анализ на казус',
     enDesc: 'Analyze the following business problem: A traditional delivery company is losing market share to digital competitors. Identify the core problem, analyze the market environment, and propose a strategic direction for digital transformation.',
-    bgDesc: 'Анализирайте следния бизнес проблем: Традиционна компания за доставки губи пазарен дял заради дигитални конкуренти. Идентифицирайте основния проблем, анализирайте пазарната среда и предложете стратегическа посока за дигитална трансформация.' },
+    bgDesc: 'Анализирай следния бизнес проблем: Традиционна компания за доставки губи пазарен дял заради дигитални конкуренти. Идентифицирай основния проблем, анализирай пазарната среда и предложи стратегическа посока за дигитална трансформация.' },
   { key: 'startup_concept', icon: Rocket, enTitle: 'Startup Concept', bgTitle: 'Стартъп концепция',
     enDesc: 'Define a startup idea that solves a real problem. Describe: 1) The problem, 2) Target customer, 3) Your value proposition, 4) How you will make money.',
     bgDesc: 'Дефинирайте стартъп идея, която решава реален проблем. Опишете: 1) Проблемът, 2) Целевият клиент, 3) Вашето ценностно предложение, 4) Как ще печелите пари.' },
   { key: 'strategic_decision', icon: BarChart3, enTitle: 'Strategic Decision', bgTitle: 'Стратегическо решение',
     enDesc: 'Your startup has a €50,000 budget and must choose between: A) Investing in marketing for rapid growth, B) Improving the product for higher satisfaction, C) Hiring a new team. Justify your decision, analyze risks, and expected outcomes.',
-    bgDesc: 'Вашият стартъп има 50,000 лв бюджет и трябва да избере между: A) Инвестиране в маркетинг за бърз растеж, B) Подобряване на продукта за по-висока задоволеност, C) Наемане на нов екип. Обосновете решението си, анализирайте рисковете и очакваните резултати.' },
+    bgDesc: 'Твоят стартъп има 50,000 лв бюджет и трябва да избере между: A) Инвестиране в маркетинг за бърз растеж, B) Подобряване на продукта за по-висока задоволеност, C) Наемане на нов екип. Обосновете решението си, анализирайте рисковете и очакваните резултати.' },
   { key: 'reflection', icon: Brain, enTitle: 'Reflection', bgTitle: 'Рефлексия',
     enDesc: 'What did you learn during the course? How has your thinking about innovation and business changed? What skills did you develop and how will you apply them in the future?',
-    bgDesc: 'Какво научихте по време на курса? Как се промени начинът ви на мислене за иновации и бизнес? Какви умения развихте и как ще ги приложите в бъдеще?' },
+    bgDesc: 'Какво научи по време на курса? Как се промени начинът ти на мислене за иновации и бизнес? Какви умения разви и как ще ги приложиш в бъдеще?' },
 ];
 
 interface FeedbackSection { score: number; strengths: string; gaps: string; hint: string; }

@@ -221,7 +221,7 @@ export default function CompetitorAnalysis({ value, onChange, lang, disabled }: 
           onChange={e => update({ ...data, opportunity: e.target.value })}
           placeholder={t(lang,
             'Describe the gap in the market that your startup can fill...',
-            'Опишете пропуска на пазара, който вашият стартъп може да запълни...'
+            'Опиши пропуска на пазара, който твоят стартъп може да запълни...'
           )}
           disabled={disabled}
           className="min-h-[120px] text-sm"

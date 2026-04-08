@@ -130,14 +130,14 @@ export const SIM_WEEKS: SimWeek[] = [
     titleEn: 'Industry Selection',
     titleBg: 'Избор на индустрия',
     descEn: 'Choose the industry your startup will operate in. Each industry has different innovation dynamics, market sizes, and risk profiles.',
-    descBg: 'Изберете индустрията, в която ще работи вашият стартъп. Всяка индустрия има различна динамика на иновациите, размер на пазара и рисков профил.',
+    descBg: 'Избери индустрията, в която ще работи твоят стартъп. Всяка индустрия има различна динамика на иновациите, размер на пазара и рисков профил.',
     icon: '🏭',
     theoryConceptEn: 'Digital Ecosystems',
     theoryConceptBg: 'Дигитални екосистеми',
     decisions: [
       {
         questionEn: 'Which industry will your startup target?',
-        questionBg: 'В коя индустрия ще работи вашият стартъп?',
+        questionBg: 'В коя индустрия ще работи твоят стартъп?',
         options: [
           { id: 's1-fintech', labelEn: 'FinTech', labelBg: 'FinTech', descEn: 'Financial technology — payments, lending, crypto, insurance. Large market, heavy regulation.', descBg: 'Финансови технологии — плащания, кредитиране, крипто, застраховане. Голям пазар, тежка регулация.', effects: { innovation: 15, marketPotential: 20, scalability: 15, riskLevel: 15, growthPotential: 18 } },
           { id: 's1-healthtech', labelEn: 'HealthTech', labelBg: 'HealthTech', descEn: 'Healthcare technology — diagnostics, telemedicine, health data. High impact, long sales cycles.', descBg: 'Здравни технологии — диагностика, телемедицина, здравни данни. Голямо въздействие, дълги цикли на продажба.', effects: { innovation: 20, marketPotential: 18, scalability: 10, riskLevel: 10, growthPotential: 15 } },
@@ -154,7 +154,7 @@ export const SIM_WEEKS: SimWeek[] = [
     titleEn: 'Problem Definition',
     titleBg: 'Дефиниране на проблема',
     descEn: 'Define the problem your startup solves. The best startups solve real, urgent, and widespread problems.',
-    descBg: 'Дефинирайте проблема, който вашият стартъп решава. Най-добрите стартъпи решават реални, неотложни и широко разпространени проблеми.',
+    descBg: 'Дефинирай проблема, който твоят стартъп решава. Най-добрите стартъпи решават реални, неотложни и широко разпространени проблеми.',
     icon: '🎯',
     decisions: [
       {
@@ -190,7 +190,7 @@ export const SIM_WEEKS: SimWeek[] = [
     decisions: [
       {
         questionEn: 'How crowded is your market?',
-        questionBg: 'Колко наситен е вашият пазар?',
+        questionBg: 'Колко наситен е твоят пазар?',
         options: [
           { id: 's3-blue', labelEn: 'Blue ocean — no direct competitors', labelBg: 'Син океан — без преки конкуренти', descEn: 'First mover advantage but must educate the market.', descBg: 'Предимство на първия навлизащ, но трябва да обучите пазара.', effects: { innovation: 15, marketPotential: 5, riskLevel: 12, growthPotential: 10 } },
           { id: 's3-moderate', labelEn: 'Moderate competition — 3-5 players', labelBg: 'Умерена конкуренция — 3-5 играча', descEn: 'Validated market with room for differentiation.', descBg: 'Валидиран пазар с място за диференциация.', effects: { innovation: 5, marketPotential: 10, scalability: 5, riskLevel: -3, growthPotential: 8 } },
@@ -199,7 +199,7 @@ export const SIM_WEEKS: SimWeek[] = [
       },
       {
         questionEn: 'What is your primary differentiation strategy?',
-        questionBg: 'Каква е вашата основна стратегия за диференциация?',
+        questionBg: 'Каква е твоята основна стратегия за диференциация?',
         options: [
           { id: 's3-tech', labelEn: 'Technology superiority', labelBg: 'Технологично превъзходство', descEn: 'Better tech creates barriers to entry. High R&D cost.', descBg: 'По-добрата технология създава бариери за навлизане. Висока R&D цена.', effects: { innovation: 15, scalability: 8, riskLevel: 5, growthPotential: 8 } },
           { id: 's3-ux', labelEn: 'Superior user experience', labelBg: 'Превъзходно потребителско изживяване', descEn: 'Make it 10x easier to use. Lower barrier, faster adoption.', descBg: 'Направете го 10 пъти по-лесно за използване. По-ниска бариера, по-бързо приемане.', effects: { innovation: 8, marketPotential: 5, scalability: 5, riskLevel: -5, growthPotential: 12 } },
@@ -244,14 +244,14 @@ export const SIM_WEEKS: SimWeek[] = [
     titleEn: 'Business Model',
     titleBg: 'Бизнес модел',
     descEn: 'Design how your startup will generate revenue. The best startups often combine multiple revenue streams to diversify risk.',
-    descBg: 'Проектирайте как вашият стартъп ще генерира приходи. Най-добрите стартъпи често комбинират множество приходни потоци.',
+    descBg: 'Проектирай как твоят стартъп ще генерира приходи. Най-добрите стартъпи често комбинират множество приходни потоци.',
     icon: '💰',
     theoryConceptEn: 'Customer Acquisition Cost',
     theoryConceptBg: 'Цена за привличане на клиент',
     decisions: [
       {
         questionEn: 'How will your startup make money? (Select all that apply)',
-        questionBg: 'Как вашият стартъп ще печели пари? (изберете всички приложими)',
+        questionBg: 'Как твоят стартъп ще печели пари? (изберете всички приложими)',
         multiSelect: true,
         multiSelectHintEn: 'Multi-revenue strategy detected — diversifying revenue streams reduces risk and increases valuation.',
         multiSelectHintBg: 'Засечена мулти-приходна стратегия — диверсификацията на приходите намалява риска и увеличава оценката.',
@@ -271,7 +271,7 @@ export const SIM_WEEKS: SimWeek[] = [
     titleEn: 'Marketing Strategy',
     titleBg: 'Маркетингова стратегия',
     descEn: 'Choose how you will acquire customers and grow your startup. The best founders use a strategic mix of channels.',
-    descBg: 'Изберете как ще привлечете клиенти и ще развиете стартъпа. Най-добрите основатели използват стратегически микс от канали.',
+    descBg: 'Избери как ще привлечеш клиенти и ще развиеш стартъпа. Най-добрите основатели използват стратегически микс от канали.',
     icon: '📣',
     theoryConceptEn: 'Network Effects',
     theoryConceptBg: 'Мрежови ефекти',
@@ -704,7 +704,7 @@ export function getStartupGrade(kpis: SimWeekKPIs): { grade: string; labelEn: st
   if (score >= 75) return {
     grade: 'A', labelEn: 'Unicorn Potential', labelBg: 'Потенциал за Unicorn', color: 'hsl(var(--sim-success))',
     feedbackEn: 'Exceptional strategy! Your startup demonstrates strong innovation, excellent market fit, and high growth potential with manageable risk. You think like a top founder.',
-    feedbackBg: 'Изключителна стратегия! Вашият стартъп демонстрира силна иновация, отлично съответствие с пазара и висок потенциал за растеж с управляем риск.'
+    feedbackBg: 'Изключителна стратегия! Твоят стартъп демонстрира силна иновация, отлично съответствие с пазара и висок потенциал за растеж с управляем риск.'
   };
   if (score >= 55) return {
     grade: 'B', labelEn: 'Strong Startup', labelBg: 'Силен стартъп', color: 'hsl(var(--chart-2))',
@@ -714,7 +714,7 @@ export function getStartupGrade(kpis: SimWeekKPIs): { grade: string; labelEn: st
   if (score >= 40) return {
     grade: 'C', labelEn: 'Promising Venture', labelBg: 'Обещаващ проект', color: 'hsl(var(--sim-warning))',
     feedbackEn: 'Your startup has potential but faces significant challenges. Review your risk exposure and consider whether your product-market fit is strong enough.',
-    feedbackBg: 'Вашият стартъп има потенциал, но среща значителни предизвикателства. Прегледайте рисковата си експозиция.'
+    feedbackBg: 'Твоят стартъп има потенциал, но среща значителни предизвикателства. Прегледай рисковата си експозиция.'
   };
   return {
     grade: 'D', labelEn: 'Needs Rethinking', labelBg: 'Нуждае се от преосмисляне', color: 'hsl(var(--sim-danger))',

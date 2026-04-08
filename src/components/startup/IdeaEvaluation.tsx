@@ -406,7 +406,7 @@ export default function IdeaEvaluation({ lang, startupData }: Props) {
             <p className="text-sm text-muted-foreground mb-4">
               {t(
                 'These companies operate in a similar space. Study them to find your unique advantage.',
-                'Тези компании работят в подобна сфера. Проучете ги, за да намерите уникалното си предимство.'
+                'Тези компании работят в подобна сфера. Проучи ги, за да намериш уникалното си предимство.'
               )}
             </p>
             <div className="grid sm:grid-cols-3 gap-3">
@@ -459,7 +459,7 @@ export default function IdeaEvaluation({ lang, startupData }: Props) {
                 <div className="w-10 h-10 rounded-full bg-primary border-2 border-primary flex items-center justify-center">
                   <Rocket className="h-4 w-4 text-primary-foreground" />
                 </div>
-                <span className="text-xs text-primary font-bold mt-0.5">{t('Your Idea', 'Вашата идея')}</span>
+                <span className="text-xs text-primary font-bold mt-0.5">{t('Your Idea', 'Твоята идея')}</span>
               </div>
 
               {/* Problem label */}
@@ -470,7 +470,7 @@ export default function IdeaEvaluation({ lang, startupData }: Props) {
             <p className="text-xs text-muted-foreground mt-2 italic">
               {t(
                 'This map shows where your idea sits relative to competitors. Move towards higher innovation and larger market to increase potential.',
-                'Тази карта показва къде е вашата идея спрямо конкурентите. Движете се към по-висока иновация и по-голям пазар.'
+                'Тази карта показва къде е твоята идея спрямо конкурентите. Движи се към по-висока иновация и по-голям пазар.'
               )}
             </p>
           </div>
@@ -482,7 +482,7 @@ export default function IdeaEvaluation({ lang, startupData }: Props) {
               {t('Differentiation Check', 'Проверка за различие')}
             </h3>
             <p className="text-sm text-muted-foreground mb-4">
-              {t('How is your idea different or better than existing solutions?', 'Как вашата идея е различна или по-добра от съществуващите решения?')}
+              {t('How is your idea different or better than existing solutions?', 'Как твоята идея е различна или по-добра от съществуващите решения?')}
             </p>
 
             <div className="grid sm:grid-cols-2 gap-2 mb-4">
@@ -504,7 +504,7 @@ export default function IdeaEvaluation({ lang, startupData }: Props) {
             <Textarea
               value={diffAnswer}
               onChange={e => setDiffAnswer(e.target.value)}
-              placeholder={t('Explain what makes your startup unique...', 'Обяснете какво прави вашия стартъп уникален...')}
+              placeholder={t('Explain what makes your startup unique...', 'Обясни какво прави твоя стартъп уникален...')}
               className="min-h-[120px]"
             />
           </div>
@@ -530,7 +530,7 @@ export default function IdeaEvaluation({ lang, startupData }: Props) {
                 <p className="text-sm text-muted-foreground mb-3">
                   {t(
                     'Get AI-powered analysis: Strengths, Risks, Improvement Suggestions, and Next Steps — just like a real accelerator review.',
-                    'Получете AI анализ: Силни страни, Рискове, Предложения за подобрение и Следващи стъпки — точно като реален акселераторен преглед.'
+                    'Получи AI анализ: Силни страни, Рискове, Предложения за подобрение и Следващи стъпки — точно като реален акселераторен преглед.'
                   )}
                 </p>
                 <Button onClick={requestAIFeedback} disabled={aiLoading} size="sm" className="gap-1.5">

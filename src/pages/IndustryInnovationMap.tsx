@@ -38,7 +38,7 @@ export default function IndustryInnovationMap() {
     }
     toast.success(
       lang === 'bg'
-        ? `Индустрия "${industry.nameBg}" е свързана с вашия стартъп проект!`
+        ? `Индустрия "${industry.nameBg}" е свързана с твоя стартъп проект!`
         : `Industry "${industry.nameEn}" linked to your startup project!`
     );
     navigate('/my-startup');
@@ -224,7 +224,7 @@ export default function IndustryInnovationMap() {
               </h3>
               <p className="text-sm text-muted-foreground mt-0.5">
                 {lang === 'bg'
-                  ? 'Свържете тази индустрия с вашия стартъп проект и започнете да работите по идеята си.'
+                  ? 'Свържи тази индустрия с твоя стартъп проект и започни да работиш по идеята си.'
                   : 'Link this industry to your startup project and start building your idea.'}
               </p>
             </div>
