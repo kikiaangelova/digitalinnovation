@@ -215,6 +215,7 @@ export default function TeacherDashboardPage() {
       startup_sections: projMap[sid]?.count || 0,
       startup_keys: projMap[sid]?.keys || {},
       startup_submitted: projMap[sid]?.submitted || false,
+      bmc_keys: projMap[sid]?.bmcKeys || {},
       module_count: modCountMap[sid] || 0,
       quiz_avg: quizScores[sid] ? Math.round(quizScores[sid].total / quizScores[sid].count) : 0,
       recent_quizzes: recentQuizzes[sid] || [],
