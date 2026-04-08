@@ -47,6 +47,9 @@ export default function ProfilePage() {
   const [saving, setSaving] = useState(false);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState(false);
+  const [classroomInfo, setClassroomInfo] = useState<{ id: string; name: string; teacher_name: string | null } | null>(null);
+  const [joinCode, setJoinCode] = useState('');
+  const [joinLoading, setJoinLoading] = useState(false);
   const [showGdprBanner, setShowGdprBanner] = useState(() => {
     return localStorage.getItem('gdpr_banner_dismissed') !== 'true';
   });
