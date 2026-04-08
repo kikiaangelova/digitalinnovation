@@ -390,10 +390,12 @@ export default function TeacherDashboardPage() {
           {/* Left: Student engagement chart + struggling students */}
           <div className="md:col-span-2 space-y-6">
             {/* Activity chart */}
-            <Card>
+            <Card className="border-border/50">
               <CardHeader className="pb-2">
                 <CardTitle className="text-base flex items-center gap-2">
-                  <BarChart3 className="h-4 w-4 text-primary" />
+                  <div className="rounded-lg sim-gradient p-1.5">
+                    <BarChart3 className="h-3.5 w-3.5 text-primary-foreground" />
+                  </div>
                   {t('Student Engagement by Area', 'Ангажираност на учениците по области')}
                 </CardTitle>
               </CardHeader>
