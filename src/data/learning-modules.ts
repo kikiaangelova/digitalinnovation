@@ -1076,6 +1076,10 @@ For digital startups, **key operational processes** include:
     slug: 'supply-chain-basics',
     title_en: 'Supply Chain Basics',
     title_bg: 'Основи на веригата за доставки',
+    hook: { en: 'In 2021, one stuck ship in the Suez Canal caused $9.6B in daily trade losses. Supply chains are invisible — until they break.', bg: 'През 2021 г. един заседнал кораб в Суецкия канал причини $9.6B дневни загуби. Веригите за доставки са невидими — докато не се счупят.' },
+    metaphor: { en: 'Just-in-Time is like cooking fresh food for each customer. Buffer stock is like a freezer full of pre-made meals. One is efficient, the other is safe.', bg: 'Just-in-Time е като готвене на прясна храна за всеки клиент. Буферен запас е като фризер с готови ястия. Едното е ефективно, другото е безопасно.' },
+    framework: { name: 'JIT vs Buffer Model', bullets_en: ['JIT: zero inventory, maximum efficiency, fragile to disruptions', 'Buffer: safety stock, higher costs, resilient to shocks', 'Best practice: hybrid approach based on risk assessment'], bullets_bg: ['JIT: нулев инвентар, максимална ефективност, крехък при прекъсвания', 'Буфер: предпазен запас, по-високи разходи, устойчив на шокове', 'Най-добра практика: хибриден подход базиран на оценка на риска'], apply_en: 'Which model fits your startup: JIT, buffer, or hybrid?', apply_bg: 'Кой модел пасва на стартъпа ти: JIT, буфер или хибрид?' },
+    provocations: [{ en: 'Should every startup care about supply chain, even digital-only products?', bg: 'Трябва ли всеки стартъп да се интересува от веригата за доставки, дори при чисто дигитални продукти?' }, { en: 'How did COVID-19 change the global approach to inventory management?', bg: 'Как COVID-19 промени глобалния подход към управлението на инвентара?' }],
     level: 2,
     startup_field: 'bmc_channels',
     concepts: [
