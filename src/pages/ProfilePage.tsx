@@ -63,27 +63,42 @@ export default function ProfilePage() {
   useEffect(() => {
     if (!user) return;
     const fetchData = async () => {
-      const { data: p } = await supabase.from('profiles').select('*').eq('user_id', user.id).maybeSingle();
+      const [profileRes, subsRes, badgesRes, teamsRes, quizRes, simRes, startupRes] = await Promise.all([
+        supabase.from('profiles').select('*').eq('user_id', user.id).maybeSingle(),
+        supabase.from('submissions').select('case_study_id, total_score, max_score, is_draft, submitted_at').eq('user_id', user.id).eq('is_draft', false),
+        supabase.from('user_badges').select('badge_id, earned_at, badges(name, description, icon)').eq('user_id', user.id),
+        supabase.from('team_members').select('team_id, role, teams(name, cohort_id)').eq('user_id', user.id),
+        supabase.from('quiz_results').select('id, score, max_score, category, quiz_type, created_at, xp_earned').eq('user_id', user.id).order('created_at', { ascending: false }),
+        supabase.from('simulator_progress').select('current_week, is_complete, grade, created_at').eq('user_id', user.id).maybeSingle(),
+        supabase.from('startup_projects').select('problem, customer, value_proposition, digital_product, business_model, growth_strategy, final_pitch, is_submitted, bmc_customer_segments, bmc_value_proposition, bmc_channels, bmc_customer_relationships, bmc_revenue_streams, bmc_key_resources, bmc_key_activities, bmc_key_partners, bmc_cost_structure').eq('user_id', user.id).maybeSingle(),
+      ]);
+      const p = profileRes.data as any;
       if (p) {
         setFullName(p.full_name || '');
-        setDisplayName((p as any).display_name || '');
-        setSkillsTags((p as any).skills_tags || []);
-        setInterests((p as any).interests || []);
-        const links = (p as any).links_json || {};
+        setDisplayName(p.display_name || '');
+        setSkillsTags(p.skills_tags || []);
+        setInterests(p.interests || []);
+        const links = p.links_json || {};
         setPortfolio(links.portfolio || '');
         setSchool(links.school || '');
         setClassGrade(links.class_grade || '');
         setCountry(links.country || '');
-        setProfileVisible((p as any).profile_visible ?? true);
-        setLeaderboardVisible((p as any).leaderboard_visible ?? false);
+        setProfileVisible(p.profile_visible ?? true);
+        setLeaderboardVisible(p.leaderboard_visible ?? false);
+        setTotalXp(p.total_xp || 0);
       }
-      const { data: subs } = await supabase.from('submissions').select('case_study_id, total_score, max_score, is_draft').eq('user_id', user.id).eq('is_draft', false);
-      setSubmissions(subs || []);
-      const { data: ub } = await supabase.from('user_badges').select('badge_id, earned_at, badges(name, description, icon)').eq('user_id', user.id);
-      setBadges(ub || []);
-      const { data: tm } = await supabase.from('team_members').select('team_id, role, teams(name, cohort_id)').eq('user_id', user.id);
-      setTeams(tm || []);
+      setSubmissions(subsRes.data || []);
+      setBadges(badgesRes.data || []);
+      setTeams(teamsRes.data || []);
+      setQuizHistory(quizRes.data || []);
+      setSimData(simRes.data || null);
+      setStartupData(startupRes.data || null);
       // Fetch classroom membership
+      const { data: membership } = await supabase
+        .from('classroom_students')
+        .select('classroom_id')
+        .eq('student_id', user.id)
+        .maybeSingle();
       const { data: membership } = await supabase
         .from('classroom_students')
         .select('classroom_id')
