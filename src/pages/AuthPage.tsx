@@ -437,9 +437,10 @@ export default function AuthPage() {
                       className="rounded mt-1 shrink-0"
                     />
                     <label htmlFor="consent" className="text-xs text-muted-foreground leading-snug">
-                      {tx(
-                        <>I have read and accept the <Link to="/privacy" target="_blank" className="text-primary hover:underline">Privacy Policy</Link> and <Link to="/terms" target="_blank" className="text-primary hover:underline">Terms of Use</Link> of DigiInnov.</>,
+                      {lang === 'bg' ? (
                         <>Прочетох и приемам <Link to="/privacy" target="_blank" className="text-primary hover:underline">Политиката за поверителност</Link> и <Link to="/terms" target="_blank" className="text-primary hover:underline">Условията за ползване</Link> на DigiInnov.</>
+                      ) : (
+                        <>I have read and accept the <Link to="/privacy" target="_blank" className="text-primary hover:underline">Privacy Policy</Link> and <Link to="/terms" target="_blank" className="text-primary hover:underline">Terms of Use</Link> of DigiInnov.</>
                       )}
                     </label>
                   </div>
