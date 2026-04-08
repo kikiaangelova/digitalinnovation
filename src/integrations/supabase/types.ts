@@ -2033,6 +2033,15 @@ export type Database = {
         Returns: boolean
       }
       recalculate_all_xp: { Args: never; Returns: undefined }
+      save_exam_draft_answers: {
+        Args: {
+          p_case_analysis: string
+          p_reflection: string
+          p_startup_concept: string
+          p_strategic_decision: string
+        }
+        Returns: undefined
+      }
     }
     Enums: {
       app_role: "admin" | "student" | "teacher_pending" | "teacher_verified"
