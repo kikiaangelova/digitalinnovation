@@ -211,8 +211,9 @@ export default function TeacherDashboardPage() {
     const p = progressMap[s.student_id];
     if (!p) return true;
     const overall = getOverall(s.student_id);
-    const inactive = (Date.now() - new Date(s.updated_at).getTime()) / 86400000 > 14;
-    return overall < 20 || inactive || (p.cases_completed === 0 && p.sim_week <= 1 && p.module_count === 0);
+    const daysSinceUpdate = (Date.now() - new Date(s.updated_at).getTime()) / 86400000;
+    // Intervention criteria: score below 50% OR stuck (no activity for 7+ days)
+    return overall < 50 || daysSinceUpdate > 7;
   });
 
   const avgXp = students.length
