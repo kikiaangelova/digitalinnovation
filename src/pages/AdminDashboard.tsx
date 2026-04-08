@@ -18,9 +18,20 @@ import {
 interface StudentXpSummary {
   user_id: string;
   full_name: string;
+  display_name: string;
+  email: string;
   total_xp: number;
   cases_completed: number;
   sessions: { case_id: string; xp_earned: number; completion_status: string }[];
+  quiz_avg: number;
+  quiz_count: number;
+  sim_week: number;
+  sim_complete: boolean;
+  sim_grade: string | null;
+  startup_pct: number;
+  startup_submitted: boolean;
+  last_active: string | null;
+  role: string;
 }
 
 interface CaseStudyAdmin {
