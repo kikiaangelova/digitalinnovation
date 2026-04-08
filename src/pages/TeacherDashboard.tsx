@@ -436,7 +436,7 @@ export default function TeacherDashboard() {
               </div>
               <div>
                 <h1 className="text-xl font-bold text-foreground">{prof?.full_name || 'Unknown'}</h1>
-                <p className="text-sm text-muted-foreground">{prof?.bio || t('No bio', 'Няма биография')}</p>
+                <p className="text-sm text-muted-foreground">{prof?.skills_tags?.join(', ') || t('No skills listed', 'Няма посочени умения')}</p>
               </div>
             </div>
             {(meta.school || meta.classGrade || meta.country) && (
