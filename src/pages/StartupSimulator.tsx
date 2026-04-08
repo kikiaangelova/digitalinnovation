@@ -258,10 +258,22 @@ export default function StartupSimulator() {
     setPhase('cycle_playing');
   };
 
-  const finishSimulation = () => {
+  const finishSimulation = async () => {
     setPhase('results');
     setLocalSimStatus('completed');
     saveProgress(kpis, history, SIM_WEEKS.length, true);
+    const { fireCelebration } = await import('@/components/ui/celebration-overlay');
+    const grade = getStartupGrade(kpis);
+    const score = Math.round(
+      (Number(kpis.innovation) || 0) * 0.25 + (Number(kpis.marketPotential) || 0) * 0.2 +
+      (Number(kpis.scalability) || 0) * 0.2 + (100 - (Number(kpis.riskLevel) || 0)) * 0.15 +
+      (Number(kpis.growthPotential) || 0) * 0.2
+    );
+    fireCelebration({
+      xp: 50,
+      title: t('Simulation Complete!', 'Браво! Завърши симулацията!'),
+      subtitle: `${t('Grade', 'Оценка')}: ${grade.grade} — ${score}/100`,
+    });
   };
 
   const performanceScore = Math.round(

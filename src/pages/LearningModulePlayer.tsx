@@ -233,11 +233,12 @@ export default function LearningModulePlayer() {
     setSaving(false);
     setPhase('results');
     setLastSavedAt(new Date());
-    if (totalXp > 0) {
-      toast.success(`+${totalXp} XP ${t('earned!', 'спечелени!')}`);
-    } else {
-      toast.success(t('Module completed!', 'Модулът е завършен!'));
-    }
+    const { fireCelebration } = await import('@/components/ui/celebration-overlay');
+    fireCelebration({
+      xp: totalXp,
+      title: t('Module Complete!', 'Браво! Завърши модула!'),
+      subtitle: totalXp > 0 ? `+${totalXp} XP ${t('earned!', 'спечелени!')}` : t('Well done!', 'Страхотно!'),
+    });
   };
 
   // Transfer application answer to My Startup
