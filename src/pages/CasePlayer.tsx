@@ -204,6 +204,9 @@ export default function CasePlayer() {
   const [startupTouched, setStartupTouched] = useState<Record<string, boolean>>({});
   const [showInsight, setShowInsight] = useState<Record<number, boolean>>({});
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [consequences, setConsequences] = useState<any[]>([]);
+  const [chosenStrategy, setChosenStrategy] = useState<string | null>(null);
+  const [consequenceReflection, setConsequenceReflection] = useState('');
   const autosaveRef = useRef<NodeJS.Timeout | null>(null);
   const saveStatusTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const pendingHistoryRef = useRef<Record<string, string>>({});
