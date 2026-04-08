@@ -154,8 +154,9 @@ export default function TeacherDashboardPage() {
         .eq('classroom_id', cls.id),
       supabase
         .from('quiz_results')
-        .select('user_id, score, max_score')
-        .in('user_id', studentIds),
+        .select('user_id, score, max_score, category, created_at')
+        .in('user_id', studentIds)
+        .order('created_at', { ascending: false }),
     ]);
 
     setAssignmentCount(assignRes.data?.length || 0);
