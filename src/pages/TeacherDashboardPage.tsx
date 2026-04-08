@@ -46,6 +46,7 @@ interface ProgressSnapshot {
   startup_keys: Record<string, boolean>;
   startup_submitted: boolean;
   module_count: number;
+  quiz_avg: number;
 }
 
 const CHART_COLORS = [
@@ -119,7 +120,7 @@ export default function TeacherDashboardPage() {
     setStudents(studentList);
 
     // 4. Get progress data in parallel
-    const [subsRes, simRes, projRes, modRes, assignRes] = await Promise.all([
+    const [subsRes, simRes, projRes, modRes, assignRes, quizRes] = await Promise.all([
       supabase
         .from('submissions')
         .select('user_id')
@@ -141,6 +142,10 @@ export default function TeacherDashboardPage() {
         .from('classroom_assignments')
         .select('id')
         .eq('classroom_id', cls.id),
+      supabase
+        .from('quiz_results')
+        .select('user_id, score, max_score')
+        .in('user_id', studentIds),
     ]);
 
     setAssignmentCount(assignRes.data?.length || 0);
@@ -172,6 +177,14 @@ export default function TeacherDashboardPage() {
       modCountMap[m.user_id] = (modCountMap[m.user_id] || 0) + 1;
     });
 
+    const quizScores: Record<string, { total: number; count: number }> = {};
+    (quizRes.data || []).forEach((q) => {
+      if (!quizScores[q.user_id]) quizScores[q.user_id] = { total: 0, count: 0 };
+      const pct = q.max_score > 0 ? (q.score / q.max_score) * 100 : 0;
+      quizScores[q.user_id].total += pct;
+      quizScores[q.user_id].count += 1;
+    });
+
     const snapshots: ProgressSnapshot[] = studentIds.map((sid) => ({
       student_id: sid,
       cases_completed: subsCountMap[sid] || 0,
@@ -182,6 +195,7 @@ export default function TeacherDashboardPage() {
       startup_keys: projMap[sid]?.keys || {},
       startup_submitted: projMap[sid]?.submitted || false,
       module_count: modCountMap[sid] || 0,
+      quiz_avg: quizScores[sid] ? Math.round(quizScores[sid].total / quizScores[sid].count) : 0,
     }));
     setProgress(snapshots);
     setLoading(false);
@@ -415,6 +429,7 @@ export default function TeacherDashboardPage() {
                           <th className="text-center py-2 px-2 text-muted-foreground font-medium">XP</th>
                           <th className="text-center py-2 px-2 text-muted-foreground font-medium">{t('Cases', 'Казуси')}</th>
                           <th className="text-center py-2 px-2 text-muted-foreground font-medium">{t('Sim', 'Сим.')}</th>
+                          <th className="text-center py-2 px-2 text-muted-foreground font-medium">{t('Quiz Avg', 'Средна тест')}</th>
                           <th className="text-center py-2 px-2 text-muted-foreground font-medium">{t('Startup', 'Стартъп')}</th>
                           <th className="py-2 px-2 text-muted-foreground font-medium">{t('Overall', 'Общо')}</th>
                           <th className="py-2 px-2 text-muted-foreground font-medium">{t('Status', 'Статус')}</th>
@@ -450,6 +465,9 @@ export default function TeacherDashboardPage() {
                                   ) : (
                                     <span className="text-muted-foreground">{p?.sim_week || 0}/6</span>
                                   )}
+                                </td>
+                                <td className="text-center py-2.5 px-2">
+                                  <span className={`text-xs font-medium ${(p?.quiz_avg || 0) < 50 ? 'text-destructive' : 'text-muted-foreground'}`}>{p?.quiz_avg || 0}%</span>
                                 </td>
                                 <td className="text-center py-2.5 px-2">
                                   <span className="text-muted-foreground">{p?.startup_sections || 0}/7</span>
