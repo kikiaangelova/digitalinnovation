@@ -482,7 +482,7 @@ CAC е критичен, защото директно влияе на рент�
     display_order: 3,
     related_case_topic: 'FinTech',
     case_transition_en: 'You just learned about CAC. Now analyze how FinTech startups optimize customer acquisition in a regulated market.',
-    case_transition_bg: 'Току-що научихте за CAC. Сега анализирайте как FinTech стартъпите оптимизират привличането на клиенти в регулиран пазар.',
+    case_transition_bg: 'Току-що научи за CAC. Сега анализирай как FinTech стартъпите оптимизират привличането на клиенти в регулиран пазар.',
     related_sim_concepts_en: ['Customer Acquisition Cost', 'Growth Channels'],
     related_sim_concepts_bg: ['Цена за привличане на клиент', 'Канали за растеж'],
     sim_transition_en: 'Apply CAC optimization strategies in the startup simulator marketing decisions.',
