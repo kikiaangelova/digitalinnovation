@@ -13,7 +13,7 @@ import {
 } from 'lucide-react';
 
 export default function AppHeader() {
-  const { user, profile, isAdmin, signOut } = useAuth();
+  const { user, profile, isAdmin, userRole, signOut } = useAuth();
   const { t, lang, setLang } = useLang();
   const navigate = useNavigate();
   const location = useLocation();
