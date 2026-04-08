@@ -107,7 +107,7 @@ export default function LearningModules() {
             <PhaseBadge phase="learn" lang={lang as 'en' | 'bg'} />
           </h1>
           <p className="typo-helper mt-1">
-            {t('Master key concepts in digital innovation and entrepreneurship', 'Овладейте ключови концепции в дигиталните иновации и предприемачеството')}
+            {t('Master key concepts in digital innovation and entrepreneurship', 'Овладей ключови концепции в дигиталните иновации и предприемачеството')}
           </p>
         </div>
 
