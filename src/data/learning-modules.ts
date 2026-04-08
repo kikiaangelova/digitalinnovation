@@ -254,6 +254,10 @@ Understanding network effects is essential for designing digital products that g
     slug: 'platform-business-models',
     title_en: 'Platform Business Models',
     title_bg: 'Платформени бизнес модели',
+    hook: { en: 'The 5 most valuable companies in the world are all platforms. Zero of them produce physical products. Why?', bg: 'Петте най-скъпи компании в света са платформи. Нито една не произвежда физически продукти. Защо?' },
+    metaphor: { en: 'A platform is a nightclub: producers are the DJs, consumers are the dancers, and you set the rules.', bg: 'Платформата е нощен клуб: производителите са DJ-тата, потребителите са танцуващите, а ти определяш правилата.' },
+    framework: { name: 'Platform Canvas', bullets_en: ['Producers: who creates value on the platform?', 'Consumers: who consumes and pays?', 'Platform: what rules, filters, and trust mechanisms do you provide?'], bullets_bg: ['Производители: кой създава стойност?', 'Потребители: кой консумира и плаща?', 'Платформа: какви правила и механизми за доверие предоставяш?'], apply_en: 'Map your startup on the Platform Canvas.', apply_bg: 'Начертай стартъпа си на Platform Canvas.' },
+    provocations: [{ en: 'Can every business become a platform? When is it a bad idea?', bg: 'Може ли всеки бизнес да стане платформа? Кога е лоша идея?' }, { en: 'Why did Amazon allow competitors to sell on its marketplace?', bg: 'Защо Amazon позволи на конкуренти да продават в маркетплейса му?' }],
     concepts: [
       {
         id: 'pb-concept-1',
