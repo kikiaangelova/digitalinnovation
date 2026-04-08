@@ -83,7 +83,7 @@ export default function TeacherDashboardPage() {
   const fetchData = useCallback(async () => {
     if (!user) return;
 
-    // 1. Get teacher's classroom
+    // 1. Try to get teacher's classroom (optional)
     const { data: cls } = await supabase
       .from('classrooms')
       .select('id, name, class_code, invite_link')
@@ -91,43 +91,34 @@ export default function TeacherDashboardPage() {
       .eq('is_active', true)
       .maybeSingle();
 
-    if (!cls) {
-      setClassroom(null);
-      setLoading(false);
-      return;
-    }
-    setClassroom(cls as Classroom);
+    setClassroom(cls as Classroom | null);
 
-    // 2. Get students
-    const { data: enrollments } = await supabase
-      .from('classroom_students')
-      .select('student_id, joined_at')
-      .eq('classroom_id', cls.id);
-
-    if (!enrollments?.length) {
-      setStudents([]);
-      setProgress([]);
-      setLoading(false);
-      return;
-    }
-
-    const studentIds = enrollments.map((e) => e.student_id);
-    const joinMap = Object.fromEntries(enrollments.map((e) => [e.student_id, e.joined_at]));
-
-    // 3. Get profiles
+    // 2. Get ALL student profiles directly
     const { data: profiles } = await supabase
       .from('profiles')
       .select('user_id, display_name, full_name, total_xp, updated_at')
-      .in('user_id', studentIds);
+      .neq('user_id', user.id)
+      .order('total_xp', { ascending: false });
 
+    // Filter out non-students by excluding known teacher/admin users
     const studentList: StudentData[] = (profiles || []).map((p) => ({
       student_id: p.user_id,
       display_name: p.display_name,
       full_name: p.full_name,
       total_xp: p.total_xp,
       updated_at: p.updated_at,
-      joined_at: joinMap[p.user_id] || '',
+      joined_at: p.updated_at,
     }));
+
+    const studentIds = studentList.map((s) => s.student_id);
+
+    if (!studentIds.length) {
+      setStudents([]);
+      setProgress([]);
+      setLoading(false);
+      return;
+    }
+
     setStudents(studentList);
 
     // 4. Get progress data in parallel
@@ -149,10 +140,9 @@ export default function TeacherDashboardPage() {
         .from('learning_module_responses')
         .select('user_id')
         .in('user_id', studentIds),
-      supabase
-        .from('classroom_assignments')
-        .select('id')
-        .eq('classroom_id', cls.id),
+      cls
+        ? supabase.from('classroom_assignments').select('id').eq('classroom_id', cls.id)
+        : Promise.resolve({ data: [] }),
       supabase
         .from('quiz_results')
         .select('user_id, score, max_score, category, created_at')
@@ -321,30 +311,7 @@ export default function TeacherDashboardPage() {
     );
   }
 
-  // ── No classroom yet ──
-  if (!classroom) {
-    return (
-      <div className="min-h-screen bg-background">
-        <AppHeader />
-        <main className="container mx-auto px-4 py-16 max-w-lg text-center space-y-6">
-          <GraduationCap className="h-16 w-16 text-muted-foreground mx-auto" />
-          <h1 className="text-2xl font-bold text-foreground">
-            {t('Welcome, Teacher!', 'Добре дошли, учителю!')}
-          </h1>
-          <p className="text-muted-foreground">
-            {t(
-              'Create your first classroom to start managing students and tracking their progress.',
-              'Създайте първата си класна стая, за да управлявате учениците и проследявате техния напредък.'
-            )}
-          </p>
-          <Button onClick={() => navigate('/teacher')} size="lg" className="sim-gradient border-0 gap-2">
-            <Plus className="h-5 w-5" />
-            {t('Create Classroom', 'Създай класна стая')}
-          </Button>
-        </main>
-      </div>
-    );
-  }
+  // (No classroom gate — dashboard always shows all students)
 
   // ── Main Dashboard ──
   return (
@@ -359,31 +326,38 @@ export default function TeacherDashboardPage() {
               {t('Teacher Dashboard', 'Учителско табло')}
             </h1>
             <p className="text-sm text-muted-foreground mt-0.5">
-              {classroom.name} · {t('Code:', 'Код:')} <span className="font-mono font-bold text-primary">{classroom.class_code}</span>
+              {classroom
+                ? <>{classroom.name} · {t('Code:', 'Код:')} <span className="font-mono font-bold text-primary">{classroom.class_code}</span></>
+                : t('All students overview', 'Преглед на всички ученици')
+              }
             </p>
           </div>
           <div className="flex items-center gap-2 flex-wrap">
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => copyToClipboard(classroom.class_code, t('Code', 'Кодът'))}
-            >
-              <Copy className="h-3.5 w-3.5 mr-1" />
-              {t('Copy code', 'Копирай код')}
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() =>
-                copyToClipboard(
-                  classroom.invite_link || `${siteUrl}/join/${classroom.class_code}`,
-                  t('Link', 'Линкът')
-                )
-              }
-            >
-              <Link2 className="h-3.5 w-3.5 mr-1" />
-              {t('Copy invite', 'Копирай покана')}
-            </Button>
+            {classroom && (
+              <>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => copyToClipboard(classroom.class_code, t('Code', 'Кодът'))}
+                >
+                  <Copy className="h-3.5 w-3.5 mr-1" />
+                  {t('Copy code', 'Копирай код')}
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() =>
+                    copyToClipboard(
+                      classroom.invite_link || `${siteUrl}/join/${classroom.class_code}`,
+                      t('Link', 'Линкът')
+                    )
+                  }
+                >
+                  <Link2 className="h-3.5 w-3.5 mr-1" />
+                  {t('Copy invite', 'Копирай покана')}
+                </Button>
+              </>
+            )}
             <Button size="sm" onClick={() => navigate('/teacher')} className="gap-1">
               {t('Manage Class', 'Управлявай класа')} <ArrowRight className="h-3.5 w-3.5" />
             </Button>
