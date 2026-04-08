@@ -81,7 +81,7 @@ export default function PendingApproval() {
         )}
 
         {checkedOnce && userRole === 'teacher_pending' && (
-          <p className="text-sm text-amber-600 font-medium">
+          <p className="text-sm text-destructive font-medium">
             {tx('Still awaiting approval.', 'Все още изчакваш одобрение.')}
           </p>
         )}
