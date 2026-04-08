@@ -453,6 +453,18 @@ export default function MyStartupIdea() {
           </div>
         </div>
 
+        {/* Hypothesis prompt before value proposition */}
+        {activeSection === SECTIONS.findIndex(s => s.key === 'value_proposition') && user && (
+          <HypothesisCard
+            contextType="startup"
+            contextId="my-startup"
+            label={t('What is your key customer hypothesis?', 'Каква е ключовата ти хипотеза за клиента?')}
+            placeholder={t('"I believe tourists want personalized experiences because standard tours don\'t match their interests."', '"Вярвам, че туристите искат персонализирани изживявания, защото стандартните турове не отговарят на интересите им."')}
+            linkTo="/simulator"
+            linkLabel={t('Test this hypothesis in the simulator →', 'Тествай тази хипотеза в симулатора →')}
+          />
+        )}
+
         {/* Tabs: Sections | Business Model Canvas */}
         <Tabs defaultValue="problems" className="space-y-6">
           <TabsList className="grid w-full max-w-2xl grid-cols-4">
