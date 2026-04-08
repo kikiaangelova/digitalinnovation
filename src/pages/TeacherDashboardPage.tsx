@@ -314,30 +314,7 @@ export default function TeacherDashboardPage() {
     );
   }
 
-  // ── No classroom yet ──
-  if (!classroom) {
-    return (
-      <div className="min-h-screen bg-background">
-        <AppHeader />
-        <main className="container mx-auto px-4 py-16 max-w-lg text-center space-y-6">
-          <GraduationCap className="h-16 w-16 text-muted-foreground mx-auto" />
-          <h1 className="text-2xl font-bold text-foreground">
-            {t('Welcome, Teacher!', 'Добре дошли, учителю!')}
-          </h1>
-          <p className="text-muted-foreground">
-            {t(
-              'Create your first classroom to start managing students and tracking their progress.',
-              'Създайте първата си класна стая, за да управлявате учениците и проследявате техния напредък.'
-            )}
-          </p>
-          <Button onClick={() => navigate('/teacher')} size="lg" className="sim-gradient border-0 gap-2">
-            <Plus className="h-5 w-5" />
-            {t('Create Classroom', 'Създай класна стая')}
-          </Button>
-        </main>
-      </div>
-    );
-  }
+  // (No classroom gate — dashboard always shows all students)
 
   // ── Main Dashboard ──
   return (
