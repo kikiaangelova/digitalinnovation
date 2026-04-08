@@ -13,7 +13,8 @@ import { toast } from 'sonner';
 import {
   Users, BookOpen, Rocket, Activity, GraduationCap, AlertTriangle,
   ArrowRight, Copy, Link2, ClipboardList, TrendingUp, Target,
-  BarChart3, CheckCircle2, Clock, Plus, Download,
+  BarChart3, CheckCircle2, Clock, Plus, Download, ChevronDown, ChevronUp,
+  Search, Lightbulb, PenTool, Wrench, Gauge, Presentation,
 } from 'lucide-react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
