@@ -37,6 +37,13 @@ interface StudentData {
   joined_at: string;
 }
 
+interface QuizEntry {
+  category: string | null;
+  score: number;
+  max_score: number;
+  created_at: string;
+}
+
 interface ProgressSnapshot {
   student_id: string;
   cases_completed: number;
@@ -48,6 +55,7 @@ interface ProgressSnapshot {
   startup_submitted: boolean;
   module_count: number;
   quiz_avg: number;
+  recent_quizzes: QuizEntry[];
 }
 
 const CHART_COLORS = [
