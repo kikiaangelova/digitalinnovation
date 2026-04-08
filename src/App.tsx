@@ -73,8 +73,9 @@ const App = () => (
           <ProgressProvider>
             <SimulatorProvider>
               <BrowserRouter>
+                <ScrollToTop />
                 <ProfileGate>
-                <div className="flex min-h-screen flex-col">
+                <div className="flex min-h-screen flex-col overflow-x-hidden">
                   <div className="flex-1 pb-20 md:pb-0">
                     <Routes>
                       {/* Public routes */}
