@@ -13,7 +13,8 @@ import { toast } from 'sonner';
 import {
   Users, BookOpen, Rocket, Activity, GraduationCap, AlertTriangle,
   ArrowRight, Copy, Link2, ClipboardList, TrendingUp, Target,
-  BarChart3, CheckCircle2, Clock, Plus, Download,
+  BarChart3, CheckCircle2, Clock, Plus, Download, ChevronDown, ChevronUp,
+  Search, Lightbulb, PenTool, Wrench, Gauge, Presentation,
 } from 'lucide-react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
@@ -68,6 +69,7 @@ export default function TeacherDashboardPage() {
   const [progress, setProgress] = useState<ProgressSnapshot[]>([]);
   const [assignmentCount, setAssignmentCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [expandedRow, setExpandedRow] = useState<string | null>(null);
 
   const fetchData = useCallback(async () => {
     if (!user) return;
@@ -238,12 +240,25 @@ export default function TeacherDashboardPage() {
       simWeek: p.sim_week,
       simComplete: p.sim_complete,
     });
-    // Current stage = last completed + 1 (capped at 6)
     const completedCount = statuses.filter((s) => s === 'completed').length;
     if (completedCount >= 6) return { num: 6, name: lang === 'bg' ? STAGE_NAMES_BG[5] : STAGE_NAMES_EN[5] };
-    const idx = completedCount; // 0-based index of current stage
+    const idx = completedCount;
     return { num: idx + 1, name: lang === 'bg' ? STAGE_NAMES_BG[idx] : STAGE_NAMES_EN[idx] };
   };
+
+  const getStudentStageStatuses = (sid: string) => {
+    const p = progressMap[sid];
+    if (!p) return Array(6).fill('not_started');
+    return deriveJourneyStatuses({
+      casesCompleted: p.cases_completed,
+      startupSections: p.startup_keys,
+      startupSubmitted: p.startup_submitted,
+      simWeek: p.sim_week,
+      simComplete: p.sim_complete,
+    });
+  };
+
+  const STAGE_ICONS = [Search, Lightbulb, PenTool, Wrench, Gauge, Presentation];
 
   const getName = (s: StudentData) => s.display_name || s.full_name || '—';
 
@@ -451,38 +466,84 @@ export default function TeacherDashboardPage() {
                                 : { label: t('On Track', 'На път'), cls: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' };
 
                             const stage = getStudentStage(s.student_id);
+                            const isExpanded = expandedRow === s.student_id;
+                            const stageStatuses = isExpanded ? getStudentStageStatuses(s.student_id) : [];
+                            const stageNames = lang === 'bg' ? STAGE_NAMES_BG : STAGE_NAMES_EN;
                             return (
-                              <tr key={s.student_id} className="hover:bg-muted/30">
-                                <td className="py-2.5 px-3 font-medium text-foreground">{getName(s)}</td>
-                                <td className="py-2.5 px-2">
-                                  <span className="text-xs font-semibold text-primary">{stage.num}/6</span>
-                                  <span className="text-xs text-muted-foreground ml-1">{stage.name}</span>
-                                </td>
-                                <td className="text-center py-2.5 px-2 text-muted-foreground">{s.total_xp}</td>
-                                <td className="text-center py-2.5 px-2">{p?.cases_completed || 0}</td>
-                                <td className="text-center py-2.5 px-2">
-                                  {p?.sim_complete ? (
-                                    <Badge variant="outline" className="text-xs">{p.sim_grade || '✓'}</Badge>
-                                  ) : (
-                                    <span className="text-muted-foreground">{p?.sim_week || 0}/6</span>
-                                  )}
-                                </td>
-                                <td className="text-center py-2.5 px-2">
-                                  <span className={`text-xs font-medium ${(p?.quiz_avg || 0) < 50 ? 'text-destructive' : 'text-muted-foreground'}`}>{p?.quiz_avg || 0}%</span>
-                                </td>
-                                <td className="text-center py-2.5 px-2">
-                                  <span className="text-muted-foreground">{Math.round(((p?.startup_sections || 0) / 7) * 100)}%</span>
-                                </td>
-                                <td className="py-2.5 px-2">
-                                  <div className="flex items-center gap-2">
-                                    <Progress value={overall} className="h-2 flex-1 max-w-[80px]" />
-                                    <span className="text-xs text-muted-foreground w-8">{overall}%</span>
-                                  </div>
-                                </td>
-                                <td className="py-2.5 px-2">
-                                  <span className={`text-xs px-2 py-0.5 rounded-full ${status.cls}`}>{status.label}</span>
-                                </td>
-                              </tr>
+                              <>
+                                <tr
+                                  key={s.student_id}
+                                  className="hover:bg-muted/30 cursor-pointer"
+                                  onClick={() => setExpandedRow(isExpanded ? null : s.student_id)}
+                                >
+                                  <td className="py-2.5 px-3 font-medium text-foreground flex items-center gap-1.5">
+                                    {isExpanded ? <ChevronUp className="h-3.5 w-3.5 text-muted-foreground shrink-0" /> : <ChevronDown className="h-3.5 w-3.5 text-muted-foreground shrink-0" />}
+                                    {getName(s)}
+                                  </td>
+                                  <td className="py-2.5 px-2">
+                                    <span className="text-xs font-semibold text-primary">{stage.num}/6</span>
+                                    <span className="text-xs text-muted-foreground ml-1">{stage.name}</span>
+                                  </td>
+                                  <td className="text-center py-2.5 px-2 text-muted-foreground">{s.total_xp}</td>
+                                  <td className="text-center py-2.5 px-2">{p?.cases_completed || 0}</td>
+                                  <td className="text-center py-2.5 px-2">
+                                    {p?.sim_complete ? (
+                                      <Badge variant="outline" className="text-xs">{p.sim_grade || '✓'}</Badge>
+                                    ) : (
+                                      <span className="text-muted-foreground">{p?.sim_week || 0}/6</span>
+                                    )}
+                                  </td>
+                                  <td className="text-center py-2.5 px-2">
+                                    <span className={`text-xs font-medium ${(p?.quiz_avg || 0) < 50 ? 'text-destructive' : 'text-muted-foreground'}`}>{p?.quiz_avg || 0}%</span>
+                                  </td>
+                                  <td className="text-center py-2.5 px-2">
+                                    <span className="text-muted-foreground">{Math.round(((p?.startup_sections || 0) / 7) * 100)}%</span>
+                                  </td>
+                                  <td className="py-2.5 px-2">
+                                    <div className="flex items-center gap-2">
+                                      <Progress value={overall} className="h-2 flex-1 max-w-[80px]" />
+                                      <span className="text-xs text-muted-foreground w-8">{overall}%</span>
+                                    </div>
+                                  </td>
+                                  <td className="py-2.5 px-2">
+                                    <span className={`text-xs px-2 py-0.5 rounded-full ${status.cls}`}>{status.label}</span>
+                                  </td>
+                                </tr>
+                                {isExpanded && (
+                                  <tr key={`${s.student_id}-detail`} className="bg-muted/20">
+                                    <td colSpan={9} className="px-6 py-4">
+                                      <div className="text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wide">
+                                        {t('Stage-by-Stage Breakdown', 'Разбивка по етапи')}
+                                      </div>
+                                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+                                        {stageStatuses.map((st, i) => {
+                                          const Icon = STAGE_ICONS[i];
+                                          const done = st === 'completed';
+                                          const inProg = st === 'in_progress';
+                                          return (
+                                            <div
+                                              key={i}
+                                              className={`rounded-lg border p-3 text-center space-y-1 ${
+                                                done
+                                                  ? 'border-green-300 bg-green-50 dark:border-green-700 dark:bg-green-950/30'
+                                                  : inProg
+                                                  ? 'border-yellow-300 bg-yellow-50 dark:border-yellow-700 dark:bg-yellow-950/30'
+                                                  : 'border-border bg-background'
+                                              }`}
+                                            >
+                                              <Icon className={`h-4 w-4 mx-auto ${done ? 'text-green-600 dark:text-green-400' : inProg ? 'text-yellow-600 dark:text-yellow-400' : 'text-muted-foreground'}`} />
+                                              <div className="text-xs font-medium text-foreground">{stageNames[i]}</div>
+                                              <div className={`text-[10px] font-semibold ${done ? 'text-green-600 dark:text-green-400' : inProg ? 'text-yellow-600 dark:text-yellow-400' : 'text-muted-foreground'}`}>
+                                                {done ? t('Done', 'Готово') : inProg ? t('In Progress', 'В ход') : t('Not Started', 'Не е започнат')}
+                                              </div>
+                                            </div>
+                                          );
+                                        })}
+                                      </div>
+                                    </td>
+                                  </tr>
+                                )}
+                              </>
                             );
                           })}
                       </tbody>
