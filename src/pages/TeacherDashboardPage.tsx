@@ -46,6 +46,7 @@ interface ProgressSnapshot {
   startup_keys: Record<string, boolean>;
   startup_submitted: boolean;
   module_count: number;
+  quiz_avg: number;
 }
 
 const CHART_COLORS = [
