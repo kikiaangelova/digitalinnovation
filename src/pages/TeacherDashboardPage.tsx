@@ -212,6 +212,7 @@ export default function TeacherDashboardPage() {
       startup_submitted: projMap[sid]?.submitted || false,
       module_count: modCountMap[sid] || 0,
       quiz_avg: quizScores[sid] ? Math.round(quizScores[sid].total / quizScores[sid].count) : 0,
+      recent_quizzes: recentQuizzes[sid] || [],
     }));
     setProgress(snapshots);
     setLoading(false);
