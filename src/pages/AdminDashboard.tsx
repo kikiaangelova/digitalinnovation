@@ -103,6 +103,19 @@ export default function AdminDashboard() {
   const [newReadingUrl, setNewReadingUrl] = useState('');
   const [newReadingLabel, setNewReadingLabel] = useState('');
 
+  const XP_LEVELS = [
+    { name: 'Explorer', min: 0 }, { name: 'Apprentice', min: 101 }, { name: 'Strategist', min: 251 },
+    { name: 'Innovator', min: 501 }, { name: 'Visionary', min: 1001 }, { name: 'Legend', min: 2001 },
+  ];
+  const getLevel = (xp: number) => {
+    for (let i = XP_LEVELS.length - 1; i >= 0; i--) {
+      if (xp >= XP_LEVELS[i].min) return XP_LEVELS[i].name;
+    }
+    return XP_LEVELS[0].name;
+  };
+
+  const STARTUP_SECTIONS = ['problem', 'customer', 'value_proposition', 'digital_product', 'business_model', 'growth_strategy', 'final_pitch'];
+
   useEffect(() => {
     if (!isAdmin) return;
     const fetchData = async () => {
@@ -120,6 +133,11 @@ export default function AdminDashboard() {
         const subsData = result.submissions || [];
         const profilesData = result.profiles || [];
         const sessionsData = result.case_sessions || [];
+        const quizData = result.quiz_results || [];
+        const simData = result.sim_progress || [];
+        const startupData = result.startups || [];
+        const authUsers = result.auth_users || [];
+        const rolesData = result.user_roles || [];
 
         setCases(casesData);
         setSubmissions(subsData);
@@ -127,19 +145,64 @@ export default function AdminDashboard() {
         profilesData.forEach((p: any) => { pm[p.user_id] = p.full_name || t('Unknown', 'Неизвестен'); });
         setProfiles(pm);
 
+        // Email map from auth users
+        const emailMap: Record<string, string> = {};
+        const lastSignInMap: Record<string, string | null> = {};
+        authUsers.forEach((u: any) => {
+          emailMap[u.id] = u.email || '';
+          lastSignInMap[u.id] = u.last_sign_in_at || null;
+        });
+
+        // Role map
+        const roleMap: Record<string, string> = {};
+        rolesData.forEach((r: any) => {
+          const existing = roleMap[r.user_id];
+          const priority: Record<string, number> = { admin: 4, teacher_verified: 3, teacher_pending: 2, student: 1 };
+          if (!existing || (priority[r.role] || 0) > (priority[existing] || 0)) {
+            roleMap[r.user_id] = r.role;
+          }
+        });
+
         const sm: Record<string, CaseSessionAdmin> = {};
         sessionsData.forEach((s: any) => {
           sm[`${s.user_id}:${s.case_id}`] = s;
         });
         setSessionMap(sm);
 
-        // Build per-student XP summary
+        // Build per-student summary with ALL data
         const xpSummaries: StudentXpSummary[] = profilesData.map((p: any) => {
           const userSessions = sessionsData.filter((s: any) => s.user_id === p.user_id);
           const completedSubs = subsData.filter((s: any) => s.user_id === p.user_id && !s.is_draft);
+          
+          // Quiz scores
+          const userQuizzes = quizData.filter((q: any) => q.user_id === p.user_id);
+          const quizAvg = userQuizzes.length > 0
+            ? Math.round(userQuizzes.reduce((sum: number, q: any) => sum + (q.max_score > 0 ? (q.score / q.max_score) * 100 : 0), 0) / userQuizzes.length)
+            : 0;
+
+          // Simulator
+          const userSim = simData.find((s: any) => s.user_id === p.user_id);
+
+          // Startup
+          const userStartup = startupData.find((s: any) => s.user_id === p.user_id);
+          let startupPct = 0;
+          if (userStartup) {
+            const filled = STARTUP_SECTIONS.filter(sec => ((userStartup[sec] || '').trim().length > 20)).length;
+            startupPct = Math.round((filled / STARTUP_SECTIONS.length) * 100);
+          }
+
+          // Last active = most recent of: profile updated_at, last_sign_in, session last_saved
+          const dates = [p.updated_at, lastSignInMap[p.user_id]].filter(Boolean);
+          userSessions.forEach((s: any) => { if (s.last_saved) dates.push(s.last_saved); });
+          const lastActive = dates.length > 0
+            ? dates.sort((a: string, b: string) => new Date(b).getTime() - new Date(a).getTime())[0]
+            : null;
+
           return {
             user_id: p.user_id,
             full_name: p.full_name || t('Unknown', 'Неизвестен'),
+            display_name: p.display_name || '',
+            email: emailMap[p.user_id] || '',
             total_xp: p.total_xp || 0,
             cases_completed: completedSubs.length,
             sessions: userSessions.map((s: any) => ({
@@ -147,8 +210,17 @@ export default function AdminDashboard() {
               xp_earned: s.xp_earned,
               completion_status: s.completion_status,
             })),
+            quiz_avg: quizAvg,
+            quiz_count: userQuizzes.length,
+            sim_week: userSim?.current_week || 0,
+            sim_complete: userSim?.is_complete || false,
+            sim_grade: userSim?.grade || null,
+            startup_pct: startupPct,
+            startup_submitted: userStartup?.is_submitted || false,
+            last_active: lastActive,
+            role: roleMap[p.user_id] || 'student',
           };
-        }).filter((s: any) => s.cases_completed > 0 || s.sessions.length > 0);
+        });
 
         xpSummaries.sort((a, b) => b.total_xp - a.total_xp);
         setStudentXpData(xpSummaries);
