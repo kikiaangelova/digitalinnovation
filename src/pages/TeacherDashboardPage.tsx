@@ -434,9 +434,14 @@ export default function TeacherDashboardPage() {
                                 ? { label: t('Idle', 'Неактивен'), cls: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' }
                                 : { label: t('Inactive', 'Спрял'), cls: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400' };
 
+                            const stage = getStudentStage(s.student_id);
                             return (
                               <tr key={s.student_id} className="hover:bg-muted/30">
                                 <td className="py-2.5 px-3 font-medium text-foreground">{getName(s)}</td>
+                                <td className="py-2.5 px-2">
+                                  <span className="text-xs font-semibold text-primary">{stage.num}/6</span>
+                                  <span className="text-xs text-muted-foreground ml-1">{stage.name}</span>
+                                </td>
                                 <td className="text-center py-2.5 px-2 text-muted-foreground">{s.total_xp}</td>
                                 <td className="text-center py-2.5 px-2">{p?.cases_completed || 0}</td>
                                 <td className="text-center py-2.5 px-2">
