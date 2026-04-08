@@ -994,6 +994,9 @@ export type Database = {
       }
       profiles: {
         Row: {
+          applied_at: string | null
+          approved_at: string | null
+          approved_by: string | null
           avatar_style: string
           avatar_url: string | null
           bio: string | null
@@ -1003,6 +1006,7 @@ export type Database = {
           display_name: string | null
           full_name: string | null
           id: string
+          institution: string | null
           interests: string[] | null
           leaderboard_visible: boolean
           links_json: Json | null
@@ -1015,6 +1019,9 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          applied_at?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
           avatar_style?: string
           avatar_url?: string | null
           bio?: string | null
@@ -1024,6 +1031,7 @@ export type Database = {
           display_name?: string | null
           full_name?: string | null
           id?: string
+          institution?: string | null
           interests?: string[] | null
           leaderboard_visible?: boolean
           links_json?: Json | null
@@ -1036,6 +1044,9 @@ export type Database = {
           user_id: string
         }
         Update: {
+          applied_at?: string | null
+          approved_at?: string | null
+          approved_by?: string | null
           avatar_style?: string
           avatar_url?: string | null
           bio?: string | null
@@ -1045,6 +1056,7 @@ export type Database = {
           display_name?: string | null
           full_name?: string | null
           id?: string
+          institution?: string | null
           interests?: string[] | null
           leaderboard_visible?: boolean
           links_json?: Json | null
@@ -1740,7 +1752,7 @@ export type Database = {
       recalculate_all_xp: { Args: never; Returns: undefined }
     }
     Enums: {
-      app_role: "admin" | "student"
+      app_role: "admin" | "student" | "teacher_pending" | "teacher_verified"
       case_difficulty: "beginner" | "intermediate" | "advanced"
       question_type:
         | "multiple_choice"
@@ -1875,7 +1887,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "student"],
+      app_role: ["admin", "student", "teacher_pending", "teacher_verified"],
       case_difficulty: ["beginner", "intermediate", "advanced"],
       question_type: [
         "multiple_choice",
