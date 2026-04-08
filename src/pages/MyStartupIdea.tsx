@@ -391,7 +391,7 @@ export default function MyStartupIdea() {
                 <PhaseBadge phase="apply" lang={lang as 'en' | 'bg'} />
               </h1>
               <p className="typo-helper">
-                {t('Build your startup idea step by step', 'Изградете стартъп идеята си стъпка по стъпка')}
+                {t('Build your startup idea step by step', 'Изгради стартъп идеята си стъпка по стъпка')}
               </p>
             </div>
           </div>
