@@ -172,7 +172,7 @@ export const LEARNING_MODULES: LearningModule[] = [
         example_en: 'Facebook initially launched only at Harvard, reaching critical mass at one university before expanding to others.',
         example_bg: 'Facebook първоначално стартира само в Харвард, достигайки критична маса в един университет, преди да се разшири.',
         takeaway_en: 'Start narrow — dominate one small market before expanding. Critical mass is easier in a niche.',
-        takeaway_bg: 'Започнете тясно — доминирайте един малък пазар, преди да се разширите.',
+        takeaway_bg: 'Започни тясно — доминирай един малък пазар, преди да се разшириш.',
       },
     ],
     simulator_decision: {
@@ -300,7 +300,7 @@ Understanding network effects is essential for designing digital products that g
       question_bg: 'Как решавате проблема кокошка и яйце?',
       options: [
         { id: 'pb-d1', label_en: 'Subsidize buyers', label_bg: 'Субсидирайте купувачите', description_en: 'Offer free credits or discounts to attract demand. Risk: unsustainable without funding.', description_bg: 'Предложете безплатни кредити или отстъпки. Риск: неустойчиво без финансиране.' },
-        { id: 'pb-d2', label_en: 'Create standalone value', label_bg: 'Създайте самостоятелна стойност', description_en: 'Build a useful tool for buyers (like a review site) that works without sellers. Convert users later.', description_bg: 'Изградете полезен инструмент за купувачите, който работи без продавачи. Конвертирайте потребителите по-късно.' },
+        { id: 'pb-d2', label_en: 'Create standalone value', label_bg: 'Създай самостоятелна стойност', description_en: 'Build a useful tool for buyers (like a review site) that works without sellers. Convert users later.', description_bg: 'Изгради полезен инструмент за купувачите, който работи без продавачи. Конвертирай потребителите по-късно.' },
         { id: 'pb-d3', label_en: 'Focus on one niche', label_bg: 'Фокусирайте се в една ниша', description_en: 'Narrow to one product category and dominate it before expanding.', description_bg: 'Стеснете се до една продуктова категория и я доминирайте преди разширяване.' },
       ],
     },
@@ -417,7 +417,7 @@ Examples include Airbnb (hosts and guests), YouTube (creators and viewers), and 
       options: [
         { id: 'cac-d1', label_en: 'All on paid ads', label_bg: 'Всичко в платена реклама', description_en: 'Predictable but expensive. Acquire 625 customers immediately at $80 CAC.', description_bg: 'Предвидимо, но скъпо. Привлечете 625 клиенти незабавно при $80 CAC.' },
         { id: 'cac-d2', label_en: '70% organic, 30% paid', label_bg: '70% органично, 30% платено', description_en: 'Invest in content, SEO, and community. Slower but builds a moat. CAC drops over time.', description_bg: 'Инвестирайте в съдържание, SEO и общност. По-бавно, но изгражда защита. CAC намалява с времето.' },
-        { id: 'cac-d3', label_en: 'Build referral program', label_bg: 'Изградете програма за препоръки', description_en: 'Invest $20K in building a viral referral system. If it works, CAC drops to ~$10.', description_bg: 'Инвестирайте $20K в изграждане на вирусна система за препоръки. Ако работи, CAC пада до ~$10.' },
+        { id: 'cac-d3', label_en: 'Build referral program', label_bg: 'Изгради програма за препоръки', description_en: 'Invest $20K in building a viral referral system. If it works, CAC drops to ~$10.', description_bg: 'Инвестирай $20K в изграждане на вирусна система за препоръки. Ако работи, CAC пада до ~$10.' },
         { id: 'cac-d4', label_en: 'Improve product first', label_bg: 'Подобрете продукта първо', description_en: 'Spend $40K on product, $10K on marketing. Better product = higher retention = better LTV:CAC.', description_bg: 'Харчете $40K за продукт, $10K за маркетинг. По-добър продукт = по-добро LTV:CAC.' },
       ],
     },
@@ -540,7 +540,7 @@ CAC е критичен, защото директно влияе на рент�
         { id: 'pmf-d1', label_en: 'Scale now — launch paid ads', label_bg: 'Мащабирайте сега — стартирайте реклами', description_en: '28% is close enough. Speed is everything in competitive markets.', description_bg: '28% е достатъчно близо. Скоростта е всичко в конкурентни пазари.' },
         { id: 'pmf-d2', label_en: 'Iterate on the product', label_bg: 'Итерирайте продукта', description_en: 'Talk to the 72% who are NOT very disappointed. Find out what\'s missing and fix it.', description_bg: 'Говорете с 72%, които НЕ са много разочаровани. Разберете какво липсва и го поправете.' },
         { id: 'pmf-d3', label_en: 'Pivot to a new segment', label_bg: 'Пивотирайте към нов сегмент', description_en: 'Maybe the current audience is wrong. Test with a different customer segment.', description_bg: 'Може би текущата аудитория е грешна. Тествайте с различен клиентски сегмент.' },
-        { id: 'pmf-d4', label_en: 'Double down on power users', label_bg: 'Фокусирайте се върху „силните" потребители', description_en: 'Study the 28% who love it. Build exclusively for them and ignore the rest.', description_bg: 'Проучете 28%, които го обичат. Изградете изцяло за тях и игнорирайте останалите.' },
+        { id: 'pmf-d4', label_en: 'Double down on power users', label_bg: 'Фокусирайте се върху „силните" потребители', description_en: 'Study the 28% who love it. Build exclusively for them and ignore the rest.', description_bg: 'Проучи 28%, които го обичат. Изгради изцяло за тях и игнорирай останалите.' },
       ],
     },
     embedded_case: {
@@ -656,7 +656,7 @@ Once PMF is achieved, the focus shifts to scaling. But PMF is not permanent — 
       question_bg: 'Каква е екосистемната ви стратегия?',
       options: [
         { id: 'de-d1', label_en: 'Open API platform', label_bg: 'Отворена API платформа', description_en: 'Let third-party developers build on your platform. Slow to start but creates powerful lock-in.', description_bg: 'Позволете на трети страни да изграждат върху вашата платформа. Бавно начало, но създава мощно заключване.' },
-        { id: 'de-d2', label_en: 'Build complementary products', label_bg: 'Изградете допълващи продукти', description_en: 'Create 2-3 products that work together. Higher cost but complete control over quality.', description_bg: 'Създайте 2-3 продукта, които работят заедно. По-висока цена, но пълен контрол.' },
+        { id: 'de-d2', label_en: 'Build complementary products', label_bg: 'Изгради допълващи продукти', description_en: 'Create 2-3 products that work together. Higher cost but complete control over quality.', description_bg: 'Създай 2-3 продукта, които работят заедно. По-висока цена, но пълен контрол.' },
         { id: 'de-d3', label_en: 'Stay focused on one product', label_bg: 'Останете фокусирани на един продукт', description_en: 'Perfect your core product before expanding. Risk: competitors build the ecosystem first.', description_bg: 'Усъвършенствайте основния продукт преди разширяване. Риск: конкурентите изграждат екосистемата първи.' },
       ],
     },
@@ -747,7 +747,7 @@ The future of competition is increasingly between ecosystems, not individual com
       options: [
         { id: 'mf-d1', label_en: 'Content marketing', label_bg: 'Контент маркетинг', description_en: 'Create blog posts, guides, and videos. Takes 6+ months but compounds over time.', description_bg: 'Създайте статии, ръководства и видеоклипове. Отнема 6+ месеца, но се натрупва с времето.' },
         { id: 'mf-d2', label_en: 'Paid social ads', label_bg: 'Платена реклама в социални медии', description_en: 'Immediate traffic but expensive. $5K/month gets ~60-100 users at $50-80 CAC.', description_bg: 'Незабавен трафик, но скъпо. $5K/месец = ~60-100 потребители при $50-80 CAC.' },
-        { id: 'mf-d3', label_en: 'Community building', label_bg: 'Изграждане на общност', description_en: 'Build a Discord/Slack community. Free acquisition but requires daily engagement.', description_bg: 'Изградете Discord/Slack общност. Безплатно привличане, но изисква ежедневен ангажимент.' },
+        { id: 'mf-d3', label_en: 'Community building', label_bg: 'Изграждане на общност', description_en: 'Build a Discord/Slack community. Free acquisition but requires daily engagement.', description_bg: 'Изгради Discord/Slack общност. Безплатно привличане, но изисква ежедневен ангажимент.' },
       ],
     },
     theory_en: `Marketing is the process of creating, communicating, and delivering value to customers. For startups, marketing is not about big budgets — it's about deeply understanding your audience and crafting the right message.
@@ -933,8 +933,8 @@ The biggest pricing mistake startups make: **charging too little.** Most early-s
       question_bg: 'Кого наемате първо?',
       options: [
         { id: 'tr-d1', label_en: 'A senior developer', label_bg: 'Старши разработчик', description_en: 'Build faster. But expensive ($80-120K/year) and hard to find for a startup.', description_bg: 'Изграждайте по-бързо. Но скъп ($80-120K/год) и труден за намиране за стартъп.' },
-        { id: 'tr-d2', label_en: 'A marketing generalist', label_bg: 'Маркетинг генералист', description_en: 'Start acquiring customers. Cheaper ($40-60K) and validates product-market fit faster.', description_bg: 'Започнете привличане на клиенти. По-евтин ($40-60K) и валидира PMF по-бързо.' },
-        { id: 'tr-d3', label_en: 'A part-time advisor', label_bg: 'Съветник на непълно работно време', description_en: 'Get strategic guidance without full-time commitment. Pay with equity (0.5-1%).', description_bg: 'Получете стратегическо напътствие без пълен ангажимент. Платете с дялове (0.5-1%).' },
+        { id: 'tr-d2', label_en: 'A marketing generalist', label_bg: 'Маркетинг генералист', description_en: 'Start acquiring customers. Cheaper ($40-60K) and validates product-market fit faster.', description_bg: 'Започни привличане на клиенти. По-евтин ($40-60K) и валидира PMF по-бързо.' },
+        { id: 'tr-d3', label_en: 'A part-time advisor', label_bg: 'Съветник на непълно работно време', description_en: 'Get strategic guidance without full-time commitment. Pay with equity (0.5-1%).', description_bg: 'Получи стратегическо напътствие без пълен ангажимент. Плати с дялове (0.5-1%).' },
         { id: 'tr-d4', label_en: 'Two interns', label_bg: 'Двама стажанти', description_en: 'Cheaper, more flexible. But require training and management time.', description_bg: 'По-евтино, по-гъвкаво. Но изискват обучение и време за управление.' },
       ],
     },
@@ -1093,7 +1093,7 @@ For digital startups, **key operational processes** include:
       question_bg: 'Как управлявате риска от веригата за доставки?',
       options: [
         { id: 'sc-d1', label_en: 'Negotiate a long-term contract', label_bg: 'Договорете дългосрочен контракт', description_en: 'Lock in current prices for 2 years. But you\'re even more locked in.', description_bg: 'Заключете текущите цени за 2 години. Но ставате още по-заключени.' },
-        { id: 'sc-d2', label_en: 'Start multi-cloud migration', label_bg: 'Започнете мулти-клауд миграция', description_en: 'Expensive and time-consuming (3-6 months) but reduces dependency forever.', description_bg: 'Скъпо и времеемко (3-6 месеца), но намалява зависимостта завинаги.' },
+        { id: 'sc-d2', label_en: 'Start multi-cloud migration', label_bg: 'Започни мулти-клауд миграция', description_en: 'Expensive and time-consuming (3-6 months) but reduces dependency forever.', description_bg: 'Скъпо и времеемко (3-6 месеца), но намалява зависимостта завинаги.' },
         { id: 'sc-d3', label_en: 'Pass costs to customers', label_bg: 'Прехвърлете разходите на клиентите', description_en: 'Raise prices 10-15%. Risk: customer churn. But protects margins immediately.', description_bg: 'Вдигнете цените с 10-15%. Риск: загуба на клиенти. Но защитава маржовете веднага.' },
       ],
     },
