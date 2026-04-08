@@ -52,7 +52,7 @@ export default function AuthPage() {
   const [teacherInstitution, setTeacherInstitution] = useState('');
   const [teacherClassName, setTeacherClassName] = useState('');
   const [teacherInviteCode, setTeacherInviteCode] = useState('');
-
+  const [consentChecked, setConsentChecked] = useState(false);
   const { signIn, signUp, user, userRole } = useAuth();
   const { t, lang } = useLang();
   const navigate = useNavigate();
