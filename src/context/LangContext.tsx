@@ -65,7 +65,7 @@ const translations = {
     // Hero
     heroLine1: 'You have an idea.',
     heroLine2: 'Let\'s build it together.',
-    heroDescriptionLine: 'Analyze real business cases, build your startup idea, and test your strategy in a startup simulator.',
+    heroDescriptionLine: 'Analyze real business cases, build your startup idea, and test your strategy in the simulator.',
     areYouTeacher: 'Are you a teacher?',
     testimonial1: 'I built a business plan for a sustainable sneaker brand in just 3 weeks.',
     testimonial2: 'The simulator made me think like a real founder, not just a student.',
