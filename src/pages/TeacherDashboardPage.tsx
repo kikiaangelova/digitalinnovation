@@ -693,7 +693,12 @@ export default function TeacherDashboardPage() {
                       if ((p?.cases_completed || 0) === 0) reasons.push(t('No cases done', 'Няма казуси'));
                       if ((p?.startup_sections || 0) === 0) reasons.push(t('No startup work', 'Няма стартъп'));
                       return (
-                        <div key={s.student_id} className={`rounded-lg border p-3 ${isNeedsHelp ? 'border-red-300 bg-red-50/50 dark:border-red-800 dark:bg-red-950/20' : 'border-yellow-300 bg-yellow-50/50 dark:border-yellow-800 dark:bg-yellow-950/20'}`}>
+                        <div
+                          key={s.student_id}
+                          className={`rounded-lg border p-3 cursor-pointer transition-colors hover:ring-1 hover:ring-primary/30 ${isNeedsHelp ? 'border-red-300 bg-red-50/50 dark:border-red-800 dark:bg-red-950/20' : 'border-yellow-300 bg-yellow-50/50 dark:border-yellow-800 dark:bg-yellow-950/20'}`}
+                          onClick={() => setExpandedRow(expandedRow === s.student_id ? null : s.student_id)}
+                          title={t('Click to view detailed progress', 'Кликнете за подробен напредък')}
+                        >
                           <div className="flex items-center justify-between mb-1">
                             <p className="text-sm font-medium text-foreground">{getName(s)}</p>
                             <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-semibold ${isNeedsHelp ? 'bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-400' : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-400'}`}>
@@ -705,6 +710,7 @@ export default function TeacherDashboardPage() {
                               <span key={i} className="text-[10px] px-1.5 py-0.5 rounded bg-muted text-muted-foreground">{r}</span>
                             ))}
                           </div>
+                          <p className="text-[10px] text-primary mt-1.5">{t('→ View details', '→ Виж детайли')}</p>
                         </div>
                       );
                     })}
