@@ -17,6 +17,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Zap, BookOpen, Rocket, BarChart3, FileText, Users, Star, Award, ArrowRight, CheckCircle2, GraduationCap } from 'lucide-react';
 import ChallengeHub from '@/components/dashboard/ChallengeHub';
+import HypothesisTracker from '@/components/dashboard/HypothesisTracker';
 import { LEARNING_MODULES } from '@/data/learning-modules';
 import PhaseBadge from '@/components/ui/phase-badge';
 
