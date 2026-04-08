@@ -186,13 +186,10 @@ export default function LearningModulePlayer() {
   const handleSubmitAll = async () => {
     if (!user || !dbModuleId) return;
     if (analyticalAnswer.trim().length < 20) {
-      toast.error(t('Please write a more detailed analytical answer (min 20 characters)', 'Моля, напишете по-подробен аналитичен отговор (мин. 20 знака)'));
+      toast.error(t('Please write a more detailed analytical answer (min 20 characters)', 'Моля, напиши по-подробен аналитичен отговор (мин. 20 знака)'));
       return;
     }
-    if (applicationAnswer.trim().length < 20) {
-      toast.error(t('Please write a more detailed application answer (min 20 characters)', 'Моля, напишете по-подробен отговор за приложение (мин. 20 знака)'));
-      return;
-    }
+    // Application answer is optional — no minimum enforced
 
     setSaving(true);
     const finalScores = calculateScores();
@@ -220,22 +217,7 @@ export default function LearningModulePlayer() {
       await supabase.from('learning_module_responses').insert(payload as any);
     }
 
-    // Sync application answer to startup project if Level 2 module has a startup_field mapping
-    if (mod.startup_field && applicationAnswer.trim().length >= 20) {
-      const { data: project } = await supabase.from('startup_projects')
-        .select('id')
-        .eq('user_id', user.id)
-        .maybeSingle();
-      
-      if (project) {
-        await supabase.from('startup_projects')
-          .update({ [mod.startup_field]: applicationAnswer.trim() } as any)
-          .eq('id', project.id);
-      } else {
-        await supabase.from('startup_projects')
-          .insert({ user_id: user.id, [mod.startup_field]: applicationAnswer.trim() } as any);
-      }
-    }
+    // NOTE: No auto-sync to startup — user chooses explicitly via "Use in My Startup" button
 
     // Award XP for theory completion
     const xpResult = await awardXp('theory_complete', mod.slug);
@@ -250,11 +232,54 @@ export default function LearningModulePlayer() {
 
     setSaving(false);
     setPhase('results');
+    setLastSavedAt(new Date());
     if (totalXp > 0) {
       toast.success(`+${totalXp} XP ${t('earned!', 'спечелени!')}`);
     } else {
       toast.success(t('Module completed!', 'Модулът е завършен!'));
     }
+  };
+
+  // Transfer application answer to My Startup
+  const handleUseInStartup = async () => {
+    if (!user || !mod.startup_field || applicationAnswer.trim().length < 10) return;
+    try {
+      const { data: project } = await supabase.from('startup_projects')
+        .select('id')
+        .eq('user_id', user.id)
+        .maybeSingle();
+      
+      if (project) {
+        await supabase.from('startup_projects')
+          .update({ [mod.startup_field]: applicationAnswer.trim() } as any)
+          .eq('id', project.id);
+      } else {
+        await supabase.from('startup_projects')
+          .insert({ user_id: user.id, [mod.startup_field]: applicationAnswer.trim() } as any);
+      }
+      setStartupSynced(true);
+      toast.success(t('Added to My Startup! ✅', 'Добавено в Моят стартъп! ✅'));
+    } catch {
+      toast.error(t('Failed to save to startup', 'Неуспешно запазване в стартъп'));
+    }
+  };
+
+  // Save status indicator component
+  const SaveStatusIndicator = () => {
+    if (existingResponse?.completed_at) return null;
+    return (
+      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+        {autoSaveStatus === 'saving' && (
+          <><Loader2 className="h-3 w-3 animate-spin" /> {t('Saving...', 'Запазване...')}</>
+        )}
+        {autoSaveStatus === 'saved' && lastSavedAt && (
+          <><Save className="h-3 w-3 text-progress" /> {t('Saved', 'Запазено')} · {lastSavedAt.toLocaleTimeString()}</>
+        )}
+        {autoSaveStatus === 'error' && (
+          <><XCircle className="h-3 w-3 text-destructive" /> {t('Save failed', 'Грешка при запазване')}</>
+        )}
+      </div>
+    );
   };
 
   const hasCase = !!mod.embedded_case;
