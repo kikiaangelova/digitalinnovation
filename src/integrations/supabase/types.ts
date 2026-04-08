@@ -312,6 +312,62 @@ export type Database = {
           },
         ]
       }
+      case_consequences: {
+        Row: {
+          case_id: string
+          choice_key: string
+          choice_label: string
+          choice_label_bg: string | null
+          created_at: string
+          explanation: string
+          explanation_bg: string | null
+          id: string
+          month_12_summary: Json
+          month_6_summary: Json
+          real_world_link: string | null
+          real_world_link_bg: string | null
+          tradeoff_scores: Json
+        }
+        Insert: {
+          case_id: string
+          choice_key: string
+          choice_label?: string
+          choice_label_bg?: string | null
+          created_at?: string
+          explanation?: string
+          explanation_bg?: string | null
+          id?: string
+          month_12_summary?: Json
+          month_6_summary?: Json
+          real_world_link?: string | null
+          real_world_link_bg?: string | null
+          tradeoff_scores?: Json
+        }
+        Update: {
+          case_id?: string
+          choice_key?: string
+          choice_label?: string
+          choice_label_bg?: string | null
+          created_at?: string
+          explanation?: string
+          explanation_bg?: string | null
+          id?: string
+          month_12_summary?: Json
+          month_6_summary?: Json
+          real_world_link?: string | null
+          real_world_link_bg?: string | null
+          tradeoff_scores?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "case_consequences_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "case_studies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       case_reflections: {
         Row: {
           case_id: string
@@ -351,7 +407,9 @@ export type Database = {
         Row: {
           answers: Json
           case_id: string
+          chosen_strategy: string | null
           completion_status: string
+          consequence_reflection: string | null
           created_at: string
           current_step: number
           id: string
@@ -363,7 +421,9 @@ export type Database = {
         Insert: {
           answers?: Json
           case_id: string
+          chosen_strategy?: string | null
           completion_status?: string
+          consequence_reflection?: string | null
           created_at?: string
           current_step?: number
           id?: string
@@ -375,7 +435,9 @@ export type Database = {
         Update: {
           answers?: Json
           case_id?: string
+          chosen_strategy?: string | null
           completion_status?: string
+          consequence_reflection?: string | null
           created_at?: string
           current_step?: number
           id?: string
