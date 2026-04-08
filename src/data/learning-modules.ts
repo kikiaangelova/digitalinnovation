@@ -244,7 +244,7 @@ Understanding network effects is essential for designing digital products that g
     display_order: 1,
     related_case_topic: 'Platform Economy',
     case_transition_en: 'You just learned about network effects. Now analyze how Uber used network effects to dominate the mobility market.',
-    case_transition_bg: 'Току-що научихте за мрежовите ефекти. Сега анализирайте как Uber използва мрежовите ефекти, за да доминира на пазара за мобилност.',
+    case_transition_bg: 'Току-що научи за мрежовите ефекти. Сега анализирай как Uber ги използва, за да доминира на пазара за мобилност.',
     related_sim_concepts_en: ['Network Effects', 'Platform Scaling'],
     related_sim_concepts_bg: ['Мрежови ефекти', 'Мащабиране на платформа'],
     sim_transition_en: 'Apply network effects strategy in the startup simulator to test how your platform can grow.',
