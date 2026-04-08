@@ -999,10 +999,13 @@ export type Database = {
           approved_by: string | null
           avatar_style: string
           avatar_url: string | null
-          bio: string | null
           class_name: string | null
           cohort_id: string | null
+          consent_given: boolean
+          consent_given_at: string | null
+          consent_version: string | null
           created_at: string
+          data_retention_until: string | null
           display_name: string | null
           full_name: string | null
           id: string
@@ -1024,10 +1027,13 @@ export type Database = {
           approved_by?: string | null
           avatar_style?: string
           avatar_url?: string | null
-          bio?: string | null
           class_name?: string | null
           cohort_id?: string | null
+          consent_given?: boolean
+          consent_given_at?: string | null
+          consent_version?: string | null
           created_at?: string
+          data_retention_until?: string | null
           display_name?: string | null
           full_name?: string | null
           id?: string
@@ -1049,10 +1055,13 @@ export type Database = {
           approved_by?: string | null
           avatar_style?: string
           avatar_url?: string | null
-          bio?: string | null
           class_name?: string | null
           cohort_id?: string | null
+          consent_given?: boolean
+          consent_given_at?: string | null
+          consent_version?: string | null
           created_at?: string
+          data_retention_until?: string | null
           display_name?: string | null
           full_name?: string | null
           id?: string

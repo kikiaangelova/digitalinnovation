@@ -52,7 +52,7 @@ export default function AuthPage() {
   const [teacherInstitution, setTeacherInstitution] = useState('');
   const [teacherClassName, setTeacherClassName] = useState('');
   const [teacherInviteCode, setTeacherInviteCode] = useState('');
-
+  const [consentChecked, setConsentChecked] = useState(false);
   const { signIn, signUp, user, userRole } = useAuth();
   const { t, lang } = useLang();
   const navigate = useNavigate();
@@ -76,6 +76,7 @@ export default function AuthPage() {
     setTeacherInstitution('');
     setTeacherClassName('');
     setTeacherInviteCode('');
+    setConsentChecked(false);
   }, [isLogin]);
 
   useEffect(() => {
@@ -425,10 +426,30 @@ export default function AuthPage() {
                     )}
                   </div>
                 )}
+                {/* ═══ CONSENT CHECKBOX (signup only) ═══ */}
+                {!isLogin && (
+                  <div className="flex items-start gap-2">
+                    <input
+                      type="checkbox"
+                      id="consent"
+                      checked={consentChecked}
+                      onChange={e => setConsentChecked(e.target.checked)}
+                      className="rounded mt-1 shrink-0"
+                    />
+                    <label htmlFor="consent" className="text-xs text-muted-foreground leading-snug">
+                      {lang === 'bg' ? (
+                        <>Прочетох и приемам <Link to="/privacy" target="_blank" className="text-primary hover:underline">Политиката за поверителност</Link> и <Link to="/terms" target="_blank" className="text-primary hover:underline">Условията за ползване</Link> на DigiInnov.</>
+                      ) : (
+                        <>I have read and accept the <Link to="/privacy" target="_blank" className="text-primary hover:underline">Privacy Policy</Link> and <Link to="/terms" target="_blank" className="text-primary hover:underline">Terms of Use</Link> of DigiInnov.</>
+                      )}
+                    </label>
+                  </div>
+                )}
+
                 <Button
                   type="submit"
                   className="w-full sim-gradient border-0"
-                  disabled={loading || (!isLogin && !signupRole)}
+                  disabled={loading || (!isLogin && !signupRole) || (!isLogin && !consentChecked)}
                 >
                   {loading ? t.pleaseWait : isLogin ? (
                     <><LogIn className="h-4 w-4 mr-2" /> {t.signIn}</>

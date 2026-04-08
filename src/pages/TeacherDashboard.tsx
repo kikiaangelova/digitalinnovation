@@ -29,7 +29,7 @@ import {
 interface ProfileData {
   user_id: string;
   full_name: string | null;
-  bio: string | null;
+  
   skills_tags: string[] | null;
   interests: string[] | null;
   cohort_id: string | null;
@@ -178,7 +178,7 @@ export default function TeacherDashboard() {
     if (!isAdmin) return;
     const load = async () => {
       const [profRes, projRes, simRes, subRes, caseRes, fbRes, modRespRes, modRes] = await Promise.all([
-        supabase.from('profiles').select('user_id, full_name, bio, skills_tags, interests, cohort_id, links_json, updated_at'),
+        supabase.from('profiles').select('user_id, full_name, skills_tags, interests, cohort_id, links_json, updated_at'),
         supabase.from('startup_projects').select('*').order('created_at', { ascending: false }),
         supabase.from('simulator_progress').select('*'),
         supabase.from('submissions').select('id, user_id, case_study_id, total_score, max_score, submitted_at, is_draft').eq('is_draft', false),
@@ -436,7 +436,7 @@ export default function TeacherDashboard() {
               </div>
               <div>
                 <h1 className="text-xl font-bold text-foreground">{prof?.full_name || 'Unknown'}</h1>
-                <p className="text-sm text-muted-foreground">{prof?.bio || t('No bio', 'Няма биография')}</p>
+                <p className="text-sm text-muted-foreground">{prof?.skills_tags?.join(', ') || t('No skills listed', 'Няма посочени умения')}</p>
               </div>
             </div>
             {(meta.school || meta.classGrade || meta.country) && (
