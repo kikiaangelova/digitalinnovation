@@ -520,7 +520,7 @@ export default function LearningModulePlayer() {
             <Textarea
               value={analyticalAnswer}
               onChange={e => setAnalyticalAnswer(e.target.value)}
-              placeholder={t('Write your analysis here...', 'Напишете вашия анализ тук...')}
+              placeholder={t('Write your analysis here...', 'Напиши анализа си тук...')}
               className="min-h-[120px]"
               disabled={!!existingResponse?.completed_at}
             />
