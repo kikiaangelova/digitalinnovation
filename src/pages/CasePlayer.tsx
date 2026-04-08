@@ -23,6 +23,8 @@ import {
 import type { Json } from '@/integrations/supabase/types';
 import CaseAnswerMentor from '@/components/case/CaseAnswerMentor';
 import UncertaintyBanner from '@/components/case/UncertaintyBanner';
+import ConsequencesPanel from '@/components/case/ConsequencesPanel';
+import ReflectionPanel from '@/components/case/ReflectionPanel';
 
 /* ── Types ── */
 interface CaseStudy {
