@@ -24,7 +24,8 @@ export type XpAction =
   | 'theory_quiz_pass'
   | 'onboarding_profile'
   | 'onboarding_journey'
-  | 'startup_all_sections';
+  | 'startup_all_sections'
+  | 'hypothesis_saved';
 
 export const XP_VALUES: Record<XpAction, number> = {
   case_open: 5,
