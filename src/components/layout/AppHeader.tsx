@@ -134,8 +134,8 @@ export default function AppHeader() {
 
           {/* ═══ Right side ═══ */}
           <div className="flex items-center gap-2 ml-auto">
-            {/* My Startup — desktop only */}
-            {user && (
+            {/* My Startup — desktop only, hidden for teachers */}
+            {user && !isTeacher && !isPending && (
               <Link to="/my-startup" className={`hidden md:flex ${navLinkClass('/my-startup')}`}>
                 <Rocket className="h-4 w-4" />
                 {t.startup}
