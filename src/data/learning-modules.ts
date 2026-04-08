@@ -370,6 +370,10 @@ Examples include Airbnb (hosts and guests), YouTube (creators and viewers), and 
     slug: 'customer-acquisition-cost',
     title_en: 'Customer Acquisition Cost',
     title_bg: 'Цена за привличане на клиент (CAC)',
+    hook: { en: 'You can build the best product in the world. If it costs €50 to get each user and each user pays you €30, you\'re bankrupt.', bg: 'Можеш да създадеш най-добрия продукт в света. Ако привличането на всеки потребител струва €50, а той плаща €30, си банкрутирал.' },
+    metaphor: { en: 'CAC is the price of a fishing rod. LTV is the total fish you catch. If the rod costs more than the fish, stop fishing.', bg: 'CAC е цената на въдицата. LTV е общата риба, която хващаш. Ако въдицата струва повече от рибата, спри да ловиш.' },
+    framework: { name: 'LTV:CAC Ratio', bullets_en: ['LTV (Lifetime Value) / CAC should be > 3:1', 'Below 1:1 = losing money on every customer', 'Payback period: how fast do you recoup CAC?'], bullets_bg: ['LTV / CAC трябва да е > 3:1', 'Под 1:1 = губиш пари с всеки клиент', 'Период на изплащане: колко бързо връщаш CAC?'], apply_en: 'Calculate LTV:CAC for your startup idea.', apply_bg: 'Изчисли LTV:CAC за стартъп идеята си.' },
+    provocations: [{ en: 'Is it possible for a startup with high CAC to succeed? Under what conditions?', bg: 'Възможно ли е стартъп с висок CAC да успее? При какви условия?' }, { en: 'Why do some companies give away products for free and still make billions?', bg: 'Защо някои компании раздават продукти безплатно и въпреки това печелят милиарди?' }],
     concepts: [
       {
         id: 'cac-concept-1',
