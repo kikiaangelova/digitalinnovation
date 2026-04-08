@@ -11,6 +11,7 @@ import { ProgressProvider } from "@/context/ProgressContext";
 import ProfileGate from "@/components/layout/ProfileGate";
 import AppFooter from "@/components/layout/AppFooter";
 import AdminRoute from "@/components/layout/AdminRoute";
+import RoleGuard from "@/components/layout/RoleGuard";
 import CycleFAB from "@/components/layout/CycleFAB";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
@@ -54,6 +55,7 @@ import FinalExam from "./pages/FinalExam";
 import Certificate from "./pages/Certificate";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfUse from "./pages/TermsOfUse";
+import PendingApproval from "./pages/PendingApproval";
 
 const queryClient = new QueryClient();
 
@@ -72,48 +74,62 @@ const App = () => (
                 <div className="flex min-h-screen flex-col">
                   <div className="flex-1 pb-20 md:pb-0">
                     <Routes>
+                      {/* Public routes */}
                       <Route path="/" element={<Index />} />
                       <Route path="/auth" element={<AuthPage />} />
                       <Route path="/reset-password" element={<ResetPasswordPage />} />
-                      <Route path="/dashboard" element={<StudentDashboard />} />
-                      <Route path="/profile" element={<ProfilePage />} />
-                      <Route path="/cases" element={<CaseLibrary />} />
-                      <Route path="/dictionary" element={<Dictionary />} />
                       <Route path="/about" element={<AboutDigitalInnovation />} />
                       <Route path="/innovation-basics" element={<AboutDigitalInnovation />} />
-                      <Route path="/case/:id/preview" element={<CasePreview />} />
-                      <Route path="/case/:id" element={<CasePlayer />} />
-                      <Route path="/case/:id/results" element={<CaseResults />} />
-                      <Route path="/simulator/preview" element={<SimulatorPreview />} />
-                      <Route path="/team/:teamId" element={<TeamWorkspace />} />
-                      <Route path="/assessment/:id" element={<AssessmentPlayer />} />
-                      <Route path="/assessment/:id/results" element={<AssessmentResults />} />
+                      <Route path="/privacy" element={<PrivacyPolicy />} />
+                      <Route path="/terms" element={<TermsOfUse />} />
+
+                      {/* Pending teacher route */}
+                      <Route path="/pending" element={<PendingApproval />} />
+
+                      {/* Student + teacher_verified + admin routes */}
+                      <Route path="/dashboard" element={<RoleGuard allowed={['student', 'teacher_verified', 'admin']}><StudentDashboard /></RoleGuard>} />
+                      <Route path="/profile" element={<RoleGuard allowed={['student', 'teacher_pending', 'teacher_verified', 'admin']}><ProfilePage /></RoleGuard>} />
+                      <Route path="/cases" element={<RoleGuard allowed={['student', 'teacher_verified', 'admin']}><CaseLibrary /></RoleGuard>} />
+                      <Route path="/dictionary" element={<RoleGuard allowed={['student', 'teacher_verified', 'admin']}><Dictionary /></RoleGuard>} />
+                      <Route path="/case/:id/preview" element={<RoleGuard allowed={['student', 'teacher_verified', 'admin']}><CasePreview /></RoleGuard>} />
+                      <Route path="/case/:id" element={<RoleGuard allowed={['student', 'teacher_verified', 'admin']}><CasePlayer /></RoleGuard>} />
+                      <Route path="/case/:id/results" element={<RoleGuard allowed={['student', 'teacher_verified', 'admin']}><CaseResults /></RoleGuard>} />
+                      <Route path="/simulator/preview" element={<RoleGuard allowed={['student', 'teacher_verified', 'admin']}><SimulatorPreview /></RoleGuard>} />
+                      <Route path="/team/:teamId" element={<RoleGuard allowed={['student', 'teacher_verified', 'admin']}><TeamWorkspace /></RoleGuard>} />
+                      <Route path="/assessment/:id" element={<RoleGuard allowed={['student', 'admin']}><AssessmentPlayer /></RoleGuard>} />
+                      <Route path="/assessment/:id/results" element={<RoleGuard allowed={['student', 'admin']}><AssessmentResults /></RoleGuard>} />
+                      <Route path="/journey" element={<RoleGuard allowed={['student', 'admin']}><LearningJourney /></RoleGuard>} />
+                      <Route path="/journey/learn/:stageId" element={<RoleGuard allowed={['student', 'admin']}><StageLearn /></RoleGuard>} />
+                      <Route path="/learn" element={<RoleGuard allowed={['student', 'teacher_verified', 'admin']}><LearningModules /></RoleGuard>} />
+                      <Route path="/learn/:slug" element={<RoleGuard allowed={['student', 'teacher_verified', 'admin']}><LearningModulePlayer /></RoleGuard>} />
+                      <Route path="/leaderboard" element={<RoleGuard allowed={['student', 'admin']}><LeaderboardPage /></RoleGuard>} />
+                      <Route path="/simulator" element={<RoleGuard allowed={['student', 'teacher_verified', 'admin']}><StartupSimulator /></RoleGuard>} />
+                      <Route path="/simulator/season/:id" element={<RoleGuard allowed={['student', 'teacher_verified', 'admin']}><SeasonView /></RoleGuard>} />
+                      <Route path="/simulator/season/:id/round/:n" element={<RoleGuard allowed={['student', 'teacher_verified', 'admin']}><RoundView /></RoleGuard>} />
+                      <Route path="/industries" element={<RoleGuard allowed={['student', 'teacher_verified', 'admin']}><IndustryInnovationMap /></RoleGuard>} />
+                      <Route path="/startup-simulator" element={<RoleGuard allowed={['student', 'teacher_verified', 'admin']}><StartupSimulator /></RoleGuard>} />
+                      <Route path="/peer-review" element={<RoleGuard allowed={['student', 'admin']}><PeerReview /></RoleGuard>} />
+                      <Route path="/my-report" element={<RoleGuard allowed={['student', 'admin']}><LearningReport /></RoleGuard>} />
+                      <Route path="/final-exam" element={<RoleGuard allowed={['student', 'admin']}><FinalExam /></RoleGuard>} />
+                      <Route path="/certificate" element={<RoleGuard allowed={['student', 'admin']}><Certificate /></RoleGuard>} />
+
+                      {/* Student-only routes */}
+                      <Route path="/my-startup" element={<RoleGuard allowed={['student', 'admin']}><MyStartupIdea /></RoleGuard>} />
+
+                      {/* Teacher-verified route */}
+                      <Route path="/teacher" element={<RoleGuard allowed={['teacher_verified', 'admin']} redirectTo="/dashboard"><TeacherDashboard /></RoleGuard>} />
+
+                      {/* Admin routes */}
                       <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
                       <Route path="/admin/analytics" element={<AdminRoute><AnalyticsDashboard /></AdminRoute>} />
                       <Route path="/admin/cohorts" element={<AdminRoute><CohortManager /></AdminRoute>} />
-                      <Route path="/my-startup" element={<MyStartupIdea />} />
-                      <Route path="/industries" element={<IndustryInnovationMap />} />
-                      <Route path="/startup-simulator" element={<StartupSimulator />} />
-                      <Route path="/simulator" element={<StartupSimulator />} />
-                      <Route path="/simulator/season/:id" element={<SeasonView />} />
-                      <Route path="/simulator/season/:id/round/:n" element={<RoundView />} />
                       <Route path="/admin/simulator" element={<AdminRoute><SimulatorAdmin /></AdminRoute>} />
                       <Route path="/admin/simulator/season/:id" element={<AdminRoute><SeasonAnalytics /></AdminRoute>} />
                       <Route path="/admin/startup-projects" element={<AdminRoute><StartupProjectsAdmin /></AdminRoute>} />
                       <Route path="/admin/teacher" element={<AdminRoute><TeacherDashboard /></AdminRoute>} />
                       <Route path="/admin/peer-reviews" element={<AdminRoute><PeerReviewAdmin /></AdminRoute>} />
-                      <Route path="/peer-review" element={<PeerReview />} />
-                      <Route path="/my-report" element={<LearningReport />} />
                       <Route path="/admin/system-status" element={<AdminRoute><SystemStatus /></AdminRoute>} />
-                      <Route path="/journey" element={<LearningJourney />} />
-                      <Route path="/journey/learn/:stageId" element={<StageLearn />} />
-                      <Route path="/learn" element={<LearningModules />} />
-                      <Route path="/learn/:slug" element={<LearningModulePlayer />} />
-                      <Route path="/leaderboard" element={<LeaderboardPage />} />
-                      <Route path="/final-exam" element={<FinalExam />} />
-                      <Route path="/certificate" element={<Certificate />} />
-                      <Route path="/privacy" element={<PrivacyPolicy />} />
-                      <Route path="/terms" element={<TermsOfUse />} />
+
                       <Route path="*" element={<NotFound />} />
                     </Routes>
                   </div>
