@@ -37,6 +37,13 @@ interface StudentData {
   joined_at: string;
 }
 
+interface QuizEntry {
+  category: string | null;
+  score: number;
+  max_score: number;
+  created_at: string;
+}
+
 interface ProgressSnapshot {
   student_id: string;
   cases_completed: number;
@@ -48,6 +55,7 @@ interface ProgressSnapshot {
   startup_submitted: boolean;
   module_count: number;
   quiz_avg: number;
+  recent_quizzes: QuizEntry[];
 }
 
 const CHART_COLORS = [
@@ -146,8 +154,9 @@ export default function TeacherDashboardPage() {
         .eq('classroom_id', cls.id),
       supabase
         .from('quiz_results')
-        .select('user_id, score, max_score')
-        .in('user_id', studentIds),
+        .select('user_id, score, max_score, category, created_at')
+        .in('user_id', studentIds)
+        .order('created_at', { ascending: false }),
     ]);
 
     setAssignmentCount(assignRes.data?.length || 0);
@@ -180,11 +189,16 @@ export default function TeacherDashboardPage() {
     });
 
     const quizScores: Record<string, { total: number; count: number }> = {};
-    (quizRes.data || []).forEach((q) => {
+    const recentQuizzes: Record<string, QuizEntry[]> = {};
+    (quizRes.data || []).forEach((q: any) => {
       if (!quizScores[q.user_id]) quizScores[q.user_id] = { total: 0, count: 0 };
       const pct = q.max_score > 0 ? (q.score / q.max_score) * 100 : 0;
       quizScores[q.user_id].total += pct;
       quizScores[q.user_id].count += 1;
+      if (!recentQuizzes[q.user_id]) recentQuizzes[q.user_id] = [];
+      if (recentQuizzes[q.user_id].length < 3) {
+        recentQuizzes[q.user_id].push({ category: q.category, score: q.score, max_score: q.max_score, created_at: q.created_at });
+      }
     });
 
     const snapshots: ProgressSnapshot[] = studentIds.map((sid) => ({
@@ -198,6 +212,7 @@ export default function TeacherDashboardPage() {
       startup_submitted: projMap[sid]?.submitted || false,
       module_count: modCountMap[sid] || 0,
       quiz_avg: quizScores[sid] ? Math.round(quizScores[sid].total / quizScores[sid].count) : 0,
+      recent_quizzes: recentQuizzes[sid] || [],
     }));
     setProgress(snapshots);
     setLoading(false);
@@ -540,6 +555,30 @@ export default function TeacherDashboardPage() {
                                           );
                                         })}
                                       </div>
+                                      {/* Recent quiz results */}
+                                      {p && p.recent_quizzes.length > 0 && (
+                                        <div className="mt-4">
+                                          <div className="text-xs font-medium text-muted-foreground mb-2 uppercase tracking-wide">
+                                            {t('Last 3 Quiz Results', 'Последни 3 теста')}
+                                          </div>
+                                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                                            {p.recent_quizzes.map((q, qi) => {
+                                              const pct = q.max_score > 0 ? Math.round((q.score / q.max_score) * 100) : 0;
+                                              return (
+                                                <div key={qi} className="flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2">
+                                                  <div className="flex-1 min-w-0">
+                                                    <div className="text-xs font-medium text-foreground truncate">{q.category || t('General', 'Общо')}</div>
+                                                    <div className="text-[10px] text-muted-foreground">{new Date(q.created_at).toLocaleDateString(lang === 'bg' ? 'bg-BG' : 'en-US', { month: 'short', day: 'numeric' })}</div>
+                                                  </div>
+                                                  <span className={`text-xs font-bold ${pct >= 80 ? 'text-green-600 dark:text-green-400' : pct >= 50 ? 'text-yellow-600 dark:text-yellow-400' : 'text-destructive'}`}>
+                                                    {pct}%
+                                                  </span>
+                                                </div>
+                                              );
+                                            })}
+                                          </div>
+                                        </div>
+                                      )}
                                     </td>
                                   </tr>
                                 )}
