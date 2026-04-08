@@ -86,7 +86,7 @@ export default function AppHeader() {
   // ─── Bottom tab bar items (mobile, logged-in) ───
   const bottomTabs = isTeacher
     ? [
-        { to: '/dashboard', icon: LayoutDashboard, label: lang === 'bg' ? 'Начало' : 'Home' },
+        { to: '/teacher-dashboard', icon: LayoutDashboard, label: lang === 'bg' ? 'Начало' : 'Home' },
         { to: '/teacher', icon: GraduationCap, label: lang === 'bg' ? 'Клас' : 'Class' },
         { to: '/cases', icon: BookOpen, label: t.cases },
         { to: '/learn', icon: GraduationCap, label: lang === 'bg' ? 'Учи' : 'Learn' },
