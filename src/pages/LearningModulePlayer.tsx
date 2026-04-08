@@ -105,6 +105,51 @@ export default function LearningModulePlayer() {
       });
   }, [user, dbModuleId]);
 
+  // Auto-save answers with debounce
+  const performAutoSave = useCallback(async () => {
+    if (!user || !dbModuleId || existingResponse?.completed_at) return;
+    setAutoSaveStatus('saving');
+    try {
+      const payload = {
+        user_id: user.id,
+        module_id: dbModuleId,
+        quiz_answers: quizAnswers,
+        quiz_score: 0,
+        quiz_max: mod?.quiz_questions.length || 0,
+        analytical_answer: analyticalAnswer,
+        application_answer: applicationAnswer,
+        updated_at: new Date().toISOString(),
+      };
+
+      if (existingResponse) {
+        await supabase.from('learning_module_responses').update(payload as any).eq('id', existingResponse.id);
+      } else {
+        const { data } = await supabase.from('learning_module_responses').insert(payload as any).select('id').single();
+        if (data) setExistingResponse({ ...payload, id: data.id });
+      }
+
+      setAutoSaveStatus('saved');
+      setLastSavedAt(new Date());
+    } catch {
+      setAutoSaveStatus('error');
+    }
+  }, [user, dbModuleId, existingResponse, quizAnswers, analyticalAnswer, applicationAnswer, mod]);
+
+  // Trigger auto-save on answer changes (debounced 2s)
+  useEffect(() => {
+    if (!user || !dbModuleId || existingResponse?.completed_at) return;
+    if (analyticalAnswer.length === 0 && applicationAnswer.length === 0) return;
+
+    if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
+    autoSaveTimer.current = setTimeout(() => {
+      performAutoSave();
+    }, 2000);
+
+    return () => {
+      if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
+    };
+  }, [analyticalAnswer, applicationAnswer, performAutoSave]);
+
   if (!mod) {
     return (
       <div className="min-h-screen bg-background">
