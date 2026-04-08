@@ -108,7 +108,7 @@ export default function CaseAnswerMentor({
           <p className="text-xs text-muted-foreground">
             {t(
               'How confident are you in your answer? The AI mentor will calibrate feedback based on your self-assessment.',
-              'Колко сте уверени в отговора си? AI менторът ще калибрира обратната връзка спрямо вашата самооценка.'
+              'Колко си уверен/а в отговора си? AI менторът ще калибрира обратната връзка спрямо твоята самооценка.'
             )}
           </p>
           <div className="px-1">

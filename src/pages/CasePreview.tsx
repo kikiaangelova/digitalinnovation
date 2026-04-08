@@ -424,7 +424,7 @@ export default function CasePreview() {
           <Button size="lg" className="w-full sim-gradient border-0 text-base font-semibold py-6"
             onClick={handleStart} disabled={steps.length === 0}>
             {steps.length === 0
-              ? tl('Coming Soon', 'Очаквайте скоро')
+              ? tl('Coming Soon', 'Очаквай скоро')
               : completionStatus === 'completed'
                 ? <>{tl('Retake Case', 'Повтори казуса')} <ArrowRight className="ml-2 h-5 w-5" /></>
                 : completionStatus === 'in_progress'

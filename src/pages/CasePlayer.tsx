@@ -525,7 +525,7 @@ export default function CasePlayer() {
           {tl('This case study content is currently being prepared. Please check back later or try another case.',
              'Съдържанието на този казус се подготвя. Моля, проверете по-късно или опитайте друг казус.')}
         </p>
-        <Button variant="outline" onClick={() => navigate('/cases')}>{tl('Browse Other Cases', 'Разгледайте други казуси')}</Button>
+        <Button variant="outline" onClick={() => navigate('/cases')}>{tl('Browse Other Cases', 'Разгледай други казуси')}</Button>
       </div>
     </div>
   );
@@ -728,7 +728,7 @@ export default function CasePlayer() {
               </div>
               <p className="text-xs text-muted-foreground mb-3">
                 {tl('Analyze the data below carefully — you will need it to answer the strategic questions.',
-                   'Анализирайте данните внимателно — ще ви трябват за отговорите на стратегическите въпроси.')}
+                   'Анализирай данните внимателно — ще ти трябват за отговорите на стратегическите въпроси.')}
               </p>
               <div className="bg-background/50 rounded-md p-4 border border-border/50 overflow-x-auto">
                 <MarkdownContent content={exhibitContent || ''} />
@@ -871,7 +871,7 @@ export default function CasePlayer() {
               <p className="text-sm text-muted-foreground">
                 {tl(
                   'Complete all analysis questions above to unlock the case insight and learning outcome.',
-                  'Завършете всички въпроси за анализ, за да отключите извода и учебния резултат.'
+                  'Завърши всички въпроси за анализ, за да отключиш извода и учебния резултат.'
                 )}
               </p>
             )}
@@ -957,7 +957,7 @@ export default function CasePlayer() {
                 <p className="text-xs text-muted-foreground mt-1">
                   {tl(
                     'Optional – connect this case to your startup idea if relevant. Complete fields (30+ characters each) to earn bonus XP.',
-                    'По избор – свържете този казус със стартъп идеята си, ако е уместно. Попълнете полетата (30+ символа всяко), за да спечелите бонус XP.'
+                    'По избор – свържи този казус със стартъп идеята си, ако е уместно. Попълни полетата (30+ символа всяко), за да спечелиш бонус XP.'
                   )}
                 </p>
               </div>

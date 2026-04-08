@@ -1162,7 +1162,7 @@ export const LEVEL_INFO = {
     en: 'Innovation Thinking',
     bg: 'Иновационно мислене',
     desc_en: 'Master the foundations of digital innovation, network effects, and platform strategy.',
-    desc_bg: 'Овладейте основите на дигиталната иновация, мрежовите ефекти и платформената стратегия.',
+    desc_bg: 'Овладей основите на дигиталната иновация, мрежовите ефекти и платформената стратегия.',
   },
   2: {
     en: 'Business Fundamentals',

@@ -231,7 +231,7 @@ export default function CaseResults() {
           <div className="flex items-center gap-2 mb-3">
             <MessageSquare className="h-5 w-5 text-primary" />
             <h2 className="text-lg font-display font-semibold text-foreground">
-              {tx('What did you learn from this case?', 'Какво научихте от този казус?')}
+              {tx('What did you learn from this case?', 'Какво научи от този казус?')}
             </h2>
           </div>
           <p className="text-sm text-muted-foreground mb-3">

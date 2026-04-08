@@ -58,7 +58,7 @@ const SECTIONS: SectionConfig[] = [
     labelEn: 'Industry Analysis',
     labelBg: 'Анализ на индустрията',
     descEn: 'Analyze the industry your startup operates in.',
-    descBg: 'Анализирайте индустрията, в която работи вашият стартъп.',
+    descBg: 'Анализирай индустрията, в която работи твоят стартъп.',
     prompts: [
       { en: '🏭 Which industry does your startup belong to?', bg: '🏭 Към коя индустрия принадлежи вашият стартъп?' },
       { en: '📈 What are the key trends in this industry?', bg: '📈 Какви са ключовите тенденции в тази индустрия?' },

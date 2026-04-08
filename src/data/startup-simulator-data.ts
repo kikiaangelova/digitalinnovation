@@ -271,7 +271,7 @@ export const SIM_WEEKS: SimWeek[] = [
     titleEn: 'Marketing Strategy',
     titleBg: 'Маркетингова стратегия',
     descEn: 'Choose how you will acquire customers and grow your startup. The best founders use a strategic mix of channels.',
-    descBg: 'Изберете как ще привлечете клиенти и ще развиете стартъпа. Най-добрите основатели използват стратегически микс от канали.',
+    descBg: 'Избери как ще привлечеш клиенти и ще развиеш стартъпа. Най-добрите основатели използват стратегически микс от канали.',
     icon: '📣',
     theoryConceptEn: 'Network Effects',
     theoryConceptBg: 'Мрежови ефекти',

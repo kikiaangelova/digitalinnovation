@@ -57,7 +57,7 @@ export function getStepUncertaintyIndicators(stepIndex: number): UncertaintyIndi
       labelEn: 'Multiple Valid Approaches',
       labelBg: 'Множество валидни подходи',
       hintEn: 'There is no single correct answer. Your reasoning and trade-off analysis matter more than the specific choice.',
-      hintBg: 'Няма единствен правилен отговор. Вашата аргументация и анализ на компромисите са по-важни от конкретния избор.',
+      hintBg: 'Няма единствен правилен отговор. Твоята аргументация и анализ на компромисите са по-важни от конкретния избор.',
     });
   }
 

@@ -203,7 +203,7 @@ export default function DecisionForm({
             {/* Strategic options with trade-off indicators */}
             <div className="p-5 space-y-3">
               <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
-                {t('Choose your strategy:', 'Изберете стратегия:')}
+                {t('Choose your strategy:', 'Избери стратегия:')}
               </p>
 
               <div className="grid gap-3">
@@ -331,7 +331,7 @@ export default function DecisionForm({
             </p>
             {!allAnswered && (
               <p className="text-xs text-muted-foreground mt-0.5">
-                {t('Complete all decisions to submit', 'Завършете всички решения, за да изпратите')}
+                {t('Complete all decisions to submit', 'Завърши всички решения, за да изпратиш')}
               </p>
             )}
           </div>

@@ -112,7 +112,7 @@ interface ReflectionPromptProps {
 
 export function ReflectionPrompt({ lang, value, onChange, disabled }: ReflectionPromptProps) {
   const prompts = [
-    { en: 'What did you learn?', bg: 'Какво научихте?' },
+    { en: 'What did you learn?', bg: 'Какво научи?' },
     { en: 'What was difficult?', bg: 'Какво беше трудно?' },
     { en: 'What will you improve next time?', bg: 'Какво ще подобрите следващия път?' },
   ];
@@ -134,7 +134,7 @@ export function ReflectionPrompt({ lang, value, onChange, disabled }: Reflection
       </div>
       <textarea
         className="w-full min-h-[80px] rounded-lg border border-border bg-background p-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 resize-y"
-        placeholder={lang === 'bg' ? 'Напишете вашите размисли тук...' : 'Write your reflections here...'}
+        placeholder={lang === 'bg' ? 'Напиши размислите си тук...' : 'Write your reflections here...'}
         value={value}
         onChange={e => onChange(e.target.value)}
         disabled={disabled}

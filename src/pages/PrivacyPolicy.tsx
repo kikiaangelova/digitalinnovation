@@ -25,7 +25,7 @@ export default function PrivacyPolicy() {
             </p>
             <p className="text-sm text-muted-foreground leading-relaxed">
               {isBg
-                ? 'Ако имате въпроси относно обработката на личните ви данни, свържете се с нас на contact@digiinnov.com.'
+                ? 'Ако имате въпроси относно обработката на личните ви данни, свържи се с нас на contact@digiinnov.com.'
                 : 'If you have questions about how your personal data is processed, contact us at contact@digiinnov.com.'}
             </p>
           </section>

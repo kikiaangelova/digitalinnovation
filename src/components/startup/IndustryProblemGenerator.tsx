@@ -479,7 +479,7 @@ export default function IndustryProblemGenerator({ lang, onProblemSelected }: Pr
         <p className="text-sm text-muted-foreground">
           {t(
             'Select a problem that interests you. You will then validate it before building your startup solution.',
-            'Изберете проблем, който ви интересува. След това ще го валидирате преди да изградите стартъп решение.',
+            'Избери проблем, който те интересува. След това ще го валидираш, преди да изградиш стартъп решение.',
           )}
         </p>
 
@@ -525,7 +525,7 @@ export default function IndustryProblemGenerator({ lang, onProblemSelected }: Pr
               </div>
 
               <div className="pt-1 flex items-center gap-1 text-xs text-primary font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-                {t('Select this problem', 'Изберете този проблем')} <ChevronRight className="h-3 w-3" />
+                {t('Select this problem', 'Избери този проблем')} <ChevronRight className="h-3 w-3" />
               </div>
             </button>
           ))}
