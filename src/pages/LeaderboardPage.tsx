@@ -30,8 +30,19 @@ export default function LeaderboardPage() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const { data, error } = await supabase.rpc('get_leaderboard', { _limit: 100 });
-        if (error) throw error;
+        // Fetch profiles directly to get real names + XP for all users
+        const { data: profileData, error: profileErr } = await supabase
+          .from('profiles')
+          .select('user_id, full_name, display_name, total_xp')
+          .gt('total_xp', 0)
+          .order('total_xp', { ascending: false })
+          .limit(100);
+        if (profileErr) throw profileErr;
+        const data = (profileData || []).map(p => ({
+          user_id: p.user_id,
+          display_name: p.full_name || p.display_name || t('Student', 'Студент'),
+          total_xp: p.total_xp,
+        }));
 
         const board: Entry[] = (data || []).map((row: any, i: number) => ({
           user_id: row.user_id,
