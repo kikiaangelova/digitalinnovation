@@ -1,17 +1,35 @@
-import { forwardRef, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/context/AuthContext';
-import { useLang } from '@/context/LangContext';
-import { Button } from '@/components/ui/button';
-import AppHeader from '@/components/layout/AppHeader';
-import InnovationShowcase from '@/components/landing/InnovationShowcase';
+import { forwardRef, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/context/AuthContext";
+import { useLang } from "@/context/LangContext";
+import { Button } from "@/components/ui/button";
+import AppHeader from "@/components/layout/AppHeader";
+import InnovationShowcase from "@/components/landing/InnovationShowcase";
 import {
-  GraduationCap, ArrowRight, Lightbulb, Search, Rocket,
-  Presentation, Compass, Briefcase, Palette,
-  Trophy, BookOpen, FlaskConical, TrendingUp, Mic,
-  Zap, Star, Calendar, ChevronRight, Book,
-  Cpu, Play, Brain, Award,
-} from 'lucide-react';
+  GraduationCap,
+  ArrowRight,
+  Lightbulb,
+  Search,
+  Rocket,
+  Presentation,
+  Compass,
+  Briefcase,
+  Palette,
+  Trophy,
+  BookOpen,
+  FlaskConical,
+  TrendingUp,
+  Mic,
+  Zap,
+  Star,
+  Calendar,
+  ChevronRight,
+  Book,
+  Cpu,
+  Play,
+  Brain,
+  Award,
+} from "lucide-react";
 
 const Index = () => {
   const { user } = useAuth();
@@ -20,12 +38,12 @@ const Index = () => {
   const [testimonialIdx, setTestimonialIdx] = useState(0);
 
   const testimonials = [
-    { quote: t.testimonial1, name: lang === 'bg' ? 'Ива М., 17' : 'Iva M., 17' },
-    { quote: t.testimonial2, name: lang === 'bg' ? 'Виктор С., 16' : 'Viktor S., 16' },
+    { quote: t.testimonial1, name: lang === "bg" ? "Ива М., 17" : "Iva M., 17" },
+    { quote: t.testimonial2, name: lang === "bg" ? "Виктор С., 16" : "Viktor S., 16" },
   ];
 
   useEffect(() => {
-    const timer = setInterval(() => setTestimonialIdx(i => (i + 1) % testimonials.length), 4000);
+    const timer = setInterval(() => setTestimonialIdx((i) => (i + 1) % testimonials.length), 4000);
     return () => clearInterval(timer);
   }, [testimonials.length]);
 
@@ -35,11 +53,16 @@ const Index = () => {
   };
 
   const learnCards = [
-    { icon: Lightbulb, title: t.learnDigitalInnovation, desc: t.learnDigitalInnovationDesc, gradient: 'gradient-explorer' },
-    { icon: Rocket, title: t.learnStartupThinking, desc: t.learnStartupThinkingDesc, gradient: 'gradient-strategist' },
-    { icon: Briefcase, title: t.learnBusinessModels, desc: t.learnBusinessModelsDesc, gradient: 'gradient-builder' },
-    { icon: Palette, title: t.learnProductDesign, desc: t.learnProductDesignDesc, gradient: 'gradient-designer' },
-    { icon: TrendingUp, title: t.learnGrowthStrategy, desc: t.learnGrowthStrategyDesc, gradient: 'gradient-founder' },
+    {
+      icon: Lightbulb,
+      title: t.learnDigitalInnovation,
+      desc: t.learnDigitalInnovationDesc,
+      gradient: "gradient-explorer",
+    },
+    { icon: Rocket, title: t.learnStartupThinking, desc: t.learnStartupThinkingDesc, gradient: "gradient-strategist" },
+    { icon: Briefcase, title: t.learnBusinessModels, desc: t.learnBusinessModelsDesc, gradient: "gradient-builder" },
+    { icon: Palette, title: t.learnProductDesign, desc: t.learnProductDesignDesc, gradient: "gradient-designer" },
+    { icon: TrendingUp, title: t.learnGrowthStrategy, desc: t.learnGrowthStrategyDesc, gradient: "gradient-founder" },
   ];
 
   const buildSteps = [
@@ -98,9 +121,7 @@ const Index = () => {
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-display font-bold text-foreground mb-4 leading-[1.1]">
             {t.heroLine1}
             <br />
-            <span className="sim-gradient-text">
-              {t.heroLine2}
-            </span>
+            <span className="sim-gradient-text">{t.heroLine2}</span>
           </h1>
 
           <p className="text-base sm:text-lg text-muted-foreground mb-2 max-w-2xl mx-auto leading-relaxed">
@@ -117,15 +138,13 @@ const Index = () => {
               <p className="text-sm text-foreground italic leading-relaxed mb-2 animate-fade-in" key={testimonialIdx}>
                 {testimonials[testimonialIdx].quote}
               </p>
-              <p className="text-xs text-muted-foreground font-medium">
-                — {testimonials[testimonialIdx].name}
-              </p>
+              <p className="text-xs text-muted-foreground font-medium">— {testimonials[testimonialIdx].name}</p>
               <div className="flex justify-center gap-1.5 mt-3">
                 {testimonials.map((_, i) => (
                   <button
                     key={i}
                     onClick={() => setTestimonialIdx(i)}
-                    className={`h-1.5 rounded-full transition-all ${i === testimonialIdx ? 'w-4 bg-primary' : 'w-1.5 bg-border'}`}
+                    className={`h-1.5 rounded-full transition-all ${i === testimonialIdx ? "w-4 bg-primary" : "w-1.5 bg-border"}`}
                   />
                 ))}
               </div>
@@ -134,15 +153,28 @@ const Index = () => {
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             {user ? (
-              <Button size="lg" className="sim-gradient border-0 text-base px-8 glow-primary" onClick={() => navigate('/dashboard')}>
+              <Button
+                size="lg"
+                className="sim-gradient border-0 text-base px-8 glow-primary"
+                onClick={() => navigate("/dashboard")}
+              >
                 {t.goToDashboard} <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             ) : (
               <>
-                <Button size="lg" className="sim-gradient border-0 text-base px-8 glow-primary" onClick={() => navigate('/auth?mode=signup')}>
+                <Button
+                  size="lg"
+                  className="sim-gradient border-0 text-base px-8 glow-primary"
+                  onClick={() => navigate("/auth?mode=signup")}
+                >
                   {t.startJourney} <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
-                <Button variant="outline" size="lg" className="text-base px-8" onClick={() => document.getElementById('how-it-works')?.scrollIntoView({ behavior: 'smooth' })}>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="text-base px-8"
+                  onClick={() => document.getElementById("how-it-works")?.scrollIntoView({ behavior: "smooth" })}
+                >
                   {t.explorePlatform}
                 </Button>
               </>
@@ -151,11 +183,8 @@ const Index = () => {
 
           {!user && (
             <p className="mt-6 text-sm text-muted-foreground">
-              {t.areYouTeacher}{' '}
-              <a
-                href="mailto:contact@digiinnov.com"
-                className="text-primary hover:underline font-medium"
-              >
+              {t.areYouTeacher}{" "}
+              <a href="mailto:contact@digiinnov.com" className="text-primary hover:underline font-medium">
                 → {t.requestDemo}
               </a>
             </p>
@@ -166,12 +195,15 @@ const Index = () => {
           {/* Quick stats */}
           <div className="flex flex-wrap justify-center gap-5 mt-10">
             {[
-              { value: '6', label: t.statWeeks, icon: Calendar },
-              { value: '10', label: t.statIndustries, icon: Cpu },
-              { value: '5', label: t.statLevels, icon: Trophy },
-              { value: '∞', label: t.statIdeas, icon: Lightbulb },
+              { value: "6", label: t.statWeeks, icon: Calendar },
+              { value: "10", label: t.statIndustries, icon: Cpu },
+              { value: "5", label: t.statLevels, icon: Trophy },
+              { value: "∞", label: t.statIdeas, icon: Lightbulb },
             ].map((stat, i) => (
-              <div key={i} className="flex items-center gap-2 rounded-full bg-card border border-border px-4 py-2 shadow-sm">
+              <div
+                key={i}
+                className="flex items-center gap-2 rounded-full bg-card border border-border px-4 py-2 shadow-sm"
+              >
                 <stat.icon className="h-4 w-4 text-primary" />
                 <span className="text-sm font-bold text-foreground">{stat.value}</span>
                 <span className="text-xs text-muted-foreground">{stat.label}</span>
@@ -188,7 +220,7 @@ const Index = () => {
             <div className="text-center mb-10">
               <div className="inline-flex items-center gap-2 rounded-full border border-primary/20 bg-card px-4 py-1.5 mb-4">
                 <Play className="h-3.5 w-3.5 text-primary" />
-                <span className="text-xs font-medium text-primary">4 {lang === 'bg' ? 'стъпки' : 'steps'}</span>
+                <span className="text-xs font-medium text-primary">4 {lang === "bg" ? "стъпки" : "steps"}</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-display font-bold text-foreground mb-3">{t.howItWorksTitle}</h2>
               <p className="text-muted-foreground max-w-lg mx-auto">{t.howItWorksDesc}</p>
@@ -201,12 +233,17 @@ const Index = () => {
                 { icon: Brain, text: t.howStep3, num: 3 },
                 { icon: Award, text: t.howStep4, num: 4 },
               ].map((step) => (
-                <div key={step.num} className="flex items-start gap-4 rounded-xl border border-border bg-card p-5 hover:border-primary/40 transition-colors">
+                <div
+                  key={step.num}
+                  className="flex items-start gap-4 rounded-xl border border-border bg-card p-5 hover:border-primary/40 transition-colors"
+                >
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl sim-gradient shrink-0 shadow-md">
                     <step.icon className="h-5 w-5 text-primary-foreground" />
                   </div>
                   <div>
-                    <div className="text-xs font-bold text-primary mb-1">{lang === 'bg' ? 'Стъпка' : 'Step'} {step.num}</div>
+                    <div className="text-xs font-bold text-primary mb-1">
+                      {lang === "bg" ? "Стъпка" : "Step"} {step.num}
+                    </div>
                     <p className="text-sm text-foreground leading-relaxed">{step.text}</p>
                   </div>
                 </div>
@@ -215,7 +252,11 @@ const Index = () => {
 
             <div className="text-center">
               <p className="text-sm font-medium text-muted-foreground mb-3">{t.howCta}</p>
-              <Button size="lg" className="sim-gradient border-0 text-base px-8 glow-primary" onClick={() => navigate('/auth?mode=signup')}>
+              <Button
+                size="lg"
+                className="sim-gradient border-0 text-base px-8 glow-primary"
+                onClick={() => navigate("/auth?mode=signup")}
+              >
                 {t.startJourney} <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </div>
@@ -234,8 +275,13 @@ const Index = () => {
           </div>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 mb-16">
             {learnCards.map((card, i) => (
-              <div key={i} className="group rounded-2xl border border-border bg-card p-5 text-center hover:border-primary/40 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                <div className={`flex h-12 w-12 items-center justify-center rounded-xl ${card.gradient} mx-auto mb-3 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+              <div
+                key={i}
+                className="group rounded-2xl border border-border bg-card p-5 text-center hover:border-primary/40 hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+              >
+                <div
+                  className={`flex h-12 w-12 items-center justify-center rounded-xl ${card.gradient} mx-auto mb-3 shadow-lg group-hover:scale-110 transition-transform duration-300`}
+                >
                   <card.icon className="h-5 w-5 text-white" />
                 </div>
                 <h3 className="font-display font-bold text-sm text-foreground mb-1">{card.title}</h3>
@@ -257,7 +303,9 @@ const Index = () => {
                   <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-card border-2 border-primary/20 shadow-md mb-3 group-hover:border-primary group-hover:scale-110 transition-all duration-300">
                     <step.icon className="h-6 w-6 text-primary" />
                   </div>
-                  <div className="flex h-6 w-6 items-center justify-center rounded-full sim-gradient text-xs font-bold text-primary-foreground mb-2 shadow-sm">{step.step}</div>
+                  <div className="flex h-6 w-6 items-center justify-center rounded-full sim-gradient text-xs font-bold text-primary-foreground mb-2 shadow-sm">
+                    {step.step}
+                  </div>
                   <p className="text-xs font-semibold text-foreground leading-snug">{step.title}</p>
                 </div>
                 {i < buildSteps.length - 1 && <ChevronRight className="h-5 w-5 text-primary/40 mx-2 shrink-0" />}
@@ -271,7 +319,9 @@ const Index = () => {
                   <step.icon className="h-5 w-5 text-primary-foreground" />
                 </div>
                 <div className="flex-1">
-                  <span className="typo-stage-label">{t.step} {step.step}</span>
+                  <span className="typo-stage-label">
+                    {t.step} {step.step}
+                  </span>
                   <p className="text-sm font-medium text-foreground">{step.title}</p>
                 </div>
                 {i < buildSteps.length - 1 && <ChevronRight className="h-4 w-4 text-muted-foreground" />}
@@ -300,7 +350,9 @@ const Index = () => {
                         <stage.icon className="h-4 w-4" />
                       </div>
                       <div className="flex-1 rounded-xl border border-border bg-card p-3 group-hover:border-primary/30 transition-all duration-300">
-                        <span className="typo-stage-label text-[10px]">{t.stage} {i + 1}</span>
+                        <span className="typo-stage-label text-[10px]">
+                          {t.stage} {i + 1}
+                        </span>
                         <h3 className="font-display font-bold text-foreground text-sm">{stage.title}</h3>
                         <p className="text-xs text-muted-foreground">{stage.desc}</p>
                       </div>
@@ -313,17 +365,24 @@ const Index = () => {
             {/* Right: Course weeks */}
             <div>
               <SectionBadge label={t.weeksCount} />
-              <h2 className="text-2xl sm:text-3xl font-display font-bold text-foreground mt-4 mb-6">{t.learningPath}</h2>
+              <h2 className="text-2xl sm:text-3xl font-display font-bold text-foreground mt-4 mb-6">
+                {t.learningPath}
+              </h2>
               <div className="space-y-3">
                 {courseWeeks.map((week, i) => (
-                  <div key={i} className="group flex gap-3 rounded-xl border border-border bg-card p-3 hover:border-primary/30 transition-all duration-300">
+                  <div
+                    key={i}
+                    className="group flex gap-3 rounded-xl border border-border bg-card p-3 hover:border-primary/30 transition-all duration-300"
+                  >
                     <div className="flex h-10 w-10 items-center justify-center rounded-xl sim-gradient text-primary-foreground shadow-md shrink-0 group-hover:scale-110 transition-transform duration-300">
                       <week.icon className="h-4 w-4" />
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-1.5 mb-0.5">
                         <Calendar className="h-3 w-3 text-primary" />
-                        <span className="typo-stage-label text-[10px]">{t.week} {week.week}</span>
+                        <span className="typo-stage-label text-[10px]">
+                          {t.week} {week.week}
+                        </span>
                       </div>
                       <h3 className="font-display font-bold text-foreground text-sm">{week.title}</h3>
                       <p className="text-xs text-muted-foreground mt-0.5">{week.desc}</p>
@@ -341,26 +400,43 @@ const Index = () => {
         <div className="container mx-auto max-w-4xl">
           <div className="text-center mb-10">
             <SectionBadge label={t.dictBadge} />
-            <h2 className="text-2xl sm:text-3xl font-display font-bold text-foreground mt-4 mb-3">
-              {t.dictTitle}
-            </h2>
-            <p className="text-muted-foreground max-w-lg mx-auto">
-              {t.dictSubtitle}
-            </p>
+            <h2 className="text-2xl sm:text-3xl font-display font-bold text-foreground mt-4 mb-3">{t.dictTitle}</h2>
+            <p className="text-muted-foreground max-w-lg mx-auto">{t.dictSubtitle}</p>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
             {[
-              { en: 'Target Audience', bg: 'Целева аудитория', cat: 'Marketing', catBg: 'Маркетинг', def: t.dictTermTargetAudience },
-              { en: 'Revenue Model', bg: 'Модел на приходите', cat: 'Pricing & Revenue', catBg: 'Ценообразуване', def: t.dictTermRevenueModel },
-              { en: 'Bottleneck', bg: 'Тясно място', cat: 'Operations', catBg: 'Операции', def: t.dictTermBottleneck },
-              { en: 'Founding Team', bg: 'Основателски екип', cat: 'Team & Roles', catBg: 'Екип и роли', def: t.dictTermFoundingTeam },
+              {
+                en: "Target Audience",
+                bg: "Целева аудитория",
+                cat: "Marketing",
+                catBg: "Маркетинг",
+                def: t.dictTermTargetAudience,
+              },
+              {
+                en: "Revenue Model",
+                bg: "Модел на приходите",
+                cat: "Pricing & Revenue",
+                catBg: "Ценообразуване",
+                def: t.dictTermRevenueModel,
+              },
+              { en: "Bottleneck", bg: "Тясно място", cat: "Operations", catBg: "Операции", def: t.dictTermBottleneck },
+              {
+                en: "Founding Team",
+                bg: "Основателски екип",
+                cat: "Team & Roles",
+                catBg: "Екип и роли",
+                def: t.dictTermFoundingTeam,
+              },
             ].map((item, i) => (
-              <div key={i} className="group rounded-xl border border-border bg-card p-4 hover:border-primary/30 transition-all duration-300">
+              <div
+                key={i}
+                className="group rounded-xl border border-border bg-card p-4 hover:border-primary/30 transition-all duration-300"
+              >
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="font-display font-bold text-foreground text-sm">{item.en}</h3>
                   <span className="text-[10px] font-medium uppercase tracking-wider text-primary/70 bg-accent px-2 py-0.5 rounded-full">
-                    {lang === 'bg' ? item.catBg : item.cat}
+                    {lang === "bg" ? item.catBg : item.cat}
                   </span>
                 </div>
                 <p className="text-xs text-primary/60 font-medium mb-1.5">{item.bg}</p>
@@ -370,7 +446,7 @@ const Index = () => {
           </div>
 
           <div className="text-center mt-8">
-            <Button variant="outline" size="lg" onClick={() => navigate('/dictionary')} className="gap-2">
+            <Button variant="outline" size="lg" onClick={() => navigate("/dictionary")} className="gap-2">
               <Book className="h-4 w-4" />
               {t.exploreDict}
               <ArrowRight className="h-4 w-4" />
@@ -395,7 +471,11 @@ const Index = () => {
           </div>
           <h2 className="text-3xl sm:text-4xl font-display font-bold text-foreground mb-4">{t.readyToInnovate}</h2>
           <p className="text-muted-foreground mb-8 max-w-md mx-auto">{t.readyToInnovateDesc}</p>
-          <Button size="lg" className="sim-gradient border-0 text-base px-10 glow-primary" onClick={() => handleNav('/dashboard')}>
+          <Button
+            size="lg"
+            className="sim-gradient border-0 text-base px-10 glow-primary"
+            onClick={() => handleNav("/dashboard")}
+          >
             {t.startJourney} <ArrowRight className="ml-2 h-5 w-5" />
           </Button>
         </div>
@@ -410,6 +490,6 @@ const SectionBadge = forwardRef<HTMLDivElement, { label: string }>(({ label }, r
     <span className="text-xs font-semibold text-primary uppercase tracking-wider">{label}</span>
   </div>
 ));
-SectionBadge.displayName = 'SectionBadge';
+SectionBadge.displayName = "SectionBadge";
 
 export default Index;
