@@ -397,6 +397,32 @@ export default function ProfilePage() {
           </div>
         </div>
 
+        {/* Dictionary quick access */}
+        <Link
+          to="/dictionary"
+          className="block rounded-lg border-2 border-primary/20 bg-gradient-to-br from-accent/40 to-accent/10 p-5 hover:border-primary/40 hover:shadow-md transition-all"
+        >
+          <div className="flex items-center gap-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 shrink-0">
+              <BookOpen className="h-6 w-6 text-primary" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <h3 className="font-display font-semibold text-foreground">
+                {tx('Business Dictionary', 'Бизнес речник')}
+              </h3>
+              <p className="text-sm text-muted-foreground mt-0.5">
+                {tx(
+                  'Explore key terms in English & Bulgarian. Earn +2 XP per term, +5 XP for the daily challenge.',
+                  'Разгледай ключови термини на английски и български. Печели +2 XP за термин, +5 XP за дневното предизвикателство.'
+                )}
+              </p>
+            </div>
+            <Button variant="outline" size="sm" className="shrink-0">
+              {tx('Open', 'Отвори')}
+            </Button>
+          </div>
+        </Link>
+
         {/* Badges */}
         {badges.length > 0 && (
           <div className="rounded-lg border border-border bg-card p-5">
