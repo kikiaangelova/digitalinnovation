@@ -295,6 +295,19 @@ function TermCard({ term: t, catColor, lang, user, viewedTermsRef }: { term: Dic
         </div>
       </div>
 
+      {!expanded && (
+        <div className="px-4 pb-3 space-y-1.5">
+          <p className="text-sm text-foreground/85 leading-relaxed line-clamp-2">
+            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider mr-1.5">EN</span>
+            {t.definition}
+          </p>
+          <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
+            <span className="text-[10px] font-bold text-primary/60 uppercase tracking-wider mr-1.5">BG</span>
+            {t.definitionBg}
+          </p>
+        </div>
+      )}
+
       {expanded && (
         <div className="px-4 pb-4 space-y-3 border-t border-border/50 pt-3">
           <div className="flex items-start gap-2">
