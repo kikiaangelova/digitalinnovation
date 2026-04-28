@@ -97,7 +97,7 @@ const App = () => (
                       <Route path="/dashboard" element={<RoleGuard allowed={['student', 'teacher_verified', 'admin']}><StudentDashboard /></RoleGuard>} />
                       <Route path="/profile" element={<RoleGuard allowed={['student', 'teacher_pending', 'teacher_verified', 'admin']}><ProfilePage /></RoleGuard>} />
                       <Route path="/cases" element={<RoleGuard allowed={['student', 'teacher_verified', 'admin']}><CaseLibrary /></RoleGuard>} />
-                      <Route path="/dictionary" element={<RoleGuard allowed={['student', 'teacher_verified', 'admin']}><Dictionary /></RoleGuard>} />
+                      <Route path="/dictionary" element={<Dictionary />} />
                       <Route path="/case/:id/preview" element={<RoleGuard allowed={['student', 'teacher_verified', 'admin']}><CasePreview /></RoleGuard>} />
                       <Route path="/case/:id" element={<RoleGuard allowed={['student', 'teacher_verified', 'admin']}><CasePlayer /></RoleGuard>} />
                       <Route path="/case/:id/results" element={<RoleGuard allowed={['student', 'teacher_verified', 'admin']}><CaseResults /></RoleGuard>} />
