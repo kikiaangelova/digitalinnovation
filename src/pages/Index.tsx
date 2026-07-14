@@ -147,8 +147,10 @@ const Index = () => {
                     onClick={() => setTestimonialIdx(i)}
                     aria-label={lang === "bg" ? `Отзив ${i + 1} от ${testimonials.length}` : `Testimonial ${i + 1} of ${testimonials.length}`}
                     aria-current={i === testimonialIdx}
-                    className={`h-1.5 rounded-full transition-all ${i === testimonialIdx ? "w-4 bg-primary" : "w-1.5 bg-border"}`}
-                  />
+                    className="min-h-11 min-w-11 flex items-center justify-center group"
+                  >
+                    <span className={`block h-1.5 rounded-full transition-all ${i === testimonialIdx ? "w-4 bg-primary" : "w-1.5 bg-border group-hover:bg-muted-foreground"}`} />
+                  </button>
                 ))}
               </div>
             </div>
