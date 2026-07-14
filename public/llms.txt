@@ -1,0 +1,17 @@
+# DigiInnov Case Lab
+
+> A gamified platform where students and founders learn digital innovation by doing — real business cases, a startup simulator, an AI mentor, and a bilingual (EN/BG) innovation dictionary.
+
+DigiInnov Case Lab teaches digital innovation and entrepreneurship through a Learn → Apply → Have Fun loop: interactive case studies, a build-measure-learn startup simulator, a guided "My Startup" project (Business Model Canvas), and gamified progression (XP, levels, badges).
+
+## Pages
+
+- [Home](/): Overview of the platform, learning journey, and how it works.
+- [About](/about): What digital innovation is and how the platform teaches it.
+- [Innovation basics](/innovation-basics): Introduction to core innovation concepts.
+- [Dictionary](/dictionary): Bilingual (English/Bulgarian) glossary of innovation, startup, and business terms.
+
+## Optional
+
+- [Privacy policy](/privacy): How user data is handled.
+- [Terms of use](/terms): Terms governing platform use.
