@@ -124,8 +124,8 @@ export default function LeaderboardPage() {
             </p>
           </div>
         ) : (
-          <div className="rounded-xl border border-border bg-card overflow-hidden">
-            <Table>
+          <div className="rounded-xl border border-border bg-card overflow-x-auto">
+            <Table className="min-w-[420px]">
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-16">#</TableHead>
