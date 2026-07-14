@@ -15,7 +15,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
-        display: ['Inter', 'system-ui', 'sans-serif'],
+        display: ['"Space Grotesk"', 'Inter', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
       },
       colors: {
@@ -65,9 +65,17 @@ export default {
         progress: {
           DEFAULT: "hsl(var(--progress))",
         },
-        "accent-orange": {
-          DEFAULT: "hsl(25 95% 53%)",
+        "accent-orange": { DEFAULT: "hsl(25 95% 53%)" },
+        ink: {
+          DEFAULT: "hsl(var(--ink))",
+          2: "hsl(var(--ink-2))",
+          3: "hsl(var(--ink-3))",
+          fg: "hsl(var(--ink-fg))",
+          dim: "hsl(var(--ink-fg-dim))",
         },
+        mint:    { DEFAULT: "hsl(var(--mint))" },
+        emerald: { DEFAULT: "hsl(var(--emerald))", glow: "hsl(var(--emerald-glow))" },
+        teal:    { DEFAULT: "hsl(var(--teal))" },
         sim: {
           success: "hsl(var(--sim-success))",
           warning: "hsl(var(--sim-warning))",

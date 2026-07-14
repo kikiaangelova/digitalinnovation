@@ -12,6 +12,10 @@ const badgeVariants = cva(
         secondary: "border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/80",
         destructive: "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
         outline: "text-foreground",
+        sticker: "border-transparent bg-white text-ink shadow-sticker px-3 py-1 rounded-full font-semibold",
+        mint: "border-transparent bg-accent text-accent-foreground",
+        xp: "border-transparent bg-xp-gradient text-white font-mono uppercase tracking-wider px-2.5 py-0.5",
+        ink: "border-transparent bg-ink-2 text-ink-fg font-mono uppercase tracking-wider",
       },
     },
     defaultVariants: {
