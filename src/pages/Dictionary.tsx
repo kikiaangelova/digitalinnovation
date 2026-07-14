@@ -198,7 +198,7 @@ export default function Dictionary() {
         <div className="flex flex-wrap gap-1 mb-4">
           <button
             onClick={() => setLetterFilter('')}
-            className={`w-7 h-7 rounded text-xs font-bold transition-colors ${!letterFilter ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:text-foreground'}`}
+            className={`min-w-11 min-h-11 sm:min-w-8 sm:min-h-8 sm:w-8 sm:h-8 px-2 rounded text-xs font-bold transition-colors ${!letterFilter ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:text-foreground'}`}
           >
             {lang === 'bg' ? 'Вс' : 'All'}
           </button>
@@ -209,7 +209,7 @@ export default function Dictionary() {
                 key={l}
                 onClick={() => available && setLetterFilter(l === letterFilter ? '' : l)}
                 disabled={!available}
-                className={`w-7 h-7 rounded text-xs font-bold transition-colors ${
+                className={`min-w-11 min-h-11 sm:min-w-8 sm:min-h-8 sm:w-8 sm:h-8 rounded text-xs font-bold transition-colors ${
                   letterFilter === l
                     ? 'bg-primary text-primary-foreground'
                     : available
@@ -227,7 +227,7 @@ export default function Dictionary() {
         <div className="flex flex-wrap gap-2 mb-6">
           <button
             onClick={() => setCatFilter('all')}
-            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${catFilter === 'all' ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:text-foreground'}`}
+            className={`px-4 py-2.5 min-h-11 sm:min-h-0 sm:py-1.5 rounded-full text-xs font-medium transition-colors ${catFilter === 'all' ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:text-foreground'}`}
           >
             {lang === 'bg' ? 'Всички' : 'All'}
           </button>
@@ -235,7 +235,7 @@ export default function Dictionary() {
             <button
               key={c}
               onClick={() => setCatFilter(c === catFilter ? 'all' : c)}
-              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${catFilter === c ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:text-foreground'}`}
+              className={`px-4 py-2.5 min-h-11 sm:min-h-0 sm:py-1.5 rounded-full text-xs font-medium transition-colors ${catFilter === c ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:text-foreground'}`}
             >
               {lang === 'bg' ? (CATEGORY_TRANSLATIONS[c] || c) : c}
             </button>
