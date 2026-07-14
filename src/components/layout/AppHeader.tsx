@@ -19,7 +19,9 @@ export default function AppHeader() {
   const location = useLocation();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [authMenuOpen, setAuthMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const authMenuRef = useRef<HTMLDivElement>(null);
   const { xp: userXp, journeyPct } = useProgress();
 
   const handleSignOut = async () => {
@@ -52,10 +54,22 @@ export default function AppHeader() {
     return () => document.removeEventListener('mousedown', handler);
   }, [dropdownOpen]);
 
+  // Close auth mini-menu on outside click
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (authMenuRef.current && !authMenuRef.current.contains(e.target as Node)) {
+        setAuthMenuOpen(false);
+      }
+    };
+    if (authMenuOpen) document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [authMenuOpen]);
+
   // Close drawer on route change
   useEffect(() => {
     setDrawerOpen(false);
     setDropdownOpen(false);
+    setAuthMenuOpen(false);
   }, [location.pathname]);
 
   const isTeacher = userRole === 'teacher_verified';
@@ -145,7 +159,7 @@ export default function AppHeader() {
             {/* Lang toggle — styled as pill */}
             <button
               onClick={toggleLang}
-              className="flex items-center gap-1 px-2.5 py-1 rounded-full border border-border bg-accent text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+              className={`${!user ? 'hidden min-[400px]:flex' : 'flex'} items-center gap-1 px-2.5 py-1 rounded-full border border-border bg-accent text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted transition-colors`}
               title={lang === 'en' ? 'Превключи на български' : 'Switch to English'}
             >
               <Globe className="h-3 w-3 md:inline hidden" />
@@ -262,12 +276,61 @@ export default function AppHeader() {
               </button>
             ) : (
               <div className="md:hidden flex items-center gap-1.5">
-                <Button variant="outline" size="sm" asChild className="hidden min-[380px]:inline-flex">
+                {/* ≥400px: show inline auth buttons */}
+                <Button variant="outline" size="sm" asChild className="hidden min-[400px]:inline-flex">
                   <Link to="/auth">{t.signIn}</Link>
                 </Button>
-                <Button size="sm" asChild className="sim-gradient border-0">
+                <Button size="sm" asChild className="sim-gradient border-0 hidden min-[400px]:inline-flex">
                   <Link to="/auth?mode=signup">{t.signUp}</Link>
                 </Button>
+
+                {/* <400px: collapse into hamburger */}
+                <div className="relative min-[400px]:hidden" ref={authMenuRef}>
+                  <button
+                    onClick={() => setAuthMenuOpen(o => !o)}
+                    className="flex items-center justify-center h-11 w-11 rounded-lg border border-border bg-card hover:bg-muted transition-colors"
+                    aria-label={lang === 'bg' ? 'Отвори меню' : 'Open menu'}
+                    aria-expanded={authMenuOpen}
+                  >
+                    <Menu className="h-5 w-5 text-foreground" />
+                  </button>
+                  {authMenuOpen && (
+                    <div className="absolute right-0 top-full mt-1.5 w-52 rounded-lg border border-border bg-card shadow-lg py-1.5 z-50 animate-fade-in">
+                      <Link
+                        to="/auth"
+                        onClick={() => setAuthMenuOpen(false)}
+                        className="flex items-center gap-2.5 px-4 py-3 text-sm text-foreground hover:bg-muted"
+                      >
+                        <User className="h-4 w-4 text-muted-foreground" />
+                        {t.signIn}
+                      </Link>
+                      <Link
+                        to="/auth?mode=signup"
+                        onClick={() => setAuthMenuOpen(false)}
+                        className="flex items-center gap-2.5 px-4 py-3 text-sm text-primary font-semibold hover:bg-muted"
+                      >
+                        <Rocket className="h-4 w-4" />
+                        {t.signUp}
+                      </Link>
+                      <Link
+                        to="/dictionary"
+                        onClick={() => setAuthMenuOpen(false)}
+                        className="flex items-center gap-2.5 px-4 py-3 text-sm text-foreground hover:bg-muted"
+                      >
+                        <Book className="h-4 w-4 text-muted-foreground" />
+                        {t.dictionary}
+                      </Link>
+                      <div className="my-1 border-t border-border" />
+                      <button
+                        onClick={() => { toggleLang(); setAuthMenuOpen(false); }}
+                        className="flex items-center gap-2.5 px-4 py-3 text-sm text-foreground hover:bg-muted w-full"
+                      >
+                        <Globe className="h-4 w-4 text-muted-foreground" />
+                        {lang === 'en' ? 'Български' : 'English'}
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             )}
           </div>
