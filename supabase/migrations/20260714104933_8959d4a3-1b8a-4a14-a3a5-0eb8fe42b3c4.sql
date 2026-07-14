@@ -1,0 +1,1 @@
+DELETE FROM public.user_roles WHERE user_id = 'a1520bbd-f531-441e-9a7f-177ab1331c19' AND role = 'teacher_verified';
