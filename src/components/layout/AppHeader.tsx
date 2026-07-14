@@ -262,7 +262,7 @@ export default function AppHeader() {
               </button>
             ) : (
               <div className="md:hidden flex items-center gap-1.5">
-                <Button variant="outline" size="sm" asChild>
+                <Button variant="outline" size="sm" asChild className="hidden min-[380px]:inline-flex">
                   <Link to="/auth">{t.signIn}</Link>
                 </Button>
                 <Button size="sm" asChild className="sim-gradient border-0">
