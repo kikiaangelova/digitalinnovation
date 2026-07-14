@@ -338,72 +338,59 @@ const Index = () => {
 
       {/* ═══════════════════ JOURNEY + COURSE TIMELINE (combined) ═══════════════════ */}
       <section className="py-16 px-4 border-t border-border bg-muted/30">
-        <div className="container mx-auto max-w-5xl">
-          <div className="grid gap-12 lg:grid-cols-2">
-            {/* Left: Journey stages */}
-            <div>
-              <SectionBadge label={t.stagesCount} />
-              <h2 className="text-2xl sm:text-3xl font-display font-bold text-foreground mt-4 mb-6">{t.yourJourney}</h2>
-              <div className="relative">
-                <div className="absolute left-[19px] top-0 bottom-0 w-0.5 bg-border">
-                  <div className="absolute inset-0 sim-gradient opacity-20 rounded-full" />
-                </div>
-                <div className="space-y-3">
-                  {journeyStages.map((stage, i) => (
-                    <div key={i} className="flex gap-3 group">
-                      <div className="relative z-10 flex h-10 w-10 items-center justify-center rounded-xl sim-gradient text-primary-foreground shadow-md shrink-0 group-hover:scale-110 transition-transform duration-300">
-                        <stage.icon className="h-4 w-4" />
-                      </div>
-                      <div className="flex-1 rounded-xl border border-border bg-card p-3 group-hover:border-primary/30 transition-all duration-300">
-                        <div className="flex items-center gap-2 flex-wrap mb-0.5">
-                          <span className="typo-stage-label text-[10px]">
-                            {t.stage} {i + 1}
-                          </span>
-                          <span className="text-[10px] font-semibold text-primary/70 bg-accent px-1.5 py-0.5 rounded-full inline-flex items-center gap-1">
-                            <Calendar className="h-2.5 w-2.5" />
-                            {t.week} {i + 1}
-                          </span>
-                        </div>
-                        <h3 className="font-display font-bold text-foreground text-sm">{stage.title}</h3>
-                        <p className="text-xs text-muted-foreground">{stage.desc}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+        <div className="container mx-auto max-w-3xl">
+          <div className="text-center mb-10">
+            <SectionBadge label={lang === 'bg' ? '6 Седмици · 6 Етапа' : '6 Weeks · 6 Stages'} />
+            <h2 className="text-2xl sm:text-3xl font-display font-bold text-foreground mt-4 mb-3">
+              {lang === 'bg' ? 'Твоят иновационен път — седмица по седмица' : 'Your Innovation Path — Week by Week'}
+            </h2>
+            <p className="text-sm text-muted-foreground max-w-xl mx-auto">
+              {lang === 'bg'
+                ? 'Всяка седмица е един етап от пътешествието. Един график, една цел: от идея до стартъп за 6 седмици.'
+                : 'Each week is one stage of the journey. One schedule, one goal: from idea to startup in 6 weeks.'}
+            </p>
+          </div>
 
-            {/* Right: Course weeks */}
-            <div>
-              <SectionBadge label={t.weeksCount} />
-              <h2 className="text-2xl sm:text-3xl font-display font-bold text-foreground mt-4 mb-6">
-                {t.learningPath}
-              </h2>
-              <div className="space-y-3">
-                {courseWeeks.map((week, i) => (
-                  <div
-                    key={i}
-                    className="group flex gap-3 rounded-xl border border-border bg-card p-3 hover:border-primary/30 transition-all duration-300"
-                  >
-                    <div className="flex h-10 w-10 items-center justify-center rounded-xl sim-gradient text-primary-foreground shadow-md shrink-0 group-hover:scale-110 transition-transform duration-300">
-                      <week.icon className="h-4 w-4" />
+          <div className="relative">
+            <div className="absolute left-[27px] top-0 bottom-0 w-0.5 bg-border">
+              <div className="absolute inset-0 sim-gradient opacity-30 rounded-full" />
+            </div>
+            <div className="space-y-3">
+              {journeyStages.map((stage, i) => {
+                const week = courseWeeks[i];
+                const WeekIcon = week?.icon ?? stage.icon;
+                return (
+                  <div key={i} className="flex gap-4 group">
+                    <div className="relative z-10 flex h-14 w-14 flex-col items-center justify-center rounded-xl sim-gradient text-primary-foreground shadow-md shrink-0 group-hover:scale-105 transition-transform duration-300">
+                      <span className="text-[9px] font-bold uppercase tracking-wider opacity-90 leading-none">
+                        {lang === 'bg' ? 'СЕД' : 'WK'}
+                      </span>
+                      <span className="text-lg font-display font-bold leading-none mt-0.5">{i + 1}</span>
                     </div>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-1.5 mb-0.5 flex-wrap">
-                        <Calendar className="h-3 w-3 text-primary" />
-                        <span className="typo-stage-label text-[10px]">
-                          {t.week} {week.week}
+                    <div className="flex-1 rounded-xl border border-border bg-card p-4 group-hover:border-primary/30 transition-all duration-300">
+                      <div className="flex items-center gap-2 flex-wrap mb-1">
+                        <span className="typo-stage-label text-[10px] inline-flex items-center gap-1">
+                          <Calendar className="h-2.5 w-2.5" />
+                          {t.week} {i + 1} · {t.stage} {i + 1}
                         </span>
-                        <span className="text-[10px] font-semibold text-primary/70 bg-accent px-1.5 py-0.5 rounded-full">
-                          {t.stage} {week.week}
+                        <span className="text-[10px] font-semibold text-primary/70 bg-accent px-1.5 py-0.5 rounded-full inline-flex items-center gap-1">
+                          <stage.icon className="h-2.5 w-2.5" />
+                          {stage.title}
                         </span>
                       </div>
-                      <h3 className="font-display font-bold text-foreground text-sm">{week.title}</h3>
-                      <p className="text-xs text-muted-foreground mt-0.5">{week.desc}</p>
+                      <h3 className="font-display font-bold text-foreground text-sm sm:text-base">
+                        {week?.title ?? stage.title}
+                      </h3>
+                      <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+                        {week?.desc ?? stage.desc}
+                      </p>
+                      <p className="text-[11px] text-muted-foreground/80 mt-1 italic">
+                        {lang === 'bg' ? 'Етап: ' : 'Stage focus: '}{stage.desc}
+                      </p>
                     </div>
                   </div>
-                ))}
-              </div>
+                );
+              })}
             </div>
           </div>
         </div>
