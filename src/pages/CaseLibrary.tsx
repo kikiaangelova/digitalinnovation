@@ -437,6 +437,8 @@ export default function CaseLibrary() {
           <div className="flex items-center gap-1 rounded-lg border border-border bg-card p-0.5 shrink-0">
             <button
               onClick={() => setViewMode('grid')}
+              aria-label={tl('Show industry grid view', 'Покажи изглед „Индустриална мрежа“')}
+              aria-pressed={viewMode === 'grid'}
               className={`rounded-md p-1.5 transition-colors ${viewMode === 'grid' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}
               title={tl('Industry Grid', 'Индустриална мрежа')}
             >
@@ -444,6 +446,8 @@ export default function CaseLibrary() {
             </button>
             <button
               onClick={() => setViewMode('list')}
+              aria-label={tl('Show all cases as a list', 'Покажи всички казуси като списък')}
+              aria-pressed={viewMode === 'list'}
               className={`rounded-md p-1.5 transition-colors ${viewMode === 'list' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}
               title={tl('All Cases', 'Всички казуси')}
             >
