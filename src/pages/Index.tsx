@@ -93,6 +93,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <AppHeader />
+      <main>
 
       {/* ═══════════════════ HERO ═══════════════════ */}
       <section className="relative py-20 sm:py-28 px-4 overflow-hidden">
@@ -144,6 +145,8 @@ const Index = () => {
                   <button
                     key={i}
                     onClick={() => setTestimonialIdx(i)}
+                    aria-label={lang === "bg" ? `Отзив ${i + 1} от ${testimonials.length}` : `Testimonial ${i + 1} of ${testimonials.length}`}
+                    aria-current={i === testimonialIdx}
                     className={`h-1.5 rounded-full transition-all ${i === testimonialIdx ? "w-4 bg-primary" : "w-1.5 bg-border"}`}
                   />
                 ))}
@@ -480,6 +483,7 @@ const Index = () => {
           </Button>
         </div>
       </section>
+      </main>
     </div>
   );
 };

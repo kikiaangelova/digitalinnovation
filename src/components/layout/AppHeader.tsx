@@ -90,14 +90,14 @@ export default function AppHeader() {
         { to: '/teacher', icon: GraduationCap, label: lang === 'bg' ? 'Клас' : 'Class' },
         { to: '/cases', icon: BookOpen, label: t.cases },
         { to: '/learn', icon: GraduationCap, label: lang === 'bg' ? 'Учи' : 'Learn' },
-        { to: '__more__', icon: Menu, label: lang === 'bg' ? 'Още' : 'More' },
+        { to: '__more__', icon: Menu, label: lang === 'bg' ? 'Още меню' : 'More menu' },
       ]
     : [
         { to: '/dashboard', icon: LayoutDashboard, label: lang === 'bg' ? 'Начало' : 'Home' },
         { to: '/cases', icon: BookOpen, label: t.cases },
         { to: '/my-startup', icon: Rocket, label: lang === 'bg' ? 'Стартъп' : 'Startup' },
         { to: '/simulator', icon: Play, label: t.simulator },
-        { to: '__more__', icon: Menu, label: lang === 'bg' ? 'Още' : 'More' },
+        { to: '__more__', icon: Menu, label: lang === 'bg' ? 'Още меню' : 'More menu' },
       ];
 
   const level = getCurrentLevel(userXp);
@@ -405,6 +405,8 @@ export default function AppHeader() {
                 <button
                   key={tab.to}
                   onClick={handleClick}
+                  aria-label={isMore ? (lang === 'bg' ? 'Отвори още опции за навигация' : 'Open more navigation options') : tab.label}
+                  aria-expanded={isMore ? drawerOpen : undefined}
                   className="flex flex-col items-center gap-1 flex-1 py-2 cursor-pointer relative"
                 >
                   <span
