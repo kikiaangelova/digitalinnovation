@@ -355,9 +355,15 @@ const Index = () => {
                         <stage.icon className="h-4 w-4" />
                       </div>
                       <div className="flex-1 rounded-xl border border-border bg-card p-3 group-hover:border-primary/30 transition-all duration-300">
-                        <span className="typo-stage-label text-[10px]">
-                          {t.stage} {i + 1}
-                        </span>
+                        <div className="flex items-center gap-2 flex-wrap mb-0.5">
+                          <span className="typo-stage-label text-[10px]">
+                            {t.stage} {i + 1}
+                          </span>
+                          <span className="text-[10px] font-semibold text-primary/70 bg-accent px-1.5 py-0.5 rounded-full inline-flex items-center gap-1">
+                            <Calendar className="h-2.5 w-2.5" />
+                            {t.week} {i + 1}
+                          </span>
+                        </div>
                         <h3 className="font-display font-bold text-foreground text-sm">{stage.title}</h3>
                         <p className="text-xs text-muted-foreground">{stage.desc}</p>
                       </div>
@@ -383,10 +389,13 @@ const Index = () => {
                       <week.icon className="h-4 w-4" />
                     </div>
                     <div className="flex-1">
-                      <div className="flex items-center gap-1.5 mb-0.5">
+                      <div className="flex items-center gap-1.5 mb-0.5 flex-wrap">
                         <Calendar className="h-3 w-3 text-primary" />
                         <span className="typo-stage-label text-[10px]">
                           {t.week} {week.week}
+                        </span>
+                        <span className="text-[10px] font-semibold text-primary/70 bg-accent px-1.5 py-0.5 rounded-full">
+                          {t.stage} {week.week}
                         </span>
                       </div>
                       <h3 className="font-display font-bold text-foreground text-sm">{week.title}</h3>
