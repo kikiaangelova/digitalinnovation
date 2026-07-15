@@ -65,6 +65,19 @@ export default function AuthPage() {
   const handleGoogleSignIn = async () => {
     setGoogleLoading(true);
     try {
+      // Stash signup intent so we can preserve teacher-role selection through the OAuth round-trip.
+      // Client storage is NOT the authorization boundary — the server RPC re-validates the transition.
+      if (!isLogin) {
+        const intent = signupRole === 'teacher_pending' ? 'teacher_pending' : 'student';
+        try {
+          sessionStorage.setItem('signup_intent', JSON.stringify({
+            intent,
+            institution: intent === 'teacher_pending' ? teacherInstitution.trim() : '',
+            class_name:  intent === 'teacher_pending' ? teacherClassName.trim()  : '',
+            ts: Date.now(),
+          }));
+        } catch {}
+      }
       // Preserve redirect target (e.g. the MCP consent URL) through the OAuth round-trip.
       const nextParam = searchParams.get("redirect");
       const redirectUri = nextParam
@@ -103,13 +116,45 @@ export default function AuthPage() {
   }, [isLogin]);
 
   useEffect(() => {
-    if (user && userRole) {
+    if (!user || !userRole) return;
+    let cancelled = false;
+    (async () => {
+      // Apply pending signup intent (Google/OAuth teacher signup) BEFORE redirecting.
+      let raw: string | null = null;
+      try { raw = sessionStorage.getItem('signup_intent'); } catch {}
+      if (raw && userRole === 'student') {
+        try {
+          const parsed = JSON.parse(raw) as {
+            intent: 'student' | 'teacher_pending';
+            institution?: string;
+            class_name?: string;
+          };
+          if (parsed.intent === 'teacher_pending') {
+            const { data, error } = await supabase.rpc('apply_signup_role_intent', {
+              _intent: 'teacher_pending',
+              _institution: parsed.institution || null,
+              _class_name: parsed.class_name || null,
+            });
+            if (!error && data === 'applied') {
+              try { sessionStorage.removeItem('signup_intent'); } catch {}
+              // Refresh role so the effect re-runs with the new role and redirects correctly.
+              await refreshRole();
+              return; // wait for effect to re-run
+            }
+          }
+        } catch (err) {
+          console.warn('[Auth] Failed to apply signup intent', err);
+        }
+      }
+      try { sessionStorage.removeItem('signup_intent'); } catch {}
+      if (cancelled) return;
       if (userRole === 'teacher_pending') {
         navigate('/pending', { replace: true });
       } else {
         navigate(redirectTo, { replace: true });
       }
-    }
+    })();
+    return () => { cancelled = true; };
   }, [user, userRole]);
 
   useEffect(() => {
