@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import {
   BookOpen, Compass, PenLine, FileText, FlaskConical, Scale, Activity,
   MessageSquare, Sparkles, TrendingUp, Award, ArrowRight, AlertCircle,
-  Loader2, Inbox, CheckCircle2,
+  Loader2, Inbox, CheckCircle2, HelpCircle, Briefcase, Search,
 } from "lucide-react";
 
 /* ═════════════════════════════════════════════════════════════
@@ -345,7 +345,8 @@ export function KikiNote({
 
 export type LearningStage =
   | "discover" | "learn" | "explore" | "apply" | "decide"
-  | "consequences" | "feedback" | "reflect" | "improve" | "next";
+  | "consequences" | "feedback" | "reflect" | "improve" | "next"
+  | "knowledge_check" | "case" | "analysis";
 
 const STAGE_META: Record<LearningStage, {
   icon: React.ComponentType<{ className?: string }>;
@@ -361,6 +362,9 @@ const STAGE_META: Record<LearningStage, {
   reflect:      { icon: PenLine,       en: "Reflect",          bg: "Рефлексия" },
   improve:      { icon: TrendingUp,    en: "Improve",          bg: "Подобри" },
   next:         { icon: ArrowRight,    en: "Next step",        bg: "Следваща стъпка" },
+  knowledge_check: { icon: HelpCircle, en: "Knowledge check",  bg: "Проверка на разбирането" },
+  case:            { icon: Briefcase,  en: "Case",             bg: "Казус" },
+  analysis:        { icon: Search,     en: "Analysis",         bg: "Анализ" },
 };
 
 export function stageLabel(stage: LearningStage, lang: "en" | "bg"): string {
