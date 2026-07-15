@@ -101,6 +101,19 @@ const Index = () => {
       <main>
         {/* ══════════ HERO — Innovation Lab Console (dark navy) ══════════ */}
         <section className="relative bg-ink-gradient text-ink-fg overflow-hidden">
+          <video
+            aria-hidden
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="auto"
+            poster=""
+            className="absolute inset-0 h-full w-full object-cover opacity-40 pointer-events-none mix-blend-screen"
+          >
+            <source src={heroBg.url} type="video/mp4" />
+          </video>
+          <div aria-hidden className="absolute inset-0 bg-ink-gradient/60 pointer-events-none" style={{ background: "linear-gradient(160deg, hsl(216 60% 10% / 0.75) 0%, hsl(217 54% 14% / 0.55) 60%, hsl(217 45% 20% / 0.7) 100%)" }} />
           <div aria-hidden className="absolute inset-0 bg-grid-ink opacity-40 pointer-events-none" />
           <div
             aria-hidden
