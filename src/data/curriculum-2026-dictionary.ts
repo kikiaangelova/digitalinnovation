@@ -9,6 +9,7 @@
  */
 
 import type { DictionaryTerm } from './dictionary-terms';
+import { EXTRA_TERMS_2026 } from './curriculum-2026-extra';
 
 /** Marketing (Positioning / SEO / Content / Paid / Analytics). */
 export const MARKETING_TERMS_2026: DictionaryTerm[] = [
@@ -451,4 +452,5 @@ export const ALL_TERMS_2026: DictionaryTerm[] = [
   ...MARKETING_TERMS_2026,
   ...AI_TERMS_2026,
   ...FINANCE_TERMS_2026,
+  ...EXTRA_TERMS_2026,
 ];
