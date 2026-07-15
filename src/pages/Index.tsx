@@ -374,6 +374,7 @@ const Index = () => {
               </Reveal>
             </div>
           </section>
+          </>
         )}
 
         {/* ══════════ WHAT YOU LEARN + BUILD ══════════ */}
