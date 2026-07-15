@@ -107,6 +107,12 @@ export interface LearningModule {
   display_order: number;
   /** Which curriculum level this module belongs to (1 = Innovation Thinking, 2 = Business Fundamentals) */
   level?: number;
+  /**
+   * Canonical subject this module belongs to (see `src/data/subject-catalog.ts`).
+   * Legacy modules default to `digital-innovation` via `moduleSubjectKey()`.
+   * Level metadata is kept internally but must NOT gate other subjects.
+   */
+  subject_key?: string;
   /** Which startup_projects field to update with the application answer */
   startup_field?: string;
   /** Embedded real-world case study for Level 2+ modules */
@@ -1171,3 +1177,16 @@ export const LEVEL_INFO = {
     desc_bg: 'Маркетинг, ценообразуване, екип, операции и верига за доставки — бизнес уменията за всеки основател.',
   },
 } as const;
+
+/** Default subject key for legacy static modules (kept in sync with the DB backfill). */
+export const LEGACY_MODULE_SUBJECT_KEY = 'digital-innovation';
+
+/** Resolves a module's subject, falling back to the legacy Digital Innovation subject. */
+export function moduleSubjectKey(mod: Pick<LearningModule, 'subject_key'>): string {
+  return mod.subject_key || LEGACY_MODULE_SUBJECT_KEY;
+}
+
+/** All modules whose canonical subject matches the given key. */
+export function modulesForSubject(subjectKey: string): LearningModule[] {
+  return LEARNING_MODULES.filter((m) => moduleSubjectKey(m) === subjectKey);
+}

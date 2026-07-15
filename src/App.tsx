@@ -53,6 +53,7 @@ import LearningJourney from "./pages/LearningJourney";
 import StageLearn from "./pages/StageLearn";
 import LearningModules from "./pages/LearningModules";
 import LearningModulePlayer from "./pages/LearningModulePlayer";
+import SubjectDetail from "./pages/SubjectDetail";
 import Pathways from "./pages/Pathways";
 import FinalExam from "./pages/FinalExam";
 import Certificate from "./pages/Certificate";
@@ -112,6 +113,7 @@ const App = () => (
                       <Route path="/journey" element={<RoleGuard allowed={['student', 'admin']}><LearningJourney /></RoleGuard>} />
                       <Route path="/journey/learn/:stageId" element={<RoleGuard allowed={['student', 'admin']}><StageLearn /></RoleGuard>} />
                       <Route path="/learn" element={<RoleGuard allowed={['student', 'teacher_verified', 'admin']}><LearningModules /></RoleGuard>} />
+                      <Route path="/learn/subject/:subjectKey" element={<RoleGuard allowed={['student', 'teacher_verified', 'admin']}><SubjectDetail /></RoleGuard>} />
                       <Route path="/learn/:slug" element={<RoleGuard allowed={['student', 'teacher_verified', 'admin']}><LearningModulePlayer /></RoleGuard>} />
                       {/* Curriculum 2026–27 preview (feature-flagged) */}
                       <Route path="/pathways" element={<Pathways />} />

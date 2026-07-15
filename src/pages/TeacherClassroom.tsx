@@ -21,6 +21,13 @@ import {
   Download, UserMinus, Save, RefreshCw, Trash2, AlertTriangle,
   BookOpen, Map, GraduationCap, Calendar, ArrowRight, CheckCircle2, Clock, X,
 } from 'lucide-react';
+import {
+  SUBJECT_CATALOG,
+  DEFAULT_SUBJECT_KEY,
+  getSubject,
+  subjectTitle,
+  subjectLabel,
+} from '@/data/subject-catalog';
 
 interface Classroom {
   id: string;
@@ -29,6 +36,7 @@ interface Classroom {
   invite_link: string | null;
   is_active: boolean;
   created_at: string;
+  subject_key: string | null;
 }
 
 interface Student {
@@ -59,13 +67,17 @@ export default function TeacherClassroom() {
   const { lang } = useLang();
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
 
-  const [classroom, setClassroom] = useState<Classroom | null>(null);
+  const [classrooms, setClassrooms] = useState<Classroom[]>([]);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const classroom = classrooms.find((c) => c.id === selectedId) ?? null;
   const [students, setStudents] = useState<Student[]>([]);
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Create classroom
   const [createName, setCreateName] = useState('');
+  const [createSubject, setCreateSubject] = useState<string>('');
+  const [showCreate, setShowCreate] = useState(false);
   const [creating, setCreating] = useState(false);
 
   // Assign modal
@@ -87,20 +99,33 @@ export default function TeacherClassroom() {
 
   // Data for dropdowns
   const [caseStudies, setCaseStudies] = useState<{ id: string; title: string }[]>([]);
-  const [modules, setModules] = useState<{ slug: string; title: string }[]>([]);
+  const [modules, setModules] = useState<{ slug: string; title: string; subject_key: string | null }[]>([]);
+  const [showAllSubjectModules, setShowAllSubjectModules] = useState(false);
 
   const siteUrl = window.location.origin;
 
   const fetchClassroom = useCallback(async () => {
     if (!user) return;
-    const { data } = await supabase
+    // Fetch all active classrooms owned by this teacher (multi-class V1).
+    const { data: allClassrooms } = await supabase
       .from('classrooms')
       .select('*')
       .eq('teacher_id', user.id)
       .eq('is_active', true)
-      .maybeSingle();
+      .order('created_at', { ascending: true });
+
+    const list = (allClassrooms ?? []) as Classroom[];
+    setClassrooms(list);
+
+    // Preserve current selection if still present; otherwise pick first.
+    const nextId =
+      selectedId && list.some((c) => c.id === selectedId)
+        ? selectedId
+        : list[0]?.id ?? null;
+    setSelectedId(nextId);
+
+    const data = nextId ? list.find((c) => c.id === nextId) : null;
     if (data) {
-      setClassroom(data as Classroom);
       setEditName(data.name);
       // Fetch students
       const { data: studentsData } = await supabase
@@ -125,27 +150,34 @@ export default function TeacherClassroom() {
         .eq('classroom_id', data.id)
         .order('created_at', { ascending: false });
       setAssignments((assignData || []) as Assignment[]);
+    } else {
+      setStudents([]);
+      setAssignments([]);
     }
     setLoading(false);
-  }, [user]);
+  }, [user, selectedId]);
 
   useEffect(() => {
     fetchClassroom();
     // Fetch case studies and modules for assignment dropdowns
     Promise.all([
       supabase.from('case_studies').select('id, title').eq('published', true),
-      supabase.from('learning_modules').select('slug, title_en, title_bg').order('display_order'),
+      supabase
+        .from('learning_modules')
+        .select('slug, title_en, title_bg, subject_key' as any)
+        .order('display_order'),
     ]).then(([casesRes, modsRes]) => {
       setCaseStudies((casesRes.data || []).map(c => ({ id: c.id, title: c.title })));
-      setModules((modsRes.data || []).map(m => ({
+      setModules(((modsRes.data || []) as any[]).map((m) => ({
         slug: m.slug,
         title: lang === 'bg' ? m.title_bg : m.title_en,
+        subject_key: (m as any).subject_key ?? null,
       })));
     });
   }, [fetchClassroom, lang]);
 
   const createClassroom = async () => {
-    if (!user || !createName.trim()) return;
+    if (!user || !createName.trim() || !createSubject) return;
     setCreating(true);
     // Generate class code via RPC
     const { data: code } = await supabase.rpc('generate_class_code');
@@ -156,9 +188,13 @@ export default function TeacherClassroom() {
       name: createName.trim(),
       class_code: code,
       invite_link: inviteLink,
-    });
+      subject_key: createSubject,
+    } as any);
     if (error) { toast.error(error.message); setCreating(false); return; }
     toast.success(t('Classroom created!', 'Класната стая е създадена!'));
+    setCreateName('');
+    setCreateSubject('');
+    setShowCreate(false);
     setCreating(false);
     fetchClassroom();
   };
@@ -222,9 +258,11 @@ export default function TeacherClassroom() {
     if (!classroom) return;
     await supabase.from('classrooms').delete().eq('id', classroom.id);
     toast.success(t('Classroom dissolved', 'Класната стая е разпусната'));
-    setClassroom(null);
+    setClassrooms((prev) => prev.filter((c) => c.id !== classroom.id));
+    setSelectedId(null);
     setStudents([]);
     setAssignments([]);
+    fetchClassroom();
   };
 
   const saveFeedback = async (studentId: string) => {
@@ -284,7 +322,7 @@ export default function TeacherClassroom() {
     );
   }
 
-  // ── STATE A: No classroom ──
+  // ── STATE A: No classroom yet ──
   if (!classroom) {
     return (
       <div className="min-h-screen bg-background">
@@ -303,7 +341,29 @@ export default function TeacherClassroom() {
                 onChange={e => setCreateName(e.target.value)}
                 placeholder={t('e.g. 12A Business 2026', 'напр. 12А Бизнес 2026')}
               />
-              <Button onClick={createClassroom} disabled={creating || !createName.trim()} className="w-full sim-gradient border-0">
+              <Label>{t('Subject', 'Предмет')}</Label>
+              <select
+                value={createSubject}
+                onChange={(e) => setCreateSubject(e.target.value)}
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+              >
+                <option value="">{t('— Select subject —', '— Избери предмет —')}</option>
+                {SUBJECT_CATALOG.map((s) => (
+                  <option key={s.key} value={s.key}>
+                    {subjectTitle(s, lang as 'bg' | 'en')}
+                    {s.availability !== 'playable'
+                      ? ` (${s.availability === 'preview' ? t('preview', 'преглед') : t('planned', 'планиран')})`
+                      : ''}
+                  </option>
+                ))}
+              </select>
+              <p className="text-[11px] text-muted-foreground">
+                {t(
+                  'Each class teaches one subject. Create another class for a different subject.',
+                  'Всеки клас изучава един предмет. Създай нов клас за друг предмет.',
+                )}
+              </p>
+              <Button onClick={createClassroom} disabled={creating || !createName.trim() || !createSubject} className="w-full sim-gradient border-0">
                 <Plus className="h-4 w-4 mr-1" />
                 {creating ? t('Creating...', 'Създаване...') : t('Create classroom', 'Създай класна стая')}
               </Button>
@@ -340,12 +400,39 @@ export default function TeacherClassroom() {
     <div className="min-h-screen bg-background">
       <AppHeader />
       <main className="container mx-auto px-4 py-6 max-w-6xl space-y-6">
-        {/* Header */}
+        {/* Header + multi-class selector */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-          <h1 className="typo-h1 flex items-center gap-2">
-            👩‍🏫 {classroom.name}
-          </h1>
+          <div className="min-w-0">
+            <h1 className="typo-h1 flex items-center gap-2 flex-wrap">
+              👩‍🏫 {classroom.name}
+              <Badge variant="outline" className="text-xs font-normal">
+                {subjectLabel(classroom.subject_key, lang as 'bg' | 'en')}
+              </Badge>
+            </h1>
+            {classrooms.length > 1 && (
+              <div className="mt-2 flex items-center gap-2 flex-wrap">
+                <Label className="text-xs text-muted-foreground">
+                  {t('Class', 'Клас')}:
+                </Label>
+                <select
+                  value={classroom.id}
+                  onChange={(e) => setSelectedId(e.target.value)}
+                  className="h-8 rounded-md border border-input bg-background px-2 text-sm"
+                >
+                  {classrooms.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name} — {subjectLabel(c.subject_key, lang as 'bg' | 'en')}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
+          </div>
           <div className="flex items-center gap-2 flex-wrap">
+            <Button variant="outline" size="sm" onClick={() => setShowCreate(true)}>
+              <Plus className="h-3.5 w-3.5 mr-1" />
+              {t('Create another class', 'Създай нов клас')}
+            </Button>
             <Button variant="outline" size="sm" onClick={() => copyToClipboard(classroom.class_code, t('Code', 'Кодът'))}>
               <Copy className="h-3.5 w-3.5 mr-1" />
               📋 {classroom.class_code}
@@ -356,6 +443,54 @@ export default function TeacherClassroom() {
             </Button>
           </div>
         </div>
+
+        {/* Inline Create-another-class panel */}
+        {showCreate && (
+          <Card className="p-4 space-y-3 border-primary/30">
+            <div className="flex items-center justify-between">
+              <h3 className="text-sm font-semibold text-foreground">
+                {t('New class', 'Нов клас')}
+              </h3>
+              <Button variant="ghost" size="sm" onClick={() => setShowCreate(false)}>
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div>
+                <Label>{t('Class name', 'Име на класа')}</Label>
+                <Input
+                  value={createName}
+                  onChange={(e) => setCreateName(e.target.value)}
+                  placeholder={t('e.g. 11B', 'напр. 11Б')}
+                />
+              </div>
+              <div>
+                <Label>{t('Subject', 'Предмет')}</Label>
+                <select
+                  value={createSubject}
+                  onChange={(e) => setCreateSubject(e.target.value)}
+                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                >
+                  <option value="">{t('— Select subject —', '— Избери предмет —')}</option>
+                  {SUBJECT_CATALOG.map((s) => (
+                    <option key={s.key} value={s.key}>
+                      {subjectTitle(s, lang as 'bg' | 'en')}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            <Button
+              onClick={createClassroom}
+              disabled={creating || !createName.trim() || !createSubject}
+              size="sm"
+              className="sim-gradient border-0"
+            >
+              <Plus className="h-3.5 w-3.5 mr-1" />
+              {t('Create class', 'Създай клас')}
+            </Button>
+          </Card>
+        )}
 
         {/* Stats */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -562,11 +697,50 @@ export default function TeacherClassroom() {
                   {assignType === 'learn_module' && (
                     <div>
                       <Label>{t('Select module', 'Избери модул')}</Label>
-                      <select value={assignModuleSlug} onChange={e => setAssignModuleSlug(e.target.value)}
-                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
-                        <option value="">{t('— Select —', '— Избери —')}</option>
-                        {modules.map(m => <option key={m.slug} value={m.slug}>{m.title}</option>)}
-                      </select>
+                      <p className="text-[11px] text-muted-foreground mb-1">
+                        {t('Showing modules for', 'Показани модули за')}:{' '}
+                        <span className="font-medium">
+                          {subjectLabel(classroom.subject_key, lang as 'bg' | 'en')}
+                        </span>
+                      </p>
+                      {(() => {
+                        const classroomSubject = classroom.subject_key || DEFAULT_SUBJECT_KEY;
+                        const filtered = showAllSubjectModules
+                          ? modules
+                          : modules.filter(
+                              (m) => (m.subject_key || DEFAULT_SUBJECT_KEY) === classroomSubject,
+                            );
+                        return (
+                          <select
+                            value={assignModuleSlug}
+                            onChange={(e) => setAssignModuleSlug(e.target.value)}
+                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
+                          >
+                            <option value="">{t('— Select —', '— Избери —')}</option>
+                            {filtered.map((m) => (
+                              <option key={m.slug} value={m.slug}>
+                                {m.title}
+                                {showAllSubjectModules
+                                  ? ` — ${subjectLabel(m.subject_key, lang as 'bg' | 'en')}`
+                                  : ''}
+                              </option>
+                            ))}
+                            {filtered.length === 0 && (
+                              <option disabled>
+                                {t('No modules yet for this subject', 'Все още няма модули за този предмет')}
+                              </option>
+                            )}
+                          </select>
+                        );
+                      })()}
+                      <label className="mt-2 flex items-center gap-2 text-xs text-muted-foreground cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={showAllSubjectModules}
+                          onChange={(e) => setShowAllSubjectModules(e.target.checked)}
+                        />
+                        {t('Show modules from other subjects', 'Покажи модули от други предмети')}
+                      </label>
                     </div>
                   )}
                   {assignType === 'case_study' && (
