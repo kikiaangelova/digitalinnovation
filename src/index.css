@@ -8,20 +8,20 @@
        Warm ivory paper · confident coral-orange · restrained amber highlight
        · cobalt AI accent · green reserved for verified success only.
        Full Cyrillic coverage. Editorial, credible, youthful-not-childish. */
-    --background: 40 40% 97%;              /* warm ivory */
+    --background: 40 42% 97%;              /* warm ivory paper */
     --foreground: 24 18% 12%;              /* warm ink */
 
-    --card: 40 44% 99%;
+    --card: 40 48% 99%;
     --card-foreground: 24 18% 14%;
 
-    --popover: 40 44% 99%;
+    --popover: 40 48% 99%;
     --popover-foreground: 24 18% 14%;
 
     --primary: 14 84% 55%;                 /* confident coral-orange */
-    --primary-foreground: 40 44% 99%;
+    --primary-foreground: 40 48% 99%;
 
     --secondary: 24 12% 18%;               /* neutral warm ink surface */
-    --secondary-foreground: 40 44% 98%;
+    --secondary-foreground: 40 48% 98%;
 
     --muted: 36 22% 92%;
     --muted-foreground: 24 10% 38%;
@@ -41,7 +41,7 @@
     /* Semantic V2 tokens — reference these instead of hard-coded colors. */
     --brand: 14 84% 55%;                    /* coral-orange, primary brand */
     --brand-strong: 12 78% 46%;
-    --brand-soft: 20 90% 96%;
+    --brand-soft: 18 92% 95%;
     --highlight: 38 92% 58%;                /* amber, ideas / discovery */
     --highlight-soft: 42 92% 92%;
     --ai: 232 62% 52%;                      /* cobalt-indigo, AI/data only */
@@ -50,9 +50,9 @@
     --success-soft: 150 45% 94%;
     --warning: 32 92% 52%;
     --danger: 0 72% 51%;
-    --paper: 40 40% 97%;
-    --paper-2: 38 32% 94%;
-    --surface: 40 44% 99%;
+    --paper: 40 42% 97%;
+    --paper-2: 38 36% 94%;
+    --surface: 40 48% 99%;
 
     /* Ink surfaces — warm mocha, not navy */
     --ink: 22 35% 14%;
@@ -64,18 +64,18 @@
     /* Legacy aliases — remap old emerald/mint/teal names onto V2 tokens so
        existing components inherit the new palette without call-site edits.
        Do not use these in new code. Use --brand / --highlight / --ai / --success. */
-    --emerald: 14 84% 55%;                 /* → brand */
-    --emerald-glow: 20 92% 62%;
-    --mint: 38 92% 58%;                    /* → highlight */
-    --teal: 232 62% 52%;                   /* → ai */
+    --emerald: var(--brand);               /* → brand */
+    --emerald-glow: var(--brand-strong);   /* → brand-strong */
+    --mint: var(--highlight);              /* → highlight */
+    --teal: var(--ai);                     /* → ai */
     --xp-gold: 38 92% 55%;
     --xp-gold-glow: 42 100% 68%;
 
     /* Sidebar — warm cream, not dark */
-    --sidebar-background: 40 40% 97%;
+    --sidebar-background: var(--paper);
     --sidebar-foreground: 24 18% 14%;
-    --sidebar-primary: 14 84% 55%;
-    --sidebar-primary-foreground: 40 44% 99%;
+    --sidebar-primary: var(--brand);
+    --sidebar-primary-foreground: 40 48% 99%;
     --sidebar-accent: 36 22% 92%;
     --sidebar-accent-foreground: 24 18% 14%;
     --sidebar-border: 30 18% 86%;
@@ -91,29 +91,29 @@
     --rank-silver: 30 8% 62%;
     --rank-bronze: 22 68% 40%;
 
-    --progress: 14 84% 55%;
+    --progress: var(--brand);
 
-    --chart-1: 14 84% 55%;
-    --chart-2: 38 92% 58%;
-    --chart-3: 232 62% 52%;
-    --chart-4: 152 55% 38%;
+    --chart-1: var(--brand);
+    --chart-2: var(--highlight);
+    --chart-3: var(--ai);
+    --chart-4: var(--success);
     --chart-5: 24 18% 22%;
 
     /* Gradients — rare and intentional. Coral → amber only (no rainbow, no green). */
-    --gradient-primary: linear-gradient(135deg, hsl(14 84% 55%) 0%, hsl(24 90% 60%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(var(--brand)) 0%, hsl(var(--brand-strong)) 100%);
     --gradient-ink: linear-gradient(160deg, hsl(24 18% 12%) 0%, hsl(24 14% 20%) 100%);
-    --gradient-xp: linear-gradient(90deg, hsl(14 84% 55%), hsl(38 92% 58%));
-    --gradient-warm: linear-gradient(135deg, hsl(14 84% 55%), hsl(24 90% 60%));
-    --gradient-zest: linear-gradient(135deg, hsl(38 92% 60%), hsl(14 84% 55%));
-    --gradient-soft: linear-gradient(180deg, hsl(40 44% 99%), hsl(38 32% 94%));
+    --gradient-xp: linear-gradient(90deg, hsl(var(--brand)), hsl(var(--highlight)));
+    --gradient-warm: linear-gradient(135deg, hsl(var(--brand)), hsl(var(--highlight)));
+    --gradient-zest: linear-gradient(135deg, hsl(var(--highlight)), hsl(var(--brand)));
+    --gradient-soft: linear-gradient(180deg, hsl(var(--surface)), hsl(var(--paper-2)));
 
     /* Elevation — soft, editorial depth (no hard black offsets by default). */
     --shadow-sticker: 0 1px 0 hsl(24 18% 12% / 0.04), 0 6px 18px -8px hsl(24 18% 12% / 0.10);
     --shadow-lift: 0 18px 36px -20px hsl(24 18% 12% / 0.20), 0 4px 10px -4px hsl(24 18% 12% / 0.06);
     --shadow-warm: 0 18px 42px -22px hsl(14 84% 55% / 0.42);
     --shadow-soft: 0 8px 22px -14px hsl(24 18% 12% / 0.16);
-    --glow-mint: 0 0 28px hsl(38 92% 58% / 0.30);
-    --glow-emerald: 0 8px 22px -8px hsl(14 84% 55% / 0.42);
+    --glow-mint: 0 0 28px hsl(var(--highlight) / 0.26);
+    --glow-emerald: 0 8px 22px -8px hsl(var(--brand) / 0.36);
   }
 
   .dark {
