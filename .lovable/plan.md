@@ -1,70 +1,51 @@
+# 2026–27 Curriculum Upgrade — Phased Build Plan
 
+The full audit spans content, gamification, assessments, versioning, and school-config UI. Shipping all of it in one turn would touch ~30 files, the DB schema, and every learner surface — high risk of regressions to XP, RLS, and existing student data. I'll build it in phases behind feature flags, one phase per turn, so you can review before each step.
 
-## Color System Overhaul: Clinical → Gamified
+---
 
-### Goal
-Replace the blue-dominant clinical palette with an energetic purple/orange/green system that feels like a startup game.
+## Phase 1 — Foundations (this turn)
 
-### Color Mapping
+Ship the plumbing every later phase depends on. Content-only + one flag. No DB changes, no gamification changes yet.
 
-**#6C5CE7 (purple)** in HSL ≈ `255 74% 64%` — new primary
-**#F97316 (orange)** in HSL ≈ `25 95% 53%` — new accent  
-**#22C55E (green)** in HSL ≈ `142 71% 45%` — progress/success
+1. **Curriculum manifest** — new `src/data/curriculum-2026.ts` describing the 12 pathways (Core + Business/Marketing/Data-AI/Human tracks), each with `id`, `level` (foundation/intermediate/advanced), and a `references[]` array pointing to existing modules/stages/dictionary categories/cases. Zero content is deleted or moved.
+2. **Preservation mapping** — `src/data/curriculum-mapping.ts` marks every existing module and stage with class (Keep/Update/Expand/Merge/Optional) so later phases can act on it programmatically.
+3. **TEACR loop scaffold** — reusable component `src/components/learning/DecisionConsequenceReflection.tsx` (Decision → Consequence → Reflection → Improvement) so any module can adopt the loop without rewriting.
+4. **Pathway index page** — `/pathways` route rendering the 12 pathways with counts pulled from the manifest. Gated by `curriculum-v2026` flag.
+5. **Feature flag** — add `curriculum-v2026` to `src/lib/featureFlags.ts`.
 
-### Changes
+Deliverables in Phase 1 don't affect any signed-out visitor, existing dashboards, XP, or DB.
 
-#### 1. `src/index.css` — CSS Variables
+---
 
-**Light mode:**
-- `--primary`: `210 78% 46%` → `255 74% 64%` (purple)
-- `--ring`: same purple
-- `--accent`: `210 60% 94%` → `25 90% 94%` (warm orange tint)
-- `--accent-foreground`: `210 78% 36%` → `25 95% 40%` (orange)
-- `--sim-info`: keep as `210 78% 46%` (blue stays for info/secondary)
-- `--sim-success`: `152 68% 38%` → `142 71% 45%` (green)
-- `--chart-1`: update to purple
-- Sidebar primary: update to purple
-- Add new custom property `--progress` for green: `142 71% 45%`
+## Phase 2 — Content Expansions (next turn)
 
-**Dark mode:** same shifts with slightly brighter/lighter values.
+- Expand Marketing Fundamentals → sub-topics (Positioning, SEO, Content, Paid, Analytics).
+- Expand AI dictionary category → Foundations / GenAI / Prompting / Ethics / Agents.
+- Add Finance & Unit Economics module + dictionary category.
+- Merge Ops + Supply Chain modules into "Operations & Systems".
 
-#### 2. `src/index.css` — Utility Classes
+## Phase 3 — Assessment & Iteration Loop
 
-- `.sim-gradient`: `blue→teal` → `purple→blue` (`hsl(255 74% 64%)` → `hsl(220 70% 50%)`)
-- `.sim-gradient-text`: same
-- `.glow-primary`: update to purple hsl values
-- `.gradient-explorer`: update to purple tones
-- Add `.glow-hover` utility for button hover glow effect
+- Wire the TEACR component into all 6 stages and 10 modules.
+- Add "Iterate with feedback" step after graded work.
 
-#### 3. `tailwind.config.ts` — Add Colors
+## Phase 4 — Gamification Rebalance
 
-- Add `progress` color token mapped to `hsl(var(--progress))`
-- Add `accent-orange` mapped to the orange accent for explicit use
+- Replace attendance badges (`comeback_kid`, `perfect_week`) with learning-quality badges (`iteration_master`, `evidence_citer`, `unit_economist`, `ai_ethicist`).
+- Add server-side XP actions: `reflection_deep`, `iteration_saved`, `peer_helpful`. Migration to `award-xp` edge function.
 
-#### 4. `src/components/ui/progress.tsx` — Green + Animation
+## Phase 5 — School & Teacher Curriculum Builder
 
-- Change default indicator color from `bg-primary` to green (`bg-emerald-500` or the new progress token)
-- Add CSS transition for width changes (already has `transition-all`, just ensure smooth)
-- Add a subtle shine/pulse animation on the indicator
+- DB: `school_pathways`, `class_programs` tables + RLS + GRANTs.
+- Teacher UI to activate pathways per class.
 
-#### 5. `src/components/ui/button.tsx` — Hover Glow
+## Phase 6 — Academic-Year Versioning
 
-- Add hover glow to the default variant: `hover:shadow-[0_0_20px_hsl(255_74%_64%/0.3)]`
-- Slightly brighten on hover via `hover:bg-primary/95` or a brighter shade
+- Version field on curriculum manifest, snapshot mechanism, in-flight student cohorts pinned to 2025-26.
 
-### Files to Edit
-1. `src/index.css` — CSS variables + utility classes
-2. `tailwind.config.ts` — add progress/accent-orange tokens
-3. `src/components/ui/progress.tsx` — green bar + shine animation
-4. `src/components/ui/button.tsx` — hover glow on default variant
+---
 
-### What stays blue
-- `--sim-info` (info badges, secondary elements)
-- `.gradient-explorer` keeps a blue accent in its gradient
-- Chart colors 2-5 unchanged
+## Confirm before I proceed
 
-### What doesn't change
-- No layout, routing, database, or component structure changes
-- No text content changes
-- XP gold system stays amber/gold
-
+I'll start with **Phase 1 only** on approval. If instead you want a specific phase first (e.g. jump straight to Marketing expansion or Gamification rebalance), say which.
