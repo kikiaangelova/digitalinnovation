@@ -9,6 +9,7 @@ import { ArrowLeft, Check, Lock, Clock, Users, Copy, Home } from 'lucide-react';
 import { toast } from 'sonner';
 import type { KPIs } from '@/types/simulator';
 import { KPI_DIRECTIONS } from '@/types/simulator';
+import { localizeSeason } from '@/lib/localize-season';
 
 export default function SeasonView() {
   const { id } = useParams<{ id: string }>();
@@ -17,7 +18,11 @@ export default function SeasonView() {
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
   const { seasons, getParticipantId, getLatestCompanyState, getSubmission, getOutcomeReport, getCompanyStateHistory, getTeamForSeason, simulatorMode } = useSimulator();
 
-  const season = seasons.find(s => s.id === id);
+  const rawSeason = seasons.find(s => s.id === id);
+  const season = useMemo(
+    () => (rawSeason ? localizeSeason(rawSeason, lang) : undefined),
+    [rawSeason, lang]
+  );
 
   const participantId = season ? getParticipantId(season.id) : null;
   const latestState = participantId ? getLatestCompanyState(participantId) : null;
