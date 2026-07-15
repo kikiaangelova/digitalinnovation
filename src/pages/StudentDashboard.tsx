@@ -309,11 +309,11 @@ export default function StudentDashboard() {
           <TodayHero lang={lang} action={canonical} />
 
           {/* ── Secondary zone: Your Learning (max 3 cards) ── */}
-          <section aria-label={t('Your learning', 'Твоето учене')} className="space-y-3">
-            <h2 className="typo-h2 flex items-center gap-2">
-              <BarChart3 className="h-5 w-5 text-primary" />
+          <section aria-label={t('Your learning', 'Твоето учене')} className="space-y-4">
+            <div className="section-chip-amber -rotate-1">
+              <BarChart3 className="h-4 w-4" />
               {t('Your learning', 'Твоето учене')}
-            </h2>
+            </div>
             <div className="grid gap-4 md:grid-cols-2">
               <LearningOutcomes lang={lang} scores={outcomeScores} />
               {hasFeedbackSignal ? (
@@ -359,11 +359,11 @@ export default function StudentDashboard() {
           </section>
 
           {/* ── Progress zone ── */}
-          <section aria-label={t('Progress', 'Прогрес')} className="space-y-3">
-            <h2 className="typo-h2 flex items-center gap-2">
-              <Star className="h-5 w-5 text-xp-gold" />
+          <section aria-label={t('Progress', 'Прогрес')} className="space-y-4">
+            <div className="section-chip-orange rotate-1">
+              <Star className="h-4 w-4" />
               {t('Progress', 'Прогрес')}
-            </h2>
+            </div>
             <LearningNavigator
               lang={lang}
               xp={xp}
@@ -397,50 +397,32 @@ export default function StudentDashboard() {
           </section>
 
           {/* ── Explore zone ── */}
-          <section aria-label={t('Explore', 'Разгледай')} className="space-y-3">
-            <h2 className="typo-h2 flex items-center gap-2">
-              <BookOpen className="h-5 w-5 text-primary" />
+          <section aria-label={t('Explore', 'Разгледай')} className="space-y-4">
+            <div className="section-chip-violet -rotate-1">
+              <BookOpen className="h-4 w-4" />
               {t('Explore', 'Разгледай')}
-            </h2>
+            </div>
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              <button
-                onClick={() => navigate('/dictionary')}
-                className="dash-section text-left min-h-[88px] hover:border-primary/40 transition"
-              >
-                <h3 className="typo-card-title">{t('Dictionary', 'Речник')}</h3>
-                <p className="text-xs text-muted-foreground mt-1">
-                  {t('Learn key innovation terms.', 'Научи ключови иновационни термини.')}
-                </p>
-              </button>
-              <button
-                onClick={() => navigate('/industry-map')}
-                className="dash-section text-left min-h-[88px] hover:border-primary/40 transition"
-              >
-                <h3 className="typo-card-title">{t('Industry Map', 'Индустриална карта')}</h3>
-                <p className="text-xs text-muted-foreground mt-1">
-                  {t('Explore innovation across sectors.', 'Разгледай иновации в различни сектори.')}
-                </p>
-              </button>
-              <button
-                onClick={() => navigate('/my-report')}
-                className="dash-section text-left min-h-[88px] hover:border-primary/40 transition"
-              >
-                <h3 className="typo-card-title">{t('My Report', 'Моят отчет')}</h3>
-                <p className="text-xs text-muted-foreground mt-1">
-                  {t('See your learning report.', 'Виж отчета за напредъка си.')}
-                </p>
-              </button>
-              <button
-                onClick={() => navigate('/final-exam')}
-                className="dash-section text-left min-h-[88px] hover:border-primary/40 transition"
-              >
-                <h3 className="typo-card-title flex items-center gap-1">
-                  <Award className="h-4 w-4 text-primary" /> {t('Final Exam', 'Финален изпит')}
-                </h3>
-                <p className="text-xs text-muted-foreground mt-1">
-                  {t('Earn your certificate.', 'Спечели сертификата си.')}
-                </p>
-              </button>
+              {[
+                { to: '/dictionary', bg: 'bg-[hsl(200_90%_88%)]', title: t('Dictionary', 'Речник'), desc: t('Key terms, fast.', 'Ключовите думи, бързо.') },
+                { to: '/industry-map', bg: 'bg-[hsl(160_84%_82%)]', title: t('Industry Map', 'Индустриална карта'), desc: t('Innovation across sectors.', 'Иновации по сектори.') },
+                { to: '/my-report', bg: 'bg-[hsl(43_96%_78%)]', title: t('My Report', 'Моят отчет'), desc: t('Your learning report.', 'Отчет за напредъка.') },
+                { to: '/final-exam', bg: 'bg-[hsl(340_82%_85%)]', title: t('Final Exam', 'Финален изпит'), desc: t('Earn your certificate.', 'Спечели сертификат.'), icon: Award },
+              ].map((tile, i) => {
+                const Icon = tile.icon;
+                return (
+                  <button
+                    key={tile.to}
+                    onClick={() => navigate(tile.to)}
+                    className={`text-left min-h-[96px] rounded-2xl border-2 border-foreground quest-shadow-sm p-4 transition-transform hover:-translate-y-0.5 active:translate-x-1 active:translate-y-1 active:shadow-none ${tile.bg} ${i % 2 === 0 ? '-rotate-1' : 'rotate-1'}`}
+                  >
+                    <h3 className="font-quest font-bold text-foreground flex items-center gap-1">
+                      {Icon ? <Icon className="h-4 w-4" /> : null} {tile.title}
+                    </h3>
+                    <p className="text-xs text-foreground/70 mt-1">{tile.desc}</p>
+                  </button>
+                );
+              })}
             </div>
             <AIMentorWidget
               lang={lang}

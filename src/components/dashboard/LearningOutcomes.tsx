@@ -1,4 +1,3 @@
-import { Progress } from '@/components/ui/progress';
 import { Lightbulb, Search, Rocket, Briefcase, Palette, TrendingUp } from 'lucide-react';
 
 // Learning outcomes and their mapping to activities
@@ -79,31 +78,44 @@ export default function LearningOutcomes({ lang, scores, compact }: LearningOutc
   );
 
   return (
-    <div className={`rounded-xl border border-border bg-card ${compact ? 'p-4' : 'p-5'}`}>
+    <div className={`rounded-3xl border-2 border-foreground bg-card quest-shadow-sm ${compact ? 'p-4' : 'p-5'}`}>
       <div className="flex items-center justify-between mb-4">
-        <h2 className={`${compact ? 'text-sm' : 'text-lg'} font-display font-semibold text-foreground`}>
+        <h2 className={`${compact ? 'text-sm' : 'text-lg'} font-quest font-bold text-foreground`}>
           {t('Learning Progress', 'Учебен напредък')}
         </h2>
-        <span className="text-xs font-bold text-primary">{avgScore}% {t('avg', 'средно')}</span>
+        <span className="font-quest text-sm font-bold px-2.5 py-0.5 rounded-full border-2 border-foreground bg-[hsl(43_96%_75%)] text-foreground">
+          {avgScore}%
+        </span>
       </div>
       <div className="space-y-3">
-        {LEARNING_OUTCOMES.map(lo => {
+        {LEARNING_OUTCOMES.map((lo, i) => {
           const Icon = lo.icon;
           const score = scores[lo.id] || 0;
+          const barColors = [
+            'bg-[hsl(43_96%_56%)]',   // amber
+            'bg-[hsl(160_84%_45%)]',  // emerald
+            'bg-[hsl(28_92%_55%)]',   // orange
+            'bg-[hsl(270_70%_60%)]',  // violet
+            'bg-[hsl(200_90%_50%)]',  // sky
+            'bg-[hsl(340_82%_60%)]',  // pink
+          ];
+          const barColor = barColors[i % barColors.length];
           return (
             <div key={lo.id}>
               <div className="flex items-center justify-between mb-1">
                 <div className="flex items-center gap-2">
-                  <Icon className="h-3.5 w-3.5 text-muted-foreground" />
+                  <Icon className="h-4 w-4 text-foreground" />
                   <span className={`${compact ? 'text-xs' : 'text-xs'} font-medium text-foreground`}>
                     {lang === 'bg' ? lo.bg : lo.en}
                   </span>
                 </div>
-                <span className={`${compact ? 'text-xs' : 'text-xs'} font-bold ${score >= 70 ? 'text-sim-success' : score >= 40 ? 'text-sim-warning' : 'text-muted-foreground'}`}>
+                <span className={`font-quest text-xs font-bold ${score >= 70 ? 'text-sim-success' : score >= 40 ? 'text-sim-warning' : 'text-foreground/60'}`}>
                   {score}%
                 </span>
               </div>
-              <Progress value={score} className="h-1.5" />
+              <div className="h-2.5 rounded-full border border-foreground/80 bg-muted overflow-hidden">
+                <div className={`h-full ${barColor} transition-all`} style={{ width: `${score}%` }} />
+              </div>
             </div>
           );
         })}
