@@ -92,6 +92,9 @@ export default function TeacherClassroom() {
   // Settings
   const [editName, setEditName] = useState('');
   const [dissolveName, setDissolveName] = useState('');
+  const [editSubject, setEditSubject] = useState<string>('');
+  const [pendingSubject, setPendingSubject] = useState<string | null>(null);
+  const [savingSubject, setSavingSubject] = useState(false);
 
   // Student detail
   const [selectedStudent, setSelectedStudent] = useState<string | null>(null);
@@ -127,6 +130,8 @@ export default function TeacherClassroom() {
     const data = nextId ? list.find((c) => c.id === nextId) : null;
     if (data) {
       setEditName(data.name);
+      setEditSubject(data.subject_key || DEFAULT_SUBJECT_KEY);
+      setPendingSubject(null);
       // Fetch students
       const { data: studentsData } = await supabase
         .from('classroom_students')
@@ -241,6 +246,26 @@ export default function TeacherClassroom() {
     if (!classroom || !editName.trim()) return;
     await supabase.from('classrooms').update({ name: editName.trim() }).eq('id', classroom.id);
     toast.success(t('Name updated', 'Името е обновено'));
+    fetchClassroom();
+  };
+
+  const changeClassroomSubject = async () => {
+    if (!classroom || !pendingSubject || pendingSubject === (classroom.subject_key || '')) {
+      setPendingSubject(null);
+      return;
+    }
+    setSavingSubject(true);
+    const { error } = await supabase
+      .from('classrooms')
+      .update({ subject_key: pendingSubject } as any)
+      .eq('id', classroom.id);
+    setSavingSubject(false);
+    if (error) {
+      toast.error(t('Could not change subject', 'Неуспешна смяна на предмет'));
+      return;
+    }
+    toast.success(t('Subject updated', 'Предметът е обновен'));
+    setPendingSubject(null);
     fetchClassroom();
   };
 
@@ -804,6 +829,82 @@ export default function TeacherClassroom() {
                     <Copy className="h-3.5 w-3.5" />
                   </Button>
                 </div>
+              </div>
+            </Card>
+
+            <Card className="p-5 space-y-3">
+              <div>
+                <Label>{t('Subject', 'Предмет')}</Label>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {t(
+                    'The subject this class studies. Students see the class under this subject in "My Subjects".',
+                    'Предметът, който този клас изучава. Учениците виждат класа под този предмет в „Моите предмети“.',
+                  )}
+                </p>
+              </div>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <select
+                  className="flex-1 h-10 rounded-md border border-input bg-background px-3 text-sm"
+                  value={pendingSubject ?? editSubject}
+                  onChange={(e) => {
+                    const v = e.target.value;
+                    setPendingSubject(v === (classroom.subject_key || DEFAULT_SUBJECT_KEY) ? null : v);
+                  }}
+                >
+                  {SUBJECT_CATALOG.map((s) => (
+                    <option key={s.key} value={s.key}>
+                      {subjectTitle(s, lang as 'bg' | 'en')}
+                      {s.availability !== 'playable'
+                        ? ` (${s.availability === 'preview' ? t('preview', 'преглед') : t('planned', 'планиран')})`
+                        : ''}
+                    </option>
+                  ))}
+                </select>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button
+                      variant="outline"
+                      disabled={!pendingSubject || savingSubject}
+                    >
+                      <Save className="h-4 w-4 mr-1" />
+                      {t('Change subject', 'Смени предмета')}
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        {t('Change subject for this class?', 'Смяна на предмет за този клас?')}
+                      </AlertDialogTitle>
+                      <AlertDialogDescription className="space-y-2">
+                        <span className="block">
+                          {t(
+                            'From',
+                            'От',
+                          )}:{' '}
+                          <strong>
+                            {subjectLabel(classroom.subject_key, lang as 'bg' | 'en')}
+                          </strong>
+                          {' → '}
+                          <strong>
+                            {subjectLabel(pendingSubject, lang as 'bg' | 'en')}
+                          </strong>
+                        </span>
+                        <span className="block text-destructive">
+                          {t(
+                            'Existing assignments and student progress are kept, but assigned modules may no longer belong to the new subject. Review your assignments after changing.',
+                            'Съществуващите задачи и напредъкът на учениците се запазват, но зададените модули може вече да не принадлежат към новия предмет. Прегледай задачите след смяната.',
+                          )}
+                        </span>
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>{t('Cancel', 'Отказ')}</AlertDialogCancel>
+                      <AlertDialogAction onClick={changeClassroomSubject}>
+                        {t('Confirm change', 'Потвърди смяната')}
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
               </div>
             </Card>
 

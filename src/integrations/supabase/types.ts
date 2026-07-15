@@ -2000,6 +2000,31 @@ export type Database = {
           user_id: string
         }[]
       }
+      get_my_classroom_assignments: {
+        Args: never
+        Returns: {
+          assignment_type: string
+          case_id: string
+          classroom_id: string
+          classroom_name: string
+          created_at: string
+          due_date: string
+          id: string
+          journey_stage: number
+          module_slug: string
+          note: string
+          subject_key: string
+        }[]
+      }
+      get_my_classroom_summaries: {
+        Args: never
+        Returns: {
+          id: string
+          is_active: boolean
+          name: string
+          subject_key: string
+        }[]
+      }
       get_player_assessment_questions: {
         Args: { _assessment_id: string }
         Returns: {
