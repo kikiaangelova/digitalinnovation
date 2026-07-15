@@ -93,22 +93,15 @@ export default function ProfilePage() {
       setQuizHistory(quizRes.data || []);
       setSimData(simRes.data || null);
       setStartupData(startupRes.data || null);
-      // Fetch classroom membership
-      const { data: membership } = await supabase
-        .from('classroom_students')
-        .select('classroom_id')
-        .eq('student_id', user.id)
-        .maybeSingle();
-      if (membership) {
-        const { data: cr } = await supabase
-          .from('classrooms')
-          .select('id, name, teacher_id')
-          .eq('id', membership.classroom_id)
-          .maybeSingle();
-        if (cr) {
-          const { data: tp } = await supabase.from('profiles').select('display_name, full_name').eq('user_id', cr.teacher_id).maybeSingle();
-          setClassroomInfo({ id: cr.id, name: cr.name, teacher_name: tp?.display_name || tp?.full_name || null });
-        }
+      // Fetch classroom via secure RPC (returns only safe fields).
+      const { data: myRows } = await supabase.rpc('get_my_classroom_summaries' as any);
+      const cr: any = Array.isArray(myRows) ? myRows[0] : null;
+      if (cr) {
+        setClassroomInfo({
+          id: cr.id,
+          name: cr.name,
+          teacher_name: cr.teacher_display_name ?? null,
+        });
       }
       setLoading(false);
     };
