@@ -26,7 +26,7 @@ const Index = () => {
     { emoji: "🚀", key: "startup", to: "/my-startup", titleEn: "Startup Thinking",  titleBg: "Стартъп мислене",       blurbEn: "Idea → customer → business, in weeks.", blurbBg: "Идея → клиент → бизнес, за седмици." },
     { emoji: "🧠", key: "ai",      to: "/pathways",     titleEn: "AI for Business",    titleBg: "AI за бизнеса",         blurbEn: "Prompt like a pro, decide like a founder.", blurbBg: "Пиши промптове като про, решавай като фаундър." },
     { emoji: "📈", key: "market",  to: "/pathways",     titleEn: "Marketing & Growth", titleBg: "Маркетинг и растеж",    blurbEn: "Get seen, get bought, get remembered.", blurbBg: "Да те видят, да те купят, да те запомнят." },
-    { emoji: "💰", key: "money",   to: "/pathways",     titleEn: "Finance Basics",     titleBg: "Финансови основи",      blurbEn: "Unit economics without the fear.",      blurbBg: "Юнит икономика без страха." },
+    { emoji: "💰", key: "money",   to: "/pathways",     titleEn: "Finance Basics",     titleBg: "Финансови основи",      blurbEn: "Unit economics without the fear.",      blurbBg: "Приходи, разходи и печалба — обяснени ясно." },
     { emoji: "🎨", key: "design",  to: "/pathways",     titleEn: "Product & Design",   titleBg: "Продукт и дизайн",      blurbEn: "Build things people actually want.",    blurbBg: "Прави неща, които хората наистина искат." },
   ];
 
