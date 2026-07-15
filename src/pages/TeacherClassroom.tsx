@@ -28,6 +28,7 @@ import {
   subjectTitle,
   subjectLabel,
 } from '@/data/subject-catalog';
+import { useModuleCatalog } from '@/hooks/useModuleCatalog';
 
 interface Classroom {
   id: string;
@@ -102,8 +103,16 @@ export default function TeacherClassroom() {
 
   // Data for dropdowns
   const [caseStudies, setCaseStudies] = useState<{ id: string; title: string }[]>([]);
-  const [modules, setModules] = useState<{ slug: string; title: string; subject_key: string | null }[]>([]);
   const [showAllSubjectModules, setShowAllSubjectModules] = useState(false);
+
+  // Shared module catalog (static + DB, de-duplicated by slug).
+  const { catalog: catalogModules } = useModuleCatalog();
+  const modules = catalogModules.map((m) => ({
+    slug: m.slug,
+    title: lang === 'bg' ? m.title_bg : m.title_en,
+    subject_key: m.subject_key,
+    hasRichContent: m.hasRichContent,
+  }));
 
   const siteUrl = window.location.origin;
 
@@ -164,22 +173,12 @@ export default function TeacherClassroom() {
 
   useEffect(() => {
     fetchClassroom();
-    // Fetch case studies and modules for assignment dropdowns
-    Promise.all([
-      supabase.from('case_studies').select('id, title').eq('published', true),
-      supabase
-        .from('learning_modules')
-        .select('slug, title_en, title_bg, subject_key' as any)
-        .order('display_order'),
-    ]).then(([casesRes, modsRes]) => {
-      setCaseStudies((casesRes.data || []).map(c => ({ id: c.id, title: c.title })));
-      setModules(((modsRes.data || []) as any[]).map((m) => ({
-        slug: m.slug,
-        title: lang === 'bg' ? m.title_bg : m.title_en,
-        subject_key: (m as any).subject_key ?? null,
-      })));
-    });
-  }, [fetchClassroom, lang]);
+    // Case studies come from the DB; modules use the shared catalog.
+    supabase.from('case_studies').select('id, title').eq('published', true)
+      .then((casesRes) => {
+        setCaseStudies((casesRes.data || []).map(c => ({ id: c.id, title: c.title })));
+      });
+  }, [fetchClassroom]);
 
   const createClassroom = async () => {
     if (!user || !createName.trim() || !createSubject) return;
