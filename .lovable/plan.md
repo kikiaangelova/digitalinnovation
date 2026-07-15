@@ -1,51 +1,82 @@
-# 2026–27 Curriculum Upgrade — Phased Build Plan
 
-The full audit spans content, gamification, assessments, versioning, and school-config UI. Shipping all of it in one turn would touch ~30 files, the DB schema, and every learner surface — high risk of regressions to XP, RLS, and existing student data. I'll build it in phases behind feature flags, one phase per turn, so you can review before each step.
+# Пълен план: DigiInnov Case Lab в гласа на Кики
 
----
+Целта: платформа, в която Gen Z придобива **знания → умения → growth mindset** през правене, с релевантни 2026 казуси и AI ментор (Кики) до тях.
 
-## Phase 1 — Foundations (this turn)
-
-Ship the plumbing every later phase depends on. Content-only + one flag. No DB changes, no gamification changes yet.
-
-1. **Curriculum manifest** — new `src/data/curriculum-2026.ts` describing the 12 pathways (Core + Business/Marketing/Data-AI/Human tracks), each with `id`, `level` (foundation/intermediate/advanced), and a `references[]` array pointing to existing modules/stages/dictionary categories/cases. Zero content is deleted or moved.
-2. **Preservation mapping** — `src/data/curriculum-mapping.ts` marks every existing module and stage with class (Keep/Update/Expand/Merge/Optional) so later phases can act on it programmatically.
-3. **TEACR loop scaffold** — reusable component `src/components/learning/DecisionConsequenceReflection.tsx` (Decision → Consequence → Reflection → Improvement) so any module can adopt the loop without rewriting.
-4. **Pathway index page** — `/pathways` route rendering the 12 pathways with counts pulled from the manifest. Gated by `curriculum-v2026` flag.
-5. **Feature flag** — add `curriculum-v2026` to `src/lib/featureFlags.ts`.
-
-Deliverables in Phase 1 don't affect any signed-out visitor, existing dashboards, XP, or DB.
+Не мога да напиша всичко в един ход — ще стане претупано и генерично, точно това което не искаш. Затова го разделям на **6 фази**, всяка е самостоятелна доставка (виждаш резултата преди да мина към следващата).
 
 ---
 
-## Phase 2 — Content Expansions (next turn)
+## Фаза 1 — Каноничен глас (пилот) 🎯 *започваме тук*
+1 модул написан докрай в твоя глас, за да служи като шаблон за всичко останало.
+- Тема: **"Черният лебед за предприемачи"** (уговорено миналия ход — чакам А или Б като ъгъл).
+- Съдържание: 7-мин четене BG+EN, TEACR сценарий, 3 речникови термина, 1 микро-казус, 3 въпроса за рефлексия.
+- След одобрение → това е "стилът", по който пиша останалите 11 предмета.
 
-- Expand Marketing Fundamentals → sub-topics (Positioning, SEO, Content, Paid, Analytics).
-- Expand AI dictionary category → Foundations / GenAI / Prompting / Ethics / Agents.
-- Add Finance & Unit Economics module + dictionary category.
-- Merge Ops + Supply Chain modules into "Operations & Systems".
+## Фаза 2 — 12-те предмета, преструктурирани
+Групирам темите ти в 12 pathway-а, всеки с ясна цел и "какво можеш в понеделник":
 
-## Phase 3 — Assessment & Iteration Loop
+```text
+CORE (задължителни за всички)
+  1. Предприемаческо мислене & Growth Mindset
+  2. Дигитални иновации (Design Thinking + Lean + Blue Ocean + Черен лебед)
+  3. AI за бизнес & Prompt Engineering
+  4. Основи на маркетинга
 
-- Wire the TEACR component into all 6 stages and 10 modules.
-- Add "Iterate with feedback" step after graded work.
+ELECTIVES (избираеми пътеки)
+  5. Дигитален маркетинг
+  6. Мениджмънт основи
+  7. Project Management (Agile / Scrum / Kanban)
+  8. Стартъпи & стартъп екосистеми
+  9. Бизнес модели & Unit Economics
+ 10. UX/UI основи
+ 11. Продажби & комуникация
+ 12. Финансова грамотност за фаундъри
+```
 
-## Phase 4 — Gamification Rebalance
+Всеки pathway: 4-6 микро-урока × 7 мин + TEACR + казус + речникови термини + финална мисия.
 
-- Replace attendance badges (`comeback_kid`, `perfect_week`) with learning-quality badges (`iteration_master`, `evidence_citer`, `unit_economist`, `ai_ethicist`).
-- Add server-side XP actions: `reflection_deep`, `iteration_saved`, `peer_helpful`. Migration to `award-xp` edge function.
+## Фаза 3 — 2026 казуси (реални компании)
+6 казуса, всеки 8 секции по формата на платформата, BG+EN:
+- **Lovable** (европейски AI стартъп, product-led growth)
+- **Payhawk** (българският unicorn, B2B fintech, enterprise sales)
+- **Revolut** (super-app, Blue Ocean в банкирането)
+- **Notion** (community-led, PLG)
+- **Duolingo** (gamification като бизнес модел — директно резонира с Gen Z)
+- **Klarna vs. AI поддръжка 2024-2025** (какво стана като замениха хора с AI и защо се върнаха)
 
-## Phase 5 — School & Teacher Curriculum Builder
+Всеки казус е "решаваш заедно с фаундъра", не четеш wiki статия.
 
-- DB: `school_pathways`, `class_programs` tables + RLS + GRANTs.
-- Teacher UI to activate pathways per class.
+## Фаза 4 — Речник (bilingual, contextual)
+- ~80 нови термина покриващи всички 12 pathway-а
+- Всеки термин линкнат към урока/казуса, където се използва (contextual)
+- Тон: "Bottleneck = мястото, в което всичко забива" — не учебник
 
-## Phase 6 — Academic-Year Versioning
+## Фаза 5 — Kiki AI ментор (upgrade)
+- Обновяване на `KIKI_PERSONA_PROMPT` с новия контекст (20 год. опит, 5-те предмета, философията)
+- Kiki отговаря различно според pathway-а (маркетинг Кики ≠ финанси Кики по тон, но същата личност)
+- 3 mode-а: **Socratic** (питa), **Coach** (окуражава), **Sparring** (предизвиква) — Gen Z обича да е предизвикван
 
-- Version field on curriculum manifest, snapshot mechanism, in-flight student cohorts pinned to 2025-26.
+## Фаза 6 — Gen Z полиране
+- Streaks + daily missions (те се връщат)
+- "Skip the theory" бутон → директно в казуса, теорията изскача като just-in-time flashcard
+- Progress без числа — с визуална карта "къде си"
+- 2-мин "no-signup preview" от лендинга: 1 решение от казус, вижда последствие, после регистрация
 
 ---
 
-## Confirm before I proceed
+## Технически бележки
 
-I'll start with **Phase 1 only** on approval. If instead you want a specific phase first (e.g. jump straight to Marketing expansion or Gamification rebalance), say which.
+- Съдържанието живее в `src/data/curriculum-2026.ts` и `src/data/cases-2026.ts` (типизирано, лесно за update).
+- Речниковите термини влизат в `dictionary` таблицата през `supabase--insert` (не migration).
+- Никакви schema промени не са нужни — всички таблици (learning_modules, case_studies, questions) вече ги имаме.
+- Kiki промптът се обновява в `supabase/functions/_shared/kiki-persona.ts`.
+- Всяка фаза е отделен commit с preview, за да можеш да кажеш "звучи като мен" или "не".
+
+---
+
+## Какво ми трябва от теб СЕГА, за да тръгна с Фаза 1
+
+**1 отговор:** Черният лебед — ъгъл **А** ("защо планът ти ще се счупи, MVP е отговорът") или **Б** ("антикрехкост, печели от хаос")?
+
+Като кажеш — за ~2 хода имаш пилотния модул на екрана и решаваме дали този глас работи, преди да го мащабирам през всичките 12 предмета.
