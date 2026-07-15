@@ -127,10 +127,10 @@ export default function AppHeader() {
         <div className="container mx-auto flex items-center justify-between px-4 py-2.5">
           {/* Logo — always visible */}
           <Link to="/" className="flex items-center gap-2.5 shrink-0">
-            <div className="flex h-7 w-7 md:h-8 md:w-8 items-center justify-center rounded-lg sim-gradient">
-              <GraduationCap className="h-4 w-4 text-primary-foreground" />
+            <div className="flex h-8 w-8 md:h-9 md:w-9 items-center justify-center rounded-2xl bg-warm-gradient shadow-soft">
+              <GraduationCap className="h-4 w-4 md:h-[18px] md:w-[18px] text-primary-foreground" />
             </div>
-            <span className="font-display font-bold text-foreground text-sm md:text-base">
+            <span className="font-display font-extrabold text-foreground text-base md:text-lg tracking-tight leading-none">
               <span className="md:hidden">DigiInnov</span>
               <span className="hidden md:inline">{t.appName}</span>
             </span>
