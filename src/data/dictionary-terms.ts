@@ -1265,3 +1265,14 @@ export const TERMS: DictionaryTerm[] = [
   },
 ];
 
+/* ── 2026-27 curriculum additions ─────────────────────────────────────── */
+// Merged in-place so every existing surface (Dictionary page, search,
+// category counts) picks them up without extra wiring. Duplicates by term
+// name are skipped so the legacy copy wins.
+import { ALL_TERMS_2026 } from './curriculum-2026-dictionary';
+
+const _existing = new Set(TERMS.map(t => t.term));
+for (const t of ALL_TERMS_2026) {
+  if (!_existing.has(t.term)) TERMS.push(t);
+}
+
