@@ -276,7 +276,7 @@ const Index = () => {
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {PATHWAYS.slice(0, 9).map((p, i) => {
+                {PATHWAYS.slice(0, 12).map((p, i) => {
                   const trackColor: Record<PathwayTrack, { bg: string; icon: string; text: string }> = {
                     core: { bg: "bg-[#58CC02]", icon: "★", text: "text-white" },
                     business: { bg: "bg-[#2B99FF]", icon: "$", text: "text-white" },
