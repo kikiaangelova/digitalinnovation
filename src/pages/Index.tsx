@@ -340,35 +340,37 @@ const Index = () => {
             </div>
           </section>
 
-          <section id="how-it-works" className="relative py-20 md:py-24 px-4 border-t border-border">
+          <section id="how-it-works" className="relative py-16 md:py-24 px-4 bg-[#FFE9F4] border-t-4 border-black">
             <div className="container mx-auto max-w-5xl">
-              <div className="max-w-2xl mb-12">
-                <div className="typo-eyebrow text-primary mb-3">
-                  01 / {lang === "bg" ? "КАК РАБОТИ" : "HOW IT WORKS"}
+              <div className="max-w-2xl mb-10">
+                <div className="inline-flex items-center gap-2 bg-black text-white font-quest text-[11px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-md rotate-[-1deg] mb-4 quest-shadow-sm">
+                  {lang === "bg" ? "01 · КАК РАБОТИ" : "01 · HOW IT WORKS"}
                 </div>
-                <h2 className="typo-h1 mb-3">{t.howItWorksTitle}</h2>
-                <p className="text-muted-foreground max-w-lg">{t.howItWorksDesc}</p>
+                <h2 className="font-quest font-bold text-4xl md:text-5xl leading-[0.95] tracking-tight text-black mb-3">
+                  {t.howItWorksTitle}
+                </h2>
+                <p className="font-quest text-black/70 max-w-lg text-base md:text-lg">{t.howItWorksDesc}</p>
               </div>
 
               <div className="grid sm:grid-cols-2 gap-4">
                 {[
-                  { icon: BookOpen, text: t.howStep1, num: 1, tag: lang === "bg" ? "УЧИ" : "LEARN" },
-                  { icon: Rocket, text: t.howStep2, num: 2, tag: lang === "bg" ? "ПРИЛОЖИ" : "APPLY" },
-                  { icon: Brain, text: t.howStep3, num: 3, tag: lang === "bg" ? "ИТЕРИРАЙ" : "ITERATE" },
-                  { icon: Award, text: t.howStep4, num: 4, tag: lang === "bg" ? "ПОБЕДИ" : "WIN" },
+                  { icon: BookOpen, text: t.howStep1, num: 1, tag: lang === "bg" ? "УЧИ" : "LEARN", bg: "bg-[#FFD600]", rot: "rotate-[-1deg]" },
+                  { icon: Rocket, text: t.howStep2, num: 2, tag: lang === "bg" ? "ПРИЛОЖИ" : "APPLY", bg: "bg-[#58CC02]", rot: "rotate-[1deg]" },
+                  { icon: Brain, text: t.howStep3, num: 3, tag: lang === "bg" ? "ИТЕРИРАЙ" : "ITERATE", bg: "bg-[#2B99FF]", rot: "rotate-[-1deg]" },
+                  { icon: Award, text: t.howStep4, num: 4, tag: lang === "bg" ? "ПОБЕДИ" : "WIN", bg: "bg-[#784EF8]", rot: "rotate-[1deg]" },
                 ].map((step, i) => (
                   <Reveal key={step.num} delay={i * 80}>
-                    <div className="group relative rounded-2xl border border-border bg-card p-5 hover:border-primary/40 hover:shadow-lift transition-all duration-300 h-full">
+                    <div className={`relative rounded-3xl border-4 border-black ${step.bg} ${step.rot} p-5 quest-shadow h-full`}>
                       <div className="flex items-start gap-4">
-                        <div className="relative flex h-12 w-12 items-center justify-center rounded-xl bg-primary-gradient shrink-0 shadow-[var(--glow-emerald)] group-hover:scale-105 transition-transform">
-                          <step.icon className="h-5 w-5 text-white" />
-                          <span className="absolute -top-2 -right-2 flex h-6 w-6 items-center justify-center rounded-full bg-white border border-border font-mono text-[11px] font-bold text-ink shadow-sticker">
+                        <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-white border-4 border-black shrink-0">
+                          <step.icon className="h-6 w-6 text-black" />
+                          <span className="absolute -top-2.5 -right-2.5 flex h-7 w-7 items-center justify-center rounded-full bg-black text-white font-quest text-xs font-bold border-2 border-black">
                             {step.num}
                           </span>
                         </div>
                         <div className="flex-1">
-                          <div className="typo-eyebrow text-primary mb-1">{step.tag}</div>
-                          <p className="text-sm text-foreground leading-relaxed">{step.text}</p>
+                          <div className="font-quest text-[10px] font-bold uppercase tracking-widest text-black/70 mb-1">{step.tag}</div>
+                          <p className="font-quest text-sm md:text-base text-black leading-snug font-medium">{step.text}</p>
                         </div>
                       </div>
                     </div>
@@ -378,10 +380,13 @@ const Index = () => {
 
               <Reveal delay={200}>
                 <div className="mt-10 flex flex-col sm:flex-row items-center gap-4 justify-center">
-                  <Button size="lg" variant="hero" onClick={() => navigate("/auth?mode=signup")}>
-                    {t.startJourney} <ArrowRight className="h-4 w-4" />
-                  </Button>
-                  <span className="text-sm text-muted-foreground">{t.howCta}</span>
+                  <button
+                    onClick={() => navigate("/auth?mode=signup")}
+                    className="font-quest font-bold text-lg bg-[#FFD600] text-black border-4 border-black rounded-2xl px-6 py-3.5 quest-btn-shadow quest-press inline-flex items-center justify-center gap-2"
+                  >
+                    {t.startJourney} <ArrowRight className="h-5 w-5" />
+                  </button>
+                  <span className="font-quest text-sm font-bold text-black/70">{t.howCta}</span>
                 </div>
               </Reveal>
             </div>
@@ -390,103 +395,106 @@ const Index = () => {
         )}
 
         {/* ══════════ WHAT YOU LEARN + BUILD ══════════ */}
-        <section className="py-20 md:py-24 px-4 border-t border-border bg-secondary/60">
+        <section className="py-16 md:py-24 px-4 bg-[#EAFBE0] border-t-4 border-black">
           <div className="container mx-auto max-w-6xl">
             {/* Skills */}
-            <div className="max-w-2xl mb-12">
-              <div className="typo-eyebrow text-primary mb-3">
-                02 / {lang === "bg" ? "КАКВО ЩЕ НАУЧИШ" : "WHAT YOU LEARN"}
+            <div className="max-w-2xl mb-10">
+              <div className="inline-flex items-center gap-2 bg-black text-white font-quest text-[11px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-md rotate-[-1deg] mb-4 quest-shadow-sm">
+                {lang === "bg" ? "02 · КАКВО ЩЕ НАУЧИШ" : "02 · WHAT YOU LEARN"}
               </div>
-              <h2 className="typo-h1 mb-3">{t.whatYouLearn}</h2>
-              <p className="text-muted-foreground">{t.whatYouLearnDesc}</p>
+              <h2 className="font-quest font-bold text-4xl md:text-5xl leading-[0.95] tracking-tight text-black mb-3">{t.whatYouLearn}</h2>
+              <p className="font-quest text-black/70 text-base md:text-lg">{t.whatYouLearnDesc}</p>
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-20">
-              {learnCards.map((card, i) => (
-                <Reveal key={i} delay={i * 60}>
-                  <div className="group relative rounded-2xl border border-border bg-card p-5 hover:border-primary/40 hover:shadow-lift transition-all duration-300 h-full">
-                    <div className="flex items-center gap-3 mb-3">
-                      <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary-gradient shadow-[var(--glow-emerald)] group-hover:scale-110 transition-transform">
-                        <card.icon className="h-5 w-5 text-white" />
+              {learnCards.map((card, i) => {
+                const bgs = ["bg-white", "bg-[#FFF7E6]", "bg-white", "bg-[#FFE9F4]", "bg-white", "bg-[#EAF3FF]"];
+                return (
+                  <Reveal key={i} delay={i * 60}>
+                    <div className={`relative rounded-3xl border-4 border-black ${bgs[i % bgs.length]} p-5 quest-shadow h-full`}>
+                      <div className="flex items-center gap-3 mb-3">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#58CC02] border-4 border-black">
+                          <card.icon className="h-5 w-5 text-white" />
+                        </div>
+                        <span className="font-quest text-[10px] font-bold uppercase tracking-widest bg-black text-white px-2 py-1 rounded-md">
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
                       </div>
-                      <span className="font-mono text-[10px] font-semibold uppercase tracking-widest text-primary">
-                        {String(i + 1).padStart(2, "0")}
-                      </span>
+                      <h3 className="font-quest font-bold text-black text-lg mb-1.5">{card.title}</h3>
+                      <p className="font-quest text-sm text-black/70 leading-snug">{card.desc}</p>
                     </div>
-                    <h3 className="font-display font-bold text-foreground mb-1.5">{card.title}</h3>
-                    <p className="text-sm text-muted-foreground leading-relaxed">{card.desc}</p>
-                  </div>
-                </Reveal>
-              ))}
+                  </Reveal>
+                );
+              })}
             </div>
 
             {/* Build */}
             <div className="max-w-2xl mb-10">
-              <div className="typo-eyebrow text-primary mb-3">
-                03 / {lang === "bg" ? "КАКВО ЩЕ ПОСТРОИШ" : "WHAT YOU BUILD"}
+              <div className="inline-flex items-center gap-2 bg-black text-white font-quest text-[11px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-md rotate-[-1deg] mb-4 quest-shadow-sm">
+                {lang === "bg" ? "03 · КАКВО ЩЕ ПОСТРОИШ" : "03 · WHAT YOU BUILD"}
               </div>
-              <h2 className="typo-h1 mb-3">{t.whatYouBuild}</h2>
-              <p className="text-muted-foreground">{t.whatYouBuildDesc}</p>
+              <h2 className="font-quest font-bold text-4xl md:text-5xl leading-[0.95] tracking-tight text-black mb-3">{t.whatYouBuild}</h2>
+              <p className="font-quest text-black/70 text-base md:text-lg">{t.whatYouBuildDesc}</p>
             </div>
 
-            <div className="hidden md:flex items-stretch justify-between gap-2">
-              {buildSteps.map((step, i) => (
-                <div key={i} className="flex items-stretch flex-1">
-                  <Reveal delay={i * 100} className="flex-1">
-                    <div className="h-full rounded-2xl border border-border bg-card p-5 hover:border-primary/40 hover:shadow-lift transition-all duration-300 group">
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary-gradient shadow-[var(--glow-emerald)] group-hover:scale-105 transition-transform">
-                          <step.icon className="h-5 w-5 text-white" />
+            <div className="hidden md:flex items-stretch justify-between gap-3">
+              {buildSteps.map((step, i) => {
+                const bgs = ["bg-[#FFD600]", "bg-[#FF6B9D]", "bg-[#2B99FF]", "bg-[#58CC02]", "bg-[#784EF8]", "bg-[#FF9600]"];
+                const rot = i % 2 === 0 ? "rotate-[-1deg]" : "rotate-[1deg]";
+                return (
+                  <div key={i} className="flex items-stretch flex-1">
+                    <Reveal delay={i * 100} className="flex-1">
+                      <div className={`h-full rounded-3xl border-4 border-black ${bgs[i % bgs.length]} ${rot} p-5 quest-shadow`}>
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white border-4 border-black">
+                            <step.icon className="h-5 w-5 text-black" />
+                          </div>
+                          <span className="font-quest text-2xl font-bold text-black/40">
+                            {String(step.step).padStart(2, "0")}
+                          </span>
                         </div>
-                        <span className="font-mono text-2xl font-bold text-primary/30">
-                          {String(step.step).padStart(2, "0")}
-                        </span>
+                        <p className="font-quest text-sm font-bold text-black leading-snug">{step.title}</p>
                       </div>
-                      <p className="text-sm font-semibold text-foreground leading-snug">{step.title}</p>
-                    </div>
-                  </Reveal>
-                  {i < buildSteps.length - 1 && (
-                    <div className="flex items-center justify-center px-1">
-                      <ChevronRight className="h-4 w-4 text-primary/40" />
-                    </div>
-                  )}
-                </div>
-              ))}
+                    </Reveal>
+                  </div>
+                );
+              })}
             </div>
             <div className="md:hidden space-y-3">
-              {buildSteps.map((step) => (
-                <div key={step.step} className="flex items-center gap-4 rounded-2xl border border-border bg-card p-4">
-                  <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary-gradient shrink-0 shadow-[var(--glow-emerald)]">
-                    <step.icon className="h-5 w-5 text-white" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="typo-eyebrow text-primary">
-                      {t.step} {step.step}
+              {buildSteps.map((step, i) => {
+                const bgs = ["bg-[#FFD600]", "bg-[#FF6B9D]", "bg-[#2B99FF]", "bg-[#58CC02]", "bg-[#784EF8]", "bg-[#FF9600]"];
+                return (
+                  <div key={step.step} className={`flex items-center gap-4 rounded-3xl border-4 border-black ${bgs[i % bgs.length]} p-4 quest-shadow-sm`}>
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white border-4 border-black shrink-0">
+                      <step.icon className="h-5 w-5 text-black" />
                     </div>
-                    <p className="text-sm font-semibold text-foreground">{step.title}</p>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-quest text-[10px] font-bold uppercase tracking-widest text-black/70">
+                        {t.step} {step.step}
+                      </div>
+                      <p className="font-quest text-sm font-bold text-black">{step.title}</p>
+                    </div>
+                    <span className="font-quest text-2xl font-bold text-black/40">
+                      {String(step.step).padStart(2, "0")}
+                    </span>
                   </div>
-                  <span className="font-mono text-xl font-bold text-primary/30">
-                    {String(step.step).padStart(2, "0")}
-                  </span>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </section>
 
         {/* ══════════ TIMELINE — Week × Stage ══════════ */}
-        <section className="py-20 md:py-24 px-4 border-t border-border">
+        <section className="py-16 md:py-24 px-4 bg-[#EAF3FF] border-t-4 border-black">
           <div className="container mx-auto max-w-3xl">
-            <div className="max-w-xl mb-12">
-              <div className="typo-eyebrow text-primary mb-3">
-                04 / {lang === "bg" ? "6 СЕДМИЦИ · 6 ЕТАПА" : "6 WEEKS · 6 STAGES"}
+            <div className="max-w-xl mb-10">
+              <div className="inline-flex items-center gap-2 bg-black text-white font-quest text-[11px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-md rotate-[-1deg] mb-4 quest-shadow-sm">
+                {lang === "bg" ? "04 · 6 СЕДМИЦИ · 6 ЕТАПА" : "04 · 6 WEEKS · 6 STAGES"}
               </div>
-              <h2 className="typo-h1 mb-3">
-                {lang === "bg"
-                  ? "Твоят иновационен път — седмица по седмица"
-                  : "Your innovation path — week by week"}
+              <h2 className="font-quest font-bold text-4xl md:text-5xl leading-[0.95] tracking-tight text-black mb-3">
+                {lang === "bg" ? "Твоят път — седмица по седмица" : "Your path — week by week"}
               </h2>
-              <p className="text-muted-foreground">
+              <p className="font-quest text-black/70 text-base md:text-lg">
                 {lang === "bg"
                   ? "Всяка седмица е един етап. Един график, една цел: от идея до стартъп за 6 седмици."
                   : "Each week is one stage. One schedule, one goal: from idea to startup in 6 weeks."}
@@ -494,35 +502,34 @@ const Index = () => {
             </div>
 
             <div className="relative">
-              <div className="absolute left-[27px] top-2 bottom-2 w-0.5 bg-border">
-                <div className="absolute inset-0 bg-primary-gradient opacity-40 rounded-full" />
-              </div>
-              <div className="space-y-3">
+              <div className="absolute left-[31px] top-4 bottom-4 w-1 bg-black rounded-full" />
+              <div className="space-y-4">
                 {journeyStages.map((stage, i) => {
                   const week = courseWeeks[i];
+                  const bgs = ["bg-[#FFD600]", "bg-[#58CC02]", "bg-[#FF6B9D]", "bg-[#2B99FF]", "bg-[#784EF8]", "bg-[#FF9600]"];
                   return (
                     <Reveal key={i} delay={i * 60}>
-                      <div className="flex gap-4 group">
-                        <div className="relative z-10 flex h-14 w-14 flex-col items-center justify-center rounded-xl bg-primary-gradient text-white shadow-[var(--glow-emerald)] shrink-0 group-hover:scale-105 transition-transform">
-                          <span className="font-mono text-[9px] font-bold uppercase tracking-wider opacity-90 leading-none">
+                      <div className="flex gap-4 items-start">
+                        <div className={`relative z-10 flex h-16 w-16 flex-col items-center justify-center rounded-2xl ${bgs[i]} text-black border-4 border-black quest-shadow-sm shrink-0`}>
+                          <span className="font-quest text-[10px] font-bold uppercase tracking-wider leading-none">
                             {lang === "bg" ? "СЕД" : "WK"}
                           </span>
-                          <span className="text-lg font-display font-bold leading-none mt-0.5">{i + 1}</span>
+                          <span className="text-2xl font-quest font-bold leading-none mt-0.5">{i + 1}</span>
                         </div>
-                        <div className="flex-1 rounded-2xl border border-border bg-card p-4 group-hover:border-primary/30 group-hover:shadow-sticker transition-all duration-300">
-                          <div className="flex items-center gap-2 flex-wrap mb-1.5">
-                            <span className="typo-eyebrow text-primary">
+                        <div className="flex-1 rounded-3xl border-4 border-black bg-white p-4 quest-shadow-sm">
+                          <div className="flex items-center gap-2 flex-wrap mb-2">
+                            <span className="font-quest text-[10px] font-bold uppercase tracking-widest bg-black text-white px-2 py-1 rounded-md">
                               {t.week} {i + 1} · {t.stage} {i + 1}
                             </span>
-                            <span className="inline-flex items-center gap-1 text-[10px] font-mono font-semibold text-accent-foreground bg-accent px-2 py-0.5 rounded-full">
-                              <stage.icon className="h-2.5 w-2.5" />
+                            <span className={`inline-flex items-center gap-1 text-[10px] font-quest font-bold text-black ${bgs[i]} border-2 border-black px-2 py-0.5 rounded-md`}>
+                              <stage.icon className="h-3 w-3" />
                               {stage.title}
                             </span>
                           </div>
-                          <h3 className="font-display font-bold text-foreground text-base">
+                          <h3 className="font-quest font-bold text-black text-lg leading-tight">
                             {week?.title ?? stage.title}
                           </h3>
-                          <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+                          <p className="font-quest text-sm text-black/70 mt-1 leading-snug">
                             {week?.desc ?? stage.desc}
                           </p>
                         </div>
@@ -535,15 +542,15 @@ const Index = () => {
           </div>
         </section>
 
-        {/* ══════════ DICTIONARY PREVIEW (light) ══════════ */}
-        <section className="py-20 md:py-24 px-4 border-t border-border bg-secondary/60">
+        {/* ══════════ DICTIONARY PREVIEW ══════════ */}
+        <section className="py-16 md:py-24 px-4 bg-[#FFF7E6] border-t-4 border-black">
           <div className="container mx-auto max-w-4xl">
             <div className="max-w-xl mb-10">
-              <div className="typo-eyebrow text-primary mb-3">
-                05 / {lang === "bg" ? "РЕЧНИК" : "DICTIONARY"}
+              <div className="inline-flex items-center gap-2 bg-black text-white font-quest text-[11px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-md rotate-[-1deg] mb-4 quest-shadow-sm">
+                {lang === "bg" ? "05 · РЕЧНИК" : "05 · DICTIONARY"}
               </div>
-              <h2 className="typo-h1 mb-3">{t.dictTitle}</h2>
-              <p className="text-muted-foreground">{t.dictSubtitle}</p>
+              <h2 className="font-quest font-bold text-4xl md:text-5xl leading-[0.95] tracking-tight text-black mb-3">{t.dictTitle}</h2>
+              <p className="font-quest text-black/70 text-base md:text-lg">{t.dictSubtitle}</p>
             </div>
 
             <div className="grid gap-3 sm:grid-cols-2">
@@ -552,61 +559,76 @@ const Index = () => {
                 { en: "Revenue Model", bg: "Модел на приходите", cat: "Pricing", catBg: "Ценообразуване", def: t.dictTermRevenueModel },
                 { en: "Bottleneck", bg: "Тясно място", cat: "Operations", catBg: "Операции", def: t.dictTermBottleneck },
                 { en: "Founding Team", bg: "Основателски екип", cat: "Team", catBg: "Екип", def: t.dictTermFoundingTeam },
-              ].map((item, i) => (
-                <Reveal key={i} delay={i * 60}>
-                  <div className="group rounded-2xl border border-border bg-card p-4 hover:border-primary/30 hover:shadow-lift transition-all h-full">
-                    <div className="flex items-center justify-between mb-2">
-                      <h3 className="font-display font-bold text-foreground">{item.en}</h3>
-                      <span className="text-[10px] font-mono font-semibold uppercase tracking-wider text-accent-foreground bg-accent px-2 py-0.5 rounded-full">
-                        {lang === "bg" ? item.catBg : item.cat}
-                      </span>
+              ].map((item, i) => {
+                const catBgs = ["bg-[#FF9600]", "bg-[#58CC02]", "bg-[#2B99FF]", "bg-[#FF6B9D]"];
+                return (
+                  <Reveal key={i} delay={i * 60}>
+                    <div className="rounded-3xl border-4 border-black bg-white p-4 quest-shadow h-full">
+                      <div className="flex items-center justify-between mb-2 gap-2">
+                        <h3 className="font-quest font-bold text-black text-lg">{item.en}</h3>
+                        <span className={`text-[10px] font-quest font-bold uppercase tracking-wider text-white ${catBgs[i]} border-2 border-black px-2 py-0.5 rounded-md shrink-0`}>
+                          {lang === "bg" ? item.catBg : item.cat}
+                        </span>
+                      </div>
+                      <p className="font-quest text-xs text-[#784EF8] font-bold mb-1.5">{item.bg}</p>
+                      <p className="font-quest text-sm text-black/70 leading-snug">{item.def}</p>
                     </div>
-                    <p className="text-xs text-primary/80 font-medium mb-1.5">{item.bg}</p>
-                    <p className="text-xs text-muted-foreground leading-relaxed">{item.def}</p>
-                  </div>
-                </Reveal>
-              ))}
+                  </Reveal>
+                );
+              })}
             </div>
 
             <div className="mt-8">
-              <Button variant="outline" size="lg" onClick={() => navigate("/dictionary")} className="gap-2">
+              <button
+                onClick={() => navigate("/dictionary")}
+                className="font-quest font-bold text-base bg-white text-black border-4 border-black rounded-2xl px-5 py-3 quest-btn-shadow quest-press inline-flex items-center justify-center gap-2"
+              >
                 <Book className="h-4 w-4" />
                 {t.exploreDict}
                 <ArrowRight className="h-4 w-4" />
-              </Button>
+              </button>
             </div>
           </div>
         </section>
 
         <InnovationShowcase lang={lang} />
 
-        {/* ══════════ CTA — dark navy band ══════════ */}
-        <section className="relative py-20 md:py-24 px-4 overflow-hidden bg-ink-gradient text-ink-fg">
-          <div aria-hidden className="absolute inset-0 bg-grid-ink opacity-30 pointer-events-none" />
+        {/* ══════════ CTA — Playful Quest ══════════ */}
+        <section className="relative py-20 md:py-28 px-4 overflow-hidden bg-[#784EF8] border-t-4 border-black">
           <div
             aria-hidden
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] rounded-full blur-3xl pointer-events-none"
-            style={{ background: "hsl(var(--mint) / 0.2)" }}
+            className="absolute inset-0 pointer-events-none opacity-30"
+            style={{
+              backgroundImage: "radial-gradient(#ffffff 1.5px, transparent 1.5px)",
+              backgroundSize: "26px 26px",
+            }}
           />
+          <div aria-hidden className="absolute top-8 left-10 h-14 w-14 rounded-2xl bg-[#FFD600] border-4 border-black quest-shadow-sm rotate-[8deg] hidden md:block" />
+          <div aria-hidden className="absolute bottom-10 right-14 h-16 w-16 rounded-full bg-[#FF6B9D] border-4 border-black quest-shadow-sm rotate-[-8deg] hidden md:block" />
+          <div aria-hidden className="absolute top-1/2 right-8 h-10 w-10 rounded-xl bg-[#58CC02] border-4 border-black quest-shadow-sm hidden lg:block" />
+
           <div className="relative container mx-auto max-w-2xl text-center">
             <Reveal>
-              <div className="inline-flex items-center gap-2 rounded-full border border-mint/30 bg-ink-2/60 backdrop-blur px-3 py-1.5 mb-6">
-                <Sparkles className="h-3.5 w-3.5 text-mint" />
-                <span className="typo-eyebrow text-mint">
-                  {lang === "bg" ? "ГОТОВ ЛИ СИ?" : "READY?"}
-                </span>
+              <div className="inline-flex items-center gap-2 bg-black text-white font-quest text-[11px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-md rotate-[-1.5deg] mb-6 quest-shadow-sm">
+                <Sparkles className="h-3.5 w-3.5" />
+                {lang === "bg" ? "ГОТОВ ЛИ СИ?" : "READY?"}
               </div>
             </Reveal>
             <Reveal delay={80}>
-              <h2 className="typo-h1 text-ink-fg mb-4 text-4xl md:text-5xl">{t.readyToInnovate}</h2>
+              <h2 className="font-quest font-bold text-white mb-5 text-4xl md:text-6xl leading-[0.95]">
+                {t.readyToInnovate}
+              </h2>
             </Reveal>
             <Reveal delay={160}>
-              <p className="text-ink-dim mb-8 max-w-md mx-auto">{t.readyToInnovateDesc}</p>
+              <p className="font-quest text-[#EDE4FF] mb-8 max-w-md mx-auto text-base md:text-lg">{t.readyToInnovateDesc}</p>
             </Reveal>
             <Reveal delay={240}>
-              <Button size="xl" variant="hero" onClick={() => handleNav("/dashboard")}>
+              <button
+                onClick={() => handleNav("/dashboard")}
+                className="font-quest font-bold text-xl bg-[#FFD600] text-black border-4 border-black rounded-2xl px-8 py-4 quest-btn-shadow quest-press inline-flex items-center justify-center gap-2"
+              >
                 {t.startJourney} <ArrowRight className="h-5 w-5" />
-              </Button>
+              </button>
             </Reveal>
           </div>
         </section>
