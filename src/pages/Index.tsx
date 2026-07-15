@@ -87,7 +87,7 @@ const Index = () => {
                     className="inline-flex min-h-[48px] items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-bold text-foreground transition active:scale-95 sm:hover:scale-105"
                     style={{ boxShadow: "var(--shadow-warm)" }}
                   >
-                    {T("Start free", "Започни безплатно")} <ArrowRight className="h-4 w-4" />
+                    {T("Start learning", "Започни да учиш")} <ArrowRight className="h-4 w-4" />
                   </button>
                   <button
                     onClick={() => document.getElementById("vibes")?.scrollIntoView({ behavior: "smooth" })}
@@ -286,12 +286,12 @@ const Index = () => {
               {T("One more thing", "Още едно нещо")}
             </p>
             <h2 className="mt-1 font-display text-3xl font-extrabold text-foreground sm:text-4xl">
-              {T("It's free. Really.", "Безплатно е. Наистина.")}
+              {T("Made for you.", "Направено за теб.")}
             </h2>
             <p className="mt-2 text-sm text-muted-foreground sm:text-base">
               {T(
-                "No credit card. No trial timer. Made in Bulgaria, for the next generation of founders — and the teachers who believe in them.",
-                "Без карта. Без таймер. Създадено в България, за следващото поколение фаундъри — и учителите, които вярват в тях."
+                "Made in Bulgaria, for the next generation of founders — and the teachers who believe in them.",
+                "Създадено в България, за следващото поколение фаундъри — и учителите, които вярват в тях."
               )}
             </p>
             <button
@@ -299,7 +299,7 @@ const Index = () => {
               className="mt-5 inline-flex min-h-[48px] items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-bold text-primary-foreground transition active:scale-95 sm:hover:scale-105"
               style={{ boxShadow: "var(--shadow-warm)" }}
             >
-              {T("Create free account", "Създай безплатен акаунт")} <ArrowRight className="h-4 w-4" />
+              {T("Create account", "Създай акаунт")} <ArrowRight className="h-4 w-4" />
             </button>
           </section>
         )}
