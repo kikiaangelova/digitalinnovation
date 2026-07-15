@@ -1945,6 +1945,10 @@ export type Database = {
     }
     Functions: {
       add_user_xp: { Args: { _user_id: string; _xp: number }; Returns: number }
+      apply_signup_role_intent: {
+        Args: { _class_name?: string; _institution?: string; _intent: string }
+        Returns: string
+      }
       generate_class_code: { Args: never; Returns: string }
       get_assessment_results_questions: {
         Args: { _assessment_id: string }
