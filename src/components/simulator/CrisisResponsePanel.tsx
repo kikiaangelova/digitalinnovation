@@ -4,6 +4,45 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Flame, ShieldAlert, Zap, TrendingUp, TrendingDown, CheckCircle2, Siren } from 'lucide-react';
 
+/** Bulgarian translations for crisis decisions (matches CRISIS_DECISIONS ids). */
+const CRISIS_BG: Record<string, { title?: string; description?: string; options?: Record<string, { label?: string; description?: string }> }> = {
+  'crisis-strategy': {
+    title: 'Кризисна стратегия за възстановяване',
+    description: 'Пазарната ти стабилност е паднала до критични нива. Бордът изисква незабавно действие. Избери своя подход за възстановяване.',
+    options: {
+      'crisis-aggressive': { label: 'Агресивен pivot', description: 'Радикално промени продуктовата посока. Висок риск, висока награда. Изгаряш пари бързо, за да уловиш възникваща възможност.' },
+      'crisis-conservative': { label: 'Консервативна стабилизация', description: 'Съкрати разходите, задръж основните клиенти, изчакай бурята. Бавно, но стабилно възстановяване с минимален допълнителен риск.' },
+      'crisis-partnership': { label: 'Стратегически съюз', description: 'Партнирай с по-голяма компания за защита. Печелиш стабилност, но жертваш част от независимостта и бъдещия ръст.' },
+      'crisis-innovate': { label: 'Контра-циклична иновация', description: 'Задълбочи в R&D, докато конкурентите се оттеглят. Изграждаш бъдещо предимство с цената на краткосрочна болка.' },
+    },
+  },
+  'crisis-resource': {
+    title: 'Спешно разпределение на ресурси',
+    description: 'С критично ниво на хаос трябва да преразпределиш оставащите си ресурси. Върху какво се фокусираш?',
+    options: {
+      'crisis-res-customers': { label: 'Задържане на клиенти', description: 'Фокусирай всички ресурси върху задържане на съществуващите клиенти щастливи. Спри кървенето преди да растеш.' },
+      'crisis-res-product': { label: 'Укрепване на продукта', description: 'Оправи критичните бъгове, намали техническия дълг, направи продукта нечуплив.' },
+      'crisis-res-cash': { label: 'Запазване на парите', description: 'Замрази всички несъществени разходи. Удължи резерва на всяка цена.' },
+      'crisis-res-talent': { label: 'Инвестиция в талант', description: 'Наеми хора с опит в кризи. Скъпо сега, но носи експертиза за навигация в бурята.' },
+    },
+  },
+};
+
+function localizeCrisisDecision(d: DecisionTemplate, lang: string): DecisionTemplate {
+  if (lang !== 'bg') return d;
+  const bg = CRISIS_BG[d.id];
+  if (!bg) return d;
+  return {
+    ...d,
+    title: bg.title || d.title,
+    description: bg.description || d.description,
+    options: d.options.map((o) => {
+      const oBg = bg.options?.[o.id];
+      return oBg ? { ...o, label: oBg.label || o.label, description: oBg.description || o.description } : o;
+    }),
+  };
+}
+
 /** Crisis decisions that only appear when stability < 30 */
 export const CRISIS_DECISIONS: DecisionTemplate[] = [
   {
@@ -133,6 +172,8 @@ export default function CrisisResponsePanel({
 
   if (turbulence.stability_score >= 30) return null;
 
+  const localizedCrisis = CRISIS_DECISIONS.map((d) => localizeCrisisDecision(d, lang));
+
   return (
     <div className="space-y-5">
       {/* Crisis alert banner */}
@@ -171,7 +212,7 @@ export default function CrisisResponsePanel({
       </div>
 
       {/* Crisis decisions */}
-      {CRISIS_DECISIONS.map((decision) => {
+      {localizedCrisis.map((decision) => {
         const chosen = crisisAnswers[decision.id];
 
         return (
