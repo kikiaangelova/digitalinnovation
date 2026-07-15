@@ -1,651 +1,315 @@
-import { forwardRef, useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { useLang } from "@/context/LangContext";
-import { Button } from "@/components/ui/button";
 import AppHeader from "@/components/layout/AppHeader";
-import StartupConsole from "@/components/landing/StartupConsole";
-import { Reveal, CountUp } from "@/components/landing/Reveal";
-import InnovationShowcase from "@/components/landing/InnovationShowcase";
 import heroBg from "@/assets/hero-bg.mp4.asset.json";
-import { PATHWAYS, TRACK_LABELS, type PathwayTrack } from "@/data/curriculum-2026";
+import kikiAvatar from "@/assets/kiki-avatar.png";
 import {
-  GraduationCap,
-  ArrowRight,
-  Lightbulb,
-  Search,
-  Rocket,
-  Presentation,
-  Compass,
-  Briefcase,
-  Palette,
-  Trophy,
-  BookOpen,
-  FlaskConical,
-  TrendingUp,
-  Mic,
-  Zap,
-  Calendar,
-  Book,
-  Cpu,
-  Play,
-  Brain,
-  Award,
-  Sparkles,
-  Target,
-  ChevronRight,
+  ArrowRight, Sparkles, Rocket, Lightbulb, Briefcase, TrendingUp,
+  Palette, Brain, Compass, ScrollText, Trophy, Play, Heart,
+  MapPin, Check,
 } from "lucide-react";
 
 const Index = () => {
   const { user } = useAuth();
-  const { lang, t } = useLang();
+  const { lang } = useLang();
   const navigate = useNavigate();
-  const [testimonialIdx, setTestimonialIdx] = useState(0);
+  const T = (en: string, bg: string) => (lang === "bg" ? bg : en);
 
-  const testimonials = [
-    { quote: t.testimonial1, name: lang === "bg" ? "Ива М., 17" : "Iva M., 17" },
-    { quote: t.testimonial2, name: lang === "bg" ? "Виктор С., 16" : "Viktor S., 16" },
+  const go = (path: string) =>
+    user ? navigate(path) : navigate(`/auth?redirect=${encodeURIComponent(path)}`);
+
+  // Subject "vibes" — Learn Italian style deck grid
+  const vibes = [
+    { emoji: "💡", key: "innov",   to: "/pathways",     titleEn: "Digital Innovation", titleBg: "Дигитални иновации",   blurbEn: "How tech eats old industries.",         blurbBg: "Как технологиите изяждат старите индустрии." },
+    { emoji: "🚀", key: "startup", to: "/startup-project", titleEn: "Startup Thinking",  titleBg: "Стартъп мислене",       blurbEn: "Idea → customer → business, in weeks.", blurbBg: "Идея → клиент → бизнес, за седмици." },
+    { emoji: "🧠", key: "ai",      to: "/pathways",     titleEn: "AI for Business",    titleBg: "AI за бизнеса",         blurbEn: "Prompt like a pro, decide like a founder.", blurbBg: "Пиши промптове като про, решавай като фаундър." },
+    { emoji: "📈", key: "market",  to: "/pathways",     titleEn: "Marketing & Growth", titleBg: "Маркетинг и растеж",    blurbEn: "Get seen, get bought, get remembered.", blurbBg: "Да те видят, да те купят, да те запомнят." },
+    { emoji: "💰", key: "money",   to: "/pathways",     titleEn: "Finance Basics",     titleBg: "Финансови основи",      blurbEn: "Unit economics without the fear.",      blurbBg: "Unit economics без страха." },
+    { emoji: "🎨", key: "design",  to: "/pathways",     titleEn: "Product & Design",   titleBg: "Продукт и дизайн",      blurbEn: "Build things people actually want.",    blurbBg: "Прави неща, които хората наистина искат." },
   ];
 
-  useEffect(() => {
-    const timer = setInterval(() => setTestimonialIdx((i) => (i + 1) % testimonials.length), 5000);
-    return () => clearInterval(timer);
-  }, [testimonials.length]);
-
-  const handleNav = (path: string) => {
-    if (user) navigate(path);
-    else navigate(`/auth?redirect=${encodeURIComponent(path)}`);
-  };
-
-  const learnCards = [
-    { icon: Lightbulb, title: t.learnDigitalInnovation, desc: t.learnDigitalInnovationDesc },
-    { icon: Rocket, title: t.learnStartupThinking, desc: t.learnStartupThinkingDesc },
-    { icon: Briefcase, title: t.learnBusinessModels, desc: t.learnBusinessModelsDesc },
-    { icon: Palette, title: t.learnProductDesign, desc: t.learnProductDesignDesc },
-    { icon: TrendingUp, title: t.learnGrowthStrategy, desc: t.learnGrowthStrategyDesc },
-  ];
-
-  const buildSteps = [
-    { icon: Search, title: t.buildIdentifyProblem, step: 1 },
-    { icon: Lightbulb, title: t.buildCreateIdea, step: 2 },
-    { icon: Briefcase, title: t.buildBusinessModel, step: 3 },
-    { icon: Presentation, title: t.buildPitchStartup, step: 4 },
-  ];
-
-  const journeyStages = [
-    { icon: Compass, title: t.journeyExplore, desc: t.journeyExploreDesc },
-    { icon: BookOpen, title: t.journeyAnalyze, desc: t.journeyAnalyzeDesc },
-    { icon: Rocket, title: t.journeyBuild, desc: t.journeyBuildDesc },
-    { icon: Palette, title: t.journeyDesign, desc: t.journeyDesignDesc },
-    { icon: FlaskConical, title: t.journeyTest, desc: t.journeyTestDesc },
-    { icon: Presentation, title: t.journeyPitch, desc: t.journeyPitchDesc },
-  ];
-
-  const courseWeeks = [
-    { week: 1, title: t.courseWeek1, icon: Lightbulb, desc: t.courseWeek1Desc },
-    { week: 2, title: t.courseWeek2, icon: Search, desc: t.courseWeek2Desc },
-    { week: 3, title: t.courseWeek3, icon: Briefcase, desc: t.courseWeek3Desc },
-    { week: 4, title: t.courseWeek4, icon: Palette, desc: t.courseWeek4Desc },
-    { week: 5, title: t.courseWeek5, icon: TrendingUp, desc: t.courseWeek5Desc },
-    { week: 6, title: t.courseWeek6, icon: Mic, desc: t.courseWeek6Desc },
-  ];
-
-  const stats = [
-    { value: 6, suffix: "", label: t.statWeeks, icon: Calendar },
-    { value: 10, suffix: "", label: t.statIndustries, icon: Cpu },
-    { value: 5, suffix: "", label: t.statLevels, icon: Trophy },
-    { value: 0, suffix: "∞", label: t.statIdeas, icon: Lightbulb },
+  const journey = [
+    { emoji: "🧭", titleEn: "Explore",   titleBg: "Откривай",    blurbEn: "Meet the frameworks — Lean, Design Thinking, Blue Ocean.", blurbBg: "Запознай се с рамките — Lean, Design Thinking, Blue Ocean." },
+    { emoji: "🔍", titleEn: "Analyze",   titleBg: "Анализирай",  blurbEn: "Real cases: Lovable, Payhawk, Revolut, Payhawk, Notion.",  blurbBg: "Реални казуси: Lovable, Payhawk, Revolut, Notion." },
+    { emoji: "🧪", titleEn: "Try",       titleBg: "Опитай",       blurbEn: "The simulator pushes back. You'll make mistakes on purpose.", blurbBg: "Симулаторът ти отговаря. Ще грешиш нарочно." },
+    { emoji: "🎨", titleEn: "Design",    titleBg: "Проектирай",  blurbEn: "Your own startup — problem, customer, model, pitch.",      blurbBg: "Твоят стартъп — проблем, клиент, модел, pitch." },
+    { emoji: "🎤", titleEn: "Pitch",     titleBg: "Питчвай",     blurbEn: "End of season: you defend your business, live.",            blurbBg: "В края на сезона: защитаваш бизнеса си, на живо." },
   ];
 
   return (
     <div className="min-h-screen bg-background">
       <AppHeader />
-      <main>
-        {/* ══════════ HERO — Playful Quest ══════════ */}
-        <section className="relative overflow-hidden bg-[#FFF7E6]">
-          {/* dotted paper backdrop */}
-          <div
-            aria-hidden
-            className="absolute inset-0 pointer-events-none opacity-60"
-            style={{
-              backgroundImage:
-                "radial-gradient(#0a0a0a 1px, transparent 1px)",
-              backgroundSize: "22px 22px",
-            }}
+
+      <main className="mx-auto max-w-3xl px-4 pb-16 pt-4 sm:px-5 sm:pt-6">
+        {/* ═══════════ HERO — cinematic video, big Fraunces statement ═══════════ */}
+        <section className="relative overflow-hidden rounded-3xl border border-white/20 shadow-2xl sm:rounded-[2rem]">
+          <video
+            src={heroBg.url}
+            autoPlay loop muted playsInline
+            className="absolute inset-0 h-full w-full object-cover"
           />
-          {/* floating stickers */}
-          <div aria-hidden className="absolute top-10 right-6 h-14 w-14 rounded-2xl bg-[#FFD600] border-4 border-black quest-shadow-sm rotate-[8deg] hidden md:block" />
-          <div aria-hidden className="absolute bottom-24 left-8 h-12 w-12 rounded-full bg-[#FF6B9D] border-4 border-black quest-shadow-sm rotate-[-12deg] hidden md:block" />
-          <div aria-hidden className="absolute top-1/3 left-4 h-10 w-10 rounded-xl bg-[#58CC02] border-4 border-black quest-shadow-sm hidden lg:block" />
-
-          <div className="relative container mx-auto px-4 pt-10 pb-16 md:pt-16 md:pb-24 max-w-6xl">
-            <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-8 lg:gap-10 items-center">
-              {/* LEFT — Chunky purple hero card */}
-              <Reveal>
-                <div className="relative rounded-[32px] border-4 border-black bg-[#784EF8] p-6 md:p-9 quest-shadow-lg">
-                  {/* Sticker eyebrow */}
-                  <div className="inline-flex items-center gap-2 rounded-full border-2 border-black bg-black text-white px-3 py-1.5 mb-6 rotate-[-1.5deg] quest-shadow-sm">
-                    <span className="relative flex h-2 w-2">
-                      <span className="absolute inline-flex h-full w-full rounded-full bg-[#58CC02] opacity-75 animate-ping" />
-                      <span className="relative inline-flex h-2 w-2 rounded-full bg-[#58CC02]" />
-                    </span>
-                    <span className="font-quest text-[11px] font-bold uppercase tracking-[0.14em]">
-                      {t.gamifiedPlatform}
-                    </span>
-                  </div>
-
-                  <h1 className="font-quest font-bold leading-[0.95] tracking-tight text-4xl sm:text-5xl lg:text-6xl text-white">
-                    {t.heroLine1}
-                    <br />
-                    <span className="inline-block bg-[#FFD600] text-black px-3 py-1 rounded-2xl border-4 border-black mt-2 rotate-[-1deg] quest-shadow-sm">
-                      {t.heroLine2}
-                    </span>
-                  </h1>
-
-                  <p className="font-quest mt-6 text-[#EDE4FF] text-base sm:text-lg leading-relaxed max-w-lg">
-                    {t.heroDescriptionLine}
-                  </p>
-
-                  <div className="mt-8 flex flex-col sm:flex-row gap-3">
-                    {user ? (
-                      <button
-                        onClick={() => navigate("/dashboard")}
-                        className="font-quest font-bold text-lg bg-[#FFD600] text-black border-4 border-black rounded-2xl px-6 py-3.5 quest-btn-shadow quest-press inline-flex items-center justify-center gap-2"
-                      >
-                        {t.goToDashboard} <ArrowRight className="h-5 w-5" />
-                      </button>
-                    ) : (
-                      <>
-                        <button
-                          onClick={() => navigate("/auth?mode=signup")}
-                          className="font-quest font-bold text-lg bg-[#FFD600] text-black border-4 border-black rounded-2xl px-6 py-3.5 quest-btn-shadow quest-press inline-flex items-center justify-center gap-2"
-                        >
-                          {t.startJourney} <ArrowRight className="h-5 w-5" />
-                        </button>
-                        <button
-                          onClick={() => document.getElementById("subjects")?.scrollIntoView({ behavior: "smooth" })}
-                          className="font-quest font-bold text-base bg-white text-black border-4 border-black rounded-2xl px-5 py-3.5 quest-btn-shadow quest-press inline-flex items-center justify-center gap-2"
-                        >
-                          <Play className="h-4 w-4" />
-                          {t.explorePlatform}
-                        </button>
-                      </>
-                    )}
-                  </div>
-
-                  {!user && (
-                    <p className="font-quest mt-5 text-sm text-[#EDE4FF]">
-                      {t.areYouTeacher}{" "}
-                      <a href="mailto:contact@digiinnov.com" className="text-white underline font-bold">
-                        → {t.requestDemo}
-                      </a>
-                    </p>
-                  )}
-                </div>
-              </Reveal>
-
-              {/* RIGHT — Console wrapped in chunky sticker frame */}
-              <Reveal delay={160}>
-                <div className="relative rounded-[32px] border-4 border-black bg-white p-4 quest-shadow-lg">
-                  <div className="absolute -top-3 -left-3 bg-black text-white font-quest font-bold text-[10px] uppercase tracking-wider px-3 py-1 rounded-lg quest-shadow-sm rotate-[-4deg]">
-                    {lang === "bg" ? "МИСИЯ НА ЖИВО" : "LIVE MISSION"}
-                  </div>
-                  <StartupConsole lang={lang} />
-                </div>
-              </Reveal>
-            </div>
-
-            {/* Sticker stats row */}
-            <Reveal delay={280}>
-              <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-3">
-                {stats.map((s, i) => {
-                  const bgs = ["bg-[#FFD600]", "bg-[#58CC02]", "bg-[#FF6B9D]", "bg-[#2B99FF]"];
-                  const rot = ["rotate-[-1.5deg]", "rotate-[1deg]", "rotate-[-1deg]", "rotate-[2deg]"];
-                  return (
-                    <div key={i} className={`${bgs[i % 4]} ${rot[i % 4]} border-4 border-black rounded-2xl px-4 py-3 quest-shadow-sm flex items-center gap-3`}>
-                      <div className="h-9 w-9 rounded-lg bg-white border-2 border-black flex items-center justify-center shrink-0">
-                        <s.icon className="h-4 w-4 text-black" />
-                      </div>
-                      <div className="min-w-0">
-                        <div className="font-quest font-bold text-xl text-black leading-none">
-                          {s.suffix === "∞" ? "∞" : <CountUp to={s.value} />}
-                        </div>
-                        <div className="font-quest text-[10px] font-bold uppercase tracking-wider text-black/70 mt-1 truncate">
-                          {s.label}
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </Reveal>
-          </div>
-
-          {/* Testimonial band */}
-          <div className="relative border-t-4 border-black bg-white">
-            <div className="container mx-auto px-4 py-4 flex items-center gap-4 max-w-6xl">
-              <span className="font-quest text-[10px] font-bold uppercase tracking-widest bg-black text-white px-2.5 py-1 rounded-md hidden sm:inline shrink-0">
-                {lang === "bg" ? "УЧЕНИЦИ" : "STUDENTS"}
+          <div className="absolute inset-0 bg-gradient-to-br from-black/75 via-black/40 to-primary/40" />
+          <div className="relative z-10 px-5 py-10 sm:px-10 sm:py-16">
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.3em] text-white backdrop-blur">
+              <Sparkles className="h-3 w-3" /> {T("Learn · Apply · Have fun", "Учи · Прилагай · Забавлявай се")}
+            </span>
+            <h1 className="mt-4 font-display text-5xl font-extrabold leading-[0.9] text-white sm:text-7xl">
+              {T("Business,", "Бизнес,")}
+              <br />
+              <span
+                className="italic bg-clip-text text-transparent"
+                style={{ backgroundImage: "var(--gradient-zest)" }}
+              >
+                {T("the real way.", "по истинския начин.")}
               </span>
-              <div className="flex-1 min-w-0">
-                <p key={testimonialIdx} className="font-quest text-sm md:text-base text-black leading-relaxed animate-fade-in">
-                  &ldquo;{testimonials[testimonialIdx].quote}&rdquo;
-                  <span className="ml-2 text-black/60 font-bold text-xs">
-                    — {testimonials[testimonialIdx].name}
-                  </span>
-                </p>
-              </div>
-              <div className="hidden sm:flex items-center gap-1.5 shrink-0">
-                {testimonials.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setTestimonialIdx(i)}
-                    aria-label={`Testimonial ${i + 1}`}
-                    className="min-h-11 min-w-11 flex items-center justify-center group"
-                  >
-                    <span className={`block h-2 rounded-full border-2 border-black transition-all ${i === testimonialIdx ? "w-8 bg-[#784EF8]" : "w-3 bg-white"}`} />
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ══════════ HOW IT WORKS — light, mission style ══════════ */}
-        {!user && (
-          <>
-          {/* ══════════ PICK YOUR SUBJECT — Playful Quest cards ══════════ */}
-          <section id="subjects" className="relative py-16 md:py-24 px-4 bg-[#F0F7FF] border-t-4 border-black">
-            <div className="container mx-auto max-w-6xl">
-              <div className="max-w-2xl mb-10">
-                <div className="inline-flex items-center gap-2 bg-black text-white font-quest text-[11px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-md rotate-[-1deg] mb-4 quest-shadow-sm">
-                  {lang === "bg" ? "00 · ИЗБЕРИ ПРЕДМЕТ" : "00 · PICK YOUR SUBJECT"}
-                </div>
-                <h2 className="font-quest font-bold text-4xl md:text-5xl leading-[0.95] tracking-tight text-black mb-4">
-                  {lang === "bg" ? "Всеки предмет — " : "Every subject, "}
-                  <span className="inline-block bg-[#FFD600] px-2 rounded-lg border-4 border-black quest-shadow-sm rotate-[-1deg]">
-                    {lang === "bg" ? "отворен за всеки" : "open to anyone"}
-                  </span>
-                  .
-                </h2>
-                <p className="font-quest text-black/70 max-w-lg text-base md:text-lg">
-                  {lang === "bg"
-                    ? "Избираш предмет. Влизаш вътре. Учиш през правене — казуси, симулатор, AI ментор, който отговаря. Без предварителен опит, без излишни лекции."
-                    : "Pick a subject. Jump in. Learn by doing — cases, simulator, an AI mentor that actually answers. No prior experience, no filler lectures."}
-                </p>
-              </div>
-
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {PATHWAYS.slice(0, 12).map((p, i) => {
-                  const trackColor: Record<PathwayTrack, { bg: string; icon: string; text: string }> = {
-                    core: { bg: "bg-[#58CC02]", icon: "★", text: "text-white" },
-                    business: { bg: "bg-[#2B99FF]", icon: "$", text: "text-white" },
-                    marketing: { bg: "bg-[#FF9600]", icon: "▲", text: "text-white" },
-                    data_ai: { bg: "bg-[#784EF8]", icon: "◆", text: "text-white" },
-                    human: { bg: "bg-[#FF4B7D]", icon: "♥", text: "text-white" },
-                  };
-                  const tc = trackColor[p.track];
-                  const progress = 20 + ((i * 17) % 70);
-                  return (
-                    <Reveal key={p.id} delay={i * 40}>
-                      <button
-                        type="button"
-                        onClick={() => navigate("/pathways")}
-                        className={`group relative w-full text-left rounded-3xl border-4 border-black ${tc.bg} ${tc.text} p-5 quest-shadow quest-press min-h-[200px] flex flex-col`}
-                      >
-                        <div className="flex items-start justify-between mb-3">
-                          <div className="h-11 w-11 rounded-xl bg-white/95 border-2 border-black flex items-center justify-center font-quest font-bold text-black text-xl">
-                            {tc.icon}
-                          </div>
-                          <span className="font-quest text-[10px] font-bold uppercase tracking-widest bg-black/25 text-white px-2 py-1 rounded-md">
-                            {lang === "bg" ? TRACK_LABELS[p.track].bg : TRACK_LABELS[p.track].en}
-                          </span>
-                        </div>
-                        <h3 className="font-quest font-bold text-white text-xl leading-tight mb-2">
-                          {lang === "bg" ? p.titleBg : p.titleEn}
-                        </h3>
-                        <p className="font-quest text-sm text-white/85 leading-snug line-clamp-2 flex-1">
-                          {lang === "bg" ? p.descriptionBg : p.descriptionEn}
-                        </p>
-                        <div className="mt-4">
-                          <div className="w-full bg-black/25 h-3 rounded-full overflow-hidden border-2 border-black">
-                            <div className="bg-white h-full" style={{ width: `${progress}%` }} />
-                          </div>
-                          <div className="flex justify-between mt-1.5 text-[10px] font-quest font-bold text-white">
-                            <span>{progress} XP</span>
-                            <span className="inline-flex items-center gap-1">
-                              {lang === "bg" ? "Отвори" : "Open"}
-                              <ChevronRight className="h-3 w-3" />
-                            </span>
-                          </div>
-                        </div>
-                      </button>
-                    </Reveal>
-                  );
-                })}
-              </div>
-
-              <div className="mt-10 flex flex-col sm:flex-row items-center gap-4 justify-center">
+            </h1>
+            <p className="mt-4 max-w-md text-sm text-white/85 sm:text-base">
+              {T(
+                "No lectures. No dead PDFs. You walk into a real case, make a real decision — and watch what happens to your business.",
+                "Без лекции. Без мъртви PDF-и. Влизаш в реален казус, взимаш реално решение — и виждаш какво става с бизнеса ти."
+              )}
+            </p>
+            <div className="mt-5 flex flex-wrap gap-2.5">
+              {user ? (
                 <button
-                  onClick={() => navigate("/pathways")}
-                  className="font-quest font-bold text-lg bg-[#784EF8] text-white border-4 border-black rounded-2xl px-6 py-3.5 quest-btn-shadow quest-press inline-flex items-center justify-center gap-2"
+                  onClick={() => navigate("/dashboard")}
+                  className="inline-flex min-h-[48px] items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-bold text-foreground transition active:scale-95 sm:hover:scale-105"
+                  style={{ boxShadow: "var(--shadow-warm)" }}
                 >
-                  {lang === "bg" ? "Виж всички предмети" : "Browse all subjects"}
-                  <ArrowRight className="h-5 w-5" />
+                  {T("Open your dashboard", "Отвори таблото")} <ArrowRight className="h-4 w-4" />
                 </button>
-                <span className="font-quest text-sm font-bold text-black/70">
-                  {lang === "bg" ? "🎉 Не се изисква регистрация" : "🎉 No signup required"}
-                </span>
-              </div>
-            </div>
-          </section>
-
-          <section id="how-it-works" className="relative py-16 md:py-24 px-4 bg-[#FFE9F4] border-t-4 border-black">
-            <div className="container mx-auto max-w-5xl">
-              <div className="max-w-2xl mb-10">
-                <div className="inline-flex items-center gap-2 bg-black text-white font-quest text-[11px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-md rotate-[-1deg] mb-4 quest-shadow-sm">
-                  {lang === "bg" ? "01 · КАК РАБОТИ" : "01 · HOW IT WORKS"}
-                </div>
-                <h2 className="font-quest font-bold text-4xl md:text-5xl leading-[0.95] tracking-tight text-black mb-3">
-                  {t.howItWorksTitle}
-                </h2>
-                <p className="font-quest text-black/70 max-w-lg text-base md:text-lg">{t.howItWorksDesc}</p>
-              </div>
-
-              <div className="grid sm:grid-cols-2 gap-4">
-                {[
-                  { icon: BookOpen, text: t.howStep1, num: 1, tag: lang === "bg" ? "УЧИ" : "LEARN", bg: "bg-[#FFD600]", rot: "rotate-[-1deg]" },
-                  { icon: Rocket, text: t.howStep2, num: 2, tag: lang === "bg" ? "ПРИЛОЖИ" : "APPLY", bg: "bg-[#58CC02]", rot: "rotate-[1deg]" },
-                  { icon: Brain, text: t.howStep3, num: 3, tag: lang === "bg" ? "ИТЕРИРАЙ" : "ITERATE", bg: "bg-[#2B99FF]", rot: "rotate-[-1deg]" },
-                  { icon: Award, text: t.howStep4, num: 4, tag: lang === "bg" ? "ПОБЕДИ" : "WIN", bg: "bg-[#784EF8]", rot: "rotate-[1deg]" },
-                ].map((step, i) => (
-                  <Reveal key={step.num} delay={i * 80}>
-                    <div className={`relative rounded-3xl border-4 border-black ${step.bg} ${step.rot} p-5 quest-shadow h-full`}>
-                      <div className="flex items-start gap-4">
-                        <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-white border-4 border-black shrink-0">
-                          <step.icon className="h-6 w-6 text-black" />
-                          <span className="absolute -top-2.5 -right-2.5 flex h-7 w-7 items-center justify-center rounded-full bg-black text-white font-quest text-xs font-bold border-2 border-black">
-                            {step.num}
-                          </span>
-                        </div>
-                        <div className="flex-1">
-                          <div className="font-quest text-[10px] font-bold uppercase tracking-widest text-black/70 mb-1">{step.tag}</div>
-                          <p className="font-quest text-sm md:text-base text-black leading-snug font-medium">{step.text}</p>
-                        </div>
-                      </div>
-                    </div>
-                  </Reveal>
-                ))}
-              </div>
-
-              <Reveal delay={200}>
-                <div className="mt-10 flex flex-col sm:flex-row items-center gap-4 justify-center">
+              ) : (
+                <>
                   <button
                     onClick={() => navigate("/auth?mode=signup")}
-                    className="font-quest font-bold text-lg bg-[#FFD600] text-black border-4 border-black rounded-2xl px-6 py-3.5 quest-btn-shadow quest-press inline-flex items-center justify-center gap-2"
+                    className="inline-flex min-h-[48px] items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-bold text-foreground transition active:scale-95 sm:hover:scale-105"
+                    style={{ boxShadow: "var(--shadow-warm)" }}
                   >
-                    {t.startJourney} <ArrowRight className="h-5 w-5" />
+                    {T("Start free", "Започни безплатно")} <ArrowRight className="h-4 w-4" />
                   </button>
-                  <span className="font-quest text-sm font-bold text-black/70">{t.howCta}</span>
-                </div>
-              </Reveal>
+                  <button
+                    onClick={() => document.getElementById("vibes")?.scrollIntoView({ behavior: "smooth" })}
+                    className="inline-flex min-h-[48px] items-center gap-2 rounded-full border border-white/40 bg-white/10 px-5 py-3 text-sm font-bold text-white backdrop-blur"
+                  >
+                    <Play className="h-4 w-4" /> {T("Peek inside", "Надникни")}
+                  </button>
+                </>
+              )}
             </div>
+          </div>
+        </section>
+
+        {/* ═══════════ Meet Kiki — personal card, floats over hero ═══════════ */}
+        <section
+          className="mt-4 mx-auto flex max-w-md items-center gap-3 rounded-3xl border border-white/30 bg-white/70 p-3 backdrop-blur-xl sm:-mt-8 sm:gap-4 sm:p-4"
+          style={{ boxShadow: "var(--shadow-soft)" }}
+        >
+          <img
+            src={kikiAvatar}
+            alt="Kiki, your business mentor"
+            width={64}
+            height={64}
+            className="h-12 w-12 rounded-full object-cover ring-2 ring-primary sm:h-16 sm:w-16"
+          />
+          <div className="flex-1 min-w-0">
+            <div className="font-display text-lg leading-tight">
+              {T("I'm Kiki.", "Аз съм Кики.")}
+            </div>
+            <div className="text-xs text-muted-foreground">
+              {T("20 years mentoring founders. Now, yours.", "20 г. mentor на фаундъри. Сега — твой.")}
+            </div>
+          </div>
+          <button
+            onClick={() => go("/mentor")}
+            className="inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-xs font-bold text-primary-foreground transition hover:scale-105"
+          >
+            {T("Say hi", "Здрасти")} <ArrowRight className="h-3.5 w-3.5" />
+          </button>
+        </section>
+
+        {/* ═══════════ Pick your vibe — deck grid ═══════════ */}
+        <section id="vibes" className="mt-8">
+          <div className="mb-3 flex items-end justify-between">
+            <h2 className="font-display text-3xl font-extrabold">
+              {T("Pick your", "Избери си ")}
+              <span className="italic text-primary">{T("vibe", "тема")}</span>
+            </h2>
+            <button onClick={() => go("/pathways")} className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
+              {T("See all", "Всички")}
+            </button>
+          </div>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
+            {vibes.map((v) => (
+              <button
+                key={v.key}
+                type="button"
+                onClick={() => go(v.to)}
+                className="group text-left rounded-2xl border border-border/60 bg-card p-4 transition active:scale-[0.98] hover:-translate-y-0.5 hover:border-primary/40"
+                style={{ boxShadow: "var(--shadow-soft)" }}
+              >
+                <div className="text-2xl">{v.emoji}</div>
+                <div className="mt-2 font-display text-base font-semibold leading-tight text-foreground">
+                  {T(v.titleEn, v.titleBg)}
+                </div>
+                <div className="mt-0.5 line-clamp-2 text-xs text-muted-foreground">
+                  {T(v.blurbEn, v.blurbBg)}
+                </div>
+              </button>
+            ))}
+          </div>
+        </section>
+
+        {/* ═══════════ Story chapter 1 — Learn by doing ═══════════ */}
+        <section
+          className="mt-8 grid gap-5 rounded-3xl border border-border/60 bg-card p-6 sm:grid-cols-[1.1fr_1fr] sm:items-center sm:gap-8 sm:p-8"
+          style={{ boxShadow: "var(--shadow-warm)" }}
+        >
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-primary">
+              {T("Chapter 1", "Глава 1")}
+            </p>
+            <h3 className="mt-2 font-display text-3xl font-extrabold text-foreground sm:text-4xl">
+              {T("You learn business", "Учиш бизнес,")}
+              <br />
+              <span className="italic text-primary">{T("by doing business.", "като правиш бизнес.")}</span>
+            </h3>
+            <p className="mt-3 text-sm text-muted-foreground sm:text-base">
+              {T(
+                "TEACR loop: Try → Error → Analyze → Correct → Reflect. Every mistake is graded — but nothing is punished. You just get sharper.",
+                "TEACR цикъл: Опит → Грешка → Анализ → Корекция → Рефлексия. Всяка грешка се оценява — но нищо не се наказва. Ти просто ставаш по-остър."
+              )}
+            </p>
+          </div>
+          <div className="relative aspect-square rounded-2xl border-2 border-dashed border-primary/40 bg-gradient-to-br from-primary/10 via-accent/10 to-secondary/10 p-6">
+            <div className="absolute -top-3 -left-3 rounded-xl bg-primary px-3 py-1 text-xs font-bold text-primary-foreground rotate-[-4deg]">
+              {T("Try", "Опит")}
+            </div>
+            <div className="absolute top-6 right-6 rounded-xl bg-destructive px-3 py-1 text-xs font-bold text-destructive-foreground rotate-[6deg]">
+              {T("Error", "Грешка")}
+            </div>
+            <div className="absolute bottom-16 left-6 rounded-xl bg-accent px-3 py-1 text-xs font-bold text-accent-foreground rotate-[-3deg]">
+              {T("Analyze", "Анализ")}
+            </div>
+            <div className="absolute bottom-6 right-8 rounded-xl bg-secondary px-3 py-1 text-xs font-bold text-secondary-foreground rotate-[4deg]">
+              {T("Correct", "Корекция")}
+            </div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <Sparkles className="h-16 w-16 text-primary/40" />
+            </div>
+          </div>
+        </section>
+
+        {/* ═══════════ Story chapter 2 — Journey ═══════════ */}
+        <section className="mt-10">
+          <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-primary">
+            {T("Chapter 2", "Глава 2")}
+          </p>
+          <h3 className="mt-1 font-display text-3xl font-extrabold text-foreground sm:text-4xl">
+            {T("The journey.", "Пътят.")}
+          </h3>
+          <p className="mt-2 text-sm text-muted-foreground">
+            {T("Five moves, six weeks, one real business at the end.", "Пет хода, шест седмици, един реален бизнес накрая.")}
+          </p>
+
+          <ol className="relative mt-6 space-y-2 border-l-2 border-dashed border-border/60 pl-5">
+            {journey.map((j, i) => (
+              <li key={j.titleEn} className="relative">
+                <span className="absolute -left-[30px] top-3 grid h-6 w-6 place-items-center rounded-full bg-primary text-xs font-bold text-primary-foreground ring-4 ring-background">
+                  {i + 1}
+                </span>
+                <div
+                  className="rounded-2xl border border-border/60 bg-card p-4"
+                  style={{ boxShadow: "var(--shadow-soft)" }}
+                >
+                  <div className="font-display text-base font-semibold">
+                    {j.emoji} {T(j.titleEn, j.titleBg)}
+                  </div>
+                  <div className="mt-0.5 text-xs text-muted-foreground sm:text-sm">
+                    {T(j.blurbEn, j.blurbBg)}
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        {/* ═══════════ Story chapter 3 — Kiki's promise (illustration left, text right) ═══════════ */}
+        <section
+          className="mt-10 grid gap-5 overflow-hidden rounded-3xl border border-primary/30 p-6 sm:grid-cols-[1fr_1.1fr] sm:items-center sm:gap-8 sm:p-8"
+          style={{ background: "var(--gradient-soft)", boxShadow: "var(--shadow-warm)" }}
+        >
+          <div className="relative">
+            <img
+              src={kikiAvatar}
+              alt="Kiki"
+              className="mx-auto h-40 w-40 rounded-3xl object-cover ring-4 ring-primary/40 sm:h-56 sm:w-56"
+              style={{ boxShadow: "var(--shadow-warm)" }}
+            />
+            <div className="absolute -bottom-2 -right-2 rounded-2xl bg-accent px-3 py-1.5 text-xs font-bold text-accent-foreground rotate-[-4deg]" style={{ boxShadow: "var(--shadow-sticker)" }}>
+              {T("Your mentor", "Твоят ментор")}
+            </div>
+          </div>
+          <div>
+            <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-primary">
+              {T("Chapter 3", "Глава 3")}
+            </p>
+            <h3 className="mt-1 font-display text-3xl font-extrabold text-foreground sm:text-4xl">
+              {T("I'll be with you", "Ще съм с теб")}
+              <br />
+              <span className="italic text-primary">{T("the whole way.", "по целия път.")}</span>
+            </h3>
+            <p className="mt-3 text-sm text-muted-foreground sm:text-base">
+              {T(
+                "I'm Kirilka — Kiki. I've spent 20 years asking founders the hard questions so they don't get eaten by their own blind spots. On this platform, I'm the AI you can ask anything. Bad ideas welcome. That's how you find the good ones.",
+                "Аз съм Кирилка — Кики. 20 години задавам на фаундъри трудните въпроси, за да не ги изяде собствената им слепота. Тук съм AI-ът, който можеш да питаш всичко. Лоши идеи — добре дошли. Така се стига до добрите."
+              )}
+            </p>
+            <button
+              onClick={() => go("/mentor")}
+              className="mt-5 inline-flex min-h-[48px] items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-bold text-primary-foreground transition active:scale-95 sm:hover:scale-105"
+              style={{ boxShadow: "var(--shadow-warm)" }}
+            >
+              {T("Meet Kiki", "Запознай се с Кики")} <ArrowRight className="h-4 w-4" />
+            </button>
+          </div>
+        </section>
+
+        {/* ═══════════ Final nudge ═══════════ */}
+        {!user && (
+          <section
+            className="mt-10 overflow-hidden rounded-3xl border border-primary/30 p-6 sm:p-8"
+            style={{ background: "var(--gradient-soft)", boxShadow: "var(--shadow-warm)" }}
+          >
+            <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-primary">
+              {T("One more thing", "Още едно нещо")}
+            </p>
+            <h2 className="mt-1 font-display text-3xl font-extrabold text-foreground sm:text-4xl">
+              {T("It's free. Really.", "Безплатно е. Наистина.")}
+            </h2>
+            <p className="mt-2 text-sm text-muted-foreground sm:text-base">
+              {T(
+                "No credit card. No trial timer. Made in Bulgaria, for the next generation of founders — and the teachers who believe in them.",
+                "Без карта. Без таймер. Създадено в България, за следващото поколение фаундъри — и учителите, които вярват в тях."
+              )}
+            </p>
+            <button
+              onClick={() => navigate("/auth?mode=signup")}
+              className="mt-5 inline-flex min-h-[48px] items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-bold text-primary-foreground transition active:scale-95 sm:hover:scale-105"
+              style={{ boxShadow: "var(--shadow-warm)" }}
+            >
+              {T("Create free account", "Създай безплатен акаунт")} <ArrowRight className="h-4 w-4" />
+            </button>
           </section>
-          </>
         )}
 
-        {/* ══════════ WHAT YOU LEARN + BUILD ══════════ */}
-        <section className="py-16 md:py-24 px-4 bg-[#EAFBE0] border-t-4 border-black">
-          <div className="container mx-auto max-w-6xl">
-            {/* Skills */}
-            <div className="max-w-2xl mb-10">
-              <div className="inline-flex items-center gap-2 bg-black text-white font-quest text-[11px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-md rotate-[-1deg] mb-4 quest-shadow-sm">
-                {lang === "bg" ? "02 · КАКВО ЩЕ НАУЧИШ" : "02 · WHAT YOU LEARN"}
-              </div>
-              <h2 className="font-quest font-bold text-4xl md:text-5xl leading-[0.95] tracking-tight text-black mb-3">{t.whatYouLearn}</h2>
-              <p className="font-quest text-black/70 text-base md:text-lg">{t.whatYouLearnDesc}</p>
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-20">
-              {learnCards.map((card, i) => {
-                const bgs = ["bg-white", "bg-[#FFF7E6]", "bg-white", "bg-[#FFE9F4]", "bg-white", "bg-[#EAF3FF]"];
-                return (
-                  <Reveal key={i} delay={i * 60}>
-                    <div className={`relative rounded-3xl border-4 border-black ${bgs[i % bgs.length]} p-5 quest-shadow h-full`}>
-                      <div className="flex items-center gap-3 mb-3">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#58CC02] border-4 border-black">
-                          <card.icon className="h-5 w-5 text-white" />
-                        </div>
-                        <span className="font-quest text-[10px] font-bold uppercase tracking-widest bg-black text-white px-2 py-1 rounded-md">
-                          {String(i + 1).padStart(2, "0")}
-                        </span>
-                      </div>
-                      <h3 className="font-quest font-bold text-black text-lg mb-1.5">{card.title}</h3>
-                      <p className="font-quest text-sm text-black/70 leading-snug">{card.desc}</p>
-                    </div>
-                  </Reveal>
-                );
-              })}
-            </div>
-
-            {/* Build */}
-            <div className="max-w-2xl mb-10">
-              <div className="inline-flex items-center gap-2 bg-black text-white font-quest text-[11px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-md rotate-[-1deg] mb-4 quest-shadow-sm">
-                {lang === "bg" ? "03 · КАКВО ЩЕ ПОСТРОИШ" : "03 · WHAT YOU BUILD"}
-              </div>
-              <h2 className="font-quest font-bold text-4xl md:text-5xl leading-[0.95] tracking-tight text-black mb-3">{t.whatYouBuild}</h2>
-              <p className="font-quest text-black/70 text-base md:text-lg">{t.whatYouBuildDesc}</p>
-            </div>
-
-            <div className="hidden md:flex items-stretch justify-between gap-3">
-              {buildSteps.map((step, i) => {
-                const bgs = ["bg-[#FFD600]", "bg-[#FF6B9D]", "bg-[#2B99FF]", "bg-[#58CC02]", "bg-[#784EF8]", "bg-[#FF9600]"];
-                const rot = i % 2 === 0 ? "rotate-[-1deg]" : "rotate-[1deg]";
-                return (
-                  <div key={i} className="flex items-stretch flex-1">
-                    <Reveal delay={i * 100} className="flex-1">
-                      <div className={`h-full rounded-3xl border-4 border-black ${bgs[i % bgs.length]} ${rot} p-5 quest-shadow`}>
-                        <div className="flex items-center justify-between mb-4">
-                          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white border-4 border-black">
-                            <step.icon className="h-5 w-5 text-black" />
-                          </div>
-                          <span className="font-quest text-2xl font-bold text-black/40">
-                            {String(step.step).padStart(2, "0")}
-                          </span>
-                        </div>
-                        <p className="font-quest text-sm font-bold text-black leading-snug">{step.title}</p>
-                      </div>
-                    </Reveal>
-                  </div>
-                );
-              })}
-            </div>
-            <div className="md:hidden space-y-3">
-              {buildSteps.map((step, i) => {
-                const bgs = ["bg-[#FFD600]", "bg-[#FF6B9D]", "bg-[#2B99FF]", "bg-[#58CC02]", "bg-[#784EF8]", "bg-[#FF9600]"];
-                return (
-                  <div key={step.step} className={`flex items-center gap-4 rounded-3xl border-4 border-black ${bgs[i % bgs.length]} p-4 quest-shadow-sm`}>
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white border-4 border-black shrink-0">
-                      <step.icon className="h-5 w-5 text-black" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="font-quest text-[10px] font-bold uppercase tracking-widest text-black/70">
-                        {t.step} {step.step}
-                      </div>
-                      <p className="font-quest text-sm font-bold text-black">{step.title}</p>
-                    </div>
-                    <span className="font-quest text-2xl font-bold text-black/40">
-                      {String(step.step).padStart(2, "0")}
-                    </span>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-
-        {/* ══════════ TIMELINE — Week × Stage ══════════ */}
-        <section className="py-16 md:py-24 px-4 bg-[#EAF3FF] border-t-4 border-black">
-          <div className="container mx-auto max-w-3xl">
-            <div className="max-w-xl mb-10">
-              <div className="inline-flex items-center gap-2 bg-black text-white font-quest text-[11px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-md rotate-[-1deg] mb-4 quest-shadow-sm">
-                {lang === "bg" ? "04 · 6 СЕДМИЦИ · 6 ЕТАПА" : "04 · 6 WEEKS · 6 STAGES"}
-              </div>
-              <h2 className="font-quest font-bold text-4xl md:text-5xl leading-[0.95] tracking-tight text-black mb-3">
-                {lang === "bg" ? "Твоят път — седмица по седмица" : "Your path — week by week"}
-              </h2>
-              <p className="font-quest text-black/70 text-base md:text-lg">
-                {lang === "bg"
-                  ? "Всяка седмица е един етап. Един график, една цел: от идея до стартъп за 6 седмици."
-                  : "Each week is one stage. One schedule, one goal: from idea to startup in 6 weeks."}
-              </p>
-            </div>
-
-            <div className="relative">
-              <div className="absolute left-[31px] top-4 bottom-4 w-1 bg-black rounded-full" />
-              <div className="space-y-4">
-                {journeyStages.map((stage, i) => {
-                  const week = courseWeeks[i];
-                  const bgs = ["bg-[#FFD600]", "bg-[#58CC02]", "bg-[#FF6B9D]", "bg-[#2B99FF]", "bg-[#784EF8]", "bg-[#FF9600]"];
-                  return (
-                    <Reveal key={i} delay={i * 60}>
-                      <div className="flex gap-4 items-start">
-                        <div className={`relative z-10 flex h-16 w-16 flex-col items-center justify-center rounded-2xl ${bgs[i]} text-black border-4 border-black quest-shadow-sm shrink-0`}>
-                          <span className="font-quest text-[10px] font-bold uppercase tracking-wider leading-none">
-                            {lang === "bg" ? "СЕД" : "WK"}
-                          </span>
-                          <span className="text-2xl font-quest font-bold leading-none mt-0.5">{i + 1}</span>
-                        </div>
-                        <div className="flex-1 rounded-3xl border-4 border-black bg-white p-4 quest-shadow-sm">
-                          <div className="flex items-center gap-2 flex-wrap mb-2">
-                            <span className="font-quest text-[10px] font-bold uppercase tracking-widest bg-black text-white px-2 py-1 rounded-md">
-                              {t.week} {i + 1} · {t.stage} {i + 1}
-                            </span>
-                            <span className={`inline-flex items-center gap-1 text-[10px] font-quest font-bold text-black ${bgs[i]} border-2 border-black px-2 py-0.5 rounded-md`}>
-                              <stage.icon className="h-3 w-3" />
-                              {stage.title}
-                            </span>
-                          </div>
-                          <h3 className="font-quest font-bold text-black text-lg leading-tight">
-                            {week?.title ?? stage.title}
-                          </h3>
-                          <p className="font-quest text-sm text-black/70 mt-1 leading-snug">
-                            {week?.desc ?? stage.desc}
-                          </p>
-                        </div>
-                      </div>
-                    </Reveal>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ══════════ DICTIONARY PREVIEW ══════════ */}
-        <section className="py-16 md:py-24 px-4 bg-[#FFF7E6] border-t-4 border-black">
-          <div className="container mx-auto max-w-4xl">
-            <div className="max-w-xl mb-10">
-              <div className="inline-flex items-center gap-2 bg-black text-white font-quest text-[11px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-md rotate-[-1deg] mb-4 quest-shadow-sm">
-                {lang === "bg" ? "05 · РЕЧНИК" : "05 · DICTIONARY"}
-              </div>
-              <h2 className="font-quest font-bold text-4xl md:text-5xl leading-[0.95] tracking-tight text-black mb-3">{t.dictTitle}</h2>
-              <p className="font-quest text-black/70 text-base md:text-lg">{t.dictSubtitle}</p>
-            </div>
-
-            <div className="grid gap-3 sm:grid-cols-2">
-              {[
-                { en: "Target Audience", bg: "Целева аудитория", cat: "Marketing", catBg: "Маркетинг", def: t.dictTermTargetAudience },
-                { en: "Revenue Model", bg: "Модел на приходите", cat: "Pricing", catBg: "Ценообразуване", def: t.dictTermRevenueModel },
-                { en: "Bottleneck", bg: "Тясно място", cat: "Operations", catBg: "Операции", def: t.dictTermBottleneck },
-                { en: "Founding Team", bg: "Основателски екип", cat: "Team", catBg: "Екип", def: t.dictTermFoundingTeam },
-              ].map((item, i) => {
-                const catBgs = ["bg-[#FF9600]", "bg-[#58CC02]", "bg-[#2B99FF]", "bg-[#FF6B9D]"];
-                return (
-                  <Reveal key={i} delay={i * 60}>
-                    <div className="rounded-3xl border-4 border-black bg-white p-4 quest-shadow h-full">
-                      <div className="flex items-center justify-between mb-2 gap-2">
-                        <h3 className="font-quest font-bold text-black text-lg">{item.en}</h3>
-                        <span className={`text-[10px] font-quest font-bold uppercase tracking-wider text-white ${catBgs[i]} border-2 border-black px-2 py-0.5 rounded-md shrink-0`}>
-                          {lang === "bg" ? item.catBg : item.cat}
-                        </span>
-                      </div>
-                      <p className="font-quest text-xs text-[#784EF8] font-bold mb-1.5">{item.bg}</p>
-                      <p className="font-quest text-sm text-black/70 leading-snug">{item.def}</p>
-                    </div>
-                  </Reveal>
-                );
-              })}
-            </div>
-
-            <div className="mt-8">
-              <button
-                onClick={() => navigate("/dictionary")}
-                className="font-quest font-bold text-base bg-white text-black border-4 border-black rounded-2xl px-5 py-3 quest-btn-shadow quest-press inline-flex items-center justify-center gap-2"
-              >
-                <Book className="h-4 w-4" />
-                {t.exploreDict}
-                <ArrowRight className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
-        </section>
-
-        <InnovationShowcase lang={lang} />
-
-        {/* ══════════ CTA — Playful Quest ══════════ */}
-        <section className="relative py-20 md:py-28 px-4 overflow-hidden bg-[#784EF8] border-t-4 border-black">
-          <div
-            aria-hidden
-            className="absolute inset-0 pointer-events-none opacity-30"
-            style={{
-              backgroundImage: "radial-gradient(#ffffff 1.5px, transparent 1.5px)",
-              backgroundSize: "26px 26px",
-            }}
-          />
-          <div aria-hidden className="absolute top-8 left-10 h-14 w-14 rounded-2xl bg-[#FFD600] border-4 border-black quest-shadow-sm rotate-[8deg] hidden md:block" />
-          <div aria-hidden className="absolute bottom-10 right-14 h-16 w-16 rounded-full bg-[#FF6B9D] border-4 border-black quest-shadow-sm rotate-[-8deg] hidden md:block" />
-          <div aria-hidden className="absolute top-1/2 right-8 h-10 w-10 rounded-xl bg-[#58CC02] border-4 border-black quest-shadow-sm hidden lg:block" />
-
-          <div className="relative container mx-auto max-w-2xl text-center">
-            <Reveal>
-              <div className="inline-flex items-center gap-2 bg-black text-white font-quest text-[11px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-md rotate-[-1.5deg] mb-6 quest-shadow-sm">
-                <Sparkles className="h-3.5 w-3.5" />
-                {lang === "bg" ? "ГОТОВ ЛИ СИ?" : "READY?"}
-              </div>
-            </Reveal>
-            <Reveal delay={80}>
-              <h2 className="font-quest font-bold text-white mb-5 text-4xl md:text-6xl leading-[0.95]">
-                {t.readyToInnovate}
-              </h2>
-            </Reveal>
-            <Reveal delay={160}>
-              <p className="font-quest text-[#EDE4FF] mb-8 max-w-md mx-auto text-base md:text-lg">{t.readyToInnovateDesc}</p>
-            </Reveal>
-            <Reveal delay={240}>
-              <button
-                onClick={() => handleNav("/dashboard")}
-                className="font-quest font-bold text-xl bg-[#FFD600] text-black border-4 border-black rounded-2xl px-8 py-4 quest-btn-shadow quest-press inline-flex items-center justify-center gap-2"
-              >
-                {t.startJourney} <ArrowRight className="h-5 w-5" />
-              </button>
-            </Reveal>
-          </div>
-        </section>
+        <p className="mt-12 text-center text-sm italic text-muted-foreground">
+          {T("Made with", "Направено с")} <Heart className="inline h-4 w-4 fill-primary text-primary" /> {T("by Kiki — a presto!", "от Кики — до скоро!")}
+        </p>
       </main>
     </div>
   );
 };
-
-const SectionBadge = forwardRef<HTMLDivElement, { label: string }>(({ label }, ref) => (
-  <div
-    ref={ref}
-    className="inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-accent px-3 py-1"
-  >
-    <Zap className="h-3 w-3 text-primary" />
-    <span className="typo-eyebrow text-primary">{label}</span>
-  </div>
-));
-SectionBadge.displayName = "SectionBadge";
 
 export default Index;
