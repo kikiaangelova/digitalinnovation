@@ -22,6 +22,9 @@ import ChallengeHub from '@/components/dashboard/ChallengeHub';
 import HypothesisTracker from '@/components/dashboard/HypothesisTracker';
 import { LEARNING_MODULES } from '@/data/learning-modules';
 import PhaseBadge from '@/components/ui/phase-badge';
+import TodayHero from '@/components/dashboard/TodayHero';
+import { isFeatureEnabled } from '@/lib/featureFlags';
+import { resolveNextAction } from '@/lib/nextAction';
 
 interface CaseRow { id: string; title: string; difficulty: string; est_minutes: number | null; topic?: string | null; }
 interface SubRow { case_study_id: string; is_draft: boolean; total_score?: number | null; max_score?: number | null; }
