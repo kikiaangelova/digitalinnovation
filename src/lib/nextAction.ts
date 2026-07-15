@@ -207,14 +207,36 @@ export function resolveNextAction(s: NextActionSnapshot): NextAction {
   const stage = deriveStage(s);
   const mission = missionLine(stage);
 
-  // 1. Urgent teacher assignment — soonest upcoming due date wins.
-  const upcoming = (s.assignments ?? [])
-    .filter((a) => a.due_date && new Date(a.due_date).getTime() >= Date.now())
-    .sort((a, b) => new Date(a.due_date!).getTime() - new Date(b.due_date!).getTime());
-  if (upcoming.length > 0) {
-    const a = upcoming[0];
+  // 1. Urgent teacher assignment. Priority bands:
+  //    (a) overdue active → (b) due within 72h → (c) other active.
+  //    Within a band the nearest due_date wins; assignments without a
+  //    due_date fall into band (c) and are ordered after dated ones.
+  const now = Date.now();
+  const H72 = 72 * 60 * 60 * 1000;
+  const scored = (s.assignments ?? []).map((a) => {
+    const t = a.due_date ? new Date(a.due_date).getTime() : null;
+    let band = 2;
+    if (t !== null && t < now) band = 0;
+    else if (t !== null && t - now <= H72) band = 1;
+    return { a, t, band };
+  });
+  scored.sort((x, y) => {
+    if (x.band !== y.band) return x.band - y.band;
+    // Nearest due date first; nulls last.
+    if (x.t === null && y.t === null) return 0;
+    if (x.t === null) return 1;
+    if (y.t === null) return -1;
+    if (x.band === 0) return y.t - x.t; // overdue: most-recently overdue first
+    return x.t - y.t;
+  });
+  if (scored.length > 0) {
+    const { a } = scored[0];
     const titleEn = a.title_en ?? 'Assignment from your teacher';
     const titleBg = a.title_bg ?? 'Задача от учителя';
+    let path = '/dashboard';
+    if (a.assignment_type === 'case_study' && a.target_id) path = `/case/${a.target_id}`;
+    else if (a.assignment_type === 'learn_module' && a.target_id) path = `/learn/${a.target_id}`;
+    else if (a.assignment_type === 'journey_stage') path = '/journey';
     return {
       kind: 'assignment',
       titleEn,
@@ -223,7 +245,7 @@ export function resolveNextAction(s: NextActionSnapshot): NextAction {
       purposeBg: 'Защо е важно: учителят ти го зададе като текуща мисия.',
       missionEn: mission.en,
       missionBg: mission.bg,
-      path: a.assignment_type === 'case' && a.target_id ? `/case/${a.target_id}` : '/dashboard',
+      path,
       iconKey: 'assignment',
       isResume: false,
     };

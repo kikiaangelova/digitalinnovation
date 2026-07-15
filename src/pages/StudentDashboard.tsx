@@ -24,10 +24,10 @@ import { LEARNING_MODULES } from '@/data/learning-modules';
 import PhaseBadge from '@/components/ui/phase-badge';
 import TodayHero from '@/components/dashboard/TodayHero';
 import { isFeatureEnabled } from '@/lib/featureFlags';
-import { resolveNextAction } from '@/lib/nextAction';
+import { resolveNextAction, type AssignmentInput } from '@/lib/nextAction';
 
 interface CaseRow { id: string; title: string; difficulty: string; est_minutes: number | null; topic?: string | null; }
-interface SubRow { case_study_id: string; is_draft: boolean; total_score?: number | null; max_score?: number | null; }
+interface SubRow { case_study_id: string; is_draft: boolean; total_score?: number | null; max_score?: number | null; updated_at?: string | null; }
 
 export default function StudentDashboard() {
   const { user, loading: authLoading } = useAuth();
@@ -52,6 +52,13 @@ export default function StudentDashboard() {
   const [quizConsecutiveImprovements, setQuizConsecutiveImprovements] = useState(0);
   const [quizHighScores80, setQuizHighScores80] = useState(0);
   const [completedModuleSlugs, setCompletedModuleSlugs] = useState<Set<string>>(new Set());
+  const [assignments, setAssignments] = useState<AssignmentInput[]>([]);
+  const [lastActivity, setLastActivity] = useState<{
+    caseDraftAt?: string | null;
+    startupAt?: string | null;
+    simulatorAt?: string | null;
+    moduleAt?: string | null;
+  }>({});
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -61,9 +68,9 @@ export default function StudentDashboard() {
       try {
         const [casesRes, subsRes, projRes, simRes, prAssignRes, prReceivedRes, profileRes, prGivenRes] = await Promise.all([
           supabase.from('case_studies').select('id, title, difficulty, est_minutes, topic').eq('published', true),
-          supabase.from('submissions').select('case_study_id, is_draft, total_score, max_score').eq('user_id', user.id),
-          supabase.from('startup_projects').select('problem, customer, value_proposition, digital_product, business_model, growth_strategy, final_pitch, is_submitted, bmc_customer_segments, bmc_value_proposition, bmc_channels, bmc_customer_relationships, bmc_revenue_streams, bmc_key_resources, bmc_key_activities, bmc_key_partners, bmc_cost_structure').eq('user_id', user.id).maybeSingle(),
-          supabase.from('simulator_progress').select('current_week, is_complete').eq('user_id', user.id).maybeSingle(),
+          supabase.from('submissions').select('case_study_id, is_draft, total_score, max_score, updated_at').eq('user_id', user.id),
+          supabase.from('startup_projects').select('problem, customer, value_proposition, digital_product, business_model, growth_strategy, final_pitch, is_submitted, updated_at, bmc_customer_segments, bmc_value_proposition, bmc_channels, bmc_customer_relationships, bmc_revenue_streams, bmc_key_resources, bmc_key_activities, bmc_key_partners, bmc_cost_structure').eq('user_id', user.id).maybeSingle(),
+          supabase.from('simulator_progress').select('current_week, is_complete, updated_at').eq('user_id', user.id).maybeSingle(),
           supabase.from('peer_review_assignments').select('id').eq('reviewer_user_id', user.id).eq('status', 'pending'),
           supabase.from('peer_reviews').select('average_score').eq('reviewee_user_id', user.id),
           supabase.from('profiles').select('total_xp, onboarding_completed').eq('user_id', user.id).maybeSingle(),
@@ -73,6 +80,15 @@ export default function StudentDashboard() {
         setSubmissions(subsRes.data || []);
         setStartupProject(projRes.data || null);
         setSimProgress(simRes.data || null);
+        // Derive last-activity timestamps for the resume tie-breaker.
+        const draftSubs = (subsRes.data || []).filter((s: any) => s.is_draft);
+        const latestDraft = draftSubs
+          .map((s: any) => s.updated_at)
+          .filter(Boolean)
+          .sort()
+          .reverse()[0] ?? null;
+        const startupAt = (projRes.data as any)?.updated_at ?? null;
+        const simulatorAt = (simRes.data as any)?.updated_at ?? null;
         setPendingReviews((prAssignRes.data || []).length);
         setPeerReviewsGiven((prGivenRes.data || []).length);
         const prScores = (prReceivedRes.data || []) as { average_score: number | null }[];
@@ -123,6 +139,66 @@ export default function StudentDashboard() {
             const completedIds = new Set(moduleResponses.map(r => r.module_id));
             setCompletedModuleSlugs(new Set(allMods.filter(m => completedIds.has(m.id)).map(m => m.slug)));
           }
+        }
+        // Latest module-response activity (any response, not just completed).
+        const { data: latestModuleResp } = await supabase
+          .from('learning_module_responses')
+          .select('updated_at')
+          .eq('user_id', user.id)
+          .order('updated_at', { ascending: false })
+          .limit(1);
+        const moduleAt = latestModuleResp?.[0]?.updated_at ?? null;
+        setLastActivity({
+          caseDraftAt: latestDraft,
+          startupAt,
+          simulatorAt,
+          moduleAt,
+        });
+
+        // Teacher assignments — RLS restricts to classrooms the student
+        // belongs to. We just query; the DB is the security boundary.
+        const { data: memberships } = await supabase
+          .from('classroom_students')
+          .select('classroom_id')
+          .eq('student_id', user.id);
+        const classroomIds = (memberships ?? []).map((m: any) => m.classroom_id);
+        if (classroomIds.length > 0) {
+          const { data: rawAssignments } = await supabase
+            .from('classroom_assignments')
+            .select('id, classroom_id, assignment_type, case_id, module_slug, due_date, note')
+            .in('classroom_id', classroomIds);
+          const casesById = new Map((casesRes.data || []).map((c: any) => [c.id, c]));
+          const modulesBySlug = new Map(LEARNING_MODULES.map(m => [m.slug, m]));
+          const enriched: AssignmentInput[] = (rawAssignments ?? []).map((a: any) => {
+            let title_en: string | null = null;
+            let title_bg: string | null = null;
+            let target_id: string | null = null;
+            if (a.assignment_type === 'case_study' && a.case_id) {
+              const c = casesById.get(a.case_id);
+              title_en = c?.title ?? 'Assigned case';
+              title_bg = c?.title ?? 'Възложен казус';
+              target_id = a.case_id;
+            } else if (a.assignment_type === 'learn_module' && a.module_slug) {
+              const m = modulesBySlug.get(a.module_slug);
+              title_en = m?.title_en ?? 'Assigned module';
+              title_bg = m?.title_bg ?? 'Възложен модул';
+              target_id = a.module_slug;
+            } else if (a.assignment_type === 'journey_stage') {
+              title_en = 'Journey stage assigned by your teacher';
+              title_bg = 'Етап от пътя, зададен от учителя';
+            }
+            return {
+              id: a.id,
+              due_date: a.due_date,
+              assignment_type: a.assignment_type,
+              target_id,
+              title_en,
+              title_bg,
+            };
+          });
+          setAssignments(enriched);
+        } else {
+          setAssignments([]);
         }
       } catch (err) {
         console.error('Dashboard fetch error:', err);
@@ -202,7 +278,7 @@ export default function StudentDashboard() {
   if (isFeatureEnabled('student-dashboard-v2')) {
     const draftCaseIds = new Set(submissions.filter(s => s.is_draft).map(s => s.case_study_id));
     const canonical = resolveNextAction({
-      assignments: [], // classroom_assignments RLS doesn't expose to students yet — see report
+      assignments,
       modules: LEARNING_MODULES.map(m => ({
         slug: m.slug,
         title_en: m.title_en,
@@ -218,6 +294,7 @@ export default function StudentDashboard() {
       simWeek,
       simComplete,
       hasAnyActivity: xp > 0 || casesCompleted > 0 || simWeek > 1,
+      lastActivity,
     });
 
     const hasPeerReviewSignal = pendingReviews > 0 || avgPeerScore !== null;
