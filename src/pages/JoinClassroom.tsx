@@ -31,13 +31,12 @@ export default function JoinClassroom() {
     if (!code) { setError('Invalid code'); setLoading(false); return; }
 
     const lookup = async () => {
-      // Find classroom by code
-      const { data: cr } = await supabase
-        .from('classrooms')
-        .select('id, name, teacher_id')
-        .eq('class_code', code.toUpperCase())
-        .eq('is_active', true)
-        .maybeSingle();
+      // Secure RPC: returns only safe fields (name, subject, teacher display name).
+      const { data: rows } = await supabase.rpc(
+        'preview_classroom_by_code' as any,
+        { _code: code.toUpperCase() },
+      );
+      const cr: any = Array.isArray(rows) ? rows[0] : rows;
 
       if (!cr) {
         setError(t('Invalid or expired code. Check with your teacher.', 'Невалиден или изтекъл код. Провери с учителя.'));
@@ -45,31 +44,16 @@ export default function JoinClassroom() {
         return;
       }
 
-      // Check if already joined
-      const { data: existing } = await supabase
-        .from('classroom_students')
-        .select('id')
-        .eq('classroom_id', cr.id)
-        .eq('student_id', user.id)
-        .maybeSingle();
-
-      if (existing) {
+      if (cr.already_member) {
         setError(t('You are already in this classroom.', 'Вече си в този клас.'));
         setLoading(false);
         return;
       }
 
-      // Get teacher name
-      const { data: teacherProfile } = await supabase
-        .from('profiles')
-        .select('display_name, full_name')
-        .eq('user_id', cr.teacher_id)
-        .maybeSingle();
-
       setClassroom({
         id: cr.id,
         name: cr.name,
-        teacher_name: teacherProfile?.display_name || teacherProfile?.full_name || null,
+        teacher_name: cr.teacher_display_name ?? null,
       });
       setLoading(false);
     };
@@ -77,14 +61,14 @@ export default function JoinClassroom() {
   }, [user, authLoading, code, navigate, lang]);
 
   const handleJoin = async () => {
-    if (!user || !classroom) return;
+    if (!user || !classroom || !code) return;
     setJoining(true);
-    const { error: insertErr } = await supabase
-      .from('classroom_students')
-      .insert({ classroom_id: classroom.id, student_id: user.id });
-
-    if (insertErr) {
-      toast.error(insertErr.message);
+    const { error: joinErr } = await supabase.rpc(
+      'join_classroom_with_code' as any,
+      { _code: code.toUpperCase() },
+    );
+    if (joinErr) {
+      toast.error(joinErr.message);
       setJoining(false);
       return;
     }
