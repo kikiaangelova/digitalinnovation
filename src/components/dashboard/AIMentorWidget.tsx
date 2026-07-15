@@ -1,10 +1,12 @@
 import { useState } from 'react';
-import { Brain, Send, Loader2, RefreshCw } from 'lucide-react';
+import { Send, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import ReactMarkdown from 'react-markdown';
+import KikiBioCard from '@/components/mentor/KikiBioCard';
+import { KIKI } from '@/lib/kiki-persona';
 
 interface AIMentorWidgetProps {
   lang: 'en' | 'bg';
@@ -54,12 +56,8 @@ export default function AIMentorWidget({ lang, startupData, onFeedbackReceived }
   return (
     <div className="rounded-xl border border-border bg-card p-5">
       <div className="flex items-center gap-3 mb-4">
-        <div className="flex h-10 w-10 items-center justify-center rounded-lg gradient-founder">
-          <Brain className="h-5 w-5 text-primary-foreground" />
-        </div>
-        <div className="flex-1">
-          <h2 className="text-lg font-display font-semibold text-foreground">{t('AI Mentor', 'AI Ментор')}</h2>
-          <p className="text-xs text-muted-foreground">{t('Get personalized feedback on your startup', 'Получи персонална обратна връзка за твоя стартъп')}</p>
+        <div className="flex-1 min-w-0">
+          <KikiBioCard lang={lang} compact />
         </div>
         {remaining !== null && (
           <Badge variant="outline" className="text-xs">
@@ -79,10 +77,7 @@ export default function AIMentorWidget({ lang, startupData, onFeedbackReceived }
         </div>
       ) : (
         <div className="rounded-lg bg-muted/50 p-4 mb-3 text-sm text-muted-foreground italic">
-          {t(
-            '"Your startup idea looks promising. Click below to get personalized feedback from the AI Mentor."',
-            '"Твоята стартъп идея изглежда обещаваща. Натисни по-долу за персонална обратна връзка от AI Ментора."'
-          )}
+          {t(KIKI.greetingEn, KIKI.greetingBg)}
         </div>
       )}
 
@@ -90,13 +85,13 @@ export default function AIMentorWidget({ lang, startupData, onFeedbackReceived }
         <Button onClick={requestFeedback} disabled={loading} size="sm" className="sim-gradient border-0">
           {loading ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <Send className="h-4 w-4 mr-1" />}
           {feedback
-            ? t('Refresh Feedback', 'Обнови обратната връзка')
-            : t('Get AI Feedback', 'Получи AI обратна връзка')
+            ? t('Ask Kiki again', 'Питай Kiki отново')
+            : t('Ask Kiki for feedback', 'Питай Kiki за обратна връзка')
           }
         </Button>
       </div>
       <p className="text-xs text-muted-foreground mt-2">
-        {t('Limited to 3 uses per day. Asking the same question returns the same answer.', 'До 3 въпроса на ден. Ако питаш едно и също, получаваш същия отговор.')}
+        {t("Kiki has 3 deep answers per day. Same question = same answer (she doesn't repeat herself).", 'Kiki има 3 задълбочени отговора на ден. Един и същ въпрос = един и същ отговор.')}
       </p>
     </div>
   );
