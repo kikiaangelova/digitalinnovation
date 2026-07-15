@@ -7,6 +7,7 @@ import { getCurrentLevel } from '@/components/dashboard/LevelCard';
 import { isNavActive } from '@/lib/nav';
 import PlayerAvatar from '@/components/avatar/PlayerAvatar';
 import { Button } from '@/components/ui/button';
+import { DigiInnovMark } from '@/components/brand/DigiInnovMark';
 import {
   GraduationCap, LogOut, LayoutDashboard, Play, Shield, User,
   BarChart3, Users, BookOpen, Book, Menu, Globe, Lightbulb,
@@ -113,7 +114,7 @@ export default function AppHeader() {
         { to: '/teacher', icon: GraduationCap, label: lang === 'bg' ? 'Клас' : 'Class' },
         { to: '/cases', icon: BookOpen, label: t.cases },
         { to: '/learn', icon: GraduationCap, label: lang === 'bg' ? 'Учи' : 'Learn' },
-        { to: '__more__', icon: Menu, label: lang === 'bg' ? 'Още меню' : 'More menu' },
+        { to: '__more__', icon: Menu, label: lang === 'bg' ? 'Още' : 'More' },
       ]
     : [
         { to: '/dashboard', icon: LayoutDashboard, label: lang === 'bg' ? 'Днес' : 'Today' },
@@ -135,13 +136,15 @@ export default function AppHeader() {
       <header className="border-b border-border bg-card/95 backdrop-blur-sm sticky top-0 z-30">
         <div className="container mx-auto flex items-center justify-between px-4 py-2.5">
           {/* Logo — always visible */}
-          <Link to="/" className="flex items-center gap-2.5 shrink-0">
-            <div className="flex h-8 w-8 md:h-9 md:w-9 items-center justify-center rounded-2xl bg-warm-gradient shadow-soft">
-              <GraduationCap className="h-4 w-4 md:h-[18px] md:w-[18px] text-primary-foreground" />
-            </div>
-            <span className="font-display font-extrabold text-foreground text-base md:text-lg tracking-tight leading-none">
+          <Link
+            to="/"
+            className="flex items-center gap-2.5 shrink-0 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded-lg"
+            aria-label={t.appName}
+          >
+            <DigiInnovMark size={32} className="transition-transform duration-200 group-hover:-rotate-6 motion-reduce:transition-none motion-reduce:group-hover:transform-none" />
+            <span className="font-display font-bold text-foreground text-base md:text-[17px] tracking-tight leading-none">
               <span className="md:hidden">DigiInnov</span>
-              <span className="hidden md:inline">{t.appName}</span>
+              <span className="hidden md:inline">DigiInnov <span className="font-normal text-muted-foreground">Case Lab</span></span>
             </span>
           </Link>
 
