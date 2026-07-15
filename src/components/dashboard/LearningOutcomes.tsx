@@ -1,4 +1,3 @@
-import { Progress } from '@/components/ui/progress';
 import { Lightbulb, Search, Rocket, Briefcase, Palette, TrendingUp } from 'lucide-react';
 
 // Learning outcomes and their mapping to activities
