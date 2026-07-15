@@ -8,7 +8,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowRight, BookOpen, Compass, GraduationCap, School } from 'lucide-react';
+import { ArrowRight, BookOpen, Calendar, ClipboardList, Compass, GraduationCap, School } from 'lucide-react';
 import AppHeader from '@/components/layout/AppHeader';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -206,6 +206,30 @@ function SubjectRow({
             : t('Content in preparation', 'Съдържанието се подготвя')}
         </span>
       </div>
+
+      {(entry.assignments.length > 0 || entry.nextDueDate) && (
+        <div className="mt-3 flex items-center gap-3 flex-wrap text-[11px] text-muted-foreground">
+          {entry.assignments.length > 0 && (
+            <span className="inline-flex items-center gap-1">
+              <ClipboardList className="h-3 w-3" />
+              {entry.assignments.length}{' '}
+              {t(
+                entry.assignments.length === 1 ? 'assignment' : 'assignments',
+                entry.assignments.length === 1 ? 'задача' : 'задачи',
+              )}
+            </span>
+          )}
+          {entry.nextDueDate && (
+            <span className="inline-flex items-center gap-1">
+              <Calendar className="h-3 w-3" />
+              {t('Next due', 'Следващ срок')}:{' '}
+              {new Date(entry.nextDueDate).toLocaleDateString(
+                lang === 'bg' ? 'bg-BG' : 'en-GB',
+              )}
+            </span>
+          )}
+        </div>
+      )}
     </li>
   );
 }

@@ -2,13 +2,24 @@
  * SubjectDetail — /learn/subject/:subjectKey
  *
  * Subject-scoped module list. Progress is calculated ONLY from modules
- * that belong to this subject, so completing (or not) an unrelated
- * subject never blocks access here. There is no global Level 1→2 lock.
+ * that belong to this subject. Teacher-assigned modules for this
+ * subject are surfaced first; assignments from other subjects are
+ * shown as a small cross-subject note.
  */
 
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, ArrowRight, BookOpen, CheckCircle2, Play } from 'lucide-react';
+import {
+  ArrowLeft,
+  ArrowRight,
+  BookOpen,
+  Calendar,
+  CheckCircle2,
+  ClipboardList,
+  Info,
+  Play,
+  School,
+} from 'lucide-react';
 import AppHeader from '@/components/layout/AppHeader';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
@@ -18,14 +29,13 @@ import { useLang } from '@/context/LangContext';
 import { supabase } from '@/integrations/supabase/client';
 import {
   getSubject,
+  subjectLabel,
   subjectShort,
   subjectTitle,
 } from '@/data/subject-catalog';
-import {
-  LEARNING_MODULES,
-  modulesForSubject,
-  type LearningModule,
-} from '@/data/learning-modules';
+import { LEARNING_MODULES } from '@/data/learning-modules';
+import { useModuleCatalog, type CatalogModule } from '@/hooks/useModuleCatalog';
+import { useMySubjects } from '@/hooks/useMySubjects';
 
 export default function SubjectDetail() {
   const { subjectKey } = useParams<{ subjectKey: string }>();
@@ -35,12 +45,26 @@ export default function SubjectDetail() {
   const t = (en: string, bg: string) => (lang === 'bg' ? bg : en);
 
   const subject = getSubject(subjectKey ?? null);
-  const modules = useMemo<LearningModule[]>(
-    () => (subjectKey ? modulesForSubject(subjectKey) : []),
-    [subjectKey],
+  const { forSubject, loading: catalogLoading } = useModuleCatalog();
+  const modules = useMemo<CatalogModule[]>(
+    () => (subjectKey ? forSubject(subjectKey) : []),
+    [subjectKey, forSubject],
   );
 
-  const [dbModuleIdBySlug, setDbModuleIdBySlug] = useState<Record<string, string>>({});
+  const { entries: mySubjects } = useMySubjects();
+  const myEntry = subjectKey
+    ? mySubjects.find((e) => e.subjectKey === subjectKey)
+    : undefined;
+  const otherSubjectAssignments = subjectKey
+    ? mySubjects.flatMap((e) =>
+        e.subjectKey === subjectKey
+          ? []
+          : e.assignments.filter(
+              (a) => a.assignment_type === 'learn_module' && a.module_slug,
+            ),
+      )
+    : [];
+
   const [responseBySlug, setResponseBySlug] = useState<Record<string, any>>({});
   const [loading, setLoading] = useState(true);
 
@@ -55,20 +79,16 @@ export default function SubjectDetail() {
         .from('learning_modules')
         .select('id, slug');
       if (cancelled) return;
-      const bySlug: Record<string, string> = {};
+      const idToSlug: Record<string, string> = {};
       (mods ?? []).forEach((m: any) => {
-        bySlug[m.slug] = m.id;
+        idToSlug[m.id] = m.slug;
       });
-      setDbModuleIdBySlug(bySlug);
 
       const { data: resps } = await supabase
         .from('learning_module_responses')
         .select('*')
         .eq('user_id', user.id);
       if (cancelled) return;
-      const idToSlug = Object.fromEntries(
-        Object.entries(bySlug).map(([slug, id]) => [id, slug]),
-      );
       const map: Record<string, any> = {};
       (resps ?? []).forEach((r: any) => {
         const slug = idToSlug[r.module_id];
@@ -102,6 +122,12 @@ export default function SubjectDetail() {
   const total = modules.length;
   const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
 
+  const assignedModules = (myEntry?.assignments ?? []).filter(
+    (a) => a.assignment_type === 'learn_module' && a.module_slug,
+  );
+  const assignedSlugs = new Set(assignedModules.map((a) => a.module_slug!));
+  const additionalModules = modules.filter((m) => !assignedSlugs.has(m.slug));
+
   return (
     <div className="min-h-screen bg-background">
       <AppHeader />
@@ -119,8 +145,8 @@ export default function SubjectDetail() {
           {subject.availability !== 'playable' && (
             <Badge variant="outline" className="text-xs">
               {subject.availability === 'preview'
-                ? t('Preview', 'Преглед')
-                : t('Planned', 'Планиран')}
+                ? t('Preview', 'В процес на подготовка')
+                : t('Planned', 'Планирано')}
             </Badge>
           )}
         </header>
@@ -139,7 +165,7 @@ export default function SubjectDetail() {
           </section>
         )}
 
-        {loading ? (
+        {loading || catalogLoading ? (
           <p className="text-sm text-muted-foreground">{t('Loading…', 'Зареждане…')}</p>
         ) : total === 0 ? (
           <section className="rounded-xl border border-dashed border-border bg-card p-8 text-center space-y-2">
@@ -152,68 +178,85 @@ export default function SubjectDetail() {
             <p className="text-xs text-muted-foreground">
               {t(
                 'We will add modules here as they become playable.',
-                'Ще добавим модули тук, когато станат достъпни.',
+                'Ще добавим модули тук, щом станат готови за използване.',
               )}
             </p>
           </section>
         ) : (
-          <ul className="space-y-2">
-            {modules.map((mod, idx) => {
-              const resp = responseBySlug[mod.slug];
-              const isCompleted = !!resp?.completed_at;
-              const isInProgress = resp && !isCompleted;
-              const status: ActivityStatus = isCompleted
-                ? 'completed'
-                : isInProgress
-                  ? 'in_progress'
-                  : 'not_started';
-              const registered = !!dbModuleIdBySlug[mod.slug];
-              return (
-                <li
-                  key={mod.slug}
-                  className="rounded-lg border border-border bg-background p-4 flex items-center justify-between gap-4 hover:border-primary/40 cursor-pointer"
-                  onClick={() => navigate(`/learn/${mod.slug}`)}
-                >
-                  <div className="flex items-center gap-3 min-w-0">
-                    <div
-                      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${
-                        isCompleted
-                          ? 'bg-primary/20'
-                          : isInProgress
-                            ? 'bg-amber-500/15'
-                            : 'bg-accent'
-                      }`}
-                    >
-                      {isCompleted ? (
-                        <CheckCircle2 className="h-4 w-4 text-primary" />
-                      ) : isInProgress ? (
-                        <Play className="h-4 w-4 text-amber-600" />
-                      ) : (
-                        <span className="text-xs font-bold text-muted-foreground">{idx + 1}</span>
-                      )}
-                    </div>
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <h3 className="text-sm font-semibold text-foreground truncate">
-                          {lang === 'bg' ? mod.title_bg : mod.title_en}
-                        </h3>
-                        <StatusBadge status={status} lang={lang as 'en' | 'bg'} />
-                        {!registered && (
-                          <Badge variant="outline" className="text-[10px] text-muted-foreground">
-                            {t('Draft', 'Чернова')}
-                          </Badge>
-                        )}
-                      </div>
-                      <p className="text-xs text-muted-foreground">
-                        {mod.quiz_questions.length} {t('quiz questions', 'въпроса')}
-                      </p>
-                    </div>
-                  </div>
-                  <ArrowRight className="h-4 w-4 text-muted-foreground shrink-0" />
-                </li>
-              );
-            })}
-          </ul>
+          <>
+            {assignedModules.length > 0 && (
+              <section className="space-y-2">
+                <h2 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                  <ClipboardList className="h-4 w-4 text-primary" />
+                  {t('Assigned by your teacher', 'Назначено от учителя')}
+                </h2>
+                <ul className="space-y-2">
+                  {assignedModules.map((a) => {
+                    const mod = modules.find((m) => m.slug === a.module_slug);
+                    if (!mod) return null;
+                    return (
+                      <ModuleRow
+                        key={`assigned-${a.id}`}
+                        mod={mod}
+                        response={responseBySlug[mod.slug]}
+                        lang={lang as 'bg' | 'en'}
+                        t={t}
+                        onOpen={() => navigate(`/learn/${mod.slug}`)}
+                        assignmentMeta={{
+                          classroomName: a.classroom_name,
+                          dueDate: a.due_date,
+                          note: a.note,
+                        }}
+                      />
+                    );
+                  })}
+                </ul>
+              </section>
+            )}
+
+            <section className="space-y-2">
+              {assignedModules.length > 0 && additionalModules.length > 0 && (
+                <h2 className="text-sm font-semibold text-foreground">
+                  {t('More modules in this subject', 'Още модули по предмета')}
+                </h2>
+              )}
+              <ul className="space-y-2">
+                {additionalModules.map((mod, idx) => (
+                  <ModuleRow
+                    key={mod.slug}
+                    mod={mod}
+                    index={idx + 1}
+                    response={responseBySlug[mod.slug]}
+                    lang={lang as 'bg' | 'en'}
+                    t={t}
+                    onOpen={() => navigate(`/learn/${mod.slug}`)}
+                  />
+                ))}
+              </ul>
+            </section>
+
+            {otherSubjectAssignments.length > 0 && (
+              <section className="rounded-xl border border-dashed border-border bg-muted/30 p-4 space-y-2">
+                <h3 className="text-xs font-semibold text-muted-foreground flex items-center gap-1">
+                  <Info className="h-3 w-3" />
+                  {t('Assignments in other subjects', 'Задачи в други предмети')}
+                </h3>
+                <ul className="space-y-1">
+                  {otherSubjectAssignments.map((a) => (
+                    <li key={a.id} className="text-xs text-muted-foreground flex items-center gap-2">
+                      <School className="h-3 w-3 shrink-0" />
+                      <span className="truncate">
+                        {a.classroom_name} · {a.module_slug}
+                      </span>
+                      <Badge variant="outline" className="text-[10px]">
+                        {subjectLabel(a.subject_key, lang as 'bg' | 'en')}
+                      </Badge>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+          </>
         )}
 
         <p className="text-[11px] text-muted-foreground pt-2">
@@ -223,9 +266,101 @@ export default function SubjectDetail() {
           )}
         </p>
 
-        {/* Anchor so tests / codesearch confirm registry export usage */}
         <span data-total-registry={LEARNING_MODULES.length} className="hidden" />
       </main>
     </div>
+  );
+}
+
+function ModuleRow({
+  mod,
+  index,
+  response,
+  lang,
+  t,
+  onOpen,
+  assignmentMeta,
+}: {
+  mod: CatalogModule;
+  index?: number;
+  response: any;
+  lang: 'bg' | 'en';
+  t: (en: string, bg: string) => string;
+  onOpen: () => void;
+  assignmentMeta?: { classroomName: string; dueDate: string | null; note: string | null };
+}) {
+  const isCompleted = !!response?.completed_at;
+  const isInProgress = response && !isCompleted;
+  const status: ActivityStatus = isCompleted
+    ? 'completed'
+    : isInProgress
+      ? 'in_progress'
+      : 'not_started';
+  return (
+    <li
+      className="rounded-lg border border-border bg-background p-4 hover:border-primary/40 cursor-pointer"
+      onClick={onOpen}
+    >
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3 min-w-0">
+          <div
+            className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full ${
+              isCompleted
+                ? 'bg-primary/20'
+                : isInProgress
+                  ? 'bg-amber-500/15'
+                  : 'bg-accent'
+            }`}
+          >
+            {isCompleted ? (
+              <CheckCircle2 className="h-4 w-4 text-primary" />
+            ) : isInProgress ? (
+              <Play className="h-4 w-4 text-amber-600" />
+            ) : (
+              <span className="text-xs font-bold text-muted-foreground">{index ?? '•'}</span>
+            )}
+          </div>
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h3 className="text-sm font-semibold text-foreground truncate">
+                {lang === 'bg' ? mod.title_bg : mod.title_en}
+              </h3>
+              <StatusBadge status={status} lang={lang} />
+              {!mod.hasRichContent && (
+                <Badge variant="outline" className="text-[10px] text-muted-foreground">
+                  {t('Basic', 'Основен')}
+                </Badge>
+              )}
+              {!mod.registered && (
+                <Badge variant="outline" className="text-[10px] text-muted-foreground">
+                  {t('Draft', 'Чернова')}
+                </Badge>
+              )}
+            </div>
+            {assignmentMeta && (
+              <p className="text-[11px] text-muted-foreground mt-0.5 flex items-center gap-2 flex-wrap">
+                <span className="inline-flex items-center gap-1">
+                  <School className="h-3 w-3" /> {assignmentMeta.classroomName}
+                </span>
+                {assignmentMeta.dueDate && (
+                  <span className="inline-flex items-center gap-1">
+                    <Calendar className="h-3 w-3" />
+                    {new Date(assignmentMeta.dueDate).toLocaleDateString(
+                      lang === 'bg' ? 'bg-BG' : 'en-GB',
+                    )}
+                  </span>
+                )}
+              </p>
+            )}
+            {assignmentMeta?.note && (
+              <p className="text-[11px] text-muted-foreground italic mt-0.5 line-clamp-1">
+                {assignmentMeta.note}
+              </p>
+            )}
+          </div>
+        </div>
+        <ArrowRight className="h-4 w-4 text-muted-foreground shrink-0" />
+      </div>
+    </li>
   );
 }
