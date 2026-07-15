@@ -33,7 +33,18 @@ export default function AppHeader() {
 
   const toggleLang = () => setLang(lang === 'en' ? 'bg' : 'en');
 
-  const isActive = (path: string) => location.pathname === path;
+  const isActive = (path: string) => {
+    const p = location.pathname;
+    if (p === path) return true;
+    // Highlight parent nav on nested routes
+    if (path === '/cases' && (p.startsWith('/case/') || p === '/cases')) return true;
+    if (path === '/learn' && p.startsWith('/learn/')) return true;
+    if (path === '/simulator' && p.startsWith('/simulator')) return true;
+    if (path === '/journey' && p.startsWith('/journey')) return true;
+    if (path === '/my-startup' && p.startsWith('/my-startup')) return true;
+    if (path === '/teacher' && p.startsWith('/teacher') && p !== '/teacher-dashboard' && p !== '/teacher-new') return true;
+    return false;
+  };
 
   // Desktop nav: underline-based active style (no pill)
   const navLinkClass = (path: string) =>
@@ -98,7 +109,15 @@ export default function AppHeader() {
       ];
 
   // ─── Bottom tab bar items (mobile, logged-in) ───
-  const bottomTabs = isTeacher
+  const bottomTabs = isPending
+    ? [
+        { to: '/pending', icon: LayoutDashboard, label: lang === 'bg' ? 'Статус' : 'Status' },
+        { to: '/profile', icon: User, label: t.profile },
+        { to: '/dictionary', icon: Book, label: t.dictionary },
+        { to: '/about', icon: Lightbulb, label: t.about },
+        { to: '__more__', icon: Menu, label: lang === 'bg' ? 'Още' : 'More' },
+      ]
+    : isTeacher
     ? [
         { to: '/teacher-dashboard', icon: LayoutDashboard, label: lang === 'bg' ? 'Начало' : 'Home' },
         { to: '/teacher', icon: GraduationCap, label: lang === 'bg' ? 'Клас' : 'Class' },
@@ -107,11 +126,11 @@ export default function AppHeader() {
         { to: '__more__', icon: Menu, label: lang === 'bg' ? 'Още меню' : 'More menu' },
       ]
     : [
-        { to: '/dashboard', icon: LayoutDashboard, label: lang === 'bg' ? 'Начало' : 'Home' },
+        { to: '/dashboard', icon: LayoutDashboard, label: lang === 'bg' ? 'Днес' : 'Today' },
+        { to: '/learn', icon: GraduationCap, label: lang === 'bg' ? 'Учи' : 'Learn' },
         { to: '/cases', icon: BookOpen, label: t.cases },
         { to: '/my-startup', icon: Rocket, label: lang === 'bg' ? 'Стартъп' : 'Startup' },
-        { to: '/simulator', icon: Play, label: t.simulator },
-        { to: '__more__', icon: Menu, label: lang === 'bg' ? 'Още меню' : 'More menu' },
+        { to: '__more__', icon: Menu, label: lang === 'bg' ? 'Още' : 'More' },
       ];
 
   const level = getCurrentLevel(userXp);
