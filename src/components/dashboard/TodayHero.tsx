@@ -9,8 +9,6 @@
  */
 
 import { useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import {
   ArrowRight, BookOpen, Rocket, BarChart3, Presentation,
   Award, ClipboardList, Target, Clock, Zap,
