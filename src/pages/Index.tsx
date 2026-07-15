@@ -23,19 +23,19 @@ const Index = () => {
   // Subject "vibes" — Learn Italian style deck grid
   const vibes = [
     { emoji: "💡", key: "innov",   to: "/pathways",     titleEn: "Digital Innovation", titleBg: "Дигитални иновации",   blurbEn: "How tech eats old industries.",         blurbBg: "Как технологиите изяждат старите индустрии." },
-    { emoji: "🚀", key: "startup", to: "/startup-project", titleEn: "Startup Thinking",  titleBg: "Стартъп мислене",       blurbEn: "Idea → customer → business, in weeks.", blurbBg: "Идея → клиент → бизнес, за седмици." },
+    { emoji: "🚀", key: "startup", to: "/my-startup", titleEn: "Startup Thinking",  titleBg: "Стартъп мислене",       blurbEn: "Idea → customer → business, in weeks.", blurbBg: "Идея → клиент → бизнес, за седмици." },
     { emoji: "🧠", key: "ai",      to: "/pathways",     titleEn: "AI for Business",    titleBg: "AI за бизнеса",         blurbEn: "Prompt like a pro, decide like a founder.", blurbBg: "Пиши промптове като про, решавай като фаундър." },
     { emoji: "📈", key: "market",  to: "/pathways",     titleEn: "Marketing & Growth", titleBg: "Маркетинг и растеж",    blurbEn: "Get seen, get bought, get remembered.", blurbBg: "Да те видят, да те купят, да те запомнят." },
-    { emoji: "💰", key: "money",   to: "/pathways",     titleEn: "Finance Basics",     titleBg: "Финансови основи",      blurbEn: "Unit economics without the fear.",      blurbBg: "Unit economics без страха." },
+    { emoji: "💰", key: "money",   to: "/pathways",     titleEn: "Finance Basics",     titleBg: "Финансови основи",      blurbEn: "Unit economics without the fear.",      blurbBg: "Юнит икономика без страха." },
     { emoji: "🎨", key: "design",  to: "/pathways",     titleEn: "Product & Design",   titleBg: "Продукт и дизайн",      blurbEn: "Build things people actually want.",    blurbBg: "Прави неща, които хората наистина искат." },
   ];
 
   const journey = [
     { emoji: "🧭", titleEn: "Explore",   titleBg: "Откривай",    blurbEn: "Meet the frameworks — Lean, Design Thinking, Blue Ocean.", blurbBg: "Запознай се с рамките — Lean, Design Thinking, Blue Ocean." },
-    { emoji: "🔍", titleEn: "Analyze",   titleBg: "Анализирай",  blurbEn: "Real cases: Lovable, Payhawk, Revolut, Payhawk, Notion.",  blurbBg: "Реални казуси: Lovable, Payhawk, Revolut, Notion." },
+    { emoji: "🔍", titleEn: "Analyze",   titleBg: "Анализирай",  blurbEn: "Real cases: Lovable, Payhawk, Revolut, Notion.",  blurbBg: "Реални казуси: Lovable, Payhawk, Revolut, Notion." },
     { emoji: "🧪", titleEn: "Try",       titleBg: "Опитай",       blurbEn: "The simulator pushes back. You'll make mistakes on purpose.", blurbBg: "Симулаторът ти отговаря. Ще грешиш нарочно." },
-    { emoji: "🎨", titleEn: "Design",    titleBg: "Проектирай",  blurbEn: "Your own startup — problem, customer, model, pitch.",      blurbBg: "Твоят стартъп — проблем, клиент, модел, pitch." },
-    { emoji: "🎤", titleEn: "Pitch",     titleBg: "Питчвай",     blurbEn: "End of season: you defend your business, live.",            blurbBg: "В края на сезона: защитаваш бизнеса си, на живо." },
+    { emoji: "🎨", titleEn: "Design",    titleBg: "Проектирай",  blurbEn: "Your own startup — problem, customer, model, presentation.", blurbBg: "Твоят стартъп — проблем, клиент, модел, представяне." },
+    { emoji: "🎤", titleEn: "Present",   titleBg: "Представи",   blurbEn: "End of season: you defend your business, live.",            blurbBg: "В края на сезона: защитаваш бизнеса си, на живо." },
   ];
 
   return (
@@ -68,7 +68,7 @@ const Index = () => {
             <p className="mt-4 max-w-md text-sm text-white/85 sm:text-base">
               {T(
                 "No lectures. No dead PDFs. You walk into a real case, make a real decision — and watch what happens to your business.",
-                "Без лекции. Без мъртви PDF-и. Влизаш в реален казус, взимаш реално решение — и виждаш какво става с бизнеса ти."
+                "Без лекции. Без мъртви PDF-и. Влизаш в реален казус, вземаш реално решение — и виждаш какво става с бизнеса ти."
               )}
             </p>
             <div className="mt-5 flex flex-wrap gap-2.5">
@@ -118,11 +118,11 @@ const Index = () => {
               {T("I'm Kiki.", "Аз съм Кики.")}
             </div>
             <div className="text-xs text-muted-foreground">
-              {T("20 years mentoring founders. Now, yours.", "20 г. mentor на фаундъри. Сега — твой.")}
+              {T("20 years mentoring founders. Now, yours.", "20 години съм ментор на основатели. Сега — твой.")}
             </div>
           </div>
           <button
-            onClick={() => go("/mentor")}
+            onClick={() => go("/dashboard")}
             className="inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-xs font-bold text-primary-foreground transition hover:scale-105"
           >
             {T("Say hi", "Здрасти")} <ArrowRight className="h-3.5 w-3.5" />
@@ -267,7 +267,7 @@ const Index = () => {
               )}
             </p>
             <button
-              onClick={() => go("/mentor")}
+              onClick={() => go("/dashboard")}
               className="mt-5 inline-flex min-h-[48px] items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-bold text-primary-foreground transition active:scale-95 sm:hover:scale-105"
               style={{ boxShadow: "var(--shadow-warm)" }}
             >
