@@ -453,4 +453,5 @@ export const ALL_TERMS_2026: DictionaryTerm[] = [
   ...AI_TERMS_2026,
   ...FINANCE_TERMS_2026,
   ...EXTRA_TERMS_2026,
+  ...BLACKSWAN_TERMS,
 ];
