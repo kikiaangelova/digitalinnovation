@@ -2032,6 +2032,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      join_team_with_code: { Args: { _join_code: string }; Returns: string }
       recalculate_all_xp: { Args: never; Returns: undefined }
       save_exam_draft_answers: {
         Args: {
