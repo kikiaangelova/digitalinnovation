@@ -8,6 +8,7 @@ import StartupConsole from "@/components/landing/StartupConsole";
 import { Reveal, CountUp } from "@/components/landing/Reveal";
 import InnovationShowcase from "@/components/landing/InnovationShowcase";
 import heroBg from "@/assets/hero-bg.mp4.asset.json";
+import { PATHWAYS, TRACK_LABELS, type PathwayTrack } from "@/data/curriculum-2026";
 import {
   GraduationCap,
   ArrowRight,
@@ -264,6 +265,69 @@ const Index = () => {
 
         {/* ══════════ HOW IT WORKS — light, mission style ══════════ */}
         {!user && (
+          <>
+          {/* ══════════ PICK YOUR SUBJECT — public, browsable ══════════ */}
+          <section id="subjects" className="relative py-20 md:py-24 px-4 border-t border-border bg-gradient-to-b from-background to-secondary/30">
+            <div className="container mx-auto max-w-6xl">
+              <div className="max-w-2xl mb-10">
+                <div className="typo-eyebrow text-primary mb-3">
+                  00 / {lang === "bg" ? "ИЗБЕРИ ПРЕДМЕТ" : "PICK YOUR SUBJECT"}
+                </div>
+                <h2 className="typo-h1 mb-3">
+                  {lang === "bg" ? "Всеки предмет — отворен за всеки." : "Every subject, open to anyone."}
+                </h2>
+                <p className="text-muted-foreground max-w-lg">
+                  {lang === "bg"
+                    ? "Използвам платформата в моите часове, но ти не си длъжен да си от моето училище. Разгледай пътищата, избери един и започни. Без плащане, без гейткийпинг."
+                    : "I use this platform with my own students — but you don't have to be one. Browse the tracks, pick one that fits you, and start. No paywall, no gatekeeping."}
+                </p>
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {PATHWAYS.slice(0, 9).map((p, i) => {
+                  const trackColor: Record<PathwayTrack, string> = {
+                    core: "from-emerald-500/20 to-emerald-500/5 border-emerald-500/30 text-emerald-400",
+                    business: "from-sky-500/20 to-sky-500/5 border-sky-500/30 text-sky-400",
+                    marketing: "from-orange-500/20 to-orange-500/5 border-orange-500/30 text-orange-400",
+                    data_ai: "from-violet-500/20 to-violet-500/5 border-violet-500/30 text-violet-400",
+                    human: "from-pink-500/20 to-pink-500/5 border-pink-500/30 text-pink-400",
+                  };
+                  return (
+                    <Reveal key={p.id} delay={i * 50}>
+                      <button
+                        type="button"
+                        onClick={() => navigate("/pathways")}
+                        className={`group relative w-full text-left rounded-2xl border bg-gradient-to-br ${trackColor[p.track]} p-5 hover:shadow-lift hover:-translate-y-0.5 transition-all duration-300 min-h-[168px]`}
+                      >
+                        <div className="flex items-center justify-between mb-3">
+                          <span className="font-mono text-[10px] font-semibold uppercase tracking-widest opacity-80">
+                            {lang === "bg" ? TRACK_LABELS[p.track].bg : TRACK_LABELS[p.track].en}
+                          </span>
+                          <ChevronRight className="h-4 w-4 opacity-60 group-hover:translate-x-1 transition-transform" />
+                        </div>
+                        <h3 className="font-display font-bold text-foreground text-lg leading-tight mb-2">
+                          {lang === "bg" ? p.titleBg : p.titleEn}
+                        </h3>
+                        <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
+                          {lang === "bg" ? p.descriptionBg : p.descriptionEn}
+                        </p>
+                      </button>
+                    </Reveal>
+                  );
+                })}
+              </div>
+
+              <div className="mt-8 flex flex-col sm:flex-row items-center gap-4 justify-center">
+                <Button size="lg" variant="hero" onClick={() => navigate("/pathways")}>
+                  {lang === "bg" ? "Виж всички 12 предмета" : "Browse all 12 subjects"} <ArrowRight className="h-4 w-4" />
+                </Button>
+                <span className="text-sm text-muted-foreground">
+                  {lang === "bg" ? "Не се изисква регистрация" : "No signup required"}
+                </span>
+              </div>
+            </div>
+          </section>
+
           <section id="how-it-works" className="relative py-20 md:py-24 px-4 border-t border-border">
             <div className="container mx-auto max-w-5xl">
               <div className="max-w-2xl mb-12">
@@ -310,6 +374,7 @@ const Index = () => {
               </Reveal>
             </div>
           </section>
+          </>
         )}
 
         {/* ══════════ WHAT YOU LEARN + BUILD ══════════ */}

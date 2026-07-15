@@ -34,7 +34,7 @@ const translations = {
     useInClassroom: 'Use in Your Classroom',
     requestDemo: 'Request Demo',
     accessClarity: 'Free for students. Contact us for schools and institutions.',
-    gamifiedPlatform: 'Gamified Learning Platform',
+    gamifiedPlatform: 'Built by a teacher, for real classrooms',
     howItWorksTitle: 'How It Works',
     howItWorksDesc: 'A structured pathway from raw idea to investor-ready pitch — no prior experience required.',
     howStep1: 'Analyse real-world business cases and master foundational concepts',
@@ -63,9 +63,9 @@ const translations = {
     readyToInnovateDesc: 'Join the Digital Innovation Lab and start building your future today.',
 
     // Hero
-    heroLine1: 'You have an idea.',
-    heroLine2: 'Let\'s build it together.',
-    heroDescriptionLine: 'Analyze real business cases, build your startup idea, and test your strategy in the simulator.',
+    heroLine1: 'Pick a subject.',
+    heroLine2: 'Build something real.',
+    heroDescriptionLine: 'Digital innovation, marketing, AI for business, finance — taught the way I teach my own students. Choose a track, learn by doing, and ship your first startup idea. No prior experience needed.',
     areYouTeacher: 'Are you a teacher?',
     testimonial1: 'I built a business plan for a sustainable sneaker brand in just 3 weeks.',
     testimonial2: 'The simulator made me think like a real founder, not just a student.',
@@ -404,7 +404,7 @@ const translations = {
     useInClassroom: 'Използвай в клас',
     requestDemo: 'Заяви демо',
     accessClarity: 'Безплатно за ученици. За училища и организации — свържи се с нас.',
-    gamifiedPlatform: 'Геймифицирана учебна платформа',
+    gamifiedPlatform: 'Създадено от преподавател, за истински класни стаи',
     howItWorksTitle: 'Как работи',
     howItWorksDesc: 'Структуриран път от сурова идея до представяне пред инвеститори — без нужда от предишен опит.',
     howStep1: 'Анализирай реални бизнес казуси и овладей основни концепции',
@@ -433,9 +433,9 @@ const translations = {
     readyToInnovateDesc: 'Присъедини се и започни да градиш бъдещето си.',
 
     // Hero
-    heroLine1: 'Имаш идея?',
-    heroLine2: 'Изгради я с нас.',
-    heroDescriptionLine: 'Анализирай реални казуси, изгради стартъп и тествай стратегията си в симулатор.',
+    heroLine1: 'Избери своя предмет.',
+    heroLine2: 'Построй нещо истинско.',
+    heroDescriptionLine: 'Дигитални иновации, маркетинг, AI за бизнеса, финанси — така, както го преподавам на моите ученици. Избери път, учи през правене и пусни първата си стартъп идея. Не ти трябва опит.',
     areYouTeacher: 'Учител си?',
     testimonial1: 'Изградих бизнес план за устойчива марка маратонки само за 3 седмици.',
     testimonial2: 'Симулаторът ме накара да мисля като истински предприемач.',
