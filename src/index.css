@@ -4,37 +4,55 @@
 
 @layer base {
   :root {
-    /* ═══ Warm Native — cream + Italian red/green (Speak Italian!) ═══
-       Warm cream backdrop, bold Inter display, red→amber→green accent. */
-    --background: 45 60% 96%;             /* soft cream */
-    --foreground: 20 40% 14%;              /* deep warm brown */
+    /* ═══ DigiInnov Design System V2 ═══
+       Warm ivory paper · confident coral-orange · restrained amber highlight
+       · cobalt AI accent · green reserved for verified success only.
+       Full Cyrillic coverage. Editorial, credible, youthful-not-childish. */
+    --background: 40 40% 97%;              /* warm ivory */
+    --foreground: 24 18% 12%;              /* warm ink */
 
-    --card: 42 60% 99%;
-    --card-foreground: 22 35% 20%;
+    --card: 40 44% 99%;
+    --card-foreground: 24 18% 14%;
 
-    --popover: 42 60% 99%;
-    --popover-foreground: 22 35% 20%;
+    --popover: 40 44% 99%;
+    --popover-foreground: 24 18% 14%;
 
-    --primary: 14 82% 54%;                 /* warm red/tomato */
-    --primary-foreground: 45 70% 98%;
+    --primary: 14 84% 55%;                 /* confident coral-orange */
+    --primary-foreground: 40 44% 99%;
 
-    --secondary: 142 48% 38%;              /* basil green */
-    --secondary-foreground: 45 70% 98%;
+    --secondary: 24 12% 18%;               /* neutral warm ink surface */
+    --secondary-foreground: 40 44% 98%;
 
-    --muted: 42 40% 92%;
-    --muted-foreground: 25 15% 42%;
+    --muted: 36 22% 92%;
+    --muted-foreground: 24 10% 38%;
 
-    --accent: 42 92% 62%;                  /* zesty amber */
-    --accent-foreground: 22 35% 18%;
+    --accent: 38 92% 58%;                  /* restrained amber highlight */
+    --accent-foreground: 24 18% 14%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 35 35% 84%;
-    --input: 35 35% 84%;
-    --ring: 14 82% 54%;
+    --border: 30 18% 86%;
+    --input: 30 18% 86%;
+    --ring: 14 84% 55%;
 
-    --radius: 1.25rem;
+    --radius: 1rem;
+
+    /* Semantic V2 tokens — reference these instead of hard-coded colors. */
+    --brand: 14 84% 55%;                    /* coral-orange, primary brand */
+    --brand-strong: 12 78% 46%;
+    --brand-soft: 20 90% 96%;
+    --highlight: 38 92% 58%;                /* amber, ideas / discovery */
+    --highlight-soft: 42 92% 92%;
+    --ai: 232 62% 52%;                      /* cobalt-indigo, AI/data only */
+    --ai-soft: 230 70% 96%;
+    --success: 152 55% 38%;                 /* green — verified success only */
+    --success-soft: 150 45% 94%;
+    --warning: 32 92% 52%;
+    --danger: 0 72% 51%;
+    --paper: 40 40% 97%;
+    --paper-2: 38 32% 94%;
+    --surface: 40 44% 99%;
 
     /* Ink surfaces — warm mocha, not navy */
     --ink: 22 35% 14%;
@@ -43,78 +61,79 @@
     --ink-fg: 45 70% 97%;
     --ink-fg-dim: 42 25% 78%;
 
-    /* Accent scale — remap legacy emerald/mint/teal onto warm palette
-       so every legacy component re-themes without hunting call sites. */
-    --emerald: 14 82% 54%;                 /* was primary — kept for legacy */
-    --emerald-glow: 22 88% 62%;
-    --mint: 42 92% 62%;                    /* highlight amber */
-    --teal: 142 48% 42%;
-    --xp-gold: 42 96% 56%;
+    /* Legacy aliases — remap old emerald/mint/teal names onto V2 tokens so
+       existing components inherit the new palette without call-site edits.
+       Do not use these in new code. Use --brand / --highlight / --ai / --success. */
+    --emerald: 14 84% 55%;                 /* → brand */
+    --emerald-glow: 20 92% 62%;
+    --mint: 38 92% 58%;                    /* → highlight */
+    --teal: 232 62% 52%;                   /* → ai */
+    --xp-gold: 38 92% 55%;
     --xp-gold-glow: 42 100% 68%;
 
     /* Sidebar — warm cream, not dark */
-    --sidebar-background: 42 55% 97%;
-    --sidebar-foreground: 22 35% 18%;
-    --sidebar-primary: 14 82% 54%;
-    --sidebar-primary-foreground: 45 70% 98%;
-    --sidebar-accent: 42 45% 92%;
-    --sidebar-accent-foreground: 22 35% 18%;
-    --sidebar-border: 35 30% 84%;
-    --sidebar-ring: 14 82% 54%;
+    --sidebar-background: 40 40% 97%;
+    --sidebar-foreground: 24 18% 14%;
+    --sidebar-primary: 14 84% 55%;
+    --sidebar-primary-foreground: 40 44% 99%;
+    --sidebar-accent: 36 22% 92%;
+    --sidebar-accent-foreground: 24 18% 14%;
+    --sidebar-border: 30 18% 86%;
+    --sidebar-ring: 14 84% 55%;
 
-    --sim-success: 142 55% 40%;
-    --sim-warning: 38 92% 55%;
+    --sim-success: 152 55% 38%;
+    --sim-warning: 32 92% 52%;
     --sim-danger: 0 72% 51%;
-    --sim-info: 200 75% 48%;
-    --sim-surface: 42 60% 97%;
-    --sim-kpi-bg: 42 55% 94%;
-    --rank-gold: 43 96% 56%;
-    --rank-silver: 220 9% 64%;
-    --rank-bronze: 28 90% 37%;
+    --sim-info: 232 62% 52%;
+    --sim-surface: 40 44% 99%;
+    --sim-kpi-bg: 38 32% 94%;
+    --rank-gold: 38 92% 55%;
+    --rank-silver: 30 8% 62%;
+    --rank-bronze: 22 68% 40%;
 
-    --progress: 14 82% 54%;
+    --progress: 14 84% 55%;
 
-    --chart-1: 14 82% 54%;
-    --chart-2: 42 92% 60%;
-    --chart-3: 142 48% 42%;
-    --chart-4: 200 75% 50%;
-    --chart-5: 320 65% 55%;
+    --chart-1: 14 84% 55%;
+    --chart-2: 38 92% 58%;
+    --chart-3: 232 62% 52%;
+    --chart-4: 152 55% 38%;
+    --chart-5: 24 18% 22%;
 
-    /* Gradients — warm zest: red → amber → green (Italian flag, warmed) */
-    --gradient-primary: linear-gradient(135deg, hsl(14 82% 54%) 0%, hsl(30 90% 58%) 55%, hsl(142 48% 45%) 100%);
-    --gradient-ink: linear-gradient(160deg, hsl(22 35% 14%) 0%, hsl(22 30% 20%) 60%, hsl(22 25% 28%) 100%);
-    --gradient-xp: linear-gradient(90deg, hsl(14 82% 54%), hsl(42 92% 60%));
-    --gradient-warm: linear-gradient(135deg, hsl(14 82% 54%), hsl(30 90% 62%));
-    --gradient-zest: linear-gradient(135deg, hsl(42 92% 65%), hsl(14 82% 54%) 55%, hsl(142 48% 42%));
-    --gradient-soft: linear-gradient(180deg, hsl(45 65% 98%), hsl(42 50% 93%));
+    /* Gradients — rare and intentional. Coral → amber only (no rainbow, no green). */
+    --gradient-primary: linear-gradient(135deg, hsl(14 84% 55%) 0%, hsl(24 90% 60%) 100%);
+    --gradient-ink: linear-gradient(160deg, hsl(24 18% 12%) 0%, hsl(24 14% 20%) 100%);
+    --gradient-xp: linear-gradient(90deg, hsl(14 84% 55%), hsl(38 92% 58%));
+    --gradient-warm: linear-gradient(135deg, hsl(14 84% 55%), hsl(24 90% 60%));
+    --gradient-zest: linear-gradient(135deg, hsl(38 92% 60%), hsl(14 84% 55%));
+    --gradient-soft: linear-gradient(180deg, hsl(40 44% 99%), hsl(38 32% 94%));
 
-    /* Elevation — warm, soft shadows */
-    --shadow-sticker: 0 2px 0 hsl(22 35% 14% / 0.06), 0 8px 20px -6px hsl(22 35% 14% / 0.12);
-    --shadow-lift: 0 20px 40px -20px hsl(22 35% 14% / 0.22), 0 4px 12px -4px hsl(22 35% 14% / 0.08);
-    --shadow-warm: 0 20px 50px -20px hsl(14 82% 54% / 0.45);
-    --shadow-soft: 0 8px 24px -12px hsl(22 25% 24% / 0.18);
-    --glow-mint: 0 0 32px hsl(42 92% 62% / 0.35), 0 0 80px hsl(14 82% 54% / 0.15);
-    --glow-emerald: 0 8px 24px -6px hsl(14 82% 54% / 0.5), 0 0 0 1px hsl(42 92% 62% / 0.2) inset;
+    /* Elevation — soft, editorial depth (no hard black offsets by default). */
+    --shadow-sticker: 0 1px 0 hsl(24 18% 12% / 0.04), 0 6px 18px -8px hsl(24 18% 12% / 0.10);
+    --shadow-lift: 0 18px 36px -20px hsl(24 18% 12% / 0.20), 0 4px 10px -4px hsl(24 18% 12% / 0.06);
+    --shadow-warm: 0 18px 42px -22px hsl(14 84% 55% / 0.42);
+    --shadow-soft: 0 8px 22px -14px hsl(24 18% 12% / 0.16);
+    --glow-mint: 0 0 28px hsl(38 92% 58% / 0.30);
+    --glow-emerald: 0 8px 22px -8px hsl(14 84% 55% / 0.42);
   }
 
   .dark {
-    --background: 22 30% 10%;
-    --foreground: 45 40% 96%;
-    --card: 22 25% 15%;
-    --card-foreground: 45 40% 96%;
-    --popover: 22 25% 15%;
-    --popover-foreground: 45 40% 96%;
-    --primary: 14 82% 60%;
-    --primary-foreground: 22 35% 12%;
-    --secondary: 142 40% 45%;
-    --secondary-foreground: 45 40% 96%;
-    --muted: 22 20% 22%;
-    --muted-foreground: 42 20% 72%;
-    --accent: 42 88% 60%;
-    --accent-foreground: 22 35% 12%;
-    --border: 22 20% 26%;
-    --input: 22 20% 26%;
-    --ring: 14 82% 60%;
+    --background: 24 18% 9%;
+    --foreground: 40 30% 94%;
+    --card: 24 16% 13%;
+    --card-foreground: 40 30% 94%;
+    --popover: 24 16% 13%;
+    --popover-foreground: 40 30% 94%;
+    --primary: 14 84% 60%;
+    --primary-foreground: 24 18% 10%;
+    --secondary: 24 14% 20%;
+    --secondary-foreground: 40 30% 94%;
+    --muted: 24 12% 20%;
+    --muted-foreground: 36 14% 70%;
+    --accent: 38 88% 60%;
+    --accent-foreground: 24 18% 10%;
+    --border: 24 12% 22%;
+    --input: 24 12% 22%;
+    --ring: 14 84% 60%;
   }
 }
 
@@ -126,8 +145,8 @@
     overflow-x: hidden;
     min-height: 100vh;
     background-image:
-      radial-gradient(ellipse at top, hsl(42 88% 88% / 0.6), transparent 60%),
-      radial-gradient(ellipse at bottom right, hsl(142 45% 75% / 0.22), transparent 55%);
+      radial-gradient(ellipse at top, hsl(38 60% 92% / 0.55), transparent 60%),
+      radial-gradient(ellipse at bottom right, hsl(14 70% 92% / 0.35), transparent 55%);
     background-attachment: fixed;
   }
   h1, h2, h3, .font-display {
@@ -138,6 +157,13 @@
   }
   .font-mono, code, kbd {
     font-family: 'JetBrains Mono', ui-monospace, monospace;
+  }
+
+  /* Baseline tap target for interactive elements on touch devices. */
+  @media (pointer: coarse) {
+    button, a[role="button"], [data-tap] {
+      min-height: 44px;
+    }
   }
 }
 
@@ -211,12 +237,18 @@
   .gradient-legend     { background: linear-gradient(135deg, hsl(170 76% 62%), hsl(200 90% 55%)); }
 
   /* Typography */
-  .typo-h1 { @apply text-3xl md:text-4xl font-display font-bold text-foreground leading-[1.05]; }
-  .typo-h2 { @apply text-2xl font-quest font-bold text-foreground tracking-tight; }
-  .typo-card-title { @apply text-base font-semibold text-foreground; }
-  .typo-body { @apply text-sm font-normal text-foreground; }
-  .typo-helper { @apply text-[13px] text-muted-foreground; }
-  .typo-xp { @apply font-mono font-bold text-primary; }
+  .typo-display  { @apply font-display text-4xl md:text-5xl font-bold text-foreground leading-[1.02] tracking-tight; }
+  .typo-h1       { @apply font-display text-3xl md:text-4xl font-bold text-foreground leading-[1.05] tracking-tight; }
+  .typo-h2       { @apply font-display text-2xl md:text-3xl font-bold text-foreground tracking-tight; }
+  .typo-h3       { @apply font-sans text-lg md:text-xl font-semibold text-foreground tracking-tight; }
+  .typo-card-title { @apply font-sans text-base font-semibold text-foreground; }
+  .typo-body     { @apply font-sans text-[15px] leading-relaxed text-foreground; }
+  .typo-long     { @apply font-sans text-base leading-[1.7] text-foreground; }
+  .typo-helper   { @apply font-sans text-[13px] text-muted-foreground; }
+  .typo-label    { @apply font-sans text-xs font-medium text-muted-foreground; }
+  .typo-meta     { @apply font-sans text-xs text-muted-foreground; }
+  .typo-numeric  { @apply font-mono font-semibold text-foreground tabular-nums; }
+  .typo-xp       { @apply font-mono font-bold text-primary tabular-nums; }
   .typo-stage-label {
     @apply text-[11px] font-mono font-semibold uppercase text-primary tracking-[0.14em];
   }
