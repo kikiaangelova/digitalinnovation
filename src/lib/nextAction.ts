@@ -5,24 +5,25 @@
  * across the header CTA, `NextStepHero.deriveNextStep`, `LearningNavigator`,
  * `QuickResumeCards`, `DailyGoalCard` and `StudentDashboard.getNextAction`.
  *
- * Feed the resolver a snapshot of the student's progress; it returns a
- * single, fully-labelled action to render in `TodayHero`.
+ * Priority order (highest → lowest):
+ *   1. Urgent teacher assignment          (soonest upcoming due date)
+ *   2. Unfinished saved activity          (draft case / startup / simulator
+ *                                          / partially-completed module)
+ *   3. Current mission                    (active stage's canonical activity)
+ *   4. Unfinished module or case          (first uncompleted)
+ *   5. Current learning-path next step    (build startup / run simulator /
+ *                                          final pitch)
+ *   6. Recommended exploration            (final exam / level-up)
  *
- * Priority (highest → lowest):
- *   1. Teacher assignment with soonest upcoming due date
- *   2. In-progress case (draft submission)
- *   3. In-progress theory module (started but not completed) — resume
- *   4. Startup section actively drafted
- *   5. Simulator continuation (started but not complete)
- *   6. Recommended-next when nothing is in progress:
- *        a. First uncompleted theory module           (Learn)
- *        b. First uncompleted case study               (Apply)
- *        c. Fill next startup section                  (Build)
- *        d. Run / continue simulator                    (Decide)
- *        e. Submit final pitch                          (Finalise)
- *        f. Take the final exam                         (Level Up)
+ * Tie-breaker: when two candidates share a priority band, prefer the one the
+ * student most recently interacted with (highest `lastStartedAt` timestamp).
  *
- * The resolver is pure and framework-free so it can be unit-tested.
+ * IMPORTANT: this resolver never invents XP or time-to-complete values. Only
+ * fields that exist in the underlying data model are surfaced (currently
+ * `case.est_minutes`). Missing values are omitted, and `TodayHero` hides the
+ * corresponding chips.
+ *
+ * Pure & framework-free so it can be unit-tested.
  */
 
 export type Lang = 'en' | 'bg';
@@ -94,6 +95,17 @@ export interface NextActionSnapshot {
   simComplete: boolean;
   /** Convenience: has the student done ANY activity yet? */
   hasAnyActivity: boolean;
+  /**
+   * Optional last-activity timestamps (ISO strings). Used purely as a
+   * tie-breaker when two candidate actions share the same priority band.
+   * All fields are optional; callers may pass none.
+   */
+  lastActivity?: {
+    caseDraftAt?: string | null;
+    startupAt?: string | null;
+    simulatorAt?: string | null;
+    moduleAt?: string | null;
+  };
 }
 
 export interface NextAction {
@@ -107,9 +119,18 @@ export interface NextAction {
   /** Mission anchor, e.g. "Week 3 · Stage 3 · Explore". */
   missionEn: string;
   missionBg: string;
-  /** Estimated minutes if known. */
+  /**
+   * Estimated minutes — ONLY populated when the value is authoritatively
+   * available in the data model (currently: `cases.est_minutes`). Never
+   * invented. `TodayHero` hides the chip when this is absent.
+   */
   estMinutes?: number;
-  /** XP available for this activity if known. */
+  /**
+   * XP reward — ONLY populated when the value is authoritatively available
+   * in the data model. Currently no verified per-action XP source exists,
+   * so this is left undefined in every branch. `TodayHero` hides the chip
+   * when this is absent.
+   */
   xp?: number;
   path: string;
   iconKey: NextActionIcon;
@@ -162,15 +183,15 @@ function missionLine(stage: number): { en: string; bg: string } {
 
 const STARTUP_SECTION_META: Record<
   string,
-  { en: string; bg: string; skillEn: string; skillBg: string; xp: number }
+  { en: string; bg: string; skillEn: string; skillBg: string }
 > = {
-  problem:            { en: 'Problem',           bg: 'Проблем',           skillEn: 'Problem framing',      skillBg: 'Дефиниране на проблем', xp: 40 },
-  customer:           { en: 'Customer',          bg: 'Клиент',            skillEn: 'Customer discovery',   skillBg: 'Откриване на клиента',   xp: 40 },
-  value_proposition:  { en: 'Value Proposition', bg: 'Стойностно предложение', skillEn: 'Value design',    skillBg: 'Дизайн на стойността',   xp: 40 },
-  digital_product:    { en: 'Digital Product',   bg: 'Дигитален продукт', skillEn: 'Product thinking',     skillBg: 'Продуктово мислене',     xp: 50 },
-  business_model:     { en: 'Business Model',    bg: 'Бизнес модел',      skillEn: 'Business modelling',   skillBg: 'Бизнес моделиране',      xp: 50 },
-  growth_strategy:    { en: 'Growth Strategy',   bg: 'Стратегия за растеж', skillEn: 'Growth strategy',    skillBg: 'Стратегия за растеж',    xp: 50 },
-  final_pitch:        { en: 'Final Pitch',       bg: 'Финално представяне', skillEn: 'Founder storytelling', skillBg: 'Разказ на основателя', xp: 120 },
+  problem:            { en: 'Problem',           bg: 'Проблем',                skillEn: 'Problem framing',      skillBg: 'Дефиниране на проблем' },
+  customer:           { en: 'Customer',          bg: 'Клиент',                 skillEn: 'Customer discovery',   skillBg: 'Откриване на клиента' },
+  value_proposition:  { en: 'Value Proposition', bg: 'Стойностно предложение', skillEn: 'Value design',         skillBg: 'Дизайн на стойността' },
+  digital_product:    { en: 'Digital Product',   bg: 'Дигитален продукт',      skillEn: 'Product thinking',     skillBg: 'Продуктово мислене' },
+  business_model:     { en: 'Business Model',    bg: 'Бизнес модел',           skillEn: 'Business modelling',   skillBg: 'Бизнес моделиране' },
+  growth_strategy:    { en: 'Growth Strategy',   bg: 'Стратегия за растеж',    skillEn: 'Growth strategy',      skillBg: 'Стратегия за растеж' },
+  final_pitch:        { en: 'Final Pitch',       bg: 'Финално представяне',    skillEn: 'Founder storytelling', skillBg: 'Разказ на основателя' },
 };
 
 const STARTUP_ORDER = [
@@ -186,7 +207,7 @@ export function resolveNextAction(s: NextActionSnapshot): NextAction {
   const stage = deriveStage(s);
   const mission = missionLine(stage);
 
-  // 1. Teacher assignment with soonest upcoming due date
+  // 1. Urgent teacher assignment — soonest upcoming due date wins.
   const upcoming = (s.assignments ?? [])
     .filter((a) => a.due_date && new Date(a.due_date).getTime() >= Date.now())
     .sort((a, b) => new Date(a.due_date!).getTime() - new Date(b.due_date!).getTime());
@@ -208,75 +229,85 @@ export function resolveNextAction(s: NextActionSnapshot): NextAction {
     };
   }
 
-  // 2. In-progress case (draft submission)
+  const nextModule = s.modules.find((m) => !s.completedModuleSlugs.has(m.slug));
+  const modulesStarted = s.completedModuleSlugs.size > 0;
+  const startupFilled = STARTUP_ORDER.filter((k) => s.startupSectionMap[k]).length;
+  const nextStartupKey = STARTUP_ORDER.find((k) => !s.startupSectionMap[k]);
+
+  // 2. Unfinished saved activity — pick the one the student most recently
+  //    touched. Candidates: draft case, startup in progress, simulator in
+  //    progress. (Modules do not currently carry a "partial" state, so a
+  //    started-but-not-completed module is handled in band 4.)
+  type Resume = { at: number; build: () => NextAction };
+  const resumes: Resume[] = [];
+  const ts = (v?: string | null) => (v ? new Date(v).getTime() : 0);
+
   if (s.draftCaseIds.size > 0) {
     const draftId = Array.from(s.draftCaseIds)[0];
     const c = s.cases.find((x) => x.id === draftId);
     if (c) {
-      return {
-        kind: 'resume_case',
-        titleEn: `Continue: ${c.title}`,
-        titleBg: `Продължи: ${c.title}`,
-        purposeEn: 'This develops: real-world case analysis and decision-making.',
-        purposeBg: 'Това развива: анализ на казуси и вземане на решения.',
-        missionEn: mission.en,
-        missionBg: mission.bg,
-        estMinutes: c.est_minutes ?? undefined,
-        xp: 100,
-        path: `/case/${c.id}`,
-        iconKey: 'book',
-        isResume: true,
-      };
+      resumes.push({
+        at: ts(s.lastActivity?.caseDraftAt),
+        build: () => ({
+          kind: 'resume_case',
+          titleEn: `Continue: ${c.title}`,
+          titleBg: `Продължи: ${c.title}`,
+          purposeEn: 'This develops: real-world case analysis and decision-making.',
+          purposeBg: 'Това развива: анализ на казуси и вземане на решения.',
+          missionEn: mission.en,
+          missionBg: mission.bg,
+          estMinutes: c.est_minutes ?? undefined,
+          path: `/case/${c.id}`,
+          iconKey: 'book',
+          isResume: true,
+        }),
+      });
     }
   }
-
-  // 3. First uncompleted module — treated as "resume" if some modules done,
-  //    "learn" (fresh) otherwise.
-  const nextModule = s.modules.find((m) => !s.completedModuleSlugs.has(m.slug));
-  const modulesStarted = s.completedModuleSlugs.size > 0;
-
-  // 4. Startup section in progress (some filled, but not all narrative & not submitted)
-  const startupFilled = STARTUP_ORDER.filter((k) => s.startupSectionMap[k]).length;
-  const nextStartupKey = STARTUP_ORDER.find((k) => !s.startupSectionMap[k]);
   if (startupFilled > 0 && startupFilled < STARTUP_ORDER.length && nextStartupKey && !s.startupSubmitted) {
     const meta = STARTUP_SECTION_META[nextStartupKey];
-    return {
-      kind: 'resume_startup',
-      titleEn: `Continue your startup: ${meta.en}`,
-      titleBg: `Продължи стартъпа си: ${meta.bg}`,
-      purposeEn: `This develops: ${meta.skillEn}.`,
-      purposeBg: `Това развива: ${meta.skillBg}.`,
-      missionEn: mission.en,
-      missionBg: mission.bg,
-      estMinutes: 15,
-      xp: meta.xp,
-      path: `/my-startup?section=${nextStartupKey}`,
-      iconKey: nextStartupKey === 'final_pitch' ? 'pitch' : 'rocket',
-      isResume: true,
-    };
+    resumes.push({
+      at: ts(s.lastActivity?.startupAt),
+      build: () => ({
+        kind: 'resume_startup',
+        titleEn: `Continue your startup: ${meta.en}`,
+        titleBg: `Продължи стартъпа си: ${meta.bg}`,
+        purposeEn: `This develops: ${meta.skillEn}.`,
+        purposeBg: `Това развива: ${meta.skillBg}.`,
+        missionEn: mission.en,
+        missionBg: mission.bg,
+        path: `/my-startup?section=${nextStartupKey}`,
+        iconKey: nextStartupKey === 'final_pitch' ? 'pitch' : 'rocket',
+        isResume: true,
+      }),
+    });
   }
-
-  // 5. Simulator continuation
   if (!s.simComplete && s.simWeek > 1) {
-    return {
-      kind: 'resume_simulator',
-      titleEn: `Continue the simulator — Week ${s.simWeek} of 6`,
-      titleBg: `Продължи симулатора — Седмица ${s.simWeek} от 6`,
-      purposeEn: 'This develops: strategic thinking under uncertainty.',
-      purposeBg: 'Това развива: стратегическо мислене в условия на несигурност.',
-      missionEn: mission.en,
-      missionBg: mission.bg,
-      estMinutes: 12,
-      xp: 50,
-      path: '/simulator',
-      iconKey: 'chart',
-      isResume: true,
-    };
+    resumes.push({
+      at: ts(s.lastActivity?.simulatorAt),
+      build: () => ({
+        kind: 'resume_simulator',
+        titleEn: `Continue the simulator — Week ${s.simWeek} of 6`,
+        titleBg: `Продължи симулатора — Седмица ${s.simWeek} от 6`,
+        purposeEn: 'This develops: strategic thinking under uncertainty.',
+        purposeBg: 'Това развива: стратегическо мислене в условия на несигурност.',
+        missionEn: mission.en,
+        missionBg: mission.bg,
+        path: '/simulator',
+        iconKey: 'chart',
+        isResume: true,
+      }),
+    });
+  }
+  if (resumes.length > 0) {
+    resumes.sort((a, b) => b.at - a.at); // most recent first; 0-timestamps sort last
+    return resumes[0].build();
   }
 
-  // ---- Recommended-next when nothing is in progress ----
+  // 3-4. Unfinished module or case — first uncompleted from curriculum order.
+  //      Priority-3 "current mission" is expressed by these curriculum-ordered
+  //      picks (they align with the student's active stage via `deriveStage`).
 
-  // 6a. Uncompleted theory module → Learn
   if (nextModule) {
     return {
       kind: modulesStarted ? 'resume_module' : 'learn_module',
@@ -294,15 +325,12 @@ export function resolveNextAction(s: NextActionSnapshot): NextAction {
         : 'Това развива: основите на дигиталното иновационно мислене.',
       missionEn: mission.en,
       missionBg: mission.bg,
-      estMinutes: 10,
-      xp: 25,
       path: `/learn/${nextModule.slug}`,
       iconKey: 'book',
       isResume: modulesStarted,
     };
   }
 
-  // 6b. First uncompleted case → Apply
   const nextCase = s.cases.find((c) => !s.completedCaseIds.has(c.id));
   if (nextCase && s.completedCaseIds.size < 2) {
     return {
@@ -314,14 +342,13 @@ export function resolveNextAction(s: NextActionSnapshot): NextAction {
       missionEn: mission.en,
       missionBg: mission.bg,
       estMinutes: nextCase.est_minutes ?? 20,
-      xp: 100,
       path: `/case/${nextCase.id}`,
       iconKey: 'book',
       isResume: false,
     };
   }
 
-  // 6c. Build startup (fewer than 3 sections filled)
+  // 5. Current learning-path next step — build startup / run simulator / pitch.
   if (startupFilled < 3 && nextStartupKey) {
     const meta = STARTUP_SECTION_META[nextStartupKey];
     return {
@@ -332,15 +359,12 @@ export function resolveNextAction(s: NextActionSnapshot): NextAction {
       purposeBg: `Това развива: ${meta.skillBg}.`,
       missionEn: mission.en,
       missionBg: mission.bg,
-      estMinutes: 15,
-      xp: meta.xp,
       path: `/my-startup?section=${nextStartupKey}`,
       iconKey: 'rocket',
       isResume: false,
     };
   }
 
-  // 6d. Run simulator (not started or week 1)
   if (!s.simComplete) {
     return {
       kind: 'run_simulator',
@@ -350,15 +374,12 @@ export function resolveNextAction(s: NextActionSnapshot): NextAction {
       purposeBg: 'Това развива: стратегическо мислене в условия на несигурност.',
       missionEn: mission.en,
       missionBg: mission.bg,
-      estMinutes: 15,
-      xp: 50,
       path: '/simulator',
       iconKey: 'chart',
       isResume: false,
     };
   }
 
-  // 6e. Submit final pitch
   if (!s.finalPitchSubmitted) {
     return {
       kind: 'final_pitch',
@@ -368,15 +389,13 @@ export function resolveNextAction(s: NextActionSnapshot): NextAction {
       purposeBg: 'Това развива: разказ на основателя и убеждаване.',
       missionEn: mission.en,
       missionBg: mission.bg,
-      estMinutes: 20,
-      xp: 120,
       path: '/my-startup?section=final_pitch',
       iconKey: 'pitch',
       isResume: false,
     };
   }
 
-  // 6f. Level up
+  // 6. Recommended exploration — final exam / level-up.
   return {
     kind: 'final_exam',
     titleEn: 'Take the final exam',
@@ -385,7 +404,6 @@ export function resolveNextAction(s: NextActionSnapshot): NextAction {
     purposeBg: 'Защо е важно: спечели сертификата и докажи уменията си.',
     missionEn: mission.en,
     missionBg: mission.bg,
-    estMinutes: 45,
     path: '/final-exam',
     iconKey: 'award',
     isResume: false,
