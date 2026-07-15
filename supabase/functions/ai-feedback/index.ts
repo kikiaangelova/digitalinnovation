@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { KIKI_PERSONA_PROMPT } from "../_shared/kiki-persona.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -98,14 +99,16 @@ serve(async (req) => {
       });
     }
 
-    const systemPrompt = `You are an AI mentor for a digital innovation course designed for 11th grade business students.
+    const systemPrompt = `${KIKI_PERSONA_PROMPT}
+
+You are giving structured written feedback inside DigiInnov Case Lab for teenage / early-founder learners.
 
 CRITICAL: Respond ENTIRELY in ${langLabel}. Do not mix languages.
 
 Guidelines:
-- Keep explanations simple and suitable for high school students
-- Be constructive, encouraging, and specific
-- Keep responses UNDER 200 words total
+- Keep it simple enough for a motivated 16-year-old, sharp enough for an adult founder.
+- Be specific — quote back their exact words when praising or challenging.
+- Under 200 words total. No headings ceremony, no filler.
 
 Structure your response with these sections:
 - **${lang === "bg" ? "Обобщение" : "Summary"}**: 1-2 sentence overview
@@ -155,7 +158,9 @@ Structure your response with these sections:
 - Use phrases like "Consider what you might be missing..." and "Playing devil's advocate..."`;
       }
 
-      mentorSystemPrompt = `You are a Socratic mentor for a university-level digital innovation course, using the MIT/Harvard case method.
+      mentorSystemPrompt = `${KIKI_PERSONA_PROMPT}
+
+You are running case-method mentoring inside DigiInnov Case Lab, MIT/Harvard style but for teenage learners and first-time founders.
 
 CRITICAL RULES:
 - NEVER give direct answers, solutions, or solve the case
