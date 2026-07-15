@@ -422,7 +422,7 @@ export default function StudentDashboard() {
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
               {[
                 { to: '/dictionary', bg: 'bg-[hsl(200_90%_88%)]', title: t('Dictionary', 'Речник'), desc: t('Key terms, fast.', 'Ключовите думи, бързо.') },
-                { to: '/industry-map', bg: 'bg-[hsl(160_84%_82%)]', title: t('Industry Map', 'Индустриална карта'), desc: t('Innovation across sectors.', 'Иновации по сектори.') },
+                { to: '/industries', bg: 'bg-[hsl(160_84%_82%)]', title: t('Industry Map', 'Индустриална карта'), desc: t('Innovation across sectors.', 'Иновации по сектори.') },
                 { to: '/my-report', bg: 'bg-[hsl(43_96%_78%)]', title: t('My Report', 'Моят отчет'), desc: t('Your learning report.', 'Отчет за напредъка.') },
                 { to: '/final-exam', bg: 'bg-[hsl(340_82%_85%)]', title: t('Final Exam', 'Финален изпит'), desc: t('Earn your certificate.', 'Спечели сертификат.'), icon: Award },
               ].map((tile, i) => {
