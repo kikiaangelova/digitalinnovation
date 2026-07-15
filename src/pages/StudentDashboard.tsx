@@ -23,7 +23,7 @@ import HypothesisTracker from '@/components/dashboard/HypothesisTracker';
 import { LEARNING_MODULES } from '@/data/learning-modules';
 import PhaseBadge from '@/components/ui/phase-badge';
 import TodayHero from '@/components/dashboard/TodayHero';
-import { isFeatureEnabled } from '@/lib/featureFlags';
+import StatsStrip from '@/components/dashboard/StatsStrip';
 import { resolveNextAction, type AssignmentInput } from '@/lib/nextAction';
 
 interface CaseRow { id: string; title: string; difficulty: string; est_minutes: number | null; topic?: string | null; }
