@@ -4,6 +4,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
 import { useProgress } from '@/context/ProgressContext';
 import { getCurrentLevel } from '@/components/dashboard/LevelCard';
+import { isNavActive } from '@/lib/nav';
 import PlayerAvatar from '@/components/avatar/PlayerAvatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -33,18 +34,7 @@ export default function AppHeader() {
 
   const toggleLang = () => setLang(lang === 'en' ? 'bg' : 'en');
 
-  const isActive = (path: string) => {
-    const p = location.pathname;
-    if (p === path) return true;
-    // Highlight parent nav on nested routes
-    if (path === '/cases' && (p.startsWith('/case/') || p === '/cases')) return true;
-    if (path === '/learn' && p.startsWith('/learn/')) return true;
-    if (path === '/simulator' && p.startsWith('/simulator')) return true;
-    if (path === '/journey' && p.startsWith('/journey')) return true;
-    if (path === '/my-startup' && p.startsWith('/my-startup')) return true;
-    if (path === '/teacher' && p.startsWith('/teacher') && p !== '/teacher-dashboard' && p !== '/teacher-new') return true;
-    return false;
-  };
+  const isActive = (path: string) => isNavActive(path, location.pathname);
 
   // Desktop nav: underline-based active style (no pill)
   const navLinkClass = (path: string) =>
