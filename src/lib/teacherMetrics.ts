@@ -297,10 +297,8 @@ function collectSignals(
     );
   }
 
-  if (
-    overall < METRIC_TARGETS.progressSlowedThresholdPct &&
-    activityStatus !== 'not_yet_started'
-  ) {
+  if (overall < METRIC_TARGETS.progressSlowedThresholdPct) {
+    // "not_yet_started" returned early above, so we know we're past that state here
     signals.push(
       makeSignal(
         'progress_has_slowed',
