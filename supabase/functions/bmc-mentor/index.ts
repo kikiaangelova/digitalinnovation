@@ -103,7 +103,9 @@ serve(async (req) => {
 
     const langLabel = lang === "bg" ? "Bulgarian" : "English";
 
-    const systemPrompt = `You are an expert startup mentor and Business Model Canvas evaluator for 11th grade business students.
+    const systemPrompt = `${(await import("../_shared/kiki-persona.ts")).KIKI_PERSONA_PROMPT}
+
+You are Kiki evaluating a learner's Business Model Canvas inside DigiInnov Case Lab.
 
 CRITICAL: Respond ENTIRELY in ${langLabel}. Do not mix languages. All text must be in ${langLabel}.
 
