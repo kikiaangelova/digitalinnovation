@@ -282,15 +282,16 @@ export default function StudentDashboard() {
             const rawName = profile?.display_name || profile?.full_name || '';
             const firstName = rawName.trim().split(/\s+/)[0] || '';
             const hour = new Date().getHours();
-            const greetEn = hour < 12 ? 'Good morning' : hour < 18 ? 'Hey' : 'Evening';
+            const greetEn = hour < 12 ? 'Morning' : hour < 18 ? 'Hey' : 'Evening';
             const greetBg = hour < 12 ? 'Добро утро' : hour < 18 ? 'Здрасти' : 'Добър вечер';
+            const emoji = hour < 12 ? '☀️' : hour < 18 ? '👋' : '🌙';
             return (
               <div className="px-1">
-                <h1 className="text-xl sm:text-2xl font-bold text-foreground leading-tight">
-                  {t(greetEn, greetBg)}{firstName ? `, ${firstName}` : ''}.
+                <h1 className="font-quest text-3xl sm:text-4xl font-bold text-foreground leading-none">
+                  {t(greetEn, greetBg)}{firstName ? `, ${firstName}` : ''} <span className="inline-block -rotate-6">{emoji}</span>
                 </h1>
-                <p className="mt-1 text-sm text-muted-foreground">
-                  {t('One move today. That\u2019s all you need.', 'Един ход днес. Толкова ти трябва.')}
+                <p className="mt-2 text-sm sm:text-base text-muted-foreground">
+                  {t('One move today. That\u2019s all it takes.', 'Един ход днес. Толкова.')}
                 </p>
               </div>
             );
