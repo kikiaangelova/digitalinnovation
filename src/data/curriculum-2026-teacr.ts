@@ -9,6 +9,7 @@
  */
 
 import type { DecisionOption } from '@/components/learning/DecisionConsequenceReflection';
+import { EXTRA_TEACR_SCENARIOS } from './curriculum-2026-extra';
 
 export interface TEACRScenario {
   /** Matches a stage id (stage-1..stage-6) or a sub-module id. */
@@ -270,6 +271,7 @@ const SUBMODULE_SCENARIOS: TEACRScenario[] = [
 export const ALL_TEACR_SCENARIOS: TEACRScenario[] = [
   ...STAGE_SCENARIOS,
   ...SUBMODULE_SCENARIOS,
+  ...EXTRA_TEACR_SCENARIOS,
 ];
 
 const BY_ID = new Map(ALL_TEACR_SCENARIOS.map(s => [s.targetId, s] as const));
