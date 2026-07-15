@@ -261,7 +261,7 @@ export default function LearningModulePlayer() {
       setStartupSynced(true);
       toast.success(t('Saved into your startup ✅', 'Записах го в стартъпа ти ✅'));
     } catch {
-      toast.error(t('Didn't save. Try again.', 'Не се записа. Пробвай пак.'));
+      toast.error(t("Didn't save. Try again.", 'Не се записа. Пробвай пак.'));
     }
   };
 
@@ -277,7 +277,7 @@ export default function LearningModulePlayer() {
           <><Save className="h-3 w-3 text-progress" /> {t('Saved', 'Записано')} · {lastSavedAt.toLocaleTimeString()}</>
         )}
         {autoSaveStatus === 'error' && (
-          <><XCircle className="h-3 w-3 text-destructive" /> {t('Didn't save', 'Не се записа')}</>
+          <><XCircle className="h-3 w-3 text-destructive" /> {t("Didn't save", 'Не се записа')}</>
         )}
       </div>
     );
