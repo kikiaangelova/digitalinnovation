@@ -1,11 +1,11 @@
 /**
- * Unified Teacher Workspace — SKELETON ONLY (step 1b).
+ * Unified Teacher Workspace — step 1c.
  *
  * Route: `/teacher-new` (feature-flagged behind `teacher-workspace-v2`).
- * The legacy routes `/teacher`, `/teacher-dashboard`, `/admin/teacher`
- * remain live and unchanged. No feature has been ported yet — each tab
- * renders a labelled placeholder describing which future step will fill
- * it in.
+ * Legacy `/teacher`, `/teacher-dashboard`, `/admin/teacher` remain live
+ * and unchanged. Step 1c wires up the Overview and Students tabs with
+ * real progress data via `useStudentProgress`; other tabs still show
+ * labelled placeholders naming the step that will port them.
  *
  * Layout
  * ------
@@ -44,12 +44,11 @@ import { toast } from 'sonner';
 import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
 import { useClassroomStudents } from '@/hooks/useClassroomStudents';
+import { useClassroomAssignments } from '@/hooks/useClassroomAssignments';
+import { useStudentProgress } from '@/hooks/useStudentProgress';
 import { isFeatureEnabled, enableFeatureFlag } from '@/lib/featureFlags';
-import {
-  computeStudentMetrics,
-  describeActivityStatus,
-  METRIC_TARGETS,
-} from '@/lib/teacherMetrics';
+import OverviewTab from '@/components/teacher-workspace/OverviewTab';
+import StudentsTab from '@/components/teacher-workspace/StudentsTab';
 
 type TabId =
   | 'overview'
@@ -226,81 +225,6 @@ function TabPlaceholder({ tab }: { tab: TabDef }) {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Overview mini-panel — uses the canonical metrics                   */
-/* ------------------------------------------------------------------ */
-
-function OverviewPreview() {
-  const t = useT();
-  const { students } = useClassroomStudents();
-
-  const summary = useMemo(() => {
-    // NOTE: this preview only uses the profile-level `updated_at` and
-    // total_xp available in step 1b. Case/simulator/startup/module
-    // inputs land in step 1c, which is why the pillar breakdown is not
-    // shown here yet.
-    const metrics = students.map((s) =>
-      computeStudentMetrics({
-        casesCompleted: 0,
-        simWeek: 0,
-        startupNarrativeFilled: 0,
-        startupBmcFilled: 0,
-        modulesCompleted: 0,
-        lastActivityAt: s.updated_at,
-        totalXp: s.total_xp,
-      }),
-    );
-    const active = metrics.filter((m) => m.activityStatus === 'active').length;
-    const notStarted = metrics.filter((m) => m.activityStatus === 'not_yet_started').length;
-    const needsSupport = metrics.filter((m) => m.activityStatus === 'support_recommended').length;
-    return { active, notStarted, needsSupport, total: students.length };
-  }, [students]);
-
-  return (
-    <div className="space-y-4">
-      <div className="grid gap-3 grid-cols-2 lg:grid-cols-4">
-        <StatCard label={t('Students', 'Ученици')} value={summary.total} />
-        <StatCard label={t('Active this week', 'Активни тази седмица')} value={summary.active} />
-        <StatCard label={t('Not yet started', 'Още не са започнали')} value={summary.notStarted} />
-        <StatCard
-          label={t('Support recommended', 'Препоръчва се подкрепа')}
-          value={summary.needsSupport}
-          tone={summary.needsSupport > 0 ? 'attention' : 'default'}
-        />
-      </div>
-      <Card className="p-4 text-xs text-muted-foreground">
-        {t(
-          `Using canonical metric model. Active window: ${METRIC_TARGETS.activeWindowDays} days. Low-activity band: ${METRIC_TARGETS.activeWindowDays + 1}–${METRIC_TARGETS.lowActivityWindowDays} days.`,
-          `Използва се каноничният модел на метриките. Активен прозорец: ${METRIC_TARGETS.activeWindowDays} дни. Ниска активност: ${METRIC_TARGETS.activeWindowDays + 1}–${METRIC_TARGETS.lowActivityWindowDays} дни.`,
-        )}
-      </Card>
-    </div>
-  );
-}
-
-function StatCard({
-  label,
-  value,
-  tone = 'default',
-}: {
-  label: string;
-  value: number;
-  tone?: 'default' | 'attention';
-}) {
-  return (
-    <Card className="p-4">
-      <p className="text-xs text-muted-foreground">{label}</p>
-      <p
-        className={`mt-1 text-2xl font-semibold ${
-          tone === 'attention' && value > 0 ? 'text-amber-600 dark:text-amber-400' : ''
-        }`}
-      >
-        {value}
-      </p>
-    </Card>
-  );
-}
-
-/* ------------------------------------------------------------------ */
 /*  Header block                                                       */
 /* ------------------------------------------------------------------ */
 
@@ -375,6 +299,28 @@ export default function TeacherWorkspace() {
   const { user, isAdmin, loading: authLoading } = useAuth();
   const t = useT();
   const { classroom, students, loading, error } = useClassroomStudents();
+  const { assignments, loading: assignmentsLoading } = useClassroomAssignments(
+    classroom?.id ?? null,
+  );
+
+  const studentIds = useMemo(() => students.map((s) => s.student_id), [students]);
+  const lastActivityById = useMemo(
+    () => Object.fromEntries(students.map((s) => [s.student_id, s.updated_at])),
+    [students],
+  );
+  const totalXpById = useMemo(
+    () => Object.fromEntries(students.map((s) => [s.student_id, s.total_xp])),
+    [students],
+  );
+  const {
+    progressById,
+    metricsById,
+    loading: progressLoading,
+  } = useStudentProgress(studentIds, {
+    lastActivityById,
+    totalXpById,
+    hasAssignedCases: assignments.some((a) => a.assignment_type === 'case'),
+  });
 
   const visibleTabs = useMemo(
     () => TABS.filter((tab) => !tab.adminOnly || isAdmin),
@@ -432,7 +378,23 @@ export default function TeacherWorkspace() {
 
           {visibleTabs.map((tab) => (
             <TabsContent key={tab.id} value={tab.id} className="mt-0">
-              {tab.id === 'overview' ? <OverviewPreview /> : <TabPlaceholder tab={tab} />}
+              {tab.id === 'overview' ? (
+                <OverviewTab
+                  metricsById={metricsById}
+                  studentCount={students.length}
+                  assignments={assignments}
+                  loading={progressLoading || assignmentsLoading}
+                />
+              ) : tab.id === 'students' ? (
+                <StudentsTab
+                  students={students}
+                  metricsById={metricsById}
+                  progressById={progressById}
+                  loading={progressLoading}
+                />
+              ) : (
+                <TabPlaceholder tab={tab} />
+              )}
             </TabsContent>
           ))}
         </Tabs>
