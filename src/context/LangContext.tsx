@@ -34,7 +34,7 @@ const translations = {
     useInClassroom: 'Use in Your Classroom',
     requestDemo: 'Request Demo',
     accessClarity: 'Free for students. Contact us for schools and institutions.',
-    gamifiedPlatform: 'Gamified Learning Platform',
+    gamifiedPlatform: 'Built by a teacher, for real classrooms',
     howItWorksTitle: 'How It Works',
     howItWorksDesc: 'A structured pathway from raw idea to investor-ready pitch — no prior experience required.',
     howStep1: 'Analyse real-world business cases and master foundational concepts',
@@ -63,9 +63,9 @@ const translations = {
     readyToInnovateDesc: 'Join the Digital Innovation Lab and start building your future today.',
 
     // Hero
-    heroLine1: 'You have an idea.',
-    heroLine2: 'Let\'s build it together.',
-    heroDescriptionLine: 'Analyze real business cases, build your startup idea, and test your strategy in the simulator.',
+    heroLine1: 'Pick a subject.',
+    heroLine2: 'Build something real.',
+    heroDescriptionLine: 'Digital innovation, marketing, AI for business, finance — taught the way I teach my own students. Choose a track, learn by doing, and ship your first startup idea. No prior experience needed.',
     areYouTeacher: 'Are you a teacher?',
     testimonial1: 'I built a business plan for a sustainable sneaker brand in just 3 weeks.',
     testimonial2: 'The simulator made me think like a real founder, not just a student.',
