@@ -423,16 +423,60 @@ export default function CaseLibrary() {
     <div className="min-h-screen bg-background">
       <AppHeader />
       <div className="container mx-auto max-w-5xl px-4 py-8">
-        <div className="flex items-start justify-between mb-6">
-          <div>
-            <h1 className="typo-h1 mb-2 flex items-center gap-2">{t.caseLibrary} <PhaseBadge phase="apply" lang={lang} /></h1>
-            <p className="typo-helper">
-              {tl(
-                'Explore case studies organized by industry domain. Select an industry to understand its context and analyze related cases.',
-                'Разгледай казуси, организирани по индустриални области. Избери индустрия, за да разбереш контекста и да анализираш свързаните казуси.'
-              )}
-            </p>
+        {/* ── Narrative header — Fraunces italic, personal Kiki intro ── */}
+        <section
+          className="mb-6 overflow-hidden rounded-3xl border border-border/60 p-6 sm:p-8"
+          style={{ background: 'var(--gradient-soft)', boxShadow: 'var(--shadow-warm)' }}
+        >
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-primary">
+                  {tl('Case library', 'Библиотека с казуси')}
+                </p>
+                <PhaseBadge phase="apply" lang={lang} />
+              </div>
+              <h1 className="mt-1 font-display text-4xl font-extrabold leading-[0.95] text-foreground sm:text-6xl">
+                {tl('Real businesses,', 'Реални бизнеси,')}
+                <br />
+                <span
+                  className="italic bg-clip-text text-transparent"
+                  style={{ backgroundImage: 'var(--gradient-zest)' }}
+                >
+                  {tl('your call.', 'ти решаваш.')}
+                </span>
+              </h1>
+              <p className="mt-3 max-w-xl text-sm text-muted-foreground sm:text-base">
+                {tl(
+                  'Pick an industry. Step into a founder\u2019s chair. Read the story, feel the pressure, choose A, B or C — and watch what happens next.',
+                  'Избери индустрия. Седни на стола на фаундъра. Прочети историята, усети напрежението, избери A, B или C — и виж какво следва.'
+                )}
+              </p>
+            </div>
+            {/* View mode toggle */}
+            <div className="flex items-center gap-1 rounded-2xl border border-border bg-card p-0.5 shrink-0">
+              <button
+                onClick={() => setViewMode('grid')}
+                aria-label={tl('Show industry grid view', 'Покажи изглед „Индустриална мрежа"')}
+                aria-pressed={viewMode === 'grid'}
+                className={`rounded-xl p-2 transition-colors ${viewMode === 'grid' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                title={tl('Industry Grid', 'Индустриална мрежа')}
+              >
+                <LayoutGrid className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => setViewMode('list')}
+                aria-label={tl('Show all cases as a list', 'Покажи всички казуси като списък')}
+                aria-pressed={viewMode === 'list'}
+                className={`rounded-xl p-2 transition-colors ${viewMode === 'list' ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+                title={tl('List', 'Списък')}
+              >
+                <List className="h-4 w-4" />
+              </button>
+            </div>
           </div>
+        </section>
+        <div className="hidden">
           {/* View mode toggle */}
           <div className="flex items-center gap-1 rounded-lg border border-border bg-card p-0.5 shrink-0">
             <button

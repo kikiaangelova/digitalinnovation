@@ -277,7 +277,7 @@ export default function StudentDashboard() {
         <AppHeader />
         {showOnboarding && <WelcomeOnboarding onComplete={handleOnboardingComplete} />}
         <main className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 pb-24 md:pb-8 space-y-5 sm:space-y-6 max-w-5xl">
-          {/* ── Warm greeting ── */}
+          {/* ── Warm greeting — narrative Fraunces hero ── */}
           {(() => {
             const rawName = profile?.display_name || profile?.full_name || '';
             const firstName = rawName.trim().split(/\s+/)[0] || '';
@@ -286,14 +286,31 @@ export default function StudentDashboard() {
             const greetBg = hour < 12 ? 'Добро утро' : hour < 18 ? 'Здрасти' : 'Добър вечер';
             const emoji = hour < 12 ? '☀️' : hour < 18 ? '👋' : '🌙';
             return (
-              <div className="px-1">
-                <h1 className="font-quest text-3xl sm:text-4xl font-bold text-foreground leading-none">
-                  {t(greetEn, greetBg)}{firstName ? `, ${firstName}` : ''} <span className="inline-block -rotate-6">{emoji}</span>
-                </h1>
-                <p className="mt-2 text-sm sm:text-base text-muted-foreground">
-                  {t('One move today. That\u2019s all it takes.', 'Един ход днес. Толкова.')}
+              <section
+                className="relative overflow-hidden rounded-3xl border border-border/60 p-6 sm:p-8"
+                style={{ background: 'var(--gradient-soft)', boxShadow: 'var(--shadow-warm)' }}
+              >
+                <p className="text-[10px] font-bold uppercase tracking-[0.3em] text-primary">
+                  {t('Today', 'Днес')}
                 </p>
-              </div>
+                <h1 className="mt-1 font-display text-4xl font-extrabold leading-[0.95] text-foreground sm:text-6xl">
+                  {t(greetEn, greetBg)}{firstName ? `, ${firstName}` : ''}
+                  <span className="ml-2 inline-block -rotate-6">{emoji}</span>
+                  <br />
+                  <span
+                    className="italic bg-clip-text text-transparent"
+                    style={{ backgroundImage: 'var(--gradient-zest)' }}
+                  >
+                    {t('one move.', 'един ход.')}
+                  </span>
+                </h1>
+                <p className="mt-3 max-w-lg text-sm text-muted-foreground sm:text-base">
+                  {t(
+                    'You don\u2019t need to do it all today. Kiki\u2019s note: pick one thing, finish it, close the tab proud.',
+                    'Не е нужно да правиш всичко днес. Кики казва: избери едно нещо, довърши го, затвори с усмивка.'
+                  )}
+                </p>
+              </section>
             );
           })()}
 
