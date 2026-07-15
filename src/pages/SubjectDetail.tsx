@@ -323,7 +323,7 @@ function ModuleRow({
   response: any;
   lang: 'bg' | 'en';
   t: (en: string, bg: string) => string;
-  onOpen: () => void;
+  onOpen?: () => void;
   assignmentMeta?: { classroomName: string; dueDate: string | null; note: string | null };
 }) {
   const isCompleted = !!response?.completed_at;
@@ -333,10 +333,14 @@ function ModuleRow({
     : isInProgress
       ? 'in_progress'
       : 'not_started';
+  const disabled = !onOpen;
   return (
     <li
-      className="rounded-lg border border-border bg-background p-4 hover:border-primary/40 cursor-pointer"
+      className={`rounded-lg border border-border bg-background p-4 ${
+        disabled ? 'opacity-70' : 'hover:border-primary/40 cursor-pointer'
+      }`}
       onClick={onOpen}
+      aria-disabled={disabled || undefined}
     >
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-3 min-w-0">
@@ -365,7 +369,7 @@ function ModuleRow({
               <StatusBadge status={status} lang={lang} />
               {!mod.hasRichContent && (
                 <Badge variant="outline" className="text-[10px] text-muted-foreground">
-                  {t('Basic', 'Основен')}
+                  {t('In preparation', 'В процес на подготовка')}
                 </Badge>
               )}
               {!mod.registered && (
@@ -396,7 +400,9 @@ function ModuleRow({
             )}
           </div>
         </div>
-        <ArrowRight className="h-4 w-4 text-muted-foreground shrink-0" />
+        {!disabled && (
+          <ArrowRight className="h-4 w-4 text-muted-foreground shrink-0" />
+        )}
       </div>
     </li>
   );
