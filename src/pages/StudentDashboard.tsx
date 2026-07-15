@@ -23,14 +23,14 @@ import HypothesisTracker from '@/components/dashboard/HypothesisTracker';
 import { LEARNING_MODULES } from '@/data/learning-modules';
 import PhaseBadge from '@/components/ui/phase-badge';
 import TodayHero from '@/components/dashboard/TodayHero';
-import { isFeatureEnabled } from '@/lib/featureFlags';
+import StatsStrip from '@/components/dashboard/StatsStrip';
 import { resolveNextAction, type AssignmentInput } from '@/lib/nextAction';
 
 interface CaseRow { id: string; title: string; difficulty: string; est_minutes: number | null; topic?: string | null; }
 interface SubRow { case_study_id: string; is_draft: boolean; total_score?: number | null; max_score?: number | null; updated_at?: string | null; }
 
 export default function StudentDashboard() {
-  const { user, loading: authLoading } = useAuth();
+  const { user, profile, loading: authLoading } = useAuth();
   const { lang } = useLang();
   const navigate = useNavigate();
   const progress = useProgress();
@@ -232,15 +232,6 @@ export default function StudentDashboard() {
 
   const outcomeScores = progress.outcomeScores;
 
-  const xpActions = [
-    { action: t('Complete case study', 'Завърши казус'), xp: '+100 XP', icon: BookOpen },
-    { action: t('High-quality analysis (>70%)', 'Качествен анализ (>70%)'), xp: '+30 XP', icon: Zap },
-    { action: t('Complete simulator scenario', 'Завърши сценарий от симулатора'), xp: '+50 XP', icon: BarChart3 },
-    { action: t('Submit startup section', 'Подай секция от стартъп'), xp: '+40–50 XP', icon: Rocket },
-    { action: t('Submit final pitch', 'Подай финално представяне'), xp: '+120 XP', icon: Zap },
-    { action: t('Explore dictionary term', 'Научи термин от речника'), xp: '+2 XP', icon: BookOpen },
-  ];
-
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
@@ -257,25 +248,6 @@ export default function StudentDashboard() {
     setTotalXp(20);
   };
 
-  // Determine next action for the student
-  const getNextAction = () => {
-    if (casesCompleted === 0) return { label: t('Start your first case study', 'Започни първия си казус'), path: '/cases', icon: BookOpen };
-    const startupFilled = Object.values(startupSectionMap).filter(Boolean).length;
-    if (startupFilled < 3) return { label: t('Build your startup idea', 'Изгради стартъп идеята си'), path: '/my-startup', icon: Rocket };
-    if (!simComplete && simWeek <= 3) return { label: t('Test your strategy in the simulator', 'Тествай стратегията в симулатора'), path: '/simulator', icon: BarChart3 };
-    if (!finalPitchSubmitted) return { label: t('Submit your final pitch', 'Подай финалното си представяне'), path: '/my-startup', icon: Rocket };
-    return { label: t('Take the final exam', 'Започни финалния изпит'), path: '/final-exam', icon: Award };
-  };
-
-  const nextAction = getNextAction();
-
-  /* ═══════════════════════════════════════════════════════════════════
-   * Student Dashboard V2 — behind `student-dashboard-v2` feature flag.
-   * ONE canonical CTA (TodayHero), reorganized hierarchy, empty-state
-   * hiding. Reuses existing widgets; deletes nothing. Old layout stays
-   * available whenever the flag is off.
-   * ═══════════════════════════════════════════════════════════════════ */
-  if (isFeatureEnabled('student-dashboard-v2')) {
     const draftCaseIds = new Set(submissions.filter(s => s.is_draft).map(s => s.case_study_id));
     const canonical = resolveNextAction({
       assignments,
@@ -305,6 +277,33 @@ export default function StudentDashboard() {
         <AppHeader />
         {showOnboarding && <WelcomeOnboarding onComplete={handleOnboardingComplete} />}
         <main className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 pb-24 md:pb-8 space-y-5 sm:space-y-6 max-w-5xl">
+          {/* ── Warm greeting ── */}
+          {(() => {
+            const rawName = profile?.display_name || profile?.full_name || '';
+            const firstName = rawName.trim().split(/\s+/)[0] || '';
+            const hour = new Date().getHours();
+            const greetEn = hour < 12 ? 'Good morning' : hour < 18 ? 'Hey' : 'Evening';
+            const greetBg = hour < 12 ? 'Добро утро' : hour < 18 ? 'Здрасти' : 'Добър вечер';
+            return (
+              <div className="px-1">
+                <h1 className="text-xl sm:text-2xl font-bold text-foreground leading-tight">
+                  {t(greetEn, greetBg)}{firstName ? `, ${firstName}` : ''}.
+                </h1>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {t('One move today. That\u2019s all you need.', 'Един ход днес. Толкова ти трябва.')}
+                </p>
+              </div>
+            );
+          })()}
+
+          {/* ── Stats strip ── */}
+          <StatsStrip
+            lang={lang}
+            xp={xp}
+            streakDays={loginStreakDays}
+            casesCompleted={casesCompleted}
+          />
+
           {/* ── Primary zone: Today ── */}
           <TodayHero lang={lang} action={canonical} />
 
@@ -450,268 +449,7 @@ export default function StudentDashboard() {
             <TestInsights lang={lang} userId={user?.id} />
           </section>
 
-          <p className="text-xs text-muted-foreground text-center">
-            {t(
-              'You are viewing the new dashboard (preview). Remove the ff:student-dashboard-v2 key from browser storage to return to the current dashboard.',
-              'Разглеждаш новото табло (преглед). Изтрий ключа ff:student-dashboard-v2 от локалното хранилище, за да се върнеш към текущото табло.',
-            )}
-          </p>
         </main>
       </div>
     );
-  }
-
-  return (
-    <div className="min-h-screen bg-background">
-      <AppHeader />
-      {showOnboarding && <WelcomeOnboarding onComplete={handleOnboardingComplete} />}
-      <main className="container mx-auto px-4 py-6 sm:py-8 pb-24 md:pb-8 space-y-6 sm:space-y-8 max-w-6xl">
-        {/* ═══ Header + Next Action ═══ */}
-        <div className="flex flex-col gap-3">
-          <div>
-            <h1 className="typo-h1 flex items-center gap-2">
-              {t('Your Innovation Dashboard', 'Твоето иновационно табло')}
-              <PhaseBadge phase="fun" lang={lang} />
-            </h1>
-            <p className="typo-helper mt-1">
-              {t('Track your progress, earn XP, and build your startup', 'Проследи напредъка си, спечели XP и изгради своя стартъп')}
-            </p>
-          </div>
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-            <Button
-              className="sim-gradient border-0 gap-2 w-full sm:w-auto"
-              onClick={() => navigate(nextAction.path)}
-            >
-              <nextAction.icon className="h-4 w-4" />
-              <span className="truncate">{nextAction.label}</span>
-              <ArrowRight className="h-4 w-4 shrink-0" />
-            </Button>
-            <Button variant="outline" size="sm" className="print:hidden w-full sm:w-auto" onClick={() => navigate('/my-report')}>
-              <FileText className="h-4 w-4 mr-1" /> {t('Report', 'Доклад')}
-            </Button>
-          </div>
-        </div>
-
-        {/* ═══ NEXT STEP HERO (read-only) ═══ */}
-        <NextStepHero
-          lang={lang}
-          casesCompleted={casesCompleted}
-          startupSectionMap={startupSectionMap}
-          startupSubmitted={startupProject?.is_submitted || false}
-          simWeek={simWeek}
-          simComplete={simComplete}
-          finalPitchSubmitted={finalPitchSubmitted}
-          stagesCompleted={progress.stagesCompleted}
-        />
-
-        {/* ═══ SECTION 1: Learning Navigator (Hero) ═══ */}
-        <LearningNavigator
-          lang={lang}
-          xp={xp}
-          casesCompleted={casesCompleted}
-          startupSections={startupSectionMap}
-          startupSubmitted={startupProject?.is_submitted || false}
-          simWeek={simWeek}
-          simComplete={simComplete}
-          outcomeScores={outcomeScores}
-        />
-
-        {/* ═══ Quick Resume Cards — "Продължи оттам, където спря" ═══ */}
-        {(() => {
-          // Find next incomplete module
-          const nextMod = LEARNING_MODULES.find(m => !completedModuleSlugs.has(m.slug));
-          // Find last started but incomplete case (draft submission)
-          const draftSubs = submissions.filter(s => s.is_draft);
-          const lastDraftCase = draftSubs.length > 0
-            ? cases.find(c => c.id === draftSubs[draftSubs.length - 1].case_study_id)
-            : undefined;
-          // Find next unstarted case if no draft
-          const nextCase = !lastDraftCase
-            ? cases.find(c => !completedCaseIds.has(c.id))
-            : undefined;
-          const resumeCase = lastDraftCase || nextCase;
-
-          return (
-            <QuickResumeCards
-              lang={lang}
-              lastCaseTitle={resumeCase?.title}
-              lastCaseId={resumeCase?.id}
-              nextModuleTitle={nextMod ? (lang === 'bg' ? nextMod.title_bg : nextMod.title_en) : undefined}
-              nextModuleSlug={nextMod?.slug}
-              simWeek={simWeek}
-              simComplete={simComplete}
-              startupProgressPct={progress.startupProgressPct}
-              startupSubmitted={startupProject?.is_submitted || false}
-            />
-          );
-        })()}
-        {/* ═══ Daily Goal (visual only, no XP changes) ═══ */}
-        <DailyGoalCard lang={lang} simComplete={simComplete} simWeek={simWeek} />
-
-        {/* ═══ Theory Modules ═══ */}
-        <Card className="p-5 border-border">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <GraduationCap className="h-5 w-5 text-primary" />
-              <h3 className="text-sm font-semibold text-foreground">
-                {t('Theory Modules', 'Теоретични модули')}
-              </h3>
-            </div>
-            <span className="text-xs text-muted-foreground">
-              {t('Earn up to 125 XP', 'Спечели до 125 XP')}
-            </span>
-          </div>
-          <div className="space-y-2">
-            {LEARNING_MODULES.map(mod => {
-              const done = completedModuleSlugs.has(mod.slug);
-              return (
-                <button
-                  key={mod.slug}
-                  onClick={() => navigate(`/learn/${mod.slug}`)}
-                  className="flex items-center gap-3 w-full rounded-lg border border-border bg-card px-3 py-2.5 text-left hover:border-primary/30 transition-colors"
-                >
-                  {done ? (
-                    <CheckCircle2 className="h-4 w-4 text-green-600 shrink-0" />
-                  ) : (
-                    <div className="h-4 w-4 rounded-full border-2 border-muted-foreground/30 shrink-0" />
-                  )}
-                  <span className={`text-sm flex-1 ${done ? 'text-muted-foreground line-through' : 'text-foreground font-medium'}`}>
-                    {lang === 'bg' ? mod.title_bg : mod.title_en}
-                  </span>
-                  <ArrowRight className="h-3.5 w-3.5 text-muted-foreground" />
-                </button>
-              );
-            })}
-          </div>
-        </Card>
-
-        <HypothesisTracker lang={lang} />
-        <ChallengeHub lang={lang} userId={user?.id} />
-        <TestInsights lang={lang} userId={user?.id} />
-
-        {/* ═══ SECTION 2: Learning & Competition ═══ */}
-        <div>
-          <h2 className="typo-h2 mb-4 flex items-center gap-2">
-            <BarChart3 className="h-5 w-5 text-primary" />
-            {t('Your Learning & Ranking', 'Твоят напредък и класиране')}
-          </h2>
-          <div className="grid gap-4 md:grid-cols-2">
-            <LearningOutcomes lang={lang} scores={outcomeScores} />
-            <Leaderboard lang={lang} currentUserId={user?.id} limit={5} />
-          </div>
-        </div>
-
-        {/* ═══ SECTION 3: Achievements & Social ═══ */}
-        <div>
-          <h2 className="typo-h2 mb-4 flex items-center gap-2">
-            <Star className="h-5 w-5 text-xp-gold" />
-            {t('Achievements & Community', 'Постижения и общност')}
-          </h2>
-
-          <div className="space-y-4">
-            <AchievementBadges
-              lang={lang}
-              casesCompleted={casesCompleted}
-              startupSubmitted={startupProject?.is_submitted || false}
-              simulatorComplete={simComplete}
-              usedAIMentor={usedAIMentor}
-              casesAbove80Percent={casesAbove80Percent}
-              bmcSectionsCompleted={bmcSectionsCompleted}
-              finalPitchSubmitted={finalPitchSubmitted}
-              peerReviewsGiven={peerReviewsGiven}
-              industriesExplored={industriesExplored}
-              loginStreakDays={loginStreakDays}
-              quizTestsCompleted={quizTestsCompleted}
-              quizCategoriesTested={quizCategoriesTested}
-              quizConsecutiveImprovements={quizConsecutiveImprovements}
-              quizHighScores80={quizHighScores80}
-            />
-
-            {/* Peer Review + XP Actions — side by side */}
-            <div className="grid gap-4 md:grid-cols-2">
-              {/* Peer Review */}
-              <div className="dash-section">
-                <div className="flex items-center justify-between mb-3">
-                  <h3 className="typo-card-title flex items-center gap-2">
-                    <Users className="h-4 w-4 text-primary" />
-                    {t('Peer Review', 'Партньорска рецензия')}
-                  </h3>
-                  <Button variant="outline" size="sm" onClick={() => navigate('/peer-review')}>
-                    {t('Open', 'Отвори')}
-                  </Button>
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="rounded-xl bg-accent/50 p-3 text-center">
-                    {pendingReviews > 0 ? (
-                      <>
-                        <p className="text-xl font-bold text-foreground">{pendingReviews}</p>
-                        <p className="text-xs text-muted-foreground">{t('Pending Reviews', 'Чакащи рецензии')}</p>
-                      </>
-                    ) : (
-                      <p className="text-xs text-muted-foreground leading-relaxed py-1">
-                        {t(
-                          "No reviews yet — submit a case first",
-                          'Все още няма — подай казус първо'
-                        )}
-                      </p>
-                    )}
-                  </div>
-                  <div className="rounded-xl bg-accent/50 p-3 text-center">
-                    <p className="text-xl font-bold text-primary flex items-center justify-center gap-1">
-                      {avgPeerScore !== null ? <><Star className="h-4 w-4" /> {avgPeerScore.toFixed(1)}/4</> : '—'}
-                    </p>
-                    <p className="text-xs text-muted-foreground">{t('Your Avg Score', 'Средна оценка')}</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* XP Actions */}
-              <div className="dash-section">
-                <h3 className="typo-card-title mb-3 flex items-center gap-2">
-                  <Zap className="h-4 w-4 text-xp-gold" />
-                  {t('Earn XP', 'Спечели XP')}
-                </h3>
-                <div className="space-y-1.5">
-                  {xpActions.map((a, i) => (
-                    <div key={i} className="flex items-center justify-between py-1">
-                      <div className="flex items-center gap-2">
-                        <a.icon className="h-3.5 w-3.5 text-muted-foreground" />
-                        <span className="text-xs text-foreground">{a.action}</span>
-                      </div>
-                      <span className="text-xs typo-xp">{a.xp}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* ═══ SECTION 4: Final Exam ═══ */}
-        <div className="dash-section-accent">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                <Award className="h-5 w-5 text-primary" />
-              </div>
-              <div>
-                <h3 className="typo-card-title">{t('Final Exam & Certificate', 'Финален изпит и сертификат')}</h3>
-                <p className="text-xs text-muted-foreground">{t('Prove your skills and earn your certificate', 'Докажи уменията си и получи сертификат')}</p>
-              </div>
-            </div>
-            <Button onClick={() => navigate('/final-exam')} className="gap-2">
-              <Award className="h-4 w-4" /> {t('Take Exam', 'Започни изпит')}
-            </Button>
-          </div>
-        </div>
-
-        {/* ═══ AI Mentor ═══ */}
-        <AIMentorWidget
-          lang={lang}
-          startupData={startupProject}
-          onFeedbackReceived={() => setUsedAIMentor(true)}
-        />
-      </main>
-    </div>
-  );
 }
