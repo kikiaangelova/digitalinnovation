@@ -11,6 +11,8 @@
  * Voice: Kiki. Warm, direct, informal "ти" in Bulgarian. No corporate fluff.
  */
 
+import { BLACKSWAN_MICROLESSONS } from './curriculum-2026-blackswan';
+
 export interface MicroLessonDecisionOption {
   labelEn: string;
   labelBg: string;
