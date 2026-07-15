@@ -30,7 +30,7 @@ interface CaseRow { id: string; title: string; difficulty: string; est_minutes: 
 interface SubRow { case_study_id: string; is_draft: boolean; total_score?: number | null; max_score?: number | null; updated_at?: string | null; }
 
 export default function StudentDashboard() {
-  const { user, loading: authLoading } = useAuth();
+  const { user, profile, loading: authLoading } = useAuth();
   const { lang } = useLang();
   const navigate = useNavigate();
   const progress = useProgress();
