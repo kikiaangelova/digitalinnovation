@@ -101,144 +101,136 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <AppHeader />
       <main>
-        {/* ══════════ HERO — Innovation Lab Console (dark navy) ══════════ */}
-        <section className="relative bg-ink-gradient text-ink-fg overflow-hidden">
-          <video
-            aria-hidden
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="auto"
-            poster=""
-            className="absolute inset-0 h-full w-full object-cover opacity-40 pointer-events-none mix-blend-screen"
-          >
-            <source src={heroBg.url} type="video/mp4" />
-          </video>
-          <div aria-hidden className="absolute inset-0 bg-ink-gradient/60 pointer-events-none" style={{ background: "linear-gradient(160deg, hsl(216 60% 10% / 0.75) 0%, hsl(217 54% 14% / 0.55) 60%, hsl(217 45% 20% / 0.7) 100%)" }} />
-          <div aria-hidden className="absolute inset-0 bg-grid-ink opacity-40 pointer-events-none" />
+        {/* ══════════ HERO — Playful Quest ══════════ */}
+        <section className="relative overflow-hidden bg-[#FFF7E6]">
+          {/* dotted paper backdrop */}
           <div
             aria-hidden
-            className="absolute -top-32 -left-32 h-[500px] w-[500px] rounded-full blur-3xl pointer-events-none"
-            style={{ background: "hsl(var(--mint) / 0.18)" }}
+            className="absolute inset-0 pointer-events-none opacity-60"
+            style={{
+              backgroundImage:
+                "radial-gradient(#0a0a0a 1px, transparent 1px)",
+              backgroundSize: "22px 22px",
+            }}
           />
-          <div
-            aria-hidden
-            className="absolute -bottom-40 -right-40 h-[600px] w-[600px] rounded-full blur-3xl pointer-events-none"
-            style={{ background: "hsl(var(--emerald) / 0.22)" }}
-          />
+          {/* floating stickers */}
+          <div aria-hidden className="absolute top-10 right-6 h-14 w-14 rounded-2xl bg-[#FFD600] border-4 border-black quest-shadow-sm rotate-[8deg] hidden md:block" />
+          <div aria-hidden className="absolute bottom-24 left-8 h-12 w-12 rounded-full bg-[#FF6B9D] border-4 border-black quest-shadow-sm rotate-[-12deg] hidden md:block" />
+          <div aria-hidden className="absolute top-1/3 left-4 h-10 w-10 rounded-xl bg-[#58CC02] border-4 border-black quest-shadow-sm hidden lg:block" />
 
-          <div className="relative container mx-auto px-4 pt-14 pb-20 md:pt-20 md:pb-28">
-            <div className="grid lg:grid-cols-[1.05fr_0.95fr] gap-10 lg:gap-14 items-center max-w-6xl mx-auto">
-              {/* LEFT — headline + CTAs */}
-              <div className="text-center lg:text-left">
-                <Reveal>
-                  <div className="inline-flex items-center gap-2 rounded-full border border-mint/30 bg-ink-2/60 backdrop-blur px-3 py-1.5 mb-5">
+          <div className="relative container mx-auto px-4 pt-10 pb-16 md:pt-16 md:pb-24 max-w-6xl">
+            <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-8 lg:gap-10 items-center">
+              {/* LEFT — Chunky purple hero card */}
+              <Reveal>
+                <div className="relative rounded-[32px] border-4 border-black bg-[#784EF8] p-6 md:p-9 quest-shadow-lg">
+                  {/* Sticker eyebrow */}
+                  <div className="inline-flex items-center gap-2 rounded-full border-2 border-black bg-black text-white px-3 py-1.5 mb-6 rotate-[-1.5deg] quest-shadow-sm">
                     <span className="relative flex h-2 w-2">
-                      <span className="absolute inline-flex h-full w-full rounded-full bg-mint opacity-75 animate-ping" />
-                      <span className="relative inline-flex h-2 w-2 rounded-full bg-mint" />
+                      <span className="absolute inline-flex h-full w-full rounded-full bg-[#58CC02] opacity-75 animate-ping" />
+                      <span className="relative inline-flex h-2 w-2 rounded-full bg-[#58CC02]" />
                     </span>
-                    <span className="typo-eyebrow text-mint">{t.gamifiedPlatform}</span>
+                    <span className="font-quest text-[11px] font-bold uppercase tracking-[0.14em]">
+                      {t.gamifiedPlatform}
+                    </span>
                   </div>
-                </Reveal>
 
-                <Reveal delay={80}>
-                  <h1 className="font-display font-bold leading-[1.02] tracking-tight text-4xl sm:text-5xl lg:text-[64px] text-ink-fg">
+                  <h1 className="font-quest font-bold leading-[0.95] tracking-tight text-4xl sm:text-5xl lg:text-6xl text-white">
                     {t.heroLine1}
                     <br />
-                    <span
-                      className="bg-clip-text text-transparent"
-                      style={{ backgroundImage: "var(--gradient-primary)" }}
-                    >
+                    <span className="inline-block bg-[#FFD600] text-black px-3 py-1 rounded-2xl border-4 border-black mt-2 rotate-[-1deg] quest-shadow-sm">
                       {t.heroLine2}
                     </span>
                   </h1>
-                </Reveal>
 
-                <Reveal delay={160}>
-                  <p className="mt-5 text-ink-dim text-base sm:text-lg max-w-xl mx-auto lg:mx-0 leading-relaxed">
+                  <p className="font-quest mt-6 text-[#EDE4FF] text-base sm:text-lg leading-relaxed max-w-lg">
                     {t.heroDescriptionLine}
                   </p>
-                </Reveal>
 
-                <Reveal delay={240}>
-                  <div className="mt-8 flex flex-col sm:flex-row gap-3 justify-center lg:justify-start">
+                  <div className="mt-8 flex flex-col sm:flex-row gap-3">
                     {user ? (
-                      <Button size="lg" variant="hero" onClick={() => navigate("/dashboard")}>
-                        {t.goToDashboard} <ArrowRight className="h-4 w-4" />
-                      </Button>
+                      <button
+                        onClick={() => navigate("/dashboard")}
+                        className="font-quest font-bold text-lg bg-[#FFD600] text-black border-4 border-black rounded-2xl px-6 py-3.5 quest-btn-shadow quest-press inline-flex items-center justify-center gap-2"
+                      >
+                        {t.goToDashboard} <ArrowRight className="h-5 w-5" />
+                      </button>
                     ) : (
                       <>
-                        <Button size="lg" variant="hero" onClick={() => navigate("/auth?mode=signup")}>
-                          {t.startJourney} <ArrowRight className="h-4 w-4" />
-                        </Button>
-                        <Button
-                          size="lg"
-                          variant="console"
-                          onClick={() =>
-                            document.getElementById("how-it-works")?.scrollIntoView({ behavior: "smooth" })
-                          }
+                        <button
+                          onClick={() => navigate("/auth?mode=signup")}
+                          className="font-quest font-bold text-lg bg-[#FFD600] text-black border-4 border-black rounded-2xl px-6 py-3.5 quest-btn-shadow quest-press inline-flex items-center justify-center gap-2"
+                        >
+                          {t.startJourney} <ArrowRight className="h-5 w-5" />
+                        </button>
+                        <button
+                          onClick={() => document.getElementById("subjects")?.scrollIntoView({ behavior: "smooth" })}
+                          className="font-quest font-bold text-base bg-white text-black border-4 border-black rounded-2xl px-5 py-3.5 quest-btn-shadow quest-press inline-flex items-center justify-center gap-2"
                         >
                           <Play className="h-4 w-4" />
                           {t.explorePlatform}
-                        </Button>
+                        </button>
                       </>
                     )}
                   </div>
-                </Reveal>
 
-                {/* Trust chips (sticker style) */}
-                <Reveal delay={320}>
-                  <div className="mt-8 flex flex-wrap gap-2 justify-center lg:justify-start">
-                    {stats.map((s, i) => (
-                      <div
-                        key={i}
-                        className="inline-flex items-center gap-2 rounded-full bg-white/95 text-ink shadow-sticker border border-white/10 px-3 py-1.5"
-                      >
-                        <s.icon className="h-3.5 w-3.5 text-primary" />
-                        <span className="font-mono text-sm font-bold text-ink">
-                          {s.suffix === "∞" ? "∞" : <CountUp to={s.value} />}
-                        </span>
-                        <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
-                          {s.label}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </Reveal>
-
-                {!user && (
-                  <Reveal delay={380}>
-                    <p className="mt-6 text-sm text-ink-dim">
+                  {!user && (
+                    <p className="font-quest mt-5 text-sm text-[#EDE4FF]">
                       {t.areYouTeacher}{" "}
-                      <a href="mailto:contact@digiinnov.com" className="text-mint hover:underline font-medium">
+                      <a href="mailto:contact@digiinnov.com" className="text-white underline font-bold">
                         → {t.requestDemo}
                       </a>
                     </p>
-                  </Reveal>
-                )}
-              </div>
+                  )}
+                </div>
+              </Reveal>
 
-              {/* RIGHT — animated console */}
-              <Reveal delay={200} className="w-full max-w-md mx-auto lg:max-w-none">
-                <StartupConsole lang={lang} />
+              {/* RIGHT — Console wrapped in chunky sticker frame */}
+              <Reveal delay={160}>
+                <div className="relative rounded-[32px] border-4 border-black bg-white p-4 quest-shadow-lg">
+                  <div className="absolute -top-3 -left-3 bg-black text-white font-quest font-bold text-[10px] uppercase tracking-wider px-3 py-1 rounded-lg quest-shadow-sm rotate-[-4deg]">
+                    {lang === "bg" ? "МИСИЯ НА ЖИВО" : "LIVE MISSION"}
+                  </div>
+                  <StartupConsole lang={lang} />
+                </div>
               </Reveal>
             </div>
+
+            {/* Sticker stats row */}
+            <Reveal delay={280}>
+              <div className="mt-10 grid grid-cols-2 md:grid-cols-4 gap-3">
+                {stats.map((s, i) => {
+                  const bgs = ["bg-[#FFD600]", "bg-[#58CC02]", "bg-[#FF6B9D]", "bg-[#2B99FF]"];
+                  const rot = ["rotate-[-1.5deg]", "rotate-[1deg]", "rotate-[-1deg]", "rotate-[2deg]"];
+                  return (
+                    <div key={i} className={`${bgs[i % 4]} ${rot[i % 4]} border-4 border-black rounded-2xl px-4 py-3 quest-shadow-sm flex items-center gap-3`}>
+                      <div className="h-9 w-9 rounded-lg bg-white border-2 border-black flex items-center justify-center shrink-0">
+                        <s.icon className="h-4 w-4 text-black" />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="font-quest font-bold text-xl text-black leading-none">
+                          {s.suffix === "∞" ? "∞" : <CountUp to={s.value} />}
+                        </div>
+                        <div className="font-quest text-[10px] font-bold uppercase tracking-wider text-black/70 mt-1 truncate">
+                          {s.label}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </Reveal>
           </div>
 
-          {/* Testimonial marquee on the ink section */}
-          <div className="relative border-t border-ink-3/60 bg-ink/40 backdrop-blur">
-            <div className="container mx-auto px-4 py-5 flex items-center gap-4 max-w-6xl">
-              <span className="typo-eyebrow text-mint hidden sm:inline shrink-0">
-                {lang === "bg" ? "СТУДЕНТИ" : "STUDENTS"}
+          {/* Testimonial band */}
+          <div className="relative border-t-4 border-black bg-white">
+            <div className="container mx-auto px-4 py-4 flex items-center gap-4 max-w-6xl">
+              <span className="font-quest text-[10px] font-bold uppercase tracking-widest bg-black text-white px-2.5 py-1 rounded-md hidden sm:inline shrink-0">
+                {lang === "bg" ? "УЧЕНИЦИ" : "STUDENTS"}
               </span>
               <div className="flex-1 min-w-0">
-                <p
-                  key={testimonialIdx}
-                  className="text-sm md:text-base text-ink-fg italic leading-relaxed animate-fade-in"
-                >
+                <p key={testimonialIdx} className="font-quest text-sm md:text-base text-black leading-relaxed animate-fade-in">
                   &ldquo;{testimonials[testimonialIdx].quote}&rdquo;
-                  <span className="ml-2 text-ink-dim not-italic font-mono text-xs">
+                  <span className="ml-2 text-black/60 font-bold text-xs">
                     — {testimonials[testimonialIdx].name}
                   </span>
                 </p>
@@ -251,11 +243,7 @@ const Index = () => {
                     aria-label={`Testimonial ${i + 1}`}
                     className="min-h-11 min-w-11 flex items-center justify-center group"
                   >
-                    <span
-                      className={`block h-1.5 rounded-full transition-all ${
-                        i === testimonialIdx ? "w-6 bg-mint" : "w-2 bg-ink-3 group-hover:bg-ink-dim"
-                      }`}
-                    />
+                    <span className={`block h-2 rounded-full border-2 border-black transition-all ${i === testimonialIdx ? "w-8 bg-[#784EF8]" : "w-3 bg-white"}`} />
                   </button>
                 ))}
               </div>
