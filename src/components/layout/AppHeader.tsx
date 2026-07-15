@@ -408,12 +408,10 @@ export default function AppHeader() {
               // cannot access (see App.tsx RoleGuard entries).
               const items: { to: string; icon: typeof Book; label: string }[] = [];
               items.push({ to: '/dictionary', icon: Book, label: t.dictionary });
-              if (!isPending && !isTeacher) {
-                // Student-only routes
-                items.push({ to: '/journey', icon: Map, label: lang === 'bg' ? 'Пътешествие' : 'Journey' });
-                items.push({ to: '/leaderboard', icon: Trophy, label: lang === 'bg' ? 'Класация' : 'Leaderboard' });
-              }
-              if (isAdmin) {
+              // Journey + Leaderboard: available to students and admins (exactly once).
+              // Not shown to teacher_verified / teacher_pending — routes are not in
+              // their permitted RoleGuard scope.
+              if ((!isPending && !isTeacher) || isAdmin) {
                 items.push({ to: '/journey', icon: Map, label: lang === 'bg' ? 'Пътешествие' : 'Journey' });
                 items.push({ to: '/leaderboard', icon: Trophy, label: lang === 'bg' ? 'Класация' : 'Leaderboard' });
               }
