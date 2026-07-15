@@ -277,6 +277,33 @@ export default function StudentDashboard() {
         <AppHeader />
         {showOnboarding && <WelcomeOnboarding onComplete={handleOnboardingComplete} />}
         <main className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 pb-24 md:pb-8 space-y-5 sm:space-y-6 max-w-5xl">
+          {/* ── Warm greeting ── */}
+          {(() => {
+            const rawName = profile?.display_name || profile?.full_name || '';
+            const firstName = rawName.trim().split(/\s+/)[0] || '';
+            const hour = new Date().getHours();
+            const greetEn = hour < 12 ? 'Good morning' : hour < 18 ? 'Hey' : 'Evening';
+            const greetBg = hour < 12 ? 'Добро утро' : hour < 18 ? 'Здрасти' : 'Добър вечер';
+            return (
+              <div className="px-1">
+                <h1 className="text-xl sm:text-2xl font-bold text-foreground leading-tight">
+                  {t(greetEn, greetBg)}{firstName ? `, ${firstName}` : ''}.
+                </h1>
+                <p className="mt-1 text-sm text-muted-foreground">
+                  {t('One move today. That\u2019s all you need.', 'Един ход днес. Толкова ти трябва.')}
+                </p>
+              </div>
+            );
+          })()}
+
+          {/* ── Stats strip ── */}
+          <StatsStrip
+            lang={lang}
+            xp={xp}
+            streakDays={loginStreakDays}
+            casesCompleted={casesCompleted}
+          />
+
           {/* ── Primary zone: Today ── */}
           <TodayHero lang={lang} action={canonical} />
 
