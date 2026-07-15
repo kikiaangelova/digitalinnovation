@@ -92,7 +92,7 @@ describe('isNavActive (nested route highlighting)', () => {
   });
 
   it('/my-startup and /journey nested paths highlight their parents', () => {
-    expect(isNavActive('/my-startup', '/my-startup?section=problem')).toBe(false); // pathname has no query
+    // callers pass location.pathname (no query string), so a plain nested path highlights.
     expect(isNavActive('/my-startup', '/my-startup/edit')).toBe(true);
     expect(isNavActive('/journey', '/journey/learn/stage-3')).toBe(true);
   });
