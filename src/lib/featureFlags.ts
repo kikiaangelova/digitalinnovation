@@ -11,7 +11,10 @@
  * RoleGuard remain the real controls.
  */
 
-export type FeatureFlagKey = 'teacher-workspace-v2' | 'student-dashboard-v2';
+export type FeatureFlagKey =
+  | 'teacher-workspace-v2'
+  | 'student-dashboard-v2'
+  | 'curriculum-v2026';
 
 const STORAGE_PREFIX = 'ff:';
 
