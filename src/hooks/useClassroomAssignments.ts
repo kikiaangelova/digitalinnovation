@@ -14,12 +14,13 @@ import { supabase } from '@/integrations/supabase/client';
 
 export interface ClassroomAssignment {
   id: string;
-  title: string;
-  description: string | null;
-  case_study_id: string | null;
+  assignment_type: string;
+  journey_stage: number | null;
+  case_id: string | null;
+  module_slug: string | null;
+  note: string | null;
   due_date: string | null;
   created_at: string;
-  is_active: boolean | null;
 }
 
 export interface UseClassroomAssignmentsResult {
@@ -47,7 +48,7 @@ export function useClassroomAssignments(
     try {
       const { data, error: err } = await supabase
         .from('classroom_assignments')
-        .select('id, title, description, case_study_id, due_date, created_at, is_active')
+        .select('id, assignment_type, journey_stage, case_id, module_slug, note, due_date, created_at')
         .eq('classroom_id', classroomId)
         .order('due_date', { ascending: true, nullsFirst: false });
       if (err) throw err;
