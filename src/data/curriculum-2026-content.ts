@@ -12,6 +12,7 @@
  */
 
 import type { PathwayLevel } from './curriculum-2026';
+import { EXTRA_SUBMODULES } from './curriculum-2026-extra';
 
 export interface SubModule {
   /** Stable id: `<pathway>-<slug>`. */
