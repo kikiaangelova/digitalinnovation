@@ -299,6 +299,28 @@ export default function TeacherWorkspace() {
   const { user, isAdmin, loading: authLoading } = useAuth();
   const t = useT();
   const { classroom, students, loading, error } = useClassroomStudents();
+  const { assignments, loading: assignmentsLoading } = useClassroomAssignments(
+    classroom?.id ?? null,
+  );
+
+  const studentIds = useMemo(() => students.map((s) => s.student_id), [students]);
+  const lastActivityById = useMemo(
+    () => Object.fromEntries(students.map((s) => [s.student_id, s.updated_at])),
+    [students],
+  );
+  const totalXpById = useMemo(
+    () => Object.fromEntries(students.map((s) => [s.student_id, s.total_xp])),
+    [students],
+  );
+  const {
+    progressById,
+    metricsById,
+    loading: progressLoading,
+  } = useStudentProgress(studentIds, {
+    lastActivityById,
+    totalXpById,
+    hasAssignedCases: assignments.some((a) => a.assignment_type === 'case'),
+  });
 
   const visibleTabs = useMemo(
     () => TABS.filter((tab) => !tab.adminOnly || isAdmin),
@@ -356,7 +378,23 @@ export default function TeacherWorkspace() {
 
           {visibleTabs.map((tab) => (
             <TabsContent key={tab.id} value={tab.id} className="mt-0">
-              {tab.id === 'overview' ? <OverviewPreview /> : <TabPlaceholder tab={tab} />}
+              {tab.id === 'overview' ? (
+                <OverviewTab
+                  metricsById={metricsById}
+                  studentCount={students.length}
+                  assignments={assignments}
+                  loading={progressLoading || assignmentsLoading}
+                />
+              ) : tab.id === 'students' ? (
+                <StudentsTab
+                  students={students}
+                  metricsById={metricsById}
+                  progressById={progressById}
+                  loading={progressLoading}
+                />
+              ) : (
+                <TabPlaceholder tab={tab} />
+              )}
             </TabsContent>
           ))}
         </Tabs>
