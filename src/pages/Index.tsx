@@ -7,6 +7,7 @@ import AppHeader from "@/components/layout/AppHeader";
 import StartupConsole from "@/components/landing/StartupConsole";
 import { Reveal, CountUp } from "@/components/landing/Reveal";
 import InnovationShowcase from "@/components/landing/InnovationShowcase";
+import heroBg from "@/assets/hero-bg.mp4.asset.json";
 import {
   GraduationCap,
   ArrowRight,
