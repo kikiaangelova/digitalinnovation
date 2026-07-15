@@ -403,16 +403,27 @@ export default function AppHeader() {
             <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-semibold mb-2">
               {lang === 'bg' ? 'Учене' : 'Learn'}
             </p>
-            {[
-              { to: '/dictionary', icon: Book, label: t.dictionary },
-              { to: '/journey', icon: Map, label: lang === 'bg' ? 'Пътешествие' : 'Journey' },
-              { to: '/leaderboard', icon: Trophy, label: lang === 'bg' ? 'Класация' : 'Leaderboard' },
-            ].map(item => (
+            {(() => {
+              // Role-aware learning items — never link to routes the user
+              // cannot access (see App.tsx RoleGuard entries).
+              const items: { to: string; icon: typeof Book; label: string }[] = [];
+              items.push({ to: '/dictionary', icon: Book, label: t.dictionary });
+              if (!isPending && !isTeacher) {
+                // Student-only routes
+                items.push({ to: '/journey', icon: Map, label: lang === 'bg' ? 'Пътешествие' : 'Journey' });
+                items.push({ to: '/leaderboard', icon: Trophy, label: lang === 'bg' ? 'Класация' : 'Leaderboard' });
+              }
+              if (isAdmin) {
+                items.push({ to: '/journey', icon: Map, label: lang === 'bg' ? 'Пътешествие' : 'Journey' });
+                items.push({ to: '/leaderboard', icon: Trophy, label: lang === 'bg' ? 'Класация' : 'Leaderboard' });
+              }
+              return items;
+            })().map(item => (
               <Link
                 key={item.to}
                 to={item.to}
                 onClick={() => setDrawerOpen(false)}
-                className="flex items-center gap-2 py-2 text-sm text-foreground"
+                className="flex items-center gap-2 py-2.5 text-sm text-foreground min-h-11"
               >
                 <item.icon className="h-4 w-4 text-muted-foreground" />
                 {item.label}
@@ -434,7 +445,7 @@ export default function AppHeader() {
                 key={item.to}
                 to={item.to}
                 onClick={() => setDrawerOpen(false)}
-                className="flex items-center gap-2 py-2 text-sm text-foreground"
+                className="flex items-center gap-2 py-2.5 text-sm text-foreground min-h-11"
               >
                 <item.icon className="h-4 w-4 text-muted-foreground" />
                 {item.label}
