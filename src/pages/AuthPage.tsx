@@ -65,8 +65,13 @@ export default function AuthPage() {
   const handleGoogleSignIn = async () => {
     setGoogleLoading(true);
     try {
+      // Preserve redirect target (e.g. the MCP consent URL) through the OAuth round-trip.
+      const nextParam = searchParams.get("redirect");
+      const redirectUri = nextParam
+        ? `${window.location.origin}/auth?redirect=${encodeURIComponent(nextParam)}`
+        : window.location.origin;
       const result = await lovable.auth.signInWithOAuth('google', {
-        redirect_uri: window.location.origin,
+        redirect_uri: redirectUri,
       });
       if (result.error) {
         toast.error(result.error.message || tx('Google sign-in failed', 'Влизането с Google не успя'));

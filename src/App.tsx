@@ -58,6 +58,7 @@ import FinalExam from "./pages/FinalExam";
 import Certificate from "./pages/Certificate";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfUse from "./pages/TermsOfUse";
+import OAuthConsent from "./pages/OAuthConsent";
 import PendingApproval from "./pages/PendingApproval";
 import TeacherClassroom from "./pages/TeacherClassroom";
 import TeacherDashboardPage from "./pages/TeacherDashboardPage";
@@ -91,6 +92,7 @@ const App = () => (
                       <Route path="/innovation-basics" element={<AboutDigitalInnovation />} />
                       <Route path="/privacy" element={<PrivacyPolicy />} />
                       <Route path="/terms" element={<TermsOfUse />} />
+                      <Route path="/.lovable/oauth/consent" element={<OAuthConsent />} />
 
                       {/* Pending teacher route */}
                       <Route path="/pending" element={<PendingApproval />} />
