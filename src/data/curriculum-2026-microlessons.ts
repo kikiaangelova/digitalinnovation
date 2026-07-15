@@ -288,6 +288,7 @@ export const MICROLESSONS_2026: MicroLesson[] = [
     applyBg:
       "Избери един канал. Спри останалите. Направи 6-седмичен тест с ЕДНО число за следене (последователи, кликове, DMs — избери ЕДНО). Сложи го в календара.",
   },
+  ...BLACKSWAN_MICROLESSONS,
 ];
 
 /** Lookup by sub-module id. Returns undefined when no micro-lesson exists yet. */
