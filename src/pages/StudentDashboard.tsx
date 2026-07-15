@@ -22,6 +22,9 @@ import ChallengeHub from '@/components/dashboard/ChallengeHub';
 import HypothesisTracker from '@/components/dashboard/HypothesisTracker';
 import { LEARNING_MODULES } from '@/data/learning-modules';
 import PhaseBadge from '@/components/ui/phase-badge';
+import TodayHero from '@/components/dashboard/TodayHero';
+import { isFeatureEnabled } from '@/lib/featureFlags';
+import { resolveNextAction } from '@/lib/nextAction';
 
 interface CaseRow { id: string; title: string; difficulty: string; est_minutes: number | null; topic?: string | null; }
 interface SubRow { case_study_id: string; is_draft: boolean; total_score?: number | null; max_score?: number | null; }
@@ -189,6 +192,197 @@ export default function StudentDashboard() {
   };
 
   const nextAction = getNextAction();
+
+  /* ═══════════════════════════════════════════════════════════════════
+   * Student Dashboard V2 — behind `student-dashboard-v2` feature flag.
+   * ONE canonical CTA (TodayHero), reorganized hierarchy, empty-state
+   * hiding. Reuses existing widgets; deletes nothing. Old layout stays
+   * available whenever the flag is off.
+   * ═══════════════════════════════════════════════════════════════════ */
+  if (isFeatureEnabled('student-dashboard-v2')) {
+    const draftCaseIds = new Set(submissions.filter(s => s.is_draft).map(s => s.case_study_id));
+    const canonical = resolveNextAction({
+      assignments: [], // classroom_assignments RLS doesn't expose to students yet — see report
+      modules: LEARNING_MODULES.map(m => ({
+        slug: m.slug,
+        title_en: m.title_en,
+        title_bg: m.title_bg,
+      })),
+      completedModuleSlugs,
+      cases: cases.map(c => ({ id: c.id, title: c.title, est_minutes: c.est_minutes, topic: c.topic })),
+      completedCaseIds,
+      draftCaseIds,
+      startupSectionMap,
+      startupSubmitted: !!startupProject?.is_submitted,
+      finalPitchSubmitted,
+      simWeek,
+      simComplete,
+      hasAnyActivity: xp > 0 || casesCompleted > 0 || simWeek > 1,
+    });
+
+    const hasPeerReviewSignal = pendingReviews > 0 || avgPeerScore !== null;
+    const hasFeedbackSignal = hasPeerReviewSignal; // extend when teacher feedback surfaces here
+
+    return (
+      <div className="min-h-screen bg-background">
+        <AppHeader />
+        {showOnboarding && <WelcomeOnboarding onComplete={handleOnboardingComplete} />}
+        <main className="container mx-auto px-3 sm:px-4 py-4 sm:py-6 pb-24 md:pb-8 space-y-5 sm:space-y-6 max-w-5xl">
+          {/* ── Primary zone: Today ── */}
+          <TodayHero lang={lang} action={canonical} />
+
+          {/* ── Secondary zone: Your Learning (max 3 cards) ── */}
+          <section aria-label={t('Your learning', 'Твоето учене')} className="space-y-3">
+            <h2 className="typo-h2 flex items-center gap-2">
+              <BarChart3 className="h-5 w-5 text-primary" />
+              {t('Your learning', 'Твоето учене')}
+            </h2>
+            <div className="grid gap-4 md:grid-cols-2">
+              <LearningOutcomes lang={lang} scores={outcomeScores} />
+              {hasFeedbackSignal ? (
+                <div className="dash-section">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="typo-card-title flex items-center gap-2">
+                      <Users className="h-4 w-4 text-primary" />
+                      {t('Recent feedback', 'Последна обратна връзка')}
+                    </h3>
+                    <Button variant="outline" size="sm" className="min-h-[44px]" onClick={() => navigate('/peer-review')}>
+                      {t('Open', 'Отвори')}
+                    </Button>
+                  </div>
+                  <div className="grid grid-cols-2 gap-3">
+                    {pendingReviews > 0 && (
+                      <div className="rounded-xl bg-accent/50 p-3 text-center">
+                        <p className="text-xl font-bold text-foreground">{pendingReviews}</p>
+                        <p className="text-xs text-muted-foreground">{t('Pending reviews', 'Чакащи рецензии')}</p>
+                      </div>
+                    )}
+                    {avgPeerScore !== null && (
+                      <div className="rounded-xl bg-accent/50 p-3 text-center">
+                        <p className="text-xl font-bold text-primary flex items-center justify-center gap-1">
+                          <Star className="h-4 w-4" /> {avgPeerScore.toFixed(1)}/4
+                        </p>
+                        <p className="text-xs text-muted-foreground">{t('Your avg score', 'Средна оценка')}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <div className="dash-section text-sm text-muted-foreground">
+                  <h3 className="typo-card-title flex items-center gap-2 mb-2">
+                    <Users className="h-4 w-4 text-primary" />
+                    {t('Recent feedback', 'Последна обратна връзка')}
+                  </h3>
+                  <p>{t('Submit a case to start receiving peer feedback.', 'Подай казус, за да започнеш да получаваш рецензии.')}</p>
+                </div>
+              )}
+            </div>
+            {/* Missions / assignments row — reuses ChallengeHub as the weekly-mission surface */}
+            <ChallengeHub lang={lang} userId={user?.id} />
+          </section>
+
+          {/* ── Progress zone ── */}
+          <section aria-label={t('Progress', 'Прогрес')} className="space-y-3">
+            <h2 className="typo-h2 flex items-center gap-2">
+              <Star className="h-5 w-5 text-xp-gold" />
+              {t('Progress', 'Прогрес')}
+            </h2>
+            <LearningNavigator
+              lang={lang}
+              xp={xp}
+              casesCompleted={casesCompleted}
+              startupSections={startupSectionMap}
+              startupSubmitted={startupProject?.is_submitted || false}
+              simWeek={simWeek}
+              simComplete={simComplete}
+              outcomeScores={outcomeScores}
+            />
+            <div className="grid gap-4 md:grid-cols-2">
+              <AchievementBadges
+                lang={lang}
+                casesCompleted={casesCompleted}
+                startupSubmitted={startupProject?.is_submitted || false}
+                simulatorComplete={simComplete}
+                usedAIMentor={usedAIMentor}
+                casesAbove80Percent={casesAbove80Percent}
+                bmcSectionsCompleted={bmcSectionsCompleted}
+                finalPitchSubmitted={finalPitchSubmitted}
+                peerReviewsGiven={peerReviewsGiven}
+                industriesExplored={industriesExplored}
+                loginStreakDays={loginStreakDays}
+                quizTestsCompleted={quizTestsCompleted}
+                quizCategoriesTested={quizCategoriesTested}
+                quizConsecutiveImprovements={quizConsecutiveImprovements}
+                quizHighScores80={quizHighScores80}
+              />
+              <Leaderboard lang={lang} currentUserId={user?.id} limit={5} />
+            </div>
+          </section>
+
+          {/* ── Explore zone ── */}
+          <section aria-label={t('Explore', 'Разгледай')} className="space-y-3">
+            <h2 className="typo-h2 flex items-center gap-2">
+              <BookOpen className="h-5 w-5 text-primary" />
+              {t('Explore', 'Разгледай')}
+            </h2>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              <button
+                onClick={() => navigate('/dictionary')}
+                className="dash-section text-left min-h-[88px] hover:border-primary/40 transition"
+              >
+                <h3 className="typo-card-title">{t('Dictionary', 'Речник')}</h3>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {t('Learn key innovation terms.', 'Научи ключови иновационни термини.')}
+                </p>
+              </button>
+              <button
+                onClick={() => navigate('/industry-map')}
+                className="dash-section text-left min-h-[88px] hover:border-primary/40 transition"
+              >
+                <h3 className="typo-card-title">{t('Industry Map', 'Индустриална карта')}</h3>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {t('Explore innovation across sectors.', 'Разгледай иновации в различни сектори.')}
+                </p>
+              </button>
+              <button
+                onClick={() => navigate('/my-report')}
+                className="dash-section text-left min-h-[88px] hover:border-primary/40 transition"
+              >
+                <h3 className="typo-card-title">{t('My Report', 'Моят отчет')}</h3>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {t('See your learning report.', 'Виж отчета за напредъка си.')}
+                </p>
+              </button>
+              <button
+                onClick={() => navigate('/final-exam')}
+                className="dash-section text-left min-h-[88px] hover:border-primary/40 transition"
+              >
+                <h3 className="typo-card-title flex items-center gap-1">
+                  <Award className="h-4 w-4 text-primary" /> {t('Final Exam', 'Финален изпит')}
+                </h3>
+                <p className="text-xs text-muted-foreground mt-1">
+                  {t('Earn your certificate.', 'Спечели сертификата си.')}
+                </p>
+              </button>
+            </div>
+            <AIMentorWidget
+              lang={lang}
+              startupData={startupProject}
+              onFeedbackReceived={() => setUsedAIMentor(true)}
+            />
+            <TestInsights lang={lang} userId={user?.id} />
+          </section>
+
+          <p className="text-xs text-muted-foreground text-center">
+            {t(
+              'You are viewing the new dashboard (preview). Remove the ff:student-dashboard-v2 key from browser storage to return to the current dashboard.',
+              'Разглеждаш новото табло (преглед). Изтрий ключа ff:student-dashboard-v2 от локалното хранилище, за да се върнеш към текущото табло.',
+            )}
+          </p>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
