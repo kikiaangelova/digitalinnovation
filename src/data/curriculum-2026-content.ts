@@ -464,6 +464,7 @@ export const ALL_SUBMODULES_2026: SubModule[] = [
   ...MARKETING_SUBMODULES,
   ...AI_SUBMODULES,
   ...FINANCE_SUBMODULES,
+  ...EXTRA_SUBMODULES,
 ];
 
 /** Group sub-modules by pathway id for quick lookup. */
