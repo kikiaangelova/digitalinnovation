@@ -186,7 +186,7 @@
 
   /* Typography */
   .typo-h1 { @apply text-3xl md:text-4xl font-display font-bold text-foreground leading-[1.05]; }
-  .typo-h2 { @apply text-2xl font-display font-semibold text-foreground; }
+  .typo-h2 { @apply text-2xl font-quest font-bold text-foreground tracking-tight; }
   .typo-card-title { @apply text-base font-semibold text-foreground; }
   .typo-body { @apply text-sm font-normal text-foreground; }
   .typo-helper { @apply text-[13px] text-muted-foreground; }
@@ -272,8 +272,19 @@
   @keyframes level-pop { 0% { transform: scale(1); } 40% { transform: scale(1.08); } 100% { transform: scale(1); } }
   @keyframes progress-shine { 0% { transform: translateX(-100%); } 100% { transform: translateX(200%); } }
 
-  .dash-section { @apply rounded-2xl border border-border bg-card p-5 md:p-6; }
-  .dash-section-accent { @apply rounded-2xl border border-primary/20 bg-accent/30 p-5 md:p-6; }
+  .dash-section { @apply rounded-3xl border-2 border-foreground bg-card p-5 md:p-6 quest-shadow-sm; }
+  .dash-section-accent { @apply rounded-3xl border-2 border-foreground bg-accent/40 p-5 md:p-6 quest-shadow-sm; }
+
+  /* Sticker section header chip — chunky pill placed above each dashboard section */
+  .section-chip {
+    @apply inline-flex items-center gap-2 rounded-full border-2 border-foreground bg-card px-4 py-1.5 font-quest text-sm font-bold text-foreground quest-shadow-sm;
+  }
+  .section-chip-amber   { @apply section-chip bg-[hsl(43_96%_75%)]; }
+  .section-chip-emerald { @apply section-chip bg-[hsl(160_84%_75%)]; }
+  .section-chip-orange  { @apply section-chip bg-[hsl(28_92%_78%)]; }
+  .section-chip-violet  { @apply section-chip bg-[hsl(270_70%_82%)]; }
+  .section-chip-sky     { @apply section-chip bg-[hsl(200_90%_80%)]; }
+  .section-chip-pink    { @apply section-chip bg-[hsl(340_82%_82%)]; }
 }
 
 /* ═══ Celebration Overlay (kept) ═══ */
