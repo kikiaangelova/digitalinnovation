@@ -10,6 +10,7 @@
 
 import type { DictionaryTerm } from './dictionary-terms';
 import { EXTRA_TERMS_2026 } from './curriculum-2026-extra';
+import { BLACKSWAN_TERMS } from './curriculum-2026-blackswan';
 
 /** Marketing (Positioning / SEO / Content / Paid / Analytics). */
 export const MARKETING_TERMS_2026: DictionaryTerm[] = [
