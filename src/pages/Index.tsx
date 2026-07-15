@@ -270,8 +270,8 @@ const Index = () => {
                 </h2>
                 <p className="font-quest text-black/70 max-w-lg text-base md:text-lg">
                   {lang === "bg"
-                    ? "Използвам платформата в моите часове, но ти не си длъжен да си от моето училище. Избери път и започни. Без плащане, без гейткийпинг."
-                    : "I use this platform with my own students — but you don't have to be one. Pick a track and start. No paywall, no gatekeeping."}
+                    ? "Избираш предмет. Влизаш вътре. Учиш през правене — казуси, симулатор, AI ментор, който отговаря. Без предварителен опит, без излишни лекции."
+                    : "Pick a subject. Jump in. Learn by doing — cases, simulator, an AI mentor that actually answers. No prior experience, no filler lectures."}
                 </p>
               </div>
 
