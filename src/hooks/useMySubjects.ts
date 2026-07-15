@@ -26,6 +26,7 @@ export interface JoinedClassroomLite {
   id: string;
   name: string;
   subject_key: string;
+  teacher_display_name: string | null;
 }
 
 export interface AssignedTaskLite {
@@ -106,6 +107,7 @@ export function useMySubjects(): UseMySubjectsResult {
           id: raw.id,
           name: raw.name,
           subject_key: key,
+          teacher_display_name: raw.teacher_display_name ?? null,
         };
         if (existing) {
           if (!existing.classrooms.some((c) => c.id === cls.id)) {

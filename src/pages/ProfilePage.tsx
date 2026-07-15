@@ -93,22 +93,15 @@ export default function ProfilePage() {
       setQuizHistory(quizRes.data || []);
       setSimData(simRes.data || null);
       setStartupData(startupRes.data || null);
-      // Fetch classroom membership
-      const { data: membership } = await supabase
-        .from('classroom_students')
-        .select('classroom_id')
-        .eq('student_id', user.id)
-        .maybeSingle();
-      if (membership) {
-        const { data: cr } = await supabase
-          .from('classrooms')
-          .select('id, name, teacher_id')
-          .eq('id', membership.classroom_id)
-          .maybeSingle();
-        if (cr) {
-          const { data: tp } = await supabase.from('profiles').select('display_name, full_name').eq('user_id', cr.teacher_id).maybeSingle();
-          setClassroomInfo({ id: cr.id, name: cr.name, teacher_name: tp?.display_name || tp?.full_name || null });
-        }
+      // Fetch classroom via secure RPC (returns only safe fields).
+      const { data: myRows } = await supabase.rpc('get_my_classroom_summaries' as any);
+      const cr: any = Array.isArray(myRows) ? myRows[0] : null;
+      if (cr) {
+        setClassroomInfo({
+          id: cr.id,
+          name: cr.name,
+          teacher_name: cr.teacher_display_name ?? null,
+        });
       }
       setLoading(false);
     };
@@ -280,14 +273,13 @@ export default function ProfilePage() {
                   onClick={async () => {
                     if (!user) return;
                     setJoinLoading(true);
-                    const { data: cr } = await supabase.from('classrooms').select('id, name, teacher_id').eq('class_code', joinCode).eq('is_active', true).maybeSingle();
+                    const { data: previewRows } = await supabase.rpc('preview_classroom_by_code' as any, { _code: joinCode });
+                    const cr: any = Array.isArray(previewRows) ? previewRows[0] : null;
                     if (!cr) { toast.error(tx('Invalid or expired code.', 'Невалиден или изтекъл код.')); setJoinLoading(false); return; }
-                    const { data: existing } = await supabase.from('classroom_students').select('id').eq('classroom_id', cr.id).eq('student_id', user.id).maybeSingle();
-                    if (existing) { toast.error(tx('Already in this class.', 'Вече си в този клас.')); setJoinLoading(false); return; }
-                    const { error } = await supabase.from('classroom_students').insert({ classroom_id: cr.id, student_id: user.id });
+                    if (cr.already_member) { toast.error(tx('Already in this class.', 'Вече си в този клас.')); setJoinLoading(false); return; }
+                    const { error } = await supabase.rpc('join_classroom_with_code' as any, { _code: joinCode });
                     if (error) { toast.error(error.message); setJoinLoading(false); return; }
-                    const { data: tp } = await supabase.from('profiles').select('display_name, full_name').eq('user_id', cr.teacher_id).maybeSingle();
-                    setClassroomInfo({ id: cr.id, name: cr.name, teacher_name: tp?.display_name || tp?.full_name || null });
+                    setClassroomInfo({ id: cr.id, name: cr.name, teacher_name: cr.teacher_display_name ?? null });
                     setJoinCode('');
                     toast.success(tx(`Joined ${cr.name}!`, `Присъедини се към ${cr.name}!`));
                     setJoinLoading(false);

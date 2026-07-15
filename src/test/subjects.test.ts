@@ -21,6 +21,7 @@ import {
   moduleSubjectKey,
   modulesForSubject,
 } from '@/data/learning-modules';
+import { buildCatalog } from '@/hooks/useModuleCatalog';
 
 describe('subject registry', () => {
   it('has stable, non-empty keys and BG + EN titles for every subject', () => {
@@ -154,5 +155,77 @@ describe('legacy classroom backfill assumption', () => {
     const effective = classroom.subject_key || DEFAULT_SUBJECT_KEY;
     expect(effective).toBe('digital-innovation');
     expect(getSubject(effective)?.title_en).toBe('Digital Innovation');
+  });
+});
+
+describe('shared module catalog (buildCatalog)', () => {
+  const staticMod = LEARNING_MODULES[0];
+
+  it('counts DB-only modules toward the correct subject total', () => {
+    const dbOnly = [
+      {
+        id: 'db-1',
+        slug: 'db-only-mkt',
+        title_en: 'DB Marketing',
+        title_bg: 'ДБ маркетинг',
+        subject_key: 'digital-marketing',
+        display_order: 10,
+      },
+    ];
+    const catalog = buildCatalog(LEARNING_MODULES, dbOnly);
+    const mktModules = catalog.filter((c) => c.subject_key === 'digital-marketing');
+    expect(mktModules.length).toBe(1);
+    expect(mktModules[0].hasRichContent).toBe(false);
+    expect(mktModules[0].registered).toBe(true);
+  });
+
+  it('does not duplicate when a slug exists in both static and DB', () => {
+    const dbRow = {
+      id: 'db-x',
+      slug: staticMod.slug,
+      title_en: null,
+      title_bg: null,
+      subject_key: staticMod.subject_key ?? null,
+      display_order: null,
+    };
+    const catalog = buildCatalog(LEARNING_MODULES, [dbRow]);
+    const matches = catalog.filter((c) => c.slug === staticMod.slug);
+    expect(matches.length).toBe(1);
+    // Static rich content is preserved, DB id is attached.
+    expect(matches[0].hasRichContent).toBe(true);
+    expect(matches[0].dbId).toBe('db-x');
+    expect(matches[0].registered).toBe(true);
+  });
+
+  it('marks DB-only modules as not playable (hasRichContent=false) so callers can gate them', () => {
+    const dbOnly = [
+      { id: 'db-2', slug: 'db-only-pm', title_en: 'PM', title_bg: 'PM', subject_key: 'management-fundamentals', display_order: 1 },
+    ];
+    const catalog = buildCatalog([], dbOnly);
+    expect(catalog[0].hasRichContent).toBe(false);
+  });
+});
+
+describe('legacy cross-subject assignment resolution', () => {
+  it('resolves an assignment to the module\'s TRUE subject via the catalog, even if the classroom subject differs', () => {
+    // Classroom is currently on management-fundamentals, but the assigned
+    // module actually belongs to digital-marketing (module_slug -> catalog).
+    const dbRows = [
+      { id: 'db-3', slug: 'legacy-mkt-mod', title_en: 'M', title_bg: 'М', subject_key: 'digital-marketing', display_order: 1 },
+    ];
+    const catalog = buildCatalog([], dbRows);
+    const bySlug = new Map(catalog.map((c) => [c.slug, c]));
+
+    const assignment = {
+      module_slug: 'legacy-mkt-mod',
+      classroom_subject_key: 'management-fundamentals',
+    };
+    const trueKey =
+      bySlug.get(assignment.module_slug)?.subject_key ??
+      assignment.classroom_subject_key;
+    expect(trueKey).toBe('digital-marketing');
+    // The assignment must remain visible under its TRUE subject, and be
+    // filtered out of the classroom's current subject page.
+    expect(trueKey === assignment.classroom_subject_key).toBe(false);
   });
 });

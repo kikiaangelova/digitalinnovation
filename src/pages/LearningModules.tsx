@@ -23,7 +23,7 @@ import {
   subjectTitle,
   type Subject,
 } from '@/data/subject-catalog';
-import { modulesForSubject } from '@/data/learning-modules';
+import { useModuleCatalog } from '@/hooks/useModuleCatalog';
 
 export default function LearningModules() {
   const { user } = useAuth();
@@ -33,6 +33,7 @@ export default function LearningModules() {
 
   const [showCatalog, setShowCatalog] = useState(false);
   const { entries, loading: subjectsLoading } = useMySubjects();
+  const { forSubject } = useModuleCatalog();
   const [progressBySubject, setProgressBySubject] = useState<
     Record<string, { completed: number; total: number }>
   >({});
@@ -72,10 +73,11 @@ export default function LearningModules() {
       });
       const map: Record<string, { completed: number; total: number }> = {};
       for (const entry of entries) {
-        const mods = modulesForSubject(entry.subjectKey);
+        // Use shared catalog so DB-only modules are counted too.
+        const catMods = forSubject(entry.subjectKey);
         map[entry.subjectKey] = {
-          completed: mods.filter((m) => completedSlugs.has(m.slug)).length,
-          total: mods.length,
+          completed: catMods.filter((m) => completedSlugs.has(m.slug)).length,
+          total: catMods.length,
         };
       }
       setProgressBySubject(map);
@@ -83,7 +85,7 @@ export default function LearningModules() {
     return () => {
       cancelled = true;
     };
-  }, [user, entries]);
+  }, [user, entries, forSubject]);
 
   const noSubjects = !subjectsLoading && entries.length === 0;
 
@@ -337,8 +339,8 @@ function SubjectCatalog({
         </h2>
         <p className="text-xs text-muted-foreground mt-1">
           {t(
-            'Honest state — we only mark a subject playable when it truly is.',
-            'Честно състояние — маркираме предмет като играбилен само когато е такъв.',
+            'Content status — we only mark a subject as ready when it truly is.',
+            'Състояние на съдържанието — маркираме предмет като готов, само когато наистина е.',
           )}
         </p>
       </div>

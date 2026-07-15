@@ -2023,6 +2023,7 @@ export type Database = {
           is_active: boolean
           name: string
           subject_key: string
+          teacher_display_name: string
         }[]
       }
       get_player_assessment_questions: {
@@ -2067,7 +2068,18 @@ export type Database = {
         }
         Returns: boolean
       }
+      join_classroom_with_code: { Args: { _code: string }; Returns: string }
       join_team_with_code: { Args: { _join_code: string }; Returns: string }
+      preview_classroom_by_code: {
+        Args: { _code: string }
+        Returns: {
+          already_member: boolean
+          id: string
+          name: string
+          subject_key: string
+          teacher_display_name: string
+        }[]
+      }
       recalculate_all_xp: { Args: never; Returns: undefined }
       save_exam_draft_answers: {
         Args: {
