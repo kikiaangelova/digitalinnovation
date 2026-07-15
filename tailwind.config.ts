@@ -66,6 +66,27 @@ export default {
           DEFAULT: "hsl(var(--progress))",
         },
         "accent-orange": { DEFAULT: "hsl(25 95% 53%)" },
+        brand: {
+          DEFAULT: "hsl(var(--brand))",
+          strong: "hsl(var(--brand-strong))",
+          soft: "hsl(var(--brand-soft))",
+        },
+        highlight: {
+          DEFAULT: "hsl(var(--highlight))",
+          soft: "hsl(var(--highlight-soft))",
+        },
+        ai: {
+          DEFAULT: "hsl(var(--ai))",
+          soft: "hsl(var(--ai-soft))",
+        },
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          soft: "hsl(var(--success-soft))",
+        },
+        paper: {
+          DEFAULT: "hsl(var(--paper))",
+          2: "hsl(var(--paper-2))",
+        },
         ink: {
           DEFAULT: "hsl(var(--ink))",
           2: "hsl(var(--ink-2))",

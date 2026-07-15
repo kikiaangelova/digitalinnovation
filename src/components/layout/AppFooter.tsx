@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useLang } from '@/context/LangContext';
 import { useAuth } from '@/context/AuthContext';
-import { GraduationCap } from 'lucide-react';
+import { DigiInnovMark } from '@/components/brand/DigiInnovMark';
 
 export default function AppFooter() {
   const { lang } = useLang();
@@ -15,16 +15,16 @@ export default function AppFooter() {
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
           <div className="space-y-3">
-            <Link to="/" className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg sim-gradient">
-                <GraduationCap className="h-4 w-4 text-primary-foreground" />
-              </div>
-              <span className="font-display text-base font-bold text-foreground">DigiInnov</span>
+            <Link to="/" className="flex items-center gap-2.5" aria-label="DigiInnov Case Lab">
+              <DigiInnovMark size={28} />
+              <span className="font-display text-base font-bold text-foreground">
+                DigiInnov <span className="font-normal text-muted-foreground">Case Lab</span>
+              </span>
             </Link>
             <p className="text-xs text-muted-foreground leading-relaxed max-w-[240px]">
               {t(
-                'A gamified platform for digital innovation and entrepreneurship education.',
-                'Геймифицирана платформа за обучение по дигитални иновации и предприемачество.'
+                'Structured theory, real business cases, and decision-driven practice — with Kiki AI as your mentor.',
+                'Структурирана теория, реални бизнес казуси и практика, водена от решения — с Кики AI като ментор.'
               )}
             </p>
           </div>

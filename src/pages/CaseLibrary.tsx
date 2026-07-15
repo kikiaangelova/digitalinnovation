@@ -269,7 +269,7 @@ export default function CaseLibrary() {
       {hasActiveFilters && (
         <div className="flex items-center gap-2">
           <span className="text-xs text-muted-foreground">
-            {allFilteredCases.length} {tl('cases found', 'казуса намерени')}
+            {allFilteredCases.length} {tl('cases found', allFilteredCases.length === 1 ? 'намерен казус' : 'намерени казуса')}
           </span>
           <button onClick={clearAllFilters} className="inline-flex items-center gap-1 text-xs text-primary hover:underline">
             <X className="h-3 w-3" />
@@ -528,7 +528,7 @@ export default function CaseLibrary() {
               <BookOpen className="h-12 w-12 text-muted-foreground/40 mx-auto mb-4" />
               <p className="text-muted-foreground">
                 {hasActiveFilters || search
-                  ? tl('No cases match your filters.', 'Няма казуси, отговарящи на филтрите ви.')
+                  ? tl('No cases match your filters.', 'Няма казуси, отговарящи на филтрите ти.')
                   : tl('No case studies available.', 'Няма налични казуси.')}
               </p>
               {(hasActiveFilters || search) && (

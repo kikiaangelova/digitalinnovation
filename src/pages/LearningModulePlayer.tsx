@@ -186,7 +186,7 @@ export default function LearningModulePlayer() {
   const handleSubmitAll = async () => {
     if (!user || !dbModuleId) return;
     if (analyticalAnswer.trim().length < 20) {
-      toast.error(t('Give me more than one line. Min 20 characters.', 'Дай ми повече от едно изречение. Поне 20 знака.'));
+      toast.error(t('Develop your argument a bit further. Minimum 20 characters.', 'Развий аргумента си с още малко контекст. Минимум 20 знака.'));
       return;
     }
     // Application answer is optional — no minimum enforced
@@ -354,7 +354,7 @@ export default function LearningModulePlayer() {
             {/* Block 1: Hook */}
             {mod.hook && (
               <div className="rounded-xl border-2 border-amber-200 dark:border-amber-800 bg-amber-50/50 dark:bg-amber-950/20 p-5">
-                <p className="text-sm font-bold text-foreground mb-1">🔥 {t('Why you should care', 'Защо ти пука')}</p>
+                <p className="text-sm font-bold text-foreground mb-1">{t('Why this matters', 'Защо това е важно')}</p>
                 <p className="text-sm text-foreground/90 leading-relaxed">{lang === 'bg' ? mod.hook.bg : mod.hook.en}</p>
               </div>
             )}
@@ -402,7 +402,7 @@ export default function LearningModulePlayer() {
 
             <div className="flex justify-end pt-2">
               <Button onClick={() => setPhase('quiz')}>
-                {t('Check what stuck', 'Виж какво ти остана')} <ChevronRight className="h-4 w-4 ml-1" />
+                {t('Check your understanding', 'Провери разбирането си')} <ChevronRight className="h-4 w-4 ml-1" />
               </Button>
             </div>
           </div>
@@ -674,7 +674,7 @@ export default function LearningModulePlayer() {
         {/* RESULTS PHASE */}
         {phase === 'results' && (
           <div className="space-y-4">
-            <Badge variant="outline">{t('📊 What you got', '📊 Какво изкара')}</Badge>
+            <Badge variant="outline">{t('Result & feedback', 'Резултат и обратна връзка')}</Badge>
 
             {/* Quiz result */}
             <div className="rounded-xl border border-border bg-card p-5">

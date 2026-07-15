@@ -20,7 +20,7 @@ const Index = () => {
   const go = (path: string) =>
     user ? navigate(path) : navigate(`/auth?redirect=${encodeURIComponent(path)}`);
 
-  // Subject "vibes" — Learn Italian style deck grid
+  // Subject cards — DigiInnov topic deck.
   const vibes = [
     { emoji: "💡", key: "innov",   to: "/pathways",     titleEn: "Digital Innovation", titleBg: "Дигитални иновации",   blurbEn: "How tech eats old industries.",         blurbBg: "Как технологиите изяждат старите индустрии." },
     { emoji: "🚀", key: "startup", to: "/my-startup", titleEn: "Startup Thinking",  titleBg: "Стартъп мислене",       blurbEn: "Idea → customer → business, in weeks.", blurbBg: "Идея → клиент → бизнес, за седмици." },
@@ -67,8 +67,8 @@ const Index = () => {
             </h1>
             <p className="mt-4 max-w-md text-sm text-white/85 sm:text-base">
               {T(
-                "No lectures. No dead PDFs. You walk into a real case, make a real decision — and watch what happens to your business.",
-                "Без лекции. Без мъртви PDF-и. Влизаш в реален казус, вземаш реално решение — и виждаш какво става с бизнеса ти."
+                "Learn the concepts. Work through real cases. Make decisions, see the consequences, and improve the way you think.",
+                "Учи ключовите концепции. Работи по реални казуси. Вземай решения, виждай последствията и подобрявай начина, по който мислиш."
               )}
             </p>
             <div className="mt-5 flex flex-wrap gap-2.5">

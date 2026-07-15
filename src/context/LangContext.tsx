@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 type Lang = 'en' | 'bg';
 
@@ -770,6 +770,14 @@ export function LangProvider({ children }: { children: ReactNode }) {
     setLang(l);
     localStorage.setItem('digiinnov-lang', l);
   };
+
+  // Keep the document's language attribute in sync so screen readers,
+  // browser hyphenation, and search engines see the correct language.
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      document.documentElement.lang = lang;
+    }
+  }, [lang]);
 
   return (
     <LangContext.Provider value={{ lang, setLang: handleSetLang, t: translations[lang] }}>
