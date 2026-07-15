@@ -72,6 +72,9 @@ export default function Pathways() {
                 {list.map(p => {
                   const levels = new Set(p.references.map(r => r.level));
                   const pathwaySubs = subs[p.id] || [];
+                  const stageRefs = p.references.filter(r => r.kind === 'stage').map(r => r.ref);
+                  const hasStageLoops = stageRefs.some(id => !!getTeacrScenario(id));
+                  const expandable = pathwaySubs.length > 0 || hasStageLoops;
                   const isOpen = openId === p.id;
                   return (
                     <article
@@ -85,11 +88,11 @@ export default function Pathways() {
                       <button
                         type="button"
                         onClick={() =>
-                          setOpenId(pathwaySubs.length ? (isOpen ? null : p.id) : null)
+                          setOpenId(expandable ? (isOpen ? null : p.id) : null)
                         }
                         className="w-full text-left"
                         aria-expanded={isOpen}
-                        disabled={pathwaySubs.length === 0}
+                        disabled={!expandable}
                       >
                       <div className="flex items-start justify-between gap-2 mb-2">
                         <h3 className="text-base font-semibold text-foreground">
@@ -129,7 +132,7 @@ export default function Pathways() {
                       )}
                       {isOpen && (
                         <StageScenarios
-                          stageRefs={p.references.filter(r => r.kind === 'stage').map(r => r.ref)}
+                          stageRefs={stageRefs}
                           lang={lang}
                         />
                       )}
