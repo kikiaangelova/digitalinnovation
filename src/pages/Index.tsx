@@ -254,63 +254,87 @@ const Index = () => {
         {/* ══════════ HOW IT WORKS — light, mission style ══════════ */}
         {!user && (
           <>
-          {/* ══════════ PICK YOUR SUBJECT — public, browsable ══════════ */}
-          <section id="subjects" className="relative py-20 md:py-24 px-4 border-t border-border bg-gradient-to-b from-background to-secondary/30">
+          {/* ══════════ PICK YOUR SUBJECT — Playful Quest cards ══════════ */}
+          <section id="subjects" className="relative py-16 md:py-24 px-4 bg-[#F0F7FF] border-t-4 border-black">
             <div className="container mx-auto max-w-6xl">
               <div className="max-w-2xl mb-10">
-                <div className="typo-eyebrow text-primary mb-3">
-                  00 / {lang === "bg" ? "ИЗБЕРИ ПРЕДМЕТ" : "PICK YOUR SUBJECT"}
+                <div className="inline-flex items-center gap-2 bg-black text-white font-quest text-[11px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-md rotate-[-1deg] mb-4 quest-shadow-sm">
+                  {lang === "bg" ? "00 · ИЗБЕРИ ПРЕДМЕТ" : "00 · PICK YOUR SUBJECT"}
                 </div>
-                <h2 className="typo-h1 mb-3">
-                  {lang === "bg" ? "Всеки предмет — отворен за всеки." : "Every subject, open to anyone."}
+                <h2 className="font-quest font-bold text-4xl md:text-5xl leading-[0.95] tracking-tight text-black mb-4">
+                  {lang === "bg" ? "Всеки предмет — " : "Every subject, "}
+                  <span className="inline-block bg-[#FFD600] px-2 rounded-lg border-4 border-black quest-shadow-sm rotate-[-1deg]">
+                    {lang === "bg" ? "отворен за всеки" : "open to anyone"}
+                  </span>
+                  .
                 </h2>
-                <p className="text-muted-foreground max-w-lg">
+                <p className="font-quest text-black/70 max-w-lg text-base md:text-lg">
                   {lang === "bg"
-                    ? "Използвам платформата в моите часове, но ти не си длъжен да си от моето училище. Разгледай пътищата, избери един и започни. Без плащане, без гейткийпинг."
-                    : "I use this platform with my own students — but you don't have to be one. Browse the tracks, pick one that fits you, and start. No paywall, no gatekeeping."}
+                    ? "Използвам платформата в моите часове, но ти не си длъжен да си от моето училище. Избери път и започни. Без плащане, без гейткийпинг."
+                    : "I use this platform with my own students — but you don't have to be one. Pick a track and start. No paywall, no gatekeeping."}
                 </p>
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {PATHWAYS.slice(0, 9).map((p, i) => {
-                  const trackColor: Record<PathwayTrack, string> = {
-                    core: "from-emerald-500/20 to-emerald-500/5 border-emerald-500/30 text-emerald-400",
-                    business: "from-sky-500/20 to-sky-500/5 border-sky-500/30 text-sky-400",
-                    marketing: "from-orange-500/20 to-orange-500/5 border-orange-500/30 text-orange-400",
-                    data_ai: "from-violet-500/20 to-violet-500/5 border-violet-500/30 text-violet-400",
-                    human: "from-pink-500/20 to-pink-500/5 border-pink-500/30 text-pink-400",
+                  const trackColor: Record<PathwayTrack, { bg: string; icon: string; text: string }> = {
+                    core: { bg: "bg-[#58CC02]", icon: "★", text: "text-white" },
+                    business: { bg: "bg-[#2B99FF]", icon: "$", text: "text-white" },
+                    marketing: { bg: "bg-[#FF9600]", icon: "▲", text: "text-white" },
+                    data_ai: { bg: "bg-[#784EF8]", icon: "◆", text: "text-white" },
+                    human: { bg: "bg-[#FF4B7D]", icon: "♥", text: "text-white" },
                   };
+                  const tc = trackColor[p.track];
+                  const progress = 20 + ((i * 17) % 70);
                   return (
-                    <Reveal key={p.id} delay={i * 50}>
+                    <Reveal key={p.id} delay={i * 40}>
                       <button
                         type="button"
                         onClick={() => navigate("/pathways")}
-                        className={`group relative w-full text-left rounded-2xl border bg-gradient-to-br ${trackColor[p.track]} p-5 hover:shadow-lift hover:-translate-y-0.5 transition-all duration-300 min-h-[168px]`}
+                        className={`group relative w-full text-left rounded-3xl border-4 border-black ${tc.bg} ${tc.text} p-5 quest-shadow quest-press min-h-[200px] flex flex-col`}
                       >
-                        <div className="flex items-center justify-between mb-3">
-                          <span className="font-mono text-[10px] font-semibold uppercase tracking-widest opacity-80">
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="h-11 w-11 rounded-xl bg-white/95 border-2 border-black flex items-center justify-center font-quest font-bold text-black text-xl">
+                            {tc.icon}
+                          </div>
+                          <span className="font-quest text-[10px] font-bold uppercase tracking-widest bg-black/25 text-white px-2 py-1 rounded-md">
                             {lang === "bg" ? TRACK_LABELS[p.track].bg : TRACK_LABELS[p.track].en}
                           </span>
-                          <ChevronRight className="h-4 w-4 opacity-60 group-hover:translate-x-1 transition-transform" />
                         </div>
-                        <h3 className="font-display font-bold text-foreground text-lg leading-tight mb-2">
+                        <h3 className="font-quest font-bold text-white text-xl leading-tight mb-2">
                           {lang === "bg" ? p.titleBg : p.titleEn}
                         </h3>
-                        <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
+                        <p className="font-quest text-sm text-white/85 leading-snug line-clamp-2 flex-1">
                           {lang === "bg" ? p.descriptionBg : p.descriptionEn}
                         </p>
+                        <div className="mt-4">
+                          <div className="w-full bg-black/25 h-3 rounded-full overflow-hidden border-2 border-black">
+                            <div className="bg-white h-full" style={{ width: `${progress}%` }} />
+                          </div>
+                          <div className="flex justify-between mt-1.5 text-[10px] font-quest font-bold text-white">
+                            <span>{progress} XP</span>
+                            <span className="inline-flex items-center gap-1">
+                              {lang === "bg" ? "Отвори" : "Open"}
+                              <ChevronRight className="h-3 w-3" />
+                            </span>
+                          </div>
+                        </div>
                       </button>
                     </Reveal>
                   );
                 })}
               </div>
 
-              <div className="mt-8 flex flex-col sm:flex-row items-center gap-4 justify-center">
-                <Button size="lg" variant="hero" onClick={() => navigate("/pathways")}>
-                  {lang === "bg" ? "Виж всички 12 предмета" : "Browse all 12 subjects"} <ArrowRight className="h-4 w-4" />
-                </Button>
-                <span className="text-sm text-muted-foreground">
-                  {lang === "bg" ? "Не се изисква регистрация" : "No signup required"}
+              <div className="mt-10 flex flex-col sm:flex-row items-center gap-4 justify-center">
+                <button
+                  onClick={() => navigate("/pathways")}
+                  className="font-quest font-bold text-lg bg-[#784EF8] text-white border-4 border-black rounded-2xl px-6 py-3.5 quest-btn-shadow quest-press inline-flex items-center justify-center gap-2"
+                >
+                  {lang === "bg" ? "Виж всички 12 предмета" : "Browse all 12 subjects"}
+                  <ArrowRight className="h-5 w-5" />
+                </button>
+                <span className="font-quest text-sm font-bold text-black/70">
+                  {lang === "bg" ? "🎉 Не се изисква регистрация" : "🎉 No signup required"}
                 </span>
               </div>
             </div>
