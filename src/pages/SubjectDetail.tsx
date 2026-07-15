@@ -55,13 +55,30 @@ export default function SubjectDetail() {
   const myEntry = subjectKey
     ? mySubjects.find((e) => e.subjectKey === subjectKey)
     : undefined;
+  const { bySlug: catalogBySlug } = useModuleCatalog();
+
+  // Resolve each module assignment's TRUE subject via the shared catalog
+  // (the classroom's current subject may differ from the module's own subject
+  // after a teacher changes the classroom subject).
+  const allModuleAssignments = mySubjects.flatMap((e) => e.assignments);
+  const assignmentTrueSubject = (slug: string | null, fallback: string) => {
+    if (!slug) return fallback;
+    return catalogBySlug.get(slug)?.subject_key || fallback;
+  };
+  const assignedModulesForSubject = subjectKey
+    ? allModuleAssignments.filter(
+        (a) =>
+          a.assignment_type === 'learn_module' &&
+          a.module_slug &&
+          assignmentTrueSubject(a.module_slug, a.subject_key) === subjectKey,
+      )
+    : [];
   const otherSubjectAssignments = subjectKey
-    ? mySubjects.flatMap((e) =>
-        e.subjectKey === subjectKey
-          ? []
-          : e.assignments.filter(
-              (a) => a.assignment_type === 'learn_module' && a.module_slug,
-            ),
+    ? allModuleAssignments.filter(
+        (a) =>
+          a.assignment_type === 'learn_module' &&
+          a.module_slug &&
+          assignmentTrueSubject(a.module_slug, a.subject_key) !== subjectKey,
       )
     : [];
 
@@ -122,9 +139,7 @@ export default function SubjectDetail() {
   const total = modules.length;
   const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
 
-  const assignedModules = (myEntry?.assignments ?? []).filter(
-    (a) => a.assignment_type === 'learn_module' && a.module_slug,
-  );
+  const assignedModules = assignedModulesForSubject;
   const assignedSlugs = new Set(assignedModules.map((a) => a.module_slug!));
   const additionalModules = modules.filter((m) => !assignedSlugs.has(m.slug));
 
@@ -201,7 +216,11 @@ export default function SubjectDetail() {
                         response={responseBySlug[mod.slug]}
                         lang={lang as 'bg' | 'en'}
                         t={t}
-                        onOpen={() => navigate(`/learn/${mod.slug}`)}
+                        onOpen={
+                          mod.hasRichContent
+                            ? () => navigate(`/learn/${mod.slug}`)
+                            : undefined
+                        }
                         assignmentMeta={{
                           classroomName: a.classroom_name,
                           dueDate: a.due_date,
@@ -229,7 +248,11 @@ export default function SubjectDetail() {
                     response={responseBySlug[mod.slug]}
                     lang={lang as 'bg' | 'en'}
                     t={t}
-                    onOpen={() => navigate(`/learn/${mod.slug}`)}
+                    onOpen={
+                      mod.hasRichContent
+                        ? () => navigate(`/learn/${mod.slug}`)
+                        : undefined
+                    }
                   />
                 ))}
               </ul>
@@ -239,20 +262,34 @@ export default function SubjectDetail() {
               <section className="rounded-xl border border-dashed border-border bg-muted/30 p-4 space-y-2">
                 <h3 className="text-xs font-semibold text-muted-foreground flex items-center gap-1">
                   <Info className="h-3 w-3" />
-                  {t('Assignments in other subjects', 'Задачи в други предмети')}
+                  {t('Assignments from another subject', 'Задачи от друг предмет')}
                 </h3>
                 <ul className="space-y-1">
-                  {otherSubjectAssignments.map((a) => (
-                    <li key={a.id} className="text-xs text-muted-foreground flex items-center gap-2">
-                      <School className="h-3 w-3 shrink-0" />
-                      <span className="truncate">
-                        {a.classroom_name} · {a.module_slug}
-                      </span>
-                      <Badge variant="outline" className="text-[10px]">
-                        {subjectLabel(a.subject_key, lang as 'bg' | 'en')}
-                      </Badge>
-                    </li>
-                  ))}
+                  {otherSubjectAssignments.map((a) => {
+                    const trueKey = assignmentTrueSubject(a.module_slug, a.subject_key);
+                    const cat = a.module_slug ? catalogBySlug.get(a.module_slug) : null;
+                    const title = cat
+                      ? (lang === 'bg' ? cat.title_bg : cat.title_en)
+                      : a.module_slug;
+                    return (
+                      <li key={a.id} className="text-xs text-muted-foreground flex items-center gap-2 flex-wrap">
+                        <School className="h-3 w-3 shrink-0" />
+                        <span className="truncate font-medium text-foreground">{title}</span>
+                        <span className="opacity-70">· {a.classroom_name}</span>
+                        {a.due_date && (
+                          <span className="opacity-70">
+                            · {new Date(a.due_date).toLocaleDateString(lang === 'bg' ? 'bg-BG' : 'en-GB')}
+                          </span>
+                        )}
+                        <Badge variant="outline" className="text-[10px]">
+                          {subjectLabel(trueKey, lang as 'bg' | 'en')}
+                        </Badge>
+                        {a.note && (
+                          <span className="italic opacity-70 w-full truncate">“{a.note}”</span>
+                        )}
+                      </li>
+                    );
+                  })}
                 </ul>
               </section>
             )}
