@@ -744,6 +744,7 @@ export default function TeacherClassroom() {
                             {filtered.map((m) => (
                               <option key={m.slug} value={m.slug}>
                                 {m.title}
+                                {!m.hasRichContent ? ` — ${t('basic', 'основен')}` : ''}
                                 {showAllSubjectModules
                                   ? ` — ${subjectLabel(m.subject_key, lang as 'bg' | 'en')}`
                                   : ''}
