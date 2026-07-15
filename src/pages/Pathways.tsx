@@ -203,6 +203,74 @@ function SubModulesList({ subs, lang }: { subs: SubModule[]; lang: 'en' | 'bg' }
                 ))}
               </div>
             )}
+            <TeacrLoopBlock targetId={m.id} lang={lang} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ── TEACR loop (Decide → Consequence → Reflect → Improve) ────────────── */
+
+function TeacrLoopBlock({ targetId, lang }: { targetId: string; lang: 'en' | 'bg' }) {
+  const [open, setOpen] = useState(false);
+  const scenario = getTeacrScenario(targetId);
+  const t = (en: string, bg: string) => (lang === 'bg' ? bg : en);
+  if (!scenario) return null;
+  return (
+    <div className="mt-3 border-t border-dashed border-border pt-3">
+      <button
+        type="button"
+        onClick={() => setOpen(v => !v)}
+        className="flex items-center gap-1.5 text-xs font-medium text-primary hover:underline min-h-[32px]"
+        aria-expanded={open}
+      >
+        <Target className="h-3.5 w-3.5" />
+        {open
+          ? t('Hide decision loop', 'Скрий цикъла на решение')
+          : t('Try the decision loop', 'Опитай цикъла на решение')}
+      </button>
+      {open && (
+        <div className="mt-3">
+          <DecisionConsequenceReflection
+            lang={lang}
+            promptEn={scenario.promptEn}
+            promptBg={scenario.promptBg}
+            options={scenario.options}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ── Stage-level TEACR scenarios (Core pathways) ──────────────────────── */
+
+function StageScenarios({ stageRefs, lang }: { stageRefs: string[]; lang: 'en' | 'bg' }) {
+  const t = (en: string, bg: string) => (lang === 'bg' ? bg : en);
+  const stageScenarios = stageRefs
+    .map(id => ({ id, scenario: getTeacrScenario(id) }))
+    .filter((x): x is { id: string; scenario: NonNullable<ReturnType<typeof getTeacrScenario>> } => !!x.scenario);
+  if (stageScenarios.length === 0) return null;
+  return (
+    <div className="mt-5 border-t border-border pt-4 space-y-4">
+      <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+        <Compass className="h-4 w-4 text-primary" />
+        {t('Stage decision loops', 'Циклите на решение по етапи')}
+      </div>
+      <div className="grid gap-3 md:grid-cols-2">
+        {stageScenarios.map(({ id, scenario }, i) => (
+          <div key={id} className="rounded-xl border border-border bg-background p-4">
+            <h4 className="text-sm font-semibold text-foreground mb-2">
+              {t(`Stage ${i + 1}`, `Етап ${i + 1}`)}
+            </h4>
+            <DecisionConsequenceReflection
+              lang={lang}
+              promptEn={scenario.promptEn}
+              promptBg={scenario.promptBg}
+              options={scenario.options}
+            />
           </div>
         ))}
       </div>
