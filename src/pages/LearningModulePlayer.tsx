@@ -154,7 +154,7 @@ export default function LearningModulePlayer() {
     return (
       <div className="min-h-screen bg-background">
         <AppHeader />
-        <div className="flex items-center justify-center py-20 text-muted-foreground">{t('Module not found', 'Модулът не е намерен')}</div>
+        <div className="flex items-center justify-center py-20 text-muted-foreground">{t('Not here. Maybe it moved.', 'Няма го тук. Явно се е преместил.')}</div>
       </div>
     );
   }
@@ -169,7 +169,7 @@ export default function LearningModulePlayer() {
 
   const handleQuizSubmit = () => {
     if (Object.keys(quizAnswers).length < quizMax) {
-      toast.error(t('Please answer all questions', 'Моля, отговорете на всички въпроси'));
+      toast.error(t('Answer everything first.', 'Първо отговори на всичко.'));
       return;
     }
     setQuizSubmitted(true);
@@ -186,7 +186,7 @@ export default function LearningModulePlayer() {
   const handleSubmitAll = async () => {
     if (!user || !dbModuleId) return;
     if (analyticalAnswer.trim().length < 20) {
-      toast.error(t('Please write a more detailed analytical answer (min 20 characters)', 'Моля, напиши по-подробен аналитичен отговор (мин. 20 знака)'));
+      toast.error(t('Give me more than one line. Min 20 characters.', 'Дай ми повече от едно изречение. Поне 20 знака.'));
       return;
     }
     // Application answer is optional — no minimum enforced
@@ -236,8 +236,8 @@ export default function LearningModulePlayer() {
     const { fireCelebration } = await import('@/components/ui/celebration-overlay');
     fireCelebration({
       xp: totalXp,
-      title: t('Module Complete!', 'Браво! Завърши модула!'),
-      subtitle: totalXp > 0 ? `+${totalXp} XP ${t('earned!', 'спечелени!')}` : t('Well done!', 'Страхотно!'),
+      title: t('Done. Nice one.', 'Готово. Браво на теб.'),
+      subtitle: totalXp > 0 ? `+${totalXp} XP ${t('in the bank', 'в банката')}` : t('Solid work.', 'Свърши го както трябва.'),
     });
   };
 
@@ -259,9 +259,9 @@ export default function LearningModulePlayer() {
           .insert({ user_id: user.id, [mod.startup_field]: applicationAnswer.trim() } as any);
       }
       setStartupSynced(true);
-      toast.success(t('Added to My Startup! ✅', 'Добавено в Моят стартъп! ✅'));
+      toast.success(t('Saved into your startup ✅', 'Записах го в стартъпа ти ✅'));
     } catch {
-      toast.error(t('Failed to save to startup', 'Неуспешно запазване в стартъп'));
+      toast.error(t('Didn't save. Try again.', 'Не се записа. Пробвай пак.'));
     }
   };
 
@@ -271,13 +271,13 @@ export default function LearningModulePlayer() {
     return (
       <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
         {autoSaveStatus === 'saving' && (
-          <><Loader2 className="h-3 w-3 animate-spin" /> {t('Saving...', 'Запазване...')}</>
+          <><Loader2 className="h-3 w-3 animate-spin" /> {t('Saving…', 'Записвам…')}</>
         )}
         {autoSaveStatus === 'saved' && lastSavedAt && (
-          <><Save className="h-3 w-3 text-progress" /> {t('Saved', 'Запазено')} · {lastSavedAt.toLocaleTimeString()}</>
+          <><Save className="h-3 w-3 text-progress" /> {t('Saved', 'Записано')} · {lastSavedAt.toLocaleTimeString()}</>
         )}
         {autoSaveStatus === 'error' && (
-          <><XCircle className="h-3 w-3 text-destructive" /> {t('Save failed', 'Грешка при запазване')}</>
+          <><XCircle className="h-3 w-3 text-destructive" /> {t('Didn't save', 'Не се записа')}</>
         )}
       </div>
     );
@@ -285,12 +285,12 @@ export default function LearningModulePlayer() {
 
   const hasCase = !!mod.embedded_case;
   const phases: { key: Phase; label: string }[] = [
-    { key: 'theory', label: t('Theory', 'Теория') },
-    { key: 'quiz', label: t('Quiz', 'Тест') },
+    { key: 'theory', label: t('Read', 'Прочети') },
+    { key: 'quiz', label: t('Check', 'Провери') },
     ...(hasCase ? [{ key: 'case_study' as Phase, label: t('Case', 'Казус') }] : []),
-    { key: 'analytical', label: t('Analysis', 'Анализ') },
-    { key: 'application', label: t('Application', 'Приложение') },
-    { key: 'results', label: t('Results', 'Резултати') },
+    { key: 'analytical', label: t('Think', 'Помисли') },
+    { key: 'application', label: t('Apply', 'Приложи') },
+    { key: 'results', label: t('Recap', 'Обобщи') },
   ];
   const phaseIdx = phases.findIndex(p => p.key === phase);
   const nextAfterQuiz: Phase = hasCase ? 'case_study' : 'analytical';
@@ -313,7 +313,7 @@ export default function LearningModulePlayer() {
         {/* Navigation */}
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="sm" onClick={() => navigate('/learn')}>
-            <ArrowLeft className="h-4 w-4 mr-1" /> {t('All Modules', 'Всички модули')}
+            <ArrowLeft className="h-4 w-4 mr-1" /> {t('Back', 'Назад')}
           </Button>
         </div>
 
@@ -354,14 +354,14 @@ export default function LearningModulePlayer() {
             {/* Block 1: Hook */}
             {mod.hook && (
               <div className="rounded-xl border-2 border-amber-200 dark:border-amber-800 bg-amber-50/50 dark:bg-amber-950/20 p-5">
-                <p className="text-sm font-bold text-foreground mb-1">🔥 {t('Why this matters', 'Защо важи това?')}</p>
+                <p className="text-sm font-bold text-foreground mb-1">🔥 {t('Why you should care', 'Защо ти пука')}</p>
                 <p className="text-sm text-foreground/90 leading-relaxed">{lang === 'bg' ? mod.hook.bg : mod.hook.en}</p>
               </div>
             )}
 
             {/* Block 2: Concept (trimmed theory + metaphor) */}
             <div className="rounded-xl border border-border bg-card p-6 space-y-4">
-              <Badge variant="outline" className="mb-2">📐 {t('The Concept', 'Концепцията')}</Badge>
+              <Badge variant="outline" className="mb-2">📐 {t('The idea', 'Идеята')}</Badge>
               <div className="prose prose-sm max-w-none text-foreground dark:prose-invert">
                 <ReactMarkdown>{lang === 'bg' ? mod.theory_bg : mod.theory_en}</ReactMarkdown>
               </div>
@@ -375,7 +375,7 @@ export default function LearningModulePlayer() {
             {/* Block 3: Framework */}
             {mod.framework && (
               <div className="rounded-xl border border-primary/20 bg-primary/5 p-5 space-y-3">
-                <p className="text-sm font-bold text-foreground">🗺️ {t('Framework', 'Рамката')}: <span className="text-primary">{mod.framework.name}</span></p>
+                <p className="text-sm font-bold text-foreground">🗺️ {t('Framework', 'Рамка')}: <span className="text-primary">{mod.framework.name}</span></p>
                 <ul className="space-y-1.5">
                   {(lang === 'bg' ? mod.framework.bullets_bg : mod.framework.bullets_en).map((b, i) => (
                     <li key={i} className="text-sm text-foreground/80 flex items-start gap-2">
@@ -392,17 +392,17 @@ export default function LearningModulePlayer() {
             {/* Block 4: Provocations */}
             {mod.provocations && mod.provocations.length > 0 && (
               <div className="rounded-xl bg-accent/40 p-5 space-y-2">
-                <p className="text-sm font-bold text-foreground flex items-center gap-1.5">💭 {t('Think before you continue', 'Помисли преди да продължиш')}</p>
+                <p className="text-sm font-bold text-foreground flex items-center gap-1.5">💭 {t('Pause. Think.', 'Спри. Помисли.')}</p>
                 {mod.provocations.map((p, i) => (
                   <p key={i} className="text-sm text-foreground/80 italic">"{lang === 'bg' ? p.bg : p.en}"</p>
                 ))}
-                <p className="text-xs text-muted-foreground pt-1">{t('These questions have no correct answer. Think like a founder.', 'Тези въпроси нямат правилен отговор. Мисли като основател.')}</p>
+                <p className="text-xs text-muted-foreground pt-1">{t('No right answer here. Think like a founder.', 'Няма верен отговор. Мисли като основател.')}</p>
               </div>
             )}
 
             <div className="flex justify-end pt-2">
               <Button onClick={() => setPhase('quiz')}>
-                {t('Continue to Quiz', 'Продължи към тест')} <ChevronRight className="h-4 w-4 ml-1" />
+                {t('Check what stuck', 'Виж какво ти остана')} <ChevronRight className="h-4 w-4 ml-1" />
               </Button>
             </div>
           </div>
@@ -411,7 +411,7 @@ export default function LearningModulePlayer() {
         {/* QUIZ PHASE */}
         {phase === 'quiz' && (
           <div className="space-y-4">
-            <Badge variant="outline">{t('🧠 Knowledge Check', '🧠 Проверка на знания')}</Badge>
+            <Badge variant="outline">{t('🧠 Quick check', '🧠 Бърза проверка')}</Badge>
             {mod.quiz_questions.map((q, qi) => {
               const correctId = q.options.find(o => o.correct)?.id;
               return (
@@ -469,7 +469,7 @@ export default function LearningModulePlayer() {
                   disabled={Object.keys(quizAnswers).length < quizMax}
                   className={Object.keys(quizAnswers).length < quizMax ? 'opacity-50' : ''}
                 >
-                  {t('Check Answers', 'Провери отговорите')}
+                  {t('Check', 'Провери')}
                   {Object.keys(quizAnswers).length < quizMax && (
                     <span className="ml-2 text-xs opacity-70">({Object.keys(quizAnswers).length}/{quizMax})</span>
                   )}
@@ -478,13 +478,13 @@ export default function LearningModulePlayer() {
             ) : (
               <div className="rounded-xl border border-border bg-card p-4 flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-semibold text-foreground">{t('Quiz Score', 'Резултат от теста')}: {quizScore}/{quizMax}</p>
+                  <p className="text-sm font-semibold text-foreground">{t('Score', 'Резултат')}: {quizScore}/{quizMax}</p>
                   <p className="text-xs text-muted-foreground">{Math.round((quizScore / quizMax) * 100)}%</p>
                 </div>
                 <Button onClick={() => setPhase(nextAfterQuiz)}>
                   {hasCase
-                    ? t('Continue to Case Study', 'Продължи към казуса')
-                    : t('Continue to Analysis', 'Продължи към анализа')
+                    ? t('Into the case', 'Към казуса')
+                    : t('To the analysis', 'Към анализа')
                   } <ChevronRight className="h-4 w-4 ml-1" />
                 </Button>
               </div>
@@ -500,14 +500,14 @@ export default function LearningModulePlayer() {
               <div className="flex items-center gap-2 mb-1">
                 <Badge className={`text-xs border-0 ${mod.embedded_case.outcome_type === 'success' ? 'bg-primary/15 text-primary' : mod.embedded_case.outcome_type === 'failure' ? 'bg-destructive/15 text-destructive' : 'bg-warning/15 text-warning'}`}>
                   {mod.embedded_case.outcome_type === 'success' ? '✅ ' : mod.embedded_case.outcome_type === 'failure' ? '❌ ' : '⚠️ '}
-                  {t('Real-World Case', 'Реален казус')}
+                  {t('Real case', 'Реален казус')}
                 </Badge>
               </div>
               <h2 className="text-lg font-bold text-foreground">
                 {lang === 'bg' ? mod.embedded_case.title_bg : mod.embedded_case.title_en}
               </h2>
               <div className="rounded-lg bg-accent/50 p-3">
-                <p className="text-xs font-semibold text-primary mb-1">🎯 {t('Learning Goal', 'Учебна цел')}</p>
+                <p className="text-xs font-semibold text-primary mb-1">🎯 {t('What you learn here', 'Какво учиш тук')}</p>
                 <p className="text-sm text-foreground">{lang === 'bg' ? mod.embedded_case.learning_goal_bg : mod.embedded_case.learning_goal_en}</p>
               </div>
             </div>
@@ -527,7 +527,7 @@ export default function LearningModulePlayer() {
             <div className="rounded-xl border border-warning/30 bg-warning/5 p-5 space-y-2">
               <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
                 <Target className="h-4 w-4 text-warning" />
-                {t('Business Problem', 'Бизнес проблем')}
+                {t('The problem', 'Проблемът')}
               </h3>
               <p className="text-sm text-foreground italic">{lang === 'bg' ? mod.embedded_case.problem_bg : mod.embedded_case.problem_en}</p>
             </div>
@@ -536,7 +536,7 @@ export default function LearningModulePlayer() {
             <div className="rounded-xl border border-border bg-card p-5 space-y-2">
               <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
                 <Lightbulb className="h-4 w-4 text-primary" />
-                {t('Key Decision', 'Ключово решение')}
+                {t('The call', 'Решението')}
               </h3>
               <p className="text-sm text-foreground">{lang === 'bg' ? mod.embedded_case.key_decision_bg : mod.embedded_case.key_decision_en}</p>
             </div>
@@ -548,7 +548,7 @@ export default function LearningModulePlayer() {
                   ? <CheckCircle2 className="h-4 w-4 text-primary" />
                   : <XCircle className="h-4 w-4 text-destructive" />
                 }
-                {t('Outcome', 'Резултат')}
+                {t('What happened', 'Какво стана')}
               </h3>
               <p className="text-sm text-foreground">{lang === 'bg' ? mod.embedded_case.outcome_bg : mod.embedded_case.outcome_en}</p>
             </div>
@@ -557,7 +557,7 @@ export default function LearningModulePlayer() {
             <div className="rounded-xl border border-border bg-card p-5 space-y-4">
               <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
                 <Brain className="h-4 w-4 text-primary" />
-                {t('Your Analysis', 'Твоят анализ')}
+                {t('Your take', 'Твоят анализ')}
               </h3>
               <p className="text-xs text-muted-foreground">
                 {t('Answer at least one question in depth. Your analysis will receive AI feedback after submission.',
@@ -571,12 +571,12 @@ export default function LearningModulePlayer() {
                   <Textarea
                     value={caseAnswers[q.id] || ''}
                     onChange={e => setCaseAnswers(prev => ({ ...prev, [q.id]: e.target.value }))}
-                    placeholder={t('Write your analysis...', 'Напиши анализа си...')}
+                    placeholder={t('Write here…', 'Пиши тук…')}
                     className="min-h-[100px]"
                     disabled={!!existingResponse?.completed_at}
                   />
                   <p className={`text-xs ${(caseAnswers[q.id] || '').length >= 50 ? 'text-primary' : (caseAnswers[q.id] || '').length >= 20 ? 'text-yellow-500' : 'text-muted-foreground'}`}>
-                    {(caseAnswers[q.id] || '').length} {t('characters', 'знака')}
+                    {(caseAnswers[q.id] || '').length} {t('chars', 'знака')}
                   </p>
                 </div>
               ))}
@@ -584,7 +584,7 @@ export default function LearningModulePlayer() {
 
             <div className="flex justify-end">
               <Button onClick={() => setPhase('analytical')}>
-                {t('Continue to Module Analysis', 'Продължи към анализа на модула')} <ChevronRight className="h-4 w-4 ml-1" />
+                {t('Next: think it through', 'Напред: помисли')} <ChevronRight className="h-4 w-4 ml-1" />
               </Button>
             </div>
           </div>
@@ -594,7 +594,7 @@ export default function LearningModulePlayer() {
         {phase === 'analytical' && (
           <div className="rounded-xl border border-border bg-card p-6 space-y-4">
             <div className="flex items-center justify-between">
-              <Badge variant="outline">{t('🔍 Analytical Question', '🔍 Аналитичен въпрос')}</Badge>
+              <Badge variant="outline">{t('🔍 Think it through', '🔍 Помисли')}</Badge>
               <SaveStatusIndicator />
             </div>
             <p className="text-sm font-semibold text-foreground">
@@ -603,14 +603,14 @@ export default function LearningModulePlayer() {
             <Textarea
               value={analyticalAnswer}
               onChange={e => setAnalyticalAnswer(e.target.value)}
-              placeholder={t('Write your analysis here...', 'Напиши анализа си тук...')}
+              placeholder={t('Write here…', 'Пиши тук…')}
               className="min-h-[120px]"
               disabled={!!existingResponse?.completed_at}
             />
-            <p className="text-xs text-muted-foreground">{analyticalAnswer.length} {t('characters', 'знака')} ({t('min 20', 'мин. 20')})</p>
+            <p className="text-xs text-muted-foreground">{analyticalAnswer.length} {t('chars', 'знака')} ({t('min 20', 'мин. 20')})</p>
             <div className="flex justify-end">
               <Button onClick={() => setPhase('application')}>
-                {t('Continue to Application', 'Продължи към приложението')} <ChevronRight className="h-4 w-4 ml-1" />
+                {t('Now use it', 'Сега го приложи')} <ChevronRight className="h-4 w-4 ml-1" />
               </Button>
             </div>
           </div>
@@ -621,7 +621,7 @@ export default function LearningModulePlayer() {
           <div className="rounded-xl border border-border bg-card p-6 space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Badge variant="outline">{t('🚀 Apply to Your Startup', '🚀 Приложи към твоя стартъп')}</Badge>
+                <Badge variant="outline">{t('🚀 Use it in your startup', '🚀 Приложи го в стартъпа си')}</Badge>
                 <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
                   {t('Optional', 'По избор')}
                 </Badge>
@@ -645,26 +645,26 @@ export default function LearningModulePlayer() {
             <Textarea
               value={applicationAnswer}
               onChange={e => setApplicationAnswer(e.target.value)}
-              placeholder={t('Apply this concept to your startup idea...', 'Приложи тази концепция към твоята стартъп идея...')}
+              placeholder={t('How does this fit your idea?', 'Как ти пасва това на идеята ти?')}
               className="min-h-[120px]"
               disabled={!!existingResponse?.completed_at}
             />
-            <p className="text-xs text-muted-foreground">{applicationAnswer.length} {t('characters', 'знака')}</p>
+            <p className="text-xs text-muted-foreground">{applicationAnswer.length} {t('chars', 'знака')}</p>
             {!existingResponse?.completed_at && (
               <div className="flex items-center justify-between gap-3">
                 <Button variant="ghost" size="sm" onClick={handleSubmitAll} disabled={saving} className="text-muted-foreground">
-                  {t('Skip & Submit', 'Пропусни и изпрати')}
+                  {t('Skip, send it', 'Пропусни, изпрати')}
                 </Button>
                 <Button onClick={handleSubmitAll} disabled={saving}>
                   <Send className="h-4 w-4 mr-1" />
-                  {saving ? t('Saving...', 'Запазване...') : t('Submit Module', 'Изпрати модул')}
+                  {saving ? t('Saving…', 'Записвам…') : t('Send it', 'Изпрати')}
                 </Button>
               </div>
             )}
             {existingResponse?.completed_at && (
               <div className="flex justify-end">
                 <Button onClick={() => setPhase('results')}>
-                  {t('View Results', 'Виж резултати')} <ChevronRight className="h-4 w-4 ml-1" />
+                  {t('See how you did', 'Виж как мина')} <ChevronRight className="h-4 w-4 ml-1" />
                 </Button>
               </div>
             )}
@@ -674,11 +674,11 @@ export default function LearningModulePlayer() {
         {/* RESULTS PHASE */}
         {phase === 'results' && (
           <div className="space-y-4">
-            <Badge variant="outline">{t('📊 Learning Outcomes', '📊 Учебни резултати')}</Badge>
+            <Badge variant="outline">{t('📊 What you got', '📊 Какво изкара')}</Badge>
 
             {/* Quiz result */}
             <div className="rounded-xl border border-border bg-card p-5">
-              <h3 className="text-sm font-semibold text-foreground mb-3">{t('Quiz Score', 'Резултат от теста')}</h3>
+              <h3 className="text-sm font-semibold text-foreground mb-3">{t('Score', 'Резултат')}</h3>
               <div className="flex items-center gap-3">
                 <Progress value={(quizScore / Math.max(quizMax, 1)) * 100} className="h-2 flex-1" />
                 <span className="text-sm font-bold text-foreground">{quizScore}/{quizMax}</span>
@@ -687,7 +687,7 @@ export default function LearningModulePlayer() {
 
             {/* Outcome Scores */}
             <div className="rounded-xl border border-border bg-card p-5">
-              <h3 className="text-sm font-semibold text-foreground mb-4">{t('Learning Outcome Scores', 'Постижения по умения')}</h3>
+              <h3 className="text-sm font-semibold text-foreground mb-4">{t('Skill scores', 'Точки по умения')}</h3>
               <div className="space-y-3">
                 {[
                   { key: 'concept', icon: Brain, en: 'Concept Understanding', bg: 'Разбиране на концепции', score: scores.concept },
@@ -713,14 +713,14 @@ export default function LearningModulePlayer() {
 
             {/* Written Answers Summary */}
             <div className="rounded-xl border border-border bg-card p-5 space-y-3">
-              <h3 className="text-sm font-semibold text-foreground">{t('Your Answers', 'Твоите отговори')}</h3>
+              <h3 className="text-sm font-semibold text-foreground">{t('Your answers', 'Твоите отговори')}</h3>
               <div>
-                <p className="text-xs font-medium text-muted-foreground mb-1">{t('Analytical Answer', 'Аналитичен отговор')}</p>
+                <p className="text-xs font-medium text-muted-foreground mb-1">{t('Your analysis', 'Твоят анализ')}</p>
                 <p className="text-xs text-foreground bg-accent/50 rounded-lg p-3">{analyticalAnswer || '—'}</p>
               </div>
               {applicationAnswer && (
                 <div>
-                  <p className="text-xs font-medium text-muted-foreground mb-1">{t('Application Answer', 'Отговор за приложение')}</p>
+                  <p className="text-xs font-medium text-muted-foreground mb-1">{t('Your application', 'Как го приложи')}</p>
                   <p className="text-xs text-foreground bg-accent/50 rounded-lg p-3">{applicationAnswer}</p>
                 </div>
               )}
@@ -732,10 +732,10 @@ export default function LearningModulePlayer() {
                 <div className="flex items-center gap-2">
                   <Rocket className="h-5 w-5 text-primary" />
                   <span className="text-sm font-semibold text-foreground">
-                    {t('Use this in My Startup', 'Използвай в Моят стартъп')}
+                    {t('Save to your startup', 'Запази в стартъпа')}
                   </span>
                   <Badge variant="secondary" className="text-[10px] px-1.5 py-0 ml-auto">
-                    {t('Recommended', 'Препоръчано')}
+                    {t('Recommended', 'Препоръчвам')}
                   </Badge>
                 </div>
                 <p className="text-xs text-muted-foreground">
@@ -747,12 +747,12 @@ export default function LearningModulePlayer() {
                 {startupSynced ? (
                   <div className="flex items-center gap-2 text-progress text-sm font-medium">
                     <CheckCircle2 className="h-4 w-4" />
-                    {t('Added to My Startup!', 'Добавено в Моят стартъп!')}
+                    {t('Saved ✅', 'Записано ✅')}
                   </div>
                 ) : (
                   <Button variant="outline" onClick={handleUseInStartup} className="w-full">
                     <Rocket className="h-4 w-4 mr-1" />
-                    {t('Add to My Startup', 'Добави в Моят стартъп')}
+                    {t('Save to startup', 'Запази в стартъпа')}
                   </Button>
                 )}
               </div>
@@ -788,7 +788,7 @@ export default function LearningModulePlayer() {
             <div className="rounded-xl border border-border bg-card p-5 space-y-4">
               <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
                 <Zap className="h-4 w-4 text-primary" />
-                {t('What would you like to do next?', 'Какво искаш да направиш?')}
+                {t('Next move?', 'Следващ ход?')}
               </h3>
 
               {/* Primary: Continue */}
@@ -801,11 +801,11 @@ export default function LearningModulePlayer() {
                       navigate(`/learn/${LEARNING_MODULES[nextIdx].slug}`);
                     }}
                   >
-                    {t('Continue to Next Module', 'Продължи към следващия модул')} <ChevronRight className="h-4 w-4 ml-1" />
+                    {t('Next module', 'Следващ модул')} <ChevronRight className="h-4 w-4 ml-1" />
                   </Button>
                 ) : (
                   <Button className="w-full" onClick={() => navigate('/learn')}>
-                    {t('Back to All Modules', 'Обратно към всички модули')} <ChevronRight className="h-4 w-4 ml-1" />
+                    {t('Back to all', 'Обратно към всички')} <ChevronRight className="h-4 w-4 ml-1" />
                   </Button>
                 )}
               </div>
@@ -819,7 +819,7 @@ export default function LearningModulePlayer() {
                   <BarChart3 className="h-5 w-5 text-muted-foreground shrink-0" />
                   <div className="flex-1 min-w-0">
                     <p className="text-xs font-medium text-foreground">{t('Open Simulator', 'Отвори симулатора')}</p>
-                    <p className="text-[10px] text-muted-foreground">{t('Optional · Test strategy', 'По избор · Тествай стратегия')}</p>
+                    <p className="text-[10px] text-muted-foreground">{t('Optional · Test the strategy', 'По избор · Тествай стратегията')}</p>
                   </div>
                 </button>
                 <button
@@ -829,7 +829,7 @@ export default function LearningModulePlayer() {
                   <Rocket className="h-5 w-5 text-muted-foreground shrink-0" />
                   <div className="flex-1 min-w-0">
                     <p className="text-xs font-medium text-foreground">{t('My Startup', 'Моят стартъп')}</p>
-                    <p className="text-[10px] text-muted-foreground">{t('Optional · Build your idea', 'По избор · Изгради идеята си')}</p>
+                    <p className="text-[10px] text-muted-foreground">{t('Optional · Work on the idea', 'По избор · Работи по идеята')}</p>
                   </div>
                 </button>
               </div>
@@ -837,7 +837,7 @@ export default function LearningModulePlayer() {
 
             <div className="flex justify-start">
               <Button variant="outline" onClick={() => navigate('/learn')}>
-                <ArrowLeft className="h-4 w-4 mr-1" /> {t('All Modules', 'Всички модули')}
+                <ArrowLeft className="h-4 w-4 mr-1" /> {t('Back', 'Назад')}
               </Button>
             </div>
           </div>
@@ -878,14 +878,14 @@ function TheoryToCaseCTA({ mod, lang, t, navigate }: { mod: LearningModule; lang
         </div>
         <div className="flex-1">
           <h3 className="text-sm font-semibold text-foreground mb-1">
-            {t('Apply in a Case Study', 'Приложи в казус')}
+            {t('Try it in a case', 'Пробвай в казус')}
           </h3>
           <p className="text-xs text-muted-foreground mb-3">
             {lang === 'bg' ? mod.case_transition_bg : mod.case_transition_en}
           </p>
           <Button size="sm" onClick={() => navigate(`/case/${caseId}/preview`)}>
             <FileText className="h-3.5 w-3.5 mr-1" />
-            {t('Start Case Study', 'Започни казус')}
+            {t('Start the case', 'Започни казуса')}
           </Button>
         </div>
       </div>
