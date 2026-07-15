@@ -8,6 +8,7 @@ import StartupConsole from "@/components/landing/StartupConsole";
 import { Reveal, CountUp } from "@/components/landing/Reveal";
 import InnovationShowcase from "@/components/landing/InnovationShowcase";
 import heroBg from "@/assets/hero-bg.mp4.asset.json";
+import { PATHWAYS, TRACK_LABELS, type PathwayTrack } from "@/data/curriculum-2026";
 import {
   GraduationCap,
   ArrowRight,
