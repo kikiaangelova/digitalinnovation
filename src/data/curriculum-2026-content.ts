@@ -13,6 +13,7 @@
 
 import type { PathwayLevel } from './curriculum-2026';
 import { EXTRA_SUBMODULES } from './curriculum-2026-extra';
+import { BLACKSWAN_SUBMODULES } from './curriculum-2026-blackswan';
 
 export interface SubModule {
   /** Stable id: `<pathway>-<slug>`. */
@@ -466,6 +467,7 @@ export const ALL_SUBMODULES_2026: SubModule[] = [
   ...AI_SUBMODULES,
   ...FINANCE_SUBMODULES,
   ...EXTRA_SUBMODULES,
+  ...BLACKSWAN_SUBMODULES,
 ];
 
 /** Group sub-modules by pathway id for quick lookup. */
