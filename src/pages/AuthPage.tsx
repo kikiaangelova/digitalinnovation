@@ -55,7 +55,7 @@ export default function AuthPage() {
   const [teacherClassName, setTeacherClassName] = useState('');
   const [teacherInviteCode, setTeacherInviteCode] = useState('');
   const [consentChecked, setConsentChecked] = useState(false);
-  const { signIn, signUp, user, userRole } = useAuth();
+  const { signIn, signUp, user, userRole, refreshRole } = useAuth();
   const { t, lang } = useLang();
   const navigate = useNavigate();
   const tx = (en: string, bg: string) => lang === 'bg' ? bg : en;
