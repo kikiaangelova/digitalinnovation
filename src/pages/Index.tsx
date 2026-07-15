@@ -330,7 +330,7 @@ const Index = () => {
                   onClick={() => navigate("/pathways")}
                   className="font-quest font-bold text-lg bg-[#784EF8] text-white border-4 border-black rounded-2xl px-6 py-3.5 quest-btn-shadow quest-press inline-flex items-center justify-center gap-2"
                 >
-                  {lang === "bg" ? "Виж всички 12 предмета" : "Browse all 12 subjects"}
+                  {lang === "bg" ? "Виж всички предмети" : "Browse all subjects"}
                   <ArrowRight className="h-5 w-5" />
                 </button>
                 <span className="font-quest text-sm font-bold text-black/70">
