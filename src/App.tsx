@@ -60,6 +60,7 @@ import TermsOfUse from "./pages/TermsOfUse";
 import PendingApproval from "./pages/PendingApproval";
 import TeacherClassroom from "./pages/TeacherClassroom";
 import TeacherDashboardPage from "./pages/TeacherDashboardPage";
+import TeacherWorkspace from "./pages/TeacherWorkspace";
 import JoinClassroom from "./pages/JoinClassroom";
 
 const queryClient = new QueryClient();
@@ -126,6 +127,8 @@ const App = () => (
                       {/* Teacher-verified routes */}
                       <Route path="/teacher" element={<RoleGuard allowed={['teacher_verified', 'admin']} redirectTo="/dashboard"><TeacherClassroom /></RoleGuard>} />
                       <Route path="/teacher-dashboard" element={<RoleGuard allowed={['teacher_verified', 'admin']} redirectTo="/dashboard"><TeacherDashboardPage /></RoleGuard>} />
+                      {/* Preview: unified Teacher Workspace (feature-flagged) — old routes above remain live */}
+                      <Route path="/teacher-new" element={<RoleGuard allowed={['teacher_verified', 'admin']} redirectTo="/dashboard"><TeacherWorkspace /></RoleGuard>} />
 
                       {/* Join classroom route (students) */}
                       <Route path="/join/:code" element={<JoinClassroom />} />
