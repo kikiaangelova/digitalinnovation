@@ -5,11 +5,17 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import AppHeader from '@/components/layout/AppHeader';
 import { BarChart3, ArrowRight, Rocket, Target, TrendingUp, Lightbulb } from 'lucide-react';
+import { localizeSeason } from '@/lib/localize-season';
+import { useMemo } from 'react';
 
 export default function StudentLanding() {
   const { seasons, hasIndividualRun, startIndividualRun } = useSimulator();
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const navigate = useNavigate();
+  const localizedSeasons = useMemo(
+    () => seasons.map((s) => localizeSeason(s, lang)),
+    [seasons, lang]
+  );
 
   const handleStart = (seasonId: string) => {
     startIndividualRun(seasonId);
@@ -33,7 +39,7 @@ export default function StudentLanding() {
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {seasons.map(season => {
+          {localizedSeasons.map(season => {
             const hasRun = hasIndividualRun(season.id);
 
             return (

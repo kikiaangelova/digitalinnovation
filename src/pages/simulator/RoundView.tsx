@@ -18,6 +18,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, ChevronLeft, ChevronRight, Zap, Target, TrendingUp, AlertTriangle, Shield, Wallet } from 'lucide-react';
 import { toast } from 'sonner';
+import { localizeSeason } from '@/lib/localize-season';
 
 export default function RoundView() {
   const { id, n } = useParams<{ id: string; n: string }>();
@@ -31,7 +32,11 @@ export default function RoundView() {
   } = useSimulator();
 
   const weekNumber = parseInt(n || '1');
-  const season = seasons.find(s => s.id === id);
+  const rawSeason = seasons.find(s => s.id === id);
+  const season = useMemo(
+    () => (rawSeason ? localizeSeason(rawSeason, lang) : undefined),
+    [rawSeason, lang]
+  );
   const round = season?.rounds.find(r => r.week_number === weekNumber);
   const participantId = season ? getParticipantId(season.id) : null;
 
