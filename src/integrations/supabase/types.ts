@@ -740,6 +740,7 @@ export type Database = {
           invite_link: string | null
           is_active: boolean
           name: string
+          subject_key: string | null
           teacher_id: string
           updated_at: string
         }
@@ -750,6 +751,7 @@ export type Database = {
           invite_link?: string | null
           is_active?: boolean
           name: string
+          subject_key?: string | null
           teacher_id: string
           updated_at?: string
         }
@@ -760,6 +762,7 @@ export type Database = {
           invite_link?: string | null
           is_active?: boolean
           name?: string
+          subject_key?: string | null
           teacher_id?: string
           updated_at?: string
         }
@@ -1044,6 +1047,7 @@ export type Database = {
           id: string
           quiz_questions: Json
           slug: string
+          subject_key: string | null
           theory_bg: string
           theory_en: string
           title_bg: string
@@ -1059,6 +1063,7 @@ export type Database = {
           id?: string
           quiz_questions?: Json
           slug: string
+          subject_key?: string | null
           theory_bg?: string
           theory_en?: string
           title_bg: string
@@ -1074,6 +1079,7 @@ export type Database = {
           id?: string
           quiz_questions?: Json
           slug?: string
+          subject_key?: string | null
           theory_bg?: string
           theory_en?: string
           title_bg?: string
