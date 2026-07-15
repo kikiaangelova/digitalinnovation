@@ -12,7 +12,9 @@ import {
 } from '@/data/curriculum-2026';
 import { subModulesByPathway, type SubModule } from '@/data/curriculum-2026-content';
 import { ALL_TERMS_2026 } from '@/data/curriculum-2026-dictionary';
-import { Sparkles, ArrowRight, BookOpen, Clock } from 'lucide-react';
+import { getTeacrScenario } from '@/data/curriculum-2026-teacr';
+import DecisionConsequenceReflection from '@/components/learning/DecisionConsequenceReflection';
+import { Sparkles, ArrowRight, BookOpen, Clock, Compass, Target } from 'lucide-react';
 import { useState } from 'react';
 
 /**
@@ -70,6 +72,9 @@ export default function Pathways() {
                 {list.map(p => {
                   const levels = new Set(p.references.map(r => r.level));
                   const pathwaySubs = subs[p.id] || [];
+                  const stageRefs = p.references.filter(r => r.kind === 'stage').map(r => r.ref);
+                  const hasStageLoops = stageRefs.some(id => !!getTeacrScenario(id));
+                  const expandable = pathwaySubs.length > 0 || hasStageLoops;
                   const isOpen = openId === p.id;
                   return (
                     <article
@@ -83,11 +88,11 @@ export default function Pathways() {
                       <button
                         type="button"
                         onClick={() =>
-                          setOpenId(pathwaySubs.length ? (isOpen ? null : p.id) : null)
+                          setOpenId(expandable ? (isOpen ? null : p.id) : null)
                         }
                         className="w-full text-left"
                         aria-expanded={isOpen}
-                        disabled={pathwaySubs.length === 0}
+                        disabled={!expandable}
                       >
                       <div className="flex items-start justify-between gap-2 mb-2">
                         <h3 className="text-base font-semibold text-foreground">
@@ -124,6 +129,12 @@ export default function Pathways() {
 
                       {isOpen && pathwaySubs.length > 0 && (
                         <SubModulesList subs={pathwaySubs} lang={lang} />
+                      )}
+                      {isOpen && (
+                        <StageScenarios
+                          stageRefs={stageRefs}
+                          lang={lang}
+                        />
                       )}
                     </article>
                   );
@@ -195,6 +206,74 @@ function SubModulesList({ subs, lang }: { subs: SubModule[]; lang: 'en' | 'bg' }
                 ))}
               </div>
             )}
+            <TeacrLoopBlock targetId={m.id} lang={lang} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ── TEACR loop (Decide → Consequence → Reflect → Improve) ────────────── */
+
+function TeacrLoopBlock({ targetId, lang }: { targetId: string; lang: 'en' | 'bg' }) {
+  const [open, setOpen] = useState(false);
+  const scenario = getTeacrScenario(targetId);
+  const t = (en: string, bg: string) => (lang === 'bg' ? bg : en);
+  if (!scenario) return null;
+  return (
+    <div className="mt-3 border-t border-dashed border-border pt-3">
+      <button
+        type="button"
+        onClick={() => setOpen(v => !v)}
+        className="flex items-center gap-1.5 text-xs font-medium text-primary hover:underline min-h-[32px]"
+        aria-expanded={open}
+      >
+        <Target className="h-3.5 w-3.5" />
+        {open
+          ? t('Hide decision loop', 'Скрий цикъла на решение')
+          : t('Try the decision loop', 'Опитай цикъла на решение')}
+      </button>
+      {open && (
+        <div className="mt-3">
+          <DecisionConsequenceReflection
+            lang={lang}
+            promptEn={scenario.promptEn}
+            promptBg={scenario.promptBg}
+            options={scenario.options}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ── Stage-level TEACR scenarios (Core pathways) ──────────────────────── */
+
+function StageScenarios({ stageRefs, lang }: { stageRefs: string[]; lang: 'en' | 'bg' }) {
+  const t = (en: string, bg: string) => (lang === 'bg' ? bg : en);
+  const stageScenarios = stageRefs
+    .map(id => ({ id, scenario: getTeacrScenario(id) }))
+    .filter((x): x is { id: string; scenario: NonNullable<ReturnType<typeof getTeacrScenario>> } => !!x.scenario);
+  if (stageScenarios.length === 0) return null;
+  return (
+    <div className="mt-5 border-t border-border pt-4 space-y-4">
+      <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
+        <Compass className="h-4 w-4 text-primary" />
+        {t('Stage decision loops', 'Циклите на решение по етапи')}
+      </div>
+      <div className="grid gap-3 md:grid-cols-2">
+        {stageScenarios.map(({ id, scenario }, i) => (
+          <div key={id} className="rounded-xl border border-border bg-background p-4">
+            <h4 className="text-sm font-semibold text-foreground mb-2">
+              {t(`Stage ${i + 1}`, `Етап ${i + 1}`)}
+            </h4>
+            <DecisionConsequenceReflection
+              lang={lang}
+              promptEn={scenario.promptEn}
+              promptBg={scenario.promptBg}
+              options={scenario.options}
+            />
           </div>
         ))}
       </div>
