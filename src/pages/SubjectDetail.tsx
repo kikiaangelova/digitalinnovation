@@ -343,6 +343,26 @@ function EntrepreneurshipDraftCard({
       <Button asChild className="w-full sm:w-auto">
         <Link to="/learn/practice/entrepreneurship">{cta}</Link>
       </Button>
+      <div
+        className="rounded-lg border border-dashed border-primary/40 bg-primary/5 p-3 space-y-1 mt-2"
+        data-testid="entrepreneurship-decision-case-cta"
+      >
+        <div className="flex items-start gap-2 flex-wrap">
+          <p className="text-sm font-semibold text-foreground leading-snug">
+            {lang === 'bg'
+              ? 'Реши казус: MVP или пълен продукт?'
+              : 'Decision case: MVP or full product?'}
+          </p>
+          <Badge variant="outline" className="text-[10px]">
+            {t('Content pending', 'Очаква съдържание')}
+          </Badge>
+        </div>
+        <p className="text-xs text-muted-foreground leading-relaxed">
+          {lang === 'bg'
+            ? 'Приложи наученото в ситуация с избор, последствия и рефлексия. Казусът се подготвя — линк ще се появи, когато е готов.'
+            : 'Apply the theme in a situation with choice, consequences and reflection. The case is being prepared — a link will appear when it is ready.'}
+        </p>
+      </div>
     </section>
   );
 }
