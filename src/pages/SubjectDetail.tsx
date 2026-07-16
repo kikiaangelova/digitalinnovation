@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import AppHeader from '@/components/layout/AppHeader';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { StatusBadge, type ActivityStatus } from '@/components/ui/status-badge';
 import { useAuth } from '@/context/AuthContext';
@@ -183,20 +184,24 @@ export default function SubjectDetail() {
         {loading || catalogLoading ? (
           <p className="text-sm text-muted-foreground">{t('Loading…', 'Зареждане…')}</p>
         ) : total === 0 ? (
-          <section className="rounded-xl border border-dashed border-border bg-card p-8 text-center space-y-2">
-            <p className="text-sm text-foreground font-medium">
-              {t(
-                'Learning content for this subject is being prepared.',
-                'Съдържанието за този предмет се подготвя.',
-              )}
-            </p>
-            <p className="text-xs text-muted-foreground">
-              {t(
-                'We will add modules here as they become playable.',
-                'Ще добавим модули тук, щом станат готови за използване.',
-              )}
-            </p>
-          </section>
+          subjectKey === 'entrepreneurship-startups' ? (
+            <EntrepreneurshipDraftCard lang={lang as 'bg' | 'en'} t={t} />
+          ) : (
+            <section className="rounded-xl border border-dashed border-border bg-card p-8 text-center space-y-2">
+              <p className="text-sm text-foreground font-medium">
+                {t(
+                  'Learning content for this subject is being prepared.',
+                  'Съдържанието за този предмет се подготвя.',
+                )}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {t(
+                  'We will add modules here as they become playable.',
+                  'Ще добавим модули тук, щом станат готови за използване.',
+                )}
+              </p>
+            </section>
+          )
         ) : (
           <>
             {assignedModules.length > 0 && (
@@ -306,6 +311,43 @@ export default function SubjectDetail() {
         <span data-total-registry={LEARNING_MODULES.length} className="hidden" />
       </main>
     </div>
+  );
+}
+
+function EntrepreneurshipDraftCard({
+  lang,
+  t,
+}: {
+  lang: 'bg' | 'en';
+  t: (en: string, bg: string) => string;
+}) {
+  const title = lang === 'bg'
+    ? 'Практически модули по предприемачество'
+    : 'Practice-first entrepreneurship modules';
+  const body = lang === 'bg'
+    ? 'Шест чернови модула са подготвени за преглед: предприемаческо мислене, откриване на проблеми, факт/мнение/допускане, бизнес модел, MVP, експерименти и pitch.'
+    : 'Six draft modules are ready for review: entrepreneurial thinking, problem discovery, fact/opinion/assumption, business model, MVP, experiments and pitch.';
+  const status = lang === 'bg'
+    ? 'Статус: чернова / за преглед'
+    : 'Status: draft / for review';
+  const cta = lang === 'bg'
+    ? 'Отвори практическите модули'
+    : 'Open practice-first modules';
+
+  return (
+    <section className="rounded-xl border border-border bg-card p-5 space-y-3">
+      <div className="flex items-start gap-2 flex-wrap">
+        <h2 className="text-sm font-semibold text-foreground">{title}</h2>
+        <Badge variant="outline" className="text-[10px]">
+          {t('Draft / For review', 'Чернова / За преглед')}
+        </Badge>
+      </div>
+      <p className="text-sm text-foreground/90 leading-relaxed">{body}</p>
+      <p className="text-[11px] text-muted-foreground">{status}</p>
+      <Button asChild className="w-full sm:w-auto">
+        <Link to="/learn/practice/entrepreneurship">{cta}</Link>
+      </Button>
+    </section>
   );
 }
 

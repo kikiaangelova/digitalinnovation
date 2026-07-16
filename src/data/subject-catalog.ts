@@ -83,8 +83,8 @@ export const SUBJECT_CATALOG: Subject[] = [
   },
   {
     key: 'entrepreneurship-startups',
-    title_bg: 'Предприемачество и стартъпи',
-    title_en: 'Entrepreneurship & Startups',
+    title_bg: 'Предприемачество и предприемаческо мислене',
+    title_en: 'Entrepreneurship & Entrepreneurial Thinking',
     short_bg: 'От идея към първи клиенти — практично, без празни лозунги.',
     short_en: 'From idea to first customers — practical, no empty slogans.',
     family: 'entrepreneurship',
