@@ -1006,8 +1006,8 @@ export const TERMS: DictionaryTerm[] = [
   {
     term: 'Marketplace',
     termBg: 'Маркетплейс (пазарна платформа)',
-    definition: 'A digital platform where multiple sellers can list and sell their products or services to buyers. The marketplace earns revenue by taking a percentage of each transaction.',
-    definitionBg: 'Дигитална платформа, където множество продавачи могат да листват и продават своите продукти или услуги на купувачи. Маркетплейсът печели приходи, като взима процент от всяка транзакция.',
+    definition: 'A digital platform where multiple sellers list and sell their products or services to buyers. The marketplace itself does not own the goods; it earns revenue by taking a percentage of each transaction. Sometimes also called a "marketplace model".',
+    definitionBg: 'Дигитална платформа, където множество продавачи предлагат продукти или услуги на купувачи. Маркетплейсът не притежава стоките — печели, като взима процент от всяка сделка. Понякога се нарича и „модел на маркетплейс“.',
     category: 'Platform',
     example: 'Amazon Marketplace, Etsy, and eBay are examples of digital marketplaces.',
   },
