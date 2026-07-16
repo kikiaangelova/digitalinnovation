@@ -116,6 +116,40 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
           'List 3 problems you saw in the last 7 days (school, family, city, online). For each: who has it, where you saw it, why it matters. No solutions.',
         brief_bg:
           'Опиши 3 проблема, които видя през последните 7 дни (училище, семейство, град, онлайн). За всеки: кой го има, къде го видя, защо има значение. Без решения.',
+        cefe: {
+          action_en:
+            'Spend 30 minutes walking through 2 different environments (school, home, transport, a shop). Record 3 concrete problems in a short log with time, place and who was affected.',
+          action_bg:
+            'Отдели 30 минути и премини през 2 различни среди (училище, дом, транспорт, магазин). Запиши 3 конкретни проблема в кратък журнал с час, място и кого засяга.',
+          visibleResult_en:
+            'A written observation log with 3 dated entries. Each entry: time, place, who, what happened, why it matters. No solutions in the problem line.',
+          visibleResult_bg:
+            'Писмен журнал с 3 датирани записа. Всеки запис: час, място, кой, какво се случи, защо има значение. В реда за проблема не се появява решение.',
+          processingQuestions_en: [
+            'Which of the 3 problems did you see with your own eyes, and which did you only hear about?',
+            'For each problem, what did you observe vs. what did you assume?',
+            'Which problem repeats and which was a one-off?',
+          ],
+          processingQuestions_bg: [
+            'Кои от 3-те проблема видя с очите си, а за кои само чу?',
+            'За всеки проблем: какво наблюдава и какво допусна?',
+            'Кой проблем се повтаря и кой беше еднократен?',
+          ],
+          generalizing_en:
+            'Real problems are located in time, place and people. A problem you can point to is more useful than a problem you can only describe.',
+          generalizing_bg:
+            'Реалните проблеми имат време, място и хора. Проблем, който можеш да посочиш, е по-полезен от такъв, който само описваш.',
+          applying_en:
+            'Rewrite one entry as a one-sentence problem statement without a solution, ready for the next task.',
+          applying_bg:
+            'Пренапиши един запис като изречение-проблем без решение, готово за следващата задача.',
+          teacherCheck_en:
+            'Log has 3 dated entries; each names a person or group; no solution appears in the problem line.',
+          teacherCheck_bg:
+            'Журналът има 3 датирани записа; всеки посочва човек или група; в реда за проблема няма решение.',
+          evidence_en: 'Observation log with 3 entries.',
+          evidence_bg: 'Журнал с 3 наблюдения.',
+        },
       },
       {
         id: 'entr-01-t2',
@@ -126,6 +160,40 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
           'Pick one problem. Write: "I believe X people would do Y if we offered Z." Add what would have to be true for this to hold.',
         brief_bg:
           'Избери един проблем. Напиши: „Вярвам, че X хора биха направили Y, ако им предложим Z.“ Добави какво трябва да е вярно, за да е така.',
+        cefe: {
+          action_en:
+            'Pick one problem from your log. Write it as: "I believe [X people] would [do Y] if we offered [Z], because [reason]. This is true if [measurable signal]. This is false if [measurable signal]."',
+          action_bg:
+            'Избери един проблем от журнала. Напиши го така: „Вярвам, че [X хора] биха [направили Y], ако им предложим [Z], защото [причина]. Ще е вярно, ако [измерим сигнал]. Ще е грешно, ако [измерим сигнал].“',
+          visibleResult_en:
+            'One written hypothesis card with an explicit confirming signal and an explicit disconfirming signal.',
+          visibleResult_bg:
+            'Една хипотеза-карта с ясен сигнал за потвърждение и ясен сигнал за опровергаване.',
+          processingQuestions_en: [
+            'What in your hypothesis is evidence and what is guess?',
+            'How would you know within 7 days that the hypothesis is wrong?',
+            'Which word could you delete without weakening the hypothesis?',
+          ],
+          processingQuestions_bg: [
+            'Кое в хипотезата е доказателство и кое е предположение?',
+            'Как за 7 дни ще разбереш, че хипотезата е грешна?',
+            'Коя дума можеш да махнеш, без да отслабиш хипотезата?',
+          ],
+          generalizing_en:
+            'A hypothesis is only useful if it can be shown wrong. Vague hypotheses cannot be tested.',
+          generalizing_bg:
+            'Хипотезата е полезна само ако може да бъде показана като грешна. Размитите хипотези не се тестват.',
+          applying_en:
+            'Rewrite the hypothesis after a peer challenges the weakest word.',
+          applying_bg:
+            'Пренапиши хипотезата, след като съученик оспори най-слабата дума.',
+          teacherCheck_en:
+            'Card includes a specific group, an action, an offer and at least one measurable disconfirming signal.',
+          teacherCheck_bg:
+            'Картата съдържа конкретна група, действие, предложение и поне един измерим сигнал за опровергаване.',
+          evidence_en: 'Hypothesis card.',
+          evidence_bg: 'Хипотеза-карта.',
+        },
       },
     ],
     caseConnection: {
