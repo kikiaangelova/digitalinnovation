@@ -47,10 +47,10 @@ describe('Practice-first surfacing V1 — Entrepreneurship only', () => {
     }
   });
 
-  it('does not surface other themes in this pass', () => {
-    const otherThemes = PRACTICE_FIRST_MODULES.filter(
-      (m) => m.themeId !== 'entrepreneurship',
-    );
-    expect(otherThemes).toHaveLength(0);
+  it('only surfaces approved themes (entrepreneurship, innovation) in this pass', () => {
+    const allowed = new Set(['entrepreneurship', 'innovation']);
+    for (const m of PRACTICE_FIRST_MODULES) {
+      expect(allowed.has(m.themeId)).toBe(true);
+    }
   });
 });
