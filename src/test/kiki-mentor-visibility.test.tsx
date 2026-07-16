@@ -231,25 +231,23 @@ describe('PracticeFirstThemePage — Kiki questions label and note', () => {
     );
   };
 
-  it('shows "Mentor questions from Kiki" and the not-automatic note (EN)', () => {
+  it('shows "Check your thinking" and the self-check note (EN)', () => {
     const { container } = renderPage('en');
-    // Expand the first accordion item so the Kiki questions section renders.
-    const triggers = container.querySelectorAll('[data-state]');
     const firstTrigger = container.querySelector('button[aria-expanded]') as HTMLButtonElement | null;
     if (firstTrigger) fireEvent.click(firstTrigger);
-    expect(container.textContent).toMatch(/Mentor questions from Kiki/);
+    expect(container.textContent).toMatch(/Check your thinking/);
     expect(container.textContent).toMatch(
-      /Kiki does not respond automatically here yet/,
+      /These are self-check questions\. Kiki does not answer automatically here\./,
     );
   });
 
-  it('shows "Менторски въпроси от Kiki" and BG note', () => {
+  it('shows "Провери мисленето си" and BG self-check note', () => {
     const { container } = renderPage('bg');
     const firstTrigger = container.querySelector('button[aria-expanded]') as HTMLButtonElement | null;
     if (firstTrigger) fireEvent.click(firstTrigger);
-    expect(container.textContent).toMatch(/Менторски въпроси от Kiki/);
+    expect(container.textContent).toMatch(/Провери мисленето си/);
     expect(container.textContent).toMatch(
-      /Тук Kiki не отговаря автоматично/,
+      /Това са въпроси за самопроверка\. Kiki не отговаря автоматично тук\./,
     );
   });
 });
