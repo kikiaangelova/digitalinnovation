@@ -206,6 +206,17 @@ const INNOVATION: RequiredConcept[] = [
   c('Innovation measurement', 'Измерване на иновации', 'innovation', ['organizations']),
 ];
 
+// Innovation Batch 2A — practice-first module anchors
+const INNOVATION_2A: RequiredConcept[] = [
+  c('Adoption', 'Приемане', 'innovation', ['adoption', 'diffusion']),
+  c('Value Creation', 'Създаване на стойност', 'innovation', ['value', 'impact']),
+  c('Continuous Improvement', 'Непрекъснато подобрение', 'innovation', ['process', 'improvement', 'measurement']),
+  c('Implementation', 'Внедряване', 'innovation', ['implementation', 'change']),
+  c('Change Management', 'Управление на промяната', 'innovation', ['implementation', 'change', 'people']),
+  c('Baseline', 'Базова стойност', 'innovation', ['measurement', 'baseline', 'evidence']),
+  c('Impact Measurement', 'Измерване на въздействие', 'innovation', ['measurement', 'impact', 'evidence']),
+];
+
 // -------------------- AI --------------------
 const AI: RequiredConcept[] = [
   // Literacy
@@ -275,6 +286,7 @@ export const REQUIRED_CONCEPTS: RequiredConcept[] = [
   ...MARKETING,
   ...ENTREPRENEURSHIP,
   ...INNOVATION,
+  ...INNOVATION_2A,
   ...AI,
   ...SKILLS,
 ];
