@@ -168,14 +168,17 @@ export default function AppHeader() {
               </Link>
             )}
 
-            {/* Lang toggle — styled as pill */}
+            {/* Lang toggle — pill shows the CURRENT language; aria/title state the switch target */}
             <button
               onClick={toggleLang}
-              className={`${!user ? 'hidden min-[400px]:flex' : 'flex'} items-center gap-1 px-2.5 py-1 rounded-full border border-border bg-accent text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted transition-colors`}
-              title={lang === 'en' ? 'Превключи на български' : 'Switch to English'}
+              className={`${!user ? 'hidden min-[400px]:flex' : 'flex'} items-center gap-1 px-2.5 py-1 rounded-full border border-border bg-accent text-xs font-semibold text-foreground hover:bg-muted transition-colors`}
+              title={lang === 'en' ? 'Language: EN — switch to Български' : 'Език: BG — превключи на English'}
+              aria-label={lang === 'en' ? 'Language: English. Switch to Bulgarian' : 'Език: Български. Превключи на английски'}
+              data-current-lang={lang}
             >
-              <Globe className="h-3 w-3 md:inline hidden" />
-              {lang === 'en' ? 'BG' : 'EN'}
+              <Globe className="h-3 w-3 md:inline hidden" aria-hidden="true" />
+              <span>{lang === 'en' ? 'EN' : 'BG'}</span>
+              <span aria-hidden="true" className="text-muted-foreground">→ {lang === 'en' ? 'BG' : 'EN'}</span>
             </button>
 
             {/* ─── Desktop: user avatar dropdown or sign-in ─── */}
