@@ -50,6 +50,9 @@ export interface PracticeFirstModule {
   keyConcepts: string[];
   dictionaryConcepts: string[];
   practiceTasks: PracticeTask[];
+  // TODO(v1b): evidenceOfSkill is currently EN-only string[]. When we
+  // introduce bilingual evidence descriptors, refactor to { en; bg } pairs
+  // across all themes in one pass instead of ad-hoc per module.
   informationSearchTask?: { prompt_en: string; prompt_bg: string };
   caseConnection?: CaseConnection;
   kikiQuestions: { en: string; bg: string }[];
