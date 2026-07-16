@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import AppHeader from '@/components/layout/AppHeader';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { StatusBadge, type ActivityStatus } from '@/components/ui/status-badge';
 import { useAuth } from '@/context/AuthContext';
