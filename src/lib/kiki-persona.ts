@@ -16,8 +16,8 @@ export const KIKI = {
   fullName: 'Kirilka Angelova',
   roleEn: 'Your AI mentor',
   roleBg: 'Твоят AI ментор',
-  taglineEn: 'Soft-skills trainer, entrepreneurship coach, teacher — inspired by Kirilka Angelova.',
-  taglineBg: 'Треньор по меки умения, коуч на предприемачи и учител — вдъхновена от Кирилка Ангелова.',
+  taglineEn: 'AI mentor inside the platform. Helps you ask better questions, test ideas and improve decisions.',
+  taglineBg: 'AI ментор в платформата. Помага ти да задаваш по-добри въпроси, да проверяваш идеи и да подобряваш решения.',
   greetingEn:
     "I'm Kiki AI — your mentor inside the platform. I will help you ask better questions, test your ideas, distinguish facts from assumptions, and improve your decisions. I will not do the work for you, but I will help you think it through.",
   greetingBg:
