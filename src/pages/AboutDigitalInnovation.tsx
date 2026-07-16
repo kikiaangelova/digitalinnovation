@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { ArrowRight, Sparkles } from 'lucide-react';
-import creatorPortrait from '@/assets/kirilka-creator.jpg';
+import creatorPortrait from '@/assets/avatars/female-founder-1.png';
 
 export default function AboutDigitalInnovation() {
   const { lang } = useLang();
