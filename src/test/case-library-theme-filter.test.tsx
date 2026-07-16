@@ -219,4 +219,28 @@ describe('CaseLibrary — ?theme= filter', () => {
     // Index 1 is intermediate → hidden
     expect(screen.queryByText('Entrepreneurship case 1')).not.toBeInTheDocument();
   });
+
+  it('grid view under theme=entrepreneurship hides industry domains with no matching cases', async () => {
+    renderLib('/cases?theme=entrepreneurship');
+    await waitForLoaded();
+    // Default view mode is grid. All entrepreneurship mock cases have topic
+    // "Business Model" which falls back to the "AI & Data" domain, so only
+    // that domain card should render.
+    expect(screen.getByText('AI & Data')).toBeInTheDocument();
+    expect(screen.queryByText('FinTech')).not.toBeInTheDocument();
+    expect(screen.queryByText('EdTech')).not.toBeInTheDocument();
+    expect(screen.queryByText('Smart Cities')).not.toBeInTheDocument();
+    expect(screen.queryByText('Digital Health')).not.toBeInTheDocument();
+  });
+
+  it('grid view without a theme still renders the full industry grid', async () => {
+    renderLib('/cases');
+    await waitForLoaded();
+    // Sanity: all industry domain cards render in the default browse view.
+    expect(screen.getByText('AI & Data')).toBeInTheDocument();
+    expect(screen.getByText('FinTech')).toBeInTheDocument();
+    expect(screen.getByText('EdTech')).toBeInTheDocument();
+    expect(screen.getByText('Smart Cities')).toBeInTheDocument();
+    expect(screen.getByText('Digital Health')).toBeInTheDocument();
+  });
 });
