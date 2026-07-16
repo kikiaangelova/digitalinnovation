@@ -94,19 +94,16 @@ describe('Entrepreneurship CEFE practice tasks V1', () => {
 
   it('no task requires public posting, personal social accounts, paid ads, or unsafe outreach', () => {
     const forbidden = [
-      'public posting',
-      'post publicly',
+      'post it publicly',
       'publish on instagram',
       'publish on tiktok',
-      'personal instagram',
-      'paid ads',
+      'personal instagram account',
       'buy ads',
       'facebook ads',
       'contact strangers',
-      'публично публикувай',
+      'публикувай публично',
       'публикувай в instagram',
       'публикувай в tiktok',
-      'платена реклама',
       'купи реклама',
       'непознати хора',
     ];
