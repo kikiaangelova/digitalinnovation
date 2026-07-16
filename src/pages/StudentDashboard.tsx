@@ -36,22 +36,6 @@ export default function StudentDashboard() {
   const progress = useProgress();
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
 
-  // Scroll into view when the URL hash targets a dashboard anchor (e.g. #kiki-mentor).
-  useEffect(() => {
-    if (typeof window === 'undefined') return;
-    const hash = window.location.hash?.replace('#', '');
-    if (!hash) return;
-    // Wait a tick for the section to render.
-    const timer = window.setTimeout(() => {
-      const el = document.getElementById(hash);
-      if (el) {
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        el.classList.add('ring-2', 'ring-primary');
-        window.setTimeout(() => el.classList.remove('ring-2', 'ring-primary'), 2000);
-      }
-    }, 400);
-    return () => window.clearTimeout(timer);
-  }, [loading]);
 
   const [cases, setCases] = useState<CaseRow[]>([]);
   const [submissions, setSubmissions] = useState<SubRow[]>([]);
