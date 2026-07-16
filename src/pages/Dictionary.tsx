@@ -318,6 +318,34 @@ export default function Dictionary() {
 
 function TermCard({ term: t, catColor, lang, user, viewedTermsRef }: { term: DictionaryTerm; catColor: (c: string) => string; lang: string; user: any; viewedTermsRef: React.MutableRefObject<Set<string>> }) {
   const [expanded, setExpanded] = useState(false);
+  const reviewStatus = getReviewStatus(t);
+  const required = isRequiredConcept(t);
+  const isApproved = reviewStatus === 'educator_approved';
+  const showPendingBanner = required && !isApproved;
+
+  const reviewLabel: Record<ReviewStatus, { en: string; bg: string; cls: string }> = {
+    needs_review: {
+      en: 'Needs review',
+      bg: 'За преглед',
+      cls: 'bg-amber-500/10 text-amber-700 border-amber-500/30',
+    },
+    needs_rewrite: {
+      en: 'Needs rewrite',
+      bg: 'Нуждае се от редакция',
+      cls: 'bg-orange-500/10 text-orange-700 border-orange-500/30',
+    },
+    educator_approved: {
+      en: 'Educator approved',
+      bg: 'Одобрено от преподавател',
+      cls: 'bg-emerald-500/10 text-emerald-700 border-emerald-500/30',
+    },
+    deprecated: {
+      en: 'Duplicate / merge needed',
+      bg: 'Дублирано / за сливане',
+      cls: 'bg-slate-500/10 text-slate-700 border-slate-500/30',
+    },
+  };
+  const rl = reviewLabel[reviewStatus];
 
   const handleToggle = () => {
     if (!expanded && user && !viewedTermsRef.current.has(t.term)) {
@@ -337,11 +365,22 @@ function TermCard({ term: t, catColor, lang, user, viewedTermsRef }: { term: Dic
           <h3 className="font-display font-bold text-foreground text-base leading-tight">{t.term}</h3>
           <p className="text-sm text-primary/70 font-medium mt-0.5">{t.termBg}</p>
         </div>
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex items-center gap-2 shrink-0 flex-wrap justify-end">
           <Badge variant="outline" className={`text-xs ${catColor(t.category)}`}>{lang === 'bg' ? (CATEGORY_TRANSLATIONS[t.category] || t.category) : t.category}</Badge>
+          <Badge variant="outline" className={`text-[10px] ${rl.cls}`}>
+            {lang === 'bg' ? rl.bg : rl.en}
+          </Badge>
           {expanded ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
         </div>
       </div>
+
+      {showPendingBanner && (
+        <div className="mx-4 mb-2 rounded-md border border-amber-500/30 bg-amber-500/5 px-3 py-2 text-[11px] text-amber-900/90 leading-snug">
+          {lang === 'bg'
+            ? 'Задължително понятие — определението подлежи на преглед.'
+            : 'Required concept — definition pending review.'}
+        </div>
+      )}
 
       {!expanded && (
         <div className="px-4 pb-3 space-y-1.5">
