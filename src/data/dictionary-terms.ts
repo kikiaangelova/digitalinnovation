@@ -393,9 +393,10 @@ export const TERMS: DictionaryTerm[] = [
   {
     term: 'Experiment',
     termBg: 'Експеримент',
-    definition: 'A structured test designed to validate or invalidate a business hypothesis. In startups, experiments help you learn quickly what works and what doesn\'t before investing heavily.',
-    definitionBg: 'Структуриран тест, проектиран да валидира или отхвърли бизнес хипотеза. В стартъпите експериментите помагат бързо да научите какво работи и какво не, преди да инвестирате значително.',
+    definition: 'A structured test designed to validate or invalidate a specific business hypothesis. In practice-first work, experiments — including lean experiments — help you learn quickly, at low cost, whether an assumption holds before you invest heavily.',
+    definitionBg: 'Структуриран тест, който проверява конкретна бизнес хипотеза. На практика (включително т.нар. лийн експерименти) експериментите ти позволяват бързо и евтино да разбереш дали дадено допускане е вярно, преди да вложиш сериозен ресурс.',
     category: 'Experimentation',
+    example: 'Landing page + ad campaign to measure how many people click "sign up" for a service you have not built yet.',
   },
   {
     term: 'Feature',
@@ -519,13 +520,6 @@ export const TERMS: DictionaryTerm[] = [
     category: 'Strategy',
   },
   {
-    term: 'Lean Experimentation',
-    termBg: 'Лийн експериментиране',
-    definition: 'Testing business ideas quickly and cheaply before building a full product. The goal is to learn as much as possible with the least amount of time and money.',
-    definitionBg: 'Бързо и евтино тестване на бизнес идеи, преди да се изгради пълен продукт. Целта е да научите възможно най-много с минимално време и пари.',
-    category: 'Experimentation',
-  },
-  {
     term: 'Lean Startup',
     termBg: 'Лийн стартъп',
     definition: 'A method for building a business by following the Build-Measure-Learn cycle. Instead of spending years on a perfect product, you launch quickly, get feedback, and improve.',
@@ -539,14 +533,6 @@ export const TERMS: DictionaryTerm[] = [
     definitionBg: 'Вид ИИ, при който компютрите се учат от данни, без да са директно програмирани за всяка задача. Системата се подобрява с времето, докато обработва повече данни и намира модели.',
     category: 'AI',
     example: 'Spotify\'s Discover Weekly playlist uses machine learning to recommend songs you might like.',
-  },
-  {
-    term: 'Marketplace Model',
-    termBg: 'Модел на маркетплейс',
-    definition: 'A platform that connects buyers and sellers and earns money by taking a commission on each transaction. The marketplace itself doesn\'t own the products being sold.',
-    definitionBg: 'Платформа, която свързва купувачи и продавачи и печели пари, като взима комисионна от всяка транзакция. Самият маркетплейс не притежава продаваните продукти.',
-    category: 'Platform',
-    example: 'eBay, Etsy, and Amazon Marketplace connect independent sellers with millions of buyers.',
   },
   {
     term: 'Minimum Viable Product (MVP)',
