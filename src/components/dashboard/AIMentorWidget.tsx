@@ -85,13 +85,13 @@ export default function AIMentorWidget({ lang, startupData, onFeedbackReceived }
         <Button onClick={requestFeedback} disabled={loading} size="sm" className="sim-gradient border-0">
           {loading ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <Send className="h-4 w-4 mr-1" />}
           {feedback
-            ? t('Ask Kiki again', 'Питай Kiki отново')
-            : t('Ask Kiki for feedback', 'Питай Kiki за обратна връзка')
+            ? t('Request another review from Kiki', 'Поискай нов преглед от Kiki')
+            : t('Request Kiki mentor review', 'Поискай преглед от ментора Kiki')
           }
         </Button>
       </div>
       <p className="text-xs text-muted-foreground mt-2">
-        {t("Kiki has 3 deep answers per day. Same question = same answer (she doesn't repeat herself).", 'Kiki има 3 задълбочени отговора на ден. Един и същ въпрос = един и същ отговор.')}
+        {t("Kiki is a mentor, not a generic chatbot. She won't do the work for you — she will help you think it through. Limit: 3 deep reviews per day.", 'Kiki е ментор, не универсален чатбот. Тя няма да върши работата вместо теб — ще ти помогне да я обмислиш. Лимит: 3 задълбочени прегледа на ден.')}
       </p>
     </div>
   );

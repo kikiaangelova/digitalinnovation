@@ -262,8 +262,8 @@ const Index = () => {
             </h3>
             <p className="mt-3 text-sm text-muted-foreground sm:text-base">
               {T(
-                "I'm Kirilka — Kiki. I've spent 20 years asking founders the hard questions so they don't get eaten by their own blind spots. On this platform, I'm the AI you can ask anything. Bad ideas welcome. That's how you find the good ones.",
-                "Аз съм Кирилка — Кики. 20 години задавам на фаундъри трудните въпроси, за да не ги изяде собствената им слепота. Тук съм AI-ът, който можеш да питаш всичко. Лоши идеи — добре дошли. Така се стига до добрите."
+                "I'm Kiki AI — your mentor inside the platform. I will help you ask better questions, test your ideas, distinguish facts from assumptions, and improve your decisions. I will not do the work for you, but I will help you think it through.",
+                "Аз съм Kiki AI — твоят ментор в платформата. Ще ти помагам да задаваш по-добри въпроси, да проверяваш идеите си, да различаваш факти от допускания и да подобряваш решенията си. Няма да върша работата вместо теб, но ще мислим заедно."
               )}
             </p>
             <button
