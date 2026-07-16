@@ -241,26 +241,23 @@ describe('Decision case CTA', () => {
   it('renders the CTA card in English on the entrepreneurship page', () => {
     renderEntrepreneurship({ lang: 'en', userId: 'u1' });
     const cta = screen.getByTestId('pf-decision-case-cta');
-    expect(cta.textContent).toContain('Decision case: MVP or full product?');
-    expect(cta.textContent).toContain('Content pending');
+    expect(cta.textContent).toContain('Entrepreneurship cases');
+    expect(cta.textContent).toContain('View cases');
   });
 
   it('renders the CTA card in Bulgarian on the entrepreneurship page', () => {
     renderEntrepreneurship({ lang: 'bg', userId: 'u1' });
     const cta = screen.getByTestId('pf-decision-case-cta');
-    expect(cta.textContent).toContain('Реши казус: MVP или пълен продукт?');
-    expect(cta.textContent).toContain('Очаква съдържание');
+    expect(cta.textContent).toContain('Казуси по предприемачество');
+    expect(cta.textContent).toContain('Виж казусите');
   });
 
-  it('does NOT render a link to a fabricated case route (case is not resolvable)', () => {
+  it('links to the theme-filtered case library', () => {
     renderEntrepreneurship({ lang: 'en', userId: 'u1' });
     const cta = screen.getByTestId('pf-decision-case-cta');
-    // The pending CTA must not contain any anchor pointing at /case, /cases, /learn/case, etc.
     const links = cta.querySelectorAll('a');
-    for (const a of Array.from(links)) {
-      const href = a.getAttribute('href') ?? '';
-      expect(href).not.toMatch(/\/case/);
-    }
+    const hrefs = Array.from(links).map((a) => a.getAttribute('href') ?? '');
+    expect(hrefs).toContain('/cases?theme=entrepreneurship');
   });
 });
 
