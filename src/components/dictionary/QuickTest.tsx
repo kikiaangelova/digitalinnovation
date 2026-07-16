@@ -8,6 +8,7 @@ import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { awardXp } from '@/lib/xp';
 import { TERMS, getTermDifficulty, type DictionaryTerm, type TermDifficulty } from '@/data/dictionary-terms';
+import { generateQuizOptions } from '@/lib/dictionary-quiz';
 import {
   HelpCircle, CheckCircle2, XCircle, Trophy, Zap,
   ArrowRight, RotateCcw, Target, TrendingUp, TrendingDown,
@@ -87,41 +88,29 @@ function generateAdaptiveQuestions(
   }
 
   return selected.map(term => {
-    const wrongPool = TERMS.filter(t => t.term !== term.term);
-    const wrongs: string[] = [];
-    const usedIndices = new Set<number>();
-    while (wrongs.length < 3 && usedIndices.size < wrongPool.length) {
-      const idx = Math.floor(Math.random() * wrongPool.length);
-      if (!usedIndices.has(idx)) {
-        usedIndices.add(idx);
-        wrongs.push(isBg ? wrongPool[idx].definitionBg : wrongPool[idx].definition);
-      }
-    }
-    const correctIndex = Math.floor(Math.random() * 4);
-    const options = [...wrongs];
-    options.splice(correctIndex, 0, isBg ? term.definitionBg : term.definition);
+    const { options, correctIndex } = generateQuizOptions(term, TERMS, isBg ? 'bg' : 'en');
     return { term, options, correctIndex, difficulty: getTermDifficulty(term) };
   });
 }
 
 function getXpTier(score: number): { xp: number; label: string; labelBg: string } {
-  if (score >= 86) return { xp: 50, label: 'Excellent!', labelBg: 'Отлично!' };
-  if (score >= 71) return { xp: 30, label: 'Great job!', labelBg: 'Чудесно!' };
-  if (score >= 51) return { xp: 20, label: 'Good effort!', labelBg: 'Добро представяне!' };
-  return { xp: 10, label: 'Keep learning!', labelBg: 'Продължавай да учиш!' };
+  if (score >= 86) return { xp: 50, label: 'Very strong', labelBg: 'Много силен резултат' };
+  if (score >= 71) return { xp: 30, label: 'Good result', labelBg: 'Добър резултат' };
+  if (score >= 51) return { xp: 20, label: 'Foundation there', labelBg: 'Основата е налице' };
+  return { xp: 10, label: 'Needs review', labelBg: 'Нужен е преговор' };
 }
 
 function getFeedback(score: number, lang: string): string {
   if (lang === 'bg') {
-    if (score >= 86) return 'Отлично разбиране на бизнес терминологията. Готов си за следващото ниво!';
-    if (score >= 71) return 'Силно представяне! Обърни внимание на термините, които сбърка.';
-    if (score >= 51) return 'Добро начало, но има още какво да научиш. Прегледай речника за термините, които не познаваш.';
-    return 'Нужна е повече практика. Прегледай термините в речника и опитай отново!';
+    if (score >= 86) return 'Много силен резултат. Прегледай само термините, които си пропуснал(а).';
+    if (score >= 71) return 'Добър резултат. Има няколко термина, които си струва да повториш.';
+    if (score >= 51) return 'Основата е налице, но част от термините още се бъркат. Прегледай речника и опитай пак.';
+    return 'Резултатът показва, че е нужен преговор. Започни с термините, които тестът посочва.';
   }
-  if (score >= 86) return 'Excellent understanding of business terminology. You are ready for the next level!';
-  if (score >= 71) return 'Strong performance! Pay attention to the terms you missed.';
-  if (score >= 51) return 'Good start, but there is more to learn. Review the dictionary for unfamiliar terms.';
-  return 'More practice needed. Review the terms in the dictionary and try again!';
+  if (score >= 86) return 'Very strong result. Review only the terms you missed.';
+  if (score >= 71) return 'Good result. A few terms are worth reviewing.';
+  if (score >= 51) return 'The foundation is there, but several terms are still unclear. Review the dictionary and try again.';
+  return 'The result shows that review is needed. Start with the terms listed below.';
 }
 
 // ─── Weak area detection ───
@@ -378,8 +367,8 @@ export default function QuickTest() {
 
         <p className="text-sm text-muted-foreground">
           {t(
-            `Answer ${QUESTIONS_PER_TEST} questions that adapt to your level. Earn XP and discover your strengths and weaknesses!`,
-            `Отговори на ${QUESTIONS_PER_TEST} въпроса, които се адаптират към нивото ти. Спечели XP и открий силните и слабите си страни!`
+            `Answer ${QUESTIONS_PER_TEST} questions. The test adapts to your previous results and shows which terms to review.`,
+            `Отговори на ${QUESTIONS_PER_TEST} въпроса. Тестът се адаптира според предишните ти резултати и показва кои термини да преговориш.`
           )}
         </p>
 
