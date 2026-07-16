@@ -1,5 +1,31 @@
 export type TermDifficulty = 'beginner' | 'intermediate' | 'advanced';
 
+/**
+ * Dictionary governance (V1) — additive metadata used by
+ * `dictionary-required-concepts.ts` and the /dictionary UI to track
+ * curriculum alignment and review status. All fields are optional so
+ * existing terms keep rendering unchanged; anything missing defaults
+ * to `needs_review` / `not_checked` at read time.
+ */
+export type ReviewStatus =
+  | 'needs_review'
+  | 'needs_rewrite'
+  | 'educator_approved'
+  | 'deprecated';
+
+export type SourceStatus =
+  | 'not_checked'
+  | 'source_checked'
+  | 'educator_checked';
+
+export type LearningAreaId =
+  | 'management'
+  | 'marketing'
+  | 'entrepreneurship'
+  | 'innovation'
+  | 'ai'
+  | 'skills';
+
 export interface DictionaryTerm {
   term: string;
   termBg: string;
@@ -8,6 +34,29 @@ export interface DictionaryTerm {
   category: string;
   example?: string;
   difficulty?: TermDifficulty;
+  /** Educator-approved learning area this concept belongs to. */
+  learningAreaId?: LearningAreaId;
+  /** Subject-catalog keys this term is used in. */
+  subjectKeys?: string[];
+  /** Free-form curriculum topic tags. */
+  topicTags?: string[];
+  /** Whether this concept is required by the curriculum. */
+  required?: boolean;
+  /** Editorial review status. Defaults to `needs_review` when omitted. */
+  reviewStatus?: ReviewStatus;
+  /** Source-check status. Defaults to `not_checked` when omitted. */
+  sourceStatus?: SourceStatus;
+  /** Internal editorial notes (never shown to learners). */
+  notes?: string;
+}
+
+/** Read-time default helpers so old terms keep working. */
+export function getReviewStatus(term: DictionaryTerm): ReviewStatus {
+  return term.reviewStatus ?? 'needs_review';
+}
+
+export function getSourceStatus(term: DictionaryTerm): SourceStatus {
+  return term.sourceStatus ?? 'not_checked';
 }
 
 // Assign difficulty based on category complexity
