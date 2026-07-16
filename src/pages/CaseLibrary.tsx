@@ -1,5 +1,5 @@
 import { useEffect, useState, useMemo } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useLang } from '@/context/LangContext';
 import { useAuth } from '@/context/AuthContext';
@@ -17,6 +17,17 @@ import {
 import { Input } from '@/components/ui/input';
 import PhaseBadge from '@/components/ui/phase-badge';
 import { INDUSTRY_DOMAINS, matchCaseToIndustry, type IndustryDomain } from '@/data/industry-domains';
+import { casesForTheme } from '@/data/case-theme-tags';
+import type { ThemeId } from '@/data/content-structure';
+
+const VALID_THEMES: ThemeId[] = ['entrepreneurship', 'innovation', 'marketing', 'management', 'ai'];
+const THEME_LABELS: Record<ThemeId, { en: string; bg: string }> = {
+  entrepreneurship: { en: 'Entrepreneurship', bg: 'Предприемачество' },
+  innovation: { en: 'Innovation', bg: 'Иновации' },
+  marketing: { en: 'Marketing', bg: 'Маркетинг' },
+  management: { en: 'Management', bg: 'Мениджмънт' },
+  ai: { en: 'AI', bg: 'Изкуствен интелект' },
+};
 
 const ICON_MAP: Record<string, React.ElementType> = {
   Brain, Landmark, GraduationCap, Building2, Network, HeartPulse, Factory, Sprout, Plane, ShoppingCart,
@@ -62,6 +73,23 @@ export default function CaseLibrary() {
   const [timeFilter, setTimeFilter] = useState<TimeFilter>('all');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [industryFilter, setIndustryFilter] = useState<string>('all');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const themeParam = searchParams.get('theme');
+  const activeTheme: ThemeId | null =
+    themeParam && (VALID_THEMES as string[]).includes(themeParam)
+      ? (themeParam as ThemeId)
+      : null;
+
+  const themeCaseIds = useMemo<Set<string> | null>(() => {
+    if (!activeTheme) return null;
+    return new Set(casesForTheme(activeTheme).map((t) => t.caseId));
+  }, [activeTheme]);
+
+  const clearThemeFilter = () => {
+    const next = new URLSearchParams(searchParams);
+    next.delete('theme');
+    setSearchParams(next, { replace: true });
+  };
 
   useEffect(() => {
     const fetchCases = async () => {
@@ -76,17 +104,23 @@ export default function CaseLibrary() {
     fetchCases();
   }, []);
 
+  // Restrict full case set to those tagged for the active theme (if any).
+  const themedCases = useMemo(
+    () => (themeCaseIds ? cases.filter((c) => themeCaseIds.has(c.id)) : cases),
+    [cases, themeCaseIds],
+  );
+
   // Group cases by industry domain
   const casesByDomain = useMemo(() => {
     const map: Record<string, CaseStudy[]> = {};
     INDUSTRY_DOMAINS.forEach(d => { map[d.id] = []; });
-    cases.forEach(c => {
+    themedCases.forEach(c => {
       const domainId = matchCaseToIndustry(c.topic);
       if (!map[domainId]) map[domainId] = [];
       map[domainId].push(c);
     });
     return map;
-  }, [cases]);
+  }, [themedCases]);
 
   const hasActiveFilters = difficultyFilter !== 'all' || timeFilter !== 'all' || statusFilter !== 'all' || industryFilter !== 'all';
 
@@ -137,7 +171,7 @@ export default function CaseLibrary() {
   };
 
   // All filtered cases for list view
-  const allFilteredCases = useMemo(() => filterCases(cases), [cases, search, difficultyFilter, timeFilter, statusFilter, industryFilter, completedCaseIds]);
+  const allFilteredCases = useMemo(() => filterCases(themedCases), [themedCases, search, difficultyFilter, timeFilter, statusFilter, industryFilter, completedCaseIds]);
 
   // Filter domains for grid view
   const filteredDomains = useMemo(() => {
