@@ -70,8 +70,8 @@ describe('learning areas — educator-approved taxonomy', () => {
   it('uses "критично мислене" (never "критическо мислене") in the Skills BG topics', () => {
     const skills = LEARNING_AREAS.find((a) => a.id === 'skills')!;
     const bg = skills.topics.map((t) => t.bg).join(' | ');
-    expect(bg).toMatch(/критично мислене/);
-    expect(bg).not.toMatch(/критическо мислене/);
+    expect(bg).toMatch(/критично мислене/i);
+    expect(bg).not.toMatch(/критическо мислене/i);
   });
 
   it('Management BG description reflects processes/resources/results, not only people leadership', () => {
