@@ -95,4 +95,27 @@ describe('Practice-first content seed V1A — Entrepreneurship', () => {
       expect(all).not.toContain(phrase);
     }
   });
+
+  it('does not contain the polished-out awkward BG phrasings', () => {
+    const forbiddenBg = [
+      'малък залог',
+      'на които им пука',
+      'уловиш част от стойността',
+      'уловиш част от нея обратно',
+    ];
+    const all = ENTREPRENEURSHIP_MODULES.map((m) =>
+      [
+        m.theoryBlock_bg,
+        ...m.practiceTasks.flatMap((t) => [t.title_bg, t.brief_bg]),
+        ...m.kikiQuestions.map((q) => q.bg),
+        m.reflectionPrompt.bg,
+        m.improvementPrompt.bg,
+      ].join(' '),
+    )
+      .join(' ')
+      .toLowerCase();
+    for (const phrase of forbiddenBg) {
+      expect(all).not.toContain(phrase);
+    }
+  });
 });
