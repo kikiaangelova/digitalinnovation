@@ -502,6 +502,40 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
           'Write: "For [who], who [problem], our [solution] gives [main benefit], unlike [alternative]." Then challenge every word.',
         brief_bg:
           'Напиши: „За [кой], който [проблем], нашето [решение] дава [основна полза], за разлика от [алтернатива].“ След това оспори всяка дума.',
+        cefe: {
+          action_en:
+            'Write your value proposition using: "For [who], who [problem], our [solution] gives [main benefit], unlike [alternative]." Then challenge every word — cross out any word that is vague or unproven.',
+          action_bg:
+            'Напиши своето value proposition по формулата: „За [кой], който [проблем], нашето [решение] дава [основна полза], за разлика от [алтернатива].“ След това оспори всяка дума — зачеркни всяка размита или недоказана.',
+          visibleResult_en:
+            'Two versions of the sentence: original and challenged, plus a short note per crossed-out word explaining why it was weak.',
+          visibleResult_bg:
+            'Две версии на изречението: оригинал и оспорена, плюс кратка бележка защо всяка зачеркната дума е слаба.',
+          processingQuestions_en: [
+            'Which word was hardest to defend?',
+            'Is your "who" a specific group or a general audience?',
+            'Is your "unlike" honest — is that really the current alternative for these users?',
+          ],
+          processingQuestions_bg: [
+            'Коя дума беше най-трудна за защита?',
+            'Твоето „кой“ е конкретна група или обща аудитория?',
+            'Твоето „за разлика от“ честно ли е — това ли използват тези хора днес?',
+          ],
+          generalizing_en:
+            'A value proposition is a claim that can be checked. Vague words hide untested assumptions.',
+          generalizing_bg:
+            'Value proposition е твърдение, което подлежи на проверка. Размитите думи крият непроверени допускания.',
+          applying_en:
+            'Rewrite the sentence in a second version that removes every vague word.',
+          applying_bg:
+            'Пренапиши изречението във втора версия, която премахва всяка размита дума.',
+          teacherCheck_en:
+            'Both versions present; at least 2 words challenged with reasons; final version names a specific group and a concrete alternative.',
+          teacherCheck_bg:
+            'Двете версии присъстват; поне 2 думи са оспорени с причина; финалната версия посочва конкретна група и конкретна алтернатива.',
+          evidence_en: 'Two-version value proposition sheet.',
+          evidence_bg: 'Лист с две версии на value proposition.',
+        },
       },
       {
         id: 'entr-04-t2',
@@ -512,6 +546,40 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
           'Fill only 5 blocks: problem, customer segment, unique value proposition, solution, channels. Mark each as evidence, assumption, or guess.',
         brief_bg:
           'Попълни само 5 блока: проблем, клиентски сегмент, уникално value proposition, решение, канали. Маркирай всеки като доказателство, допускане или предположение.',
+        cefe: {
+          action_en:
+            'On paper or one page, fill only 5 Lean Canvas blocks: problem, customer segment, unique value proposition, solution, channels. Next to each block write "evidence", "assumption" or "guess".',
+          action_bg:
+            'На хартия или на една страница попълни само 5 блока от Lean Canvas: проблем, клиентски сегмент, уникално value proposition, решение, канали. До всеки блок напиши „доказателство“, „допускане“ или „предположение“.',
+          visibleResult_en:
+            'A one-page 5-block canvas with an evidence-quality tag on every block.',
+          visibleResult_bg:
+            'Едностраничен canvas с 5 блока, всеки маркиран по качеството на доказателството.',
+          processingQuestions_en: [
+            'Which block is fully evidence — and how strong is that evidence?',
+            'Which block is fully guess, and does the whole idea depend on it?',
+            'Where does the customer segment not match the channel you chose?',
+          ],
+          processingQuestions_bg: [
+            'Кой блок е изцяло доказателство — и колко силно е това доказателство?',
+            'Кой блок е изцяло предположение и зависи ли цялата идея от него?',
+            'Къде клиентският сегмент не съвпада с избрания канал?',
+          ],
+          generalizing_en:
+            'A canvas is honest only when each block is labeled by evidence quality. It is a map, not a claim.',
+          generalizing_bg:
+            'Canvas е честен само когато всеки блок е маркиран по качеството на доказателството. Той е карта, не претенция.',
+          applying_en:
+            'Pick the weakest block and write one action to convert a guess into evidence within 7 days.',
+          applying_bg:
+            'Избери най-слабия блок и напиши едно действие, което ще превърне предположение в доказателство за 7 дни.',
+          teacherCheck_en:
+            '5 blocks filled; every block tagged by evidence quality; at least one improvement action written.',
+          teacherCheck_bg:
+            '5 блока попълнени; всеки маркиран по качество на доказателството; поне едно действие за подобрение.',
+          evidence_en: 'Tagged Lean Canvas page.',
+          evidence_bg: 'Маркиран Lean Canvas.',
+        },
       },
     ],
     caseConnection: {
