@@ -21,6 +21,7 @@ const CONCEPT_ALIASES: Record<string, string> = {
   'MVP (Minimum Viable Product)': 'Minimum Viable Product (MVP)',
   'Customer segments': 'Customer Segments',
   'Product-market fit': 'Product-Market Fit',
+  'Go-to-market': 'Go-to-Market Strategy',
 };
 
 function resolveConcept(name: string): { term: string; found: boolean } {
