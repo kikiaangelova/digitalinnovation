@@ -62,7 +62,7 @@ const mockMySubjects = {
   refresh: vi.fn(),
 };
 
-function setup(lang: 'en' | 'bg') {
+async function setup(lang: 'en' | 'bg') {
   const { useAuth } = await import('@/context/AuthContext');
   const { useLang } = await import('@/context/LangContext');
   const { useModuleCatalog } = await import('@/hooks/useModuleCatalog');
