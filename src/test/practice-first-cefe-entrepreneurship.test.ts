@@ -42,7 +42,9 @@ describe('Entrepreneurship CEFE practice tasks V1', () => {
           `task ${t.id} missing cefe.${key}`,
         ).toBeTruthy();
         expect(
-          String((t.cefe as Record<string, string>)[key]).trim().length,
+          String(
+            (t.cefe as unknown as Record<string, string>)[key],
+          ).trim().length,
         ).toBeGreaterThan(3);
       }
     }
