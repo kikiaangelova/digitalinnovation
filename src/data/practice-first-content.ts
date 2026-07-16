@@ -243,6 +243,40 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
           '20 minutes in a real place (school hallway, cafe, transport). Write only what you see and hear — no explanations. Then list 3 possible problems, marked as observation or guess.',
         brief_bg:
           '20 минути на реално място (коридор, кафене, транспорт). Записвай само това, което виждаш и чуваш — без обяснения. После опиши 3 възможни проблема, като отбележиш кое е наблюдение и кое предположение.',
+        cefe: {
+          action_en:
+            'Go to a real public place (school corridor, canteen, bus, cafe). For 20 minutes record only what you see and hear. No interpretation. Add a timestamp every 2–3 minutes.',
+          action_bg:
+            'Отиди на реално обществено място (коридор, столова, автобус, кафене). За 20 минути записвай само какво виждаш и чуваш. Без интерпретации. Слагай часова отметка на всеки 2–3 минути.',
+          visibleResult_en:
+            'A raw observation sheet with timestamps and a second column that separates "observed" from "assumed".',
+          visibleResult_bg:
+            'Суров лист за наблюдение с часови отметки и втора колона, която разделя „наблюдавано“ от „допуснато“.',
+          processingQuestions_en: [
+            'Where did you slip from observation into interpretation?',
+            'What surprised you compared to what you expected before you started?',
+            'Which 3 possible problems emerged — and are they problems for the users or for you?',
+          ],
+          processingQuestions_bg: [
+            'Къде премина от наблюдение към интерпретация?',
+            'Какво те изненада спрямо това, което очакваше преди началото?',
+            'Кои 3 възможни проблема излязоха — и проблем ли са за потребителите или за теб?',
+          ],
+          generalizing_en:
+            'Observation without interpretation is a discipline. Most people describe what they think, not what actually happened.',
+          generalizing_bg:
+            'Наблюдението без интерпретация е дисциплина. Повечето хора описват какво си мислят, а не какво се случи.',
+          applying_en:
+            'Design one 10-minute follow-up observation focused on one behavior you noticed.',
+          applying_bg:
+            'Проектирай едно допълващо 10-минутно наблюдение, фокусирано върху едно поведение, което забеляза.',
+          teacherCheck_en:
+            'Sheet has ≥8 timestamped entries; observed and assumed columns are separated; 3 candidate problems listed.',
+          teacherCheck_bg:
+            'Листът има ≥8 записа с часови отметки; колоните „наблюдавано“ и „допуснато“ са отделени; 3 възможни проблема са изброени.',
+          evidence_en: 'Timestamped observation sheet.',
+          evidence_bg: 'Лист за наблюдение с часови отметки.',
+        },
       },
       {
         id: 'entr-02-t2',
@@ -253,6 +287,40 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
           'Take one problem from Module 1. Ask "why?" five times. Write each answer. Mark where you had evidence and where you guessed.',
         brief_bg:
           'Вземи един проблем от Модул 1. Попитай „защо?“ пет пъти. Запиши всеки отговор. Отбележи къде имаш доказателство и къде си предположил(а).',
+        cefe: {
+          action_en:
+            'Take one problem from Module 1. Write it at the top. Ask "why does this happen?" five times, writing each answer on a new line. After each answer, mark [evidence] or [guess].',
+          action_bg:
+            'Вземи един проблем от Модул 1. Напиши го най-отгоре. Попитай „защо се случва това?“ пет пъти, като записваш всеки отговор на нов ред. След всеки отговор отбележи [доказателство] или [предположение].',
+          visibleResult_en:
+            'A five-level "why" chain, each level marked evidence or guess.',
+          visibleResult_bg:
+            'Верига „защо“ с 5 нива, всяко ниво отбелязано като доказателство или предположение.',
+          processingQuestions_en: [
+            'At which level did guesses start replacing evidence?',
+            'Does the root cause you reached match the symptom you started from?',
+            'Which "why" would need an interview or a source to be answered honestly?',
+          ],
+          processingQuestions_bg: [
+            'На кое ниво предположенията започнаха да заменят доказателствата?',
+            'Съвпада ли достигнатата коренова причина със симптома, от който тръгна?',
+            'Кое „защо“ се нуждае от интервю или източник, за да получи честен отговор?',
+          ],
+          generalizing_en:
+            'Symptoms are what you notice. Root causes are one or two "whys" deeper than most people go.',
+          generalizing_bg:
+            'Симптомите са това, което забелязваш. Кореновите причини са едно-две „защо“ по-дълбоко от там, докъдето стигат повечето хора.',
+          applying_en:
+            'Turn the deepest "why" without evidence into a question you can answer with one interview or 3 sources.',
+          applying_bg:
+            'Превърни най-дълбокото „защо“ без доказателство във въпрос, на който можеш да отговориш с едно интервю или 3 източника.',
+          teacherCheck_en:
+            'Chain has 5 levels; at least one level marked as guess; the final line reframes the problem, not just the symptom.',
+          teacherCheck_bg:
+            'Веригата има 5 нива; поне едно ниво е отбелязано като предположение; последният ред преформулира проблема, а не симптома.',
+          evidence_en: 'Five whys chain.',
+          evidence_bg: 'Верига „пет пъти защо“.',
+        },
       },
     ],
     informationSearchTask: {
