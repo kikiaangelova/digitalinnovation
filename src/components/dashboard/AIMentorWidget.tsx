@@ -21,7 +21,25 @@ export default function AIMentorWidget({ lang, startupData, onFeedbackReceived }
   const [cached, setCached] = useState(false);
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
 
+  // Guard: require some real content before spending an AI request.
+  // Rule: at least 2 meaningful fields with 20+ characters.
+  const meaningfulFields = startupData
+    ? Object.values(startupData).filter(
+        (v) => typeof v === 'string' && v.trim().length >= 20,
+      ).length
+    : 0;
+  const hasEnoughContent = meaningfulFields >= 2;
+
   const requestFeedback = async () => {
+    if (!hasEnoughContent) {
+      toast.error(
+        t(
+          'Add at least part of your project before asking Kiki for a meaningful review.',
+          'Попълни поне част от проекта си, за да поискам смислен преглед от Kiki.',
+        ),
+      );
+      return;
+    }
     setLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke('ai-feedback', {
@@ -81,12 +99,26 @@ export default function AIMentorWidget({ lang, startupData, onFeedbackReceived }
         </div>
       )}
 
+      {!hasEnoughContent && !feedback && (
+        <p className="text-xs text-muted-foreground mb-2">
+          {t(
+            'Add at least part of your project before asking Kiki for a meaningful review.',
+            'Попълни поне част от проекта си, за да поискам смислен преглед от Kiki.',
+          )}
+        </p>
+      )}
+
       <div className="flex gap-2">
-        <Button onClick={requestFeedback} disabled={loading} size="sm" className="sim-gradient border-0">
+        <Button
+          onClick={requestFeedback}
+          disabled={loading || !hasEnoughContent}
+          size="sm"
+          className="sim-gradient border-0"
+        >
           {loading ? <Loader2 className="h-4 w-4 animate-spin mr-1" /> : <Send className="h-4 w-4 mr-1" />}
           {feedback
-            ? t('Request another review from Kiki', 'Поискай нов преглед от Kiki')
-            : t('Request Kiki mentor review', 'Поискай преглед от ментора Kiki')
+            ? t('Ask Kiki for another review', 'Поискай нов преглед от Kiki')
+            : t('Ask Kiki for feedback', 'Поискай обратна връзка от Kiki')
           }
         </Button>
       </div>
