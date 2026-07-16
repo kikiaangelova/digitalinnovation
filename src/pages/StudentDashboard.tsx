@@ -488,11 +488,17 @@ export default function StudentDashboard() {
                 );
               })}
             </div>
-            <AIMentorWidget
-              lang={lang}
-              startupData={startupProject}
-              onFeedbackReceived={() => setUsedAIMentor(true)}
-            />
+            <section
+              id="kiki-mentor"
+              aria-label={t('Ask Kiki', 'Попитай Kiki')}
+              className="scroll-mt-24 rounded-2xl transition-shadow"
+            >
+              <AIMentorWidget
+                lang={lang}
+                startupData={startupProject}
+                onFeedbackReceived={() => setUsedAIMentor(true)}
+              />
+            </section>
             <TestInsights lang={lang} userId={user?.id} />
           </section>
 
