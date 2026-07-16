@@ -75,9 +75,9 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
     title_bg: 'Какво означава предприемачество като мислене и действие',
     status: 'needs_review',
     theoryBlock_en:
-      'Entrepreneurship is not a personality type. It is a way of thinking and acting: noticing real problems in the world around you, forming a small bet about a possible solution, and testing that bet with real people before spending serious time or money. A Startup is one vehicle for this — but the same thinking works inside schools, NGOs, teams and existing companies.',
+      'Entrepreneurship is not a personality type. It is a way of thinking and acting: noticing real problems in the world around you, forming a small, testable hypothesis about a possible solution, and checking that hypothesis with real people before spending serious time or money. A Startup is one vehicle for this — but the same thinking works inside schools, NGOs, teams and existing companies.',
     theoryBlock_bg:
-      'Предприемачеството не е черта на характера. То е начин на мислене и действие: забелязваш реален проблем около теб, формулираш малка хипотеза за възможно решение и я проверяваш с реални хора, преди да вложиш сериозно време или пари. Startup е една от формите — но същият начин на мислене работи и в училище, в екипи, в НПО и в съществуващи компании.',
+      'Предприемачеството не е черта на характера. То е начин на мислене и действие: забелязваш реален проблем около теб, формулираш малка проверима хипотеза за възможно решение и я проверяваш с реални хора, преди да вложиш сериозно време или пари. Startup е една от формите — но същият начин на мислене работи и в училище, в екипи, в НПО и в съществуващи компании.',
     practiceRatio: R,
     keyConcepts: ['Entrepreneurial mindset', 'Action vs intention', 'Startup', 'Small bets'],
     dictionaryConcepts: ['Entrepreneurship', 'Entrepreneurial mindset', 'Startup', 'Lean Startup'],
@@ -94,13 +94,13 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
       },
       {
         id: 'entr-01-t2',
-        title_en: 'Turn one observation into a small bet',
-        title_bg: 'Превърни едно наблюдение в малък експеримент',
+        title_en: 'Turn one observation into a small testable hypothesis',
+        title_bg: 'Превърни едно наблюдение в малка проверима хипотеза',
         kind: 'decision',
         brief_en:
-          'Pick one problem. Write one sentence: "I believe X people would do Y if we offered Z." State what would have to be true for this bet to make sense.',
+          'Pick one problem. Write one sentence: "I believe X people would do Y if we offered Z." State what would have to be true for this hypothesis to hold.',
         brief_bg:
-          'Избери един проблем. Напиши едно изречение: „Вярвам, че X хора биха направили Y, ако им предложим Z.“ Опиши какво трябва да е вярно, за да има смисъл този залог.',
+          'Избери един проблем. Напиши едно изречение: „Вярвам, че X хора биха направили Y, ако им предложим Z.“ Опиши какво трябва да е вярно, за да се потвърди тази хипотеза.',
       },
     ],
     caseConnection: {
@@ -257,9 +257,9 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
     title_bg: 'Възможност, създаване на стойност и бизнес модел',
     status: 'needs_review',
     theoryBlock_en:
-      'An opportunity exists when a real problem meets people who care enough to change behavior or pay. Value is what improves in the user\'s life. A business model describes how that value is delivered, captured and sustained — often sketched first on a Business Model Canvas or Lean Canvas.',
+      'An opportunity exists when a real problem meets people for whom the problem matters enough to change behavior or pay. Value is what measurably improves in the user\'s life. A business model describes how that value is delivered and how the effort behind it is sustained through revenue, resources or long-term return — often sketched first on a Business Model Canvas or Lean Canvas.',
     theoryBlock_bg:
-      'Възможност съществува, когато реален проблем срещне хора, на които им пука достатъчно, за да променят поведение или да платят. Стойността е това, което се подобрява в живота на потребителя. Бизнес моделът описва как тази стойност се доставя, улавя и поддържа — най-често се скицира първо на Business Model Canvas или Lean Canvas.',
+      'Възможност съществува, когато реален проблем срещне хора, за които този проблем е достатъчно важен, за да променят поведение или да платят. Стойността е това, което измеримо се подобрява в живота на потребителя. Бизнес моделът описва как тази стойност се доставя и как усилието зад нея се поддържа — чрез устойчив приход, ресурс или дългосрочна възвръщаемост. Най-често се скицира първо на Business Model Canvas или Lean Canvas.',
     practiceRatio: R,
     keyConcepts: ['Opportunity', 'Value proposition', 'Business Model Canvas', 'Lean Canvas'],
     dictionaryConcepts: ['Opportunity recognition', 'Value proposition', 'Business model'],
@@ -296,7 +296,7 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
       { en: 'What changes in the user\'s life if this works?', bg: 'Какво се променя в живота на потребителя, ако това работи?' },
       { en: 'What are they using today instead, and why?', bg: 'Какво използват днес вместо това и защо?' },
       { en: 'Which block on your canvas has the weakest evidence?', bg: 'Кой блок в твоя canvas има най-слабо доказателство?' },
-      { en: 'How will value actually reach the user — and how will you capture some of it back?', bg: 'Как реално стойността ще стигне до потребителя — и как ще уловиш част от нея обратно?' },
+      { en: 'How will value actually reach the user — and how will the work behind it earn a sustainable return in revenue, resources or long-term value?', bg: 'Как реално стойността ще стигне до потребителя — и как работата зад нея ще получи устойчив приход, ресурс или дългосрочна възвръщаемост?' },
     ],
     evidenceOfSkill: ['Value framing', 'Business model literacy', 'Segmentation clarity'],
     reflectionPrompt: {
