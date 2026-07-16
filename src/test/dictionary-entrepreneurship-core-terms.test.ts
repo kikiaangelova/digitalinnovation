@@ -87,7 +87,10 @@ describe('dictionary batch 1B — concept anchors', () => {
     expect(blob).toMatch(/learn|learning|test|assumption|учи|проверим|допускан/);
     expect(t.definition.toLowerCase()).not.toMatch(/small version of (your|the) product/);
     expect(t.definition.toLowerCase()).not.toMatch(/simplest version of your product/);
-    expect(t.definitionBg.toLowerCase()).not.toMatch(/умалена версия/);
+    // BG copy may use "умалена версия" only as a negated contrast; ensure it never
+    // frames MVP AS a shrunk-down version of the final product.
+    expect(t.definitionBg.toLowerCase()).not.toMatch(/^mvp е умалена версия/);
+    expect(t.definitionBg.toLowerCase()).not.toMatch(/mvp е (просто|само)?\s*умалена версия/);
   });
 
   it('Product-Market Fit avoids "perfect match" and includes evidence of repeated value', () => {
