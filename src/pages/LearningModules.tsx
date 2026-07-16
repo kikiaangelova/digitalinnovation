@@ -465,6 +465,11 @@ function LearningAreaSection({
             {t('Subjects & pathways', 'Предмети и учебни пътеки')}
           </p>
           <SubjectGrid subjects={subjects} lang={lang} t={t} onOpen={onOpen} />
+          {area.id === 'entrepreneurship' && (
+            <div className="mt-3">
+              <PracticeFirstDraftLink lang={lang} t={t} />
+            </div>
+          )}
         </div>
       ) : isSkillsArea ? (
         <p className="mt-3 text-[11px] italic text-muted-foreground">
