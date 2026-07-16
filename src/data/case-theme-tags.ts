@@ -110,24 +110,32 @@ export const CASE_THEME_TAGS: CaseThemeTag[] = [
     caseId: 'd1000002-0000-0000-0000-000000000003',
     primaryTheme: 'entrepreneurship',
     secondaryThemes: ['marketing', 'innovation'],
-    topicTags: ['mvp', 'consumer-app', 'value-proposition'],
+    topicTags: ['mvp', 'full-product', 'experiment', 'consumer-app', 'value-proposition'],
     difficulty: 'intermediate',
     entrepreneurshipLevel: 'intermediate',
     moduleFit: ['entr-05-mvp-experiments-learning'],
-    caseUseNotes: 'Calm vs Headspace — clean MVP-vs-full-product tradeoff on a consumer app.',
+    caseUseNotes:
+      'Calm vs Headspace — best current MVP / full-product experiment candidate. Needs future content upgrade with consequences (A/B/C outcomes).',
+    reviewStatus: 'needs_content_review',
   },
   {
     caseId: 'a1000001-0001-0001-0001-000000000001',
     primaryTheme: 'entrepreneurship',
-    secondaryThemes: ['innovation', 'ai'],
-    topicTags: ['fintech', 'bulgaria', 'ai', 'scaleup'],
-    difficulty: 'intermediate',
-    entrepreneurshipLevel: 'intermediate',
-    moduleFit: [
-      'entr-04-opportunity-value-business-model',
-      'entr-05-mvp-experiments-learning',
+    secondaryThemes: ['management', 'innovation'],
+    topicTags: [
+      'bulgarian-case',
+      'fintech',
+      'scaling',
+      'business-model',
+      'pitch',
+      'category-expansion',
     ],
-    caseUseNotes: 'Payhawk — Bulgarian founder story with clear risky assumption. Not beginner.',
+    difficulty: 'intermediate',
+    entrepreneurshipLevel: 'advanced',
+    moduleFit: ['entr-06-decision-pivot-pitch'],
+    reviewStatus: 'needs_content_review',
+    caseUseNotes:
+      'Strong Bulgarian advanced case. Not the first MVP case. Better for scaling, pitch, evidence-based decision and business-model expansion.',
   },
 
   // ── Entrepreneurship — Advanced ────────────────────────────────────────────
@@ -240,10 +248,12 @@ export const CASE_THEME_TAGS: CaseThemeTag[] = [
   {
     caseId: 'd1000005-0000-0000-0000-000000000001',
     primaryTheme: 'management',
-    secondaryThemes: ['innovation'],
+    secondaryThemes: ['innovation', 'entrepreneurship'],
     topicTags: ['supply-chain', 'fast-fashion', 'operations'],
     difficulty: 'intermediate',
-    caseUseNotes: 'Zara — operations and supply chain, not core entrepreneurship.',
+    reviewStatus: 'needs_content_review',
+    caseUseNotes:
+      'Zara — useful secondary Entrepreneurship support for feedback loops, value chain and customer-response speed, but not the cleanest MVP anchor.',
   },
   {
     caseId: 'a1000001-0001-0001-0004-000000000001',
