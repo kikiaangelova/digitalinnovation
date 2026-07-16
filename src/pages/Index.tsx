@@ -101,31 +101,34 @@ const Index = () => {
           </div>
         </section>
 
-        {/* ═══════════ Meet Kiki — personal card, floats over hero ═══════════ */}
+        {/* ═══════════ Meet Kiki — in-platform AI mentor card ═══════════ */}
         <section
           className="mt-4 mx-auto flex max-w-md items-center gap-3 rounded-3xl border border-white/30 bg-white/70 p-3 backdrop-blur-xl sm:-mt-8 sm:gap-4 sm:p-4"
           style={{ boxShadow: "var(--shadow-soft)" }}
         >
           <img
             src={kikiAvatar}
-            alt="Kiki, your business mentor"
+            alt={T("Kiki AI, your mentor inside the platform", "Kiki AI — твоят ментор в платформата")}
             width={64}
             height={64}
             className="h-12 w-12 rounded-full object-cover ring-2 ring-primary sm:h-16 sm:w-16"
           />
           <div className="flex-1 min-w-0">
             <div className="font-display text-lg leading-tight">
-              {T("I'm Kiki.", "Аз съм Кики.")}
+              {T("I'm Kiki AI.", "Аз съм Kiki AI.")}
             </div>
             <div className="text-xs text-muted-foreground">
-              {T("20 years mentoring founders. Now, yours.", "20 години съм ментор на основатели. Сега — твой.")}
+              {T(
+                "Your mentor inside the platform. I'll help you ask better questions, test your ideas, and improve your decisions. I won't do the work for you, but I'll help you think it through.",
+                "Твоят ментор в платформата. Ще ти помагам да задаваш по-добри въпроси, да проверяваш идеите си и да подобряваш решенията си. Няма да върша работата вместо теб, но ще мислим заедно."
+              )}
             </div>
           </div>
           <button
             onClick={() => go("/dashboard")}
             className="inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-xs font-bold text-primary-foreground transition hover:scale-105"
           >
-            {T("Say hi", "Здрасти")} <ArrowRight className="h-3.5 w-3.5" />
+            {T("Ask Kiki", "Попитай Kiki")} <ArrowRight className="h-3.5 w-3.5" />
           </button>
         </section>
 
