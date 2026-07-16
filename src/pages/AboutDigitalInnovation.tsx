@@ -134,4 +134,3 @@ const _removedAcademicTopics = [
   // 'Platform Economy & Network Effects', 'Startup Ecosystems'
 ] as const;
 
-/* ── Academic topic data ── */
