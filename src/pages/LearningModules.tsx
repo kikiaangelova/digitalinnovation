@@ -19,10 +19,19 @@ import { supabase } from '@/integrations/supabase/client';
 import { useMySubjects, type MySubjectEntry } from '@/hooks/useMySubjects';
 import {
   SUBJECT_CATALOG,
+  SUBJECT_BY_KEY,
   subjectShort,
   subjectTitle,
   type Subject,
 } from '@/data/subject-catalog';
+import {
+  LEARNING_AREAS,
+  areaOfSubject,
+  areaShort,
+  areaTitle,
+  type LearningArea,
+  type LearningAreaId,
+} from '@/data/learning-areas';
 import { useModuleCatalog } from '@/hooks/useModuleCatalog';
 
 export default function LearningModules() {
