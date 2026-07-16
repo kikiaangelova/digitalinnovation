@@ -236,13 +236,6 @@ export const TERMS: DictionaryTerm[] = [
     category: 'Strategy',
   },
   {
-    term: 'Content Marketing',
-    termBg: 'Маркетинг чрез съдържание',
-    definition: 'A marketing strategy that involves creating and sharing valuable content (articles, videos, social media posts) to attract and engage customers rather than directly advertising products.',
-    definitionBg: 'Маркетингова стратегия, която включва създаване и споделяне на ценно съдържание (статии, видеа, публикации в социални мрежи) за привличане и ангажиране на клиенти.',
-    category: 'Strategy',
-  },
-  {
     term: 'Conversion Rate',
     termBg: 'Процент на конверсия',
     definition: 'The percentage of people who take a desired action, like buying a product, signing up, or downloading an app. A higher conversion rate means your product or marketing is more effective.',
