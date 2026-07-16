@@ -426,7 +426,7 @@ function LearningAreaSection({
       {subjects.length > 0 ? (
         <div className="mt-4">
           <p className="text-[10px] uppercase tracking-wide font-semibold text-muted-foreground mb-2">
-            {t('Subjects & pathways', 'Предмети и пътища')}
+            {t('Subjects & pathways', 'Предмети и учебни пътеки')}
           </p>
           <SubjectGrid subjects={subjects} lang={lang} t={t} onOpen={onOpen} />
         </div>
