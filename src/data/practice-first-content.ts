@@ -756,6 +756,40 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
           'Based on your last experiment, write a 1-page decision: what you learned, what evidence supports it, which option you choose (pivot / persevere / kill), what you will do in the next 2 weeks.',
         brief_bg:
           'Въз основа на последния си експеримент напиши решение на 1 страница: какво научи, какви доказателства го подкрепят, кой вариант избираш (pivot / persevere / прекратяване), какво ще направиш през следващите 2 седмици.',
+        cefe: {
+          action_en:
+            'Based on your latest experiment, write a one-page evidence-based decision: what you learned, evidence for and against, explicit choice of pivot / persevere / stop, and concrete next steps for the next 2 weeks.',
+          action_bg:
+            'Въз основа на последния си експеримент напиши едностранично аргументирано решение: какво научи, доказателства „за“ и „против“, ясен избор pivot / persevere / прекратяване и конкретни следващи стъпки за следващите 2 седмици.',
+          visibleResult_en:
+            'A one-page decision memo with an explicit pivot / persevere / stop choice and a review date.',
+          visibleResult_bg:
+            'Едностраничен меморандум за решение с ясен избор pivot / persevere / прекратяване и дата за преглед.',
+          processingQuestions_en: [
+            'What evidence supports your choice — and what evidence contradicts it?',
+            'Are you pivoting because of learning, or because of discomfort?',
+            'What would have to be true in 2 weeks for this decision to still hold?',
+          ],
+          processingQuestions_bg: [
+            'Кои доказателства подкрепят избора ти — и кои му противоречат?',
+            'Правиш ли pivot заради наученото или заради дискомфорт?',
+            'Какво трябва да е вярно след 2 седмици, за да остане това решение валидно?',
+          ],
+          generalizing_en:
+            'A decision under uncertainty is judged by the reasoning behind it, not by outcome alone. Pivot, persevere and stop are all valid — dressing an assumption as a decision is not.',
+          generalizing_bg:
+            'Решение при несигурност се оценява по аргументите зад него, а не само по резултата. Pivot, persevere и прекратяване са валидни — представянето на допускане за решение — не.',
+          applying_en:
+            'Add a review date to check the decision against new evidence.',
+          applying_bg:
+            'Добави дата за преглед, на която ще провериш решението спрямо новите доказателства.',
+          teacherCheck_en:
+            'Memo includes learnings, evidence on both sides, an explicit pivot / persevere / stop choice, 2-week actions and a review date.',
+          teacherCheck_bg:
+            'Меморандумът съдържа наученото, доказателства и в двете посоки, ясен избор pivot / persevere / прекратяване, 2-седмични действия и дата за преглед.',
+          evidence_en: 'One-page decision memo.',
+          evidence_bg: 'Едностраничен меморандум за решение.',
+        },
       },
       {
         id: 'entr-06-t2',
@@ -766,6 +800,40 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
           'Structure: problem, who has it, evidence you gathered, current solution, what you learned, what you are asking for. No hype, no promises you cannot back up.',
         brief_bg:
           'Структура: проблем, кой го има, доказателства, които събра, текущо решение, какво научи, какво искаш. Без хайп и без обещания, които не можеш да подкрепиш.',
+        cefe: {
+          action_en:
+            'Prepare a 90-second spoken pitch: problem, who has it, evidence you gathered, current solution, what you learned, what you are asking for. Time it. Record it once (audio or video for yourself only) or deliver it in front of a peer. No public posting.',
+          action_bg:
+            'Подготви 90-секунден изговорен pitch: проблем, кой го има, събрани доказателства, текущо решение, какво научи, какво искаш. Засичай времето. Запиши го веднъж (аудио или видео само за себе си) или го представи пред съученик. Без публикуване.',
+          visibleResult_en:
+            'A short pitch outline plus a 90-second delivery and one line of peer feedback. This is an evidence-based decision to keep, adjust or pivot the story.',
+          visibleResult_bg:
+            'Кратка структура на pitch плюс 90-секундно изпълнение и един ред обратна връзка от съученик. Това е аргументирано решение дали да запазиш, коригираш или направиш pivot на историята.',
+          processingQuestions_en: [
+            'Which sentence in your pitch is not backed by evidence?',
+            'Where were you tempted to overstate — and what kept you honest?',
+            'What did the listener understand differently than you intended?',
+          ],
+          processingQuestions_bg: [
+            'Кое изречение в pitch-а не е подкрепено с доказателство?',
+            'Къде беше изкушен(а) да преувеличиш — и какво те задържа честен(а)?',
+            'Какво разбра слушателят различно от това, което имаше предвид?',
+          ],
+          generalizing_en:
+            'A pitch is a compressed honest story. Its job is to earn attention and feedback, not to sell a fantasy.',
+          generalizing_bg:
+            'Pitch е компактна честна история. Задачата му е да спечели внимание и обратна връзка, не да продаде фантазия.',
+          applying_en:
+            'Deliver version 2 after one round of feedback, changing at most 3 things.',
+          applying_bg:
+            'Представи версия 2 след един кръг обратна връзка, като промениш най-много 3 неща.',
+          teacherCheck_en:
+            'Outline present; delivery close to 90 seconds; at least one honest weakness named; no unsupported claims of traction; no public posting required.',
+          teacherCheck_bg:
+            'Структурата присъства; изпълнението е около 90 секунди; посочена е поне една честна слабост; няма недоказани твърдения за трактион; не се изисква публикуване.',
+          evidence_en: 'Pitch outline + 90-second delivery + 1 line of feedback.',
+          evidence_bg: 'Структура на pitch + 90-секундно изпълнение + 1 ред обратна връзка.',
+        },
       },
     ],
     caseConnection: {
