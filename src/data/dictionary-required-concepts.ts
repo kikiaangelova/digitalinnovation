@@ -150,7 +150,15 @@ const ENTREPRENEURSHIP: RequiredConcept[] = [
   c('Opportunity recognition', 'Разпознаване на възможност', 'entrepreneurship', ['discovery']),
   c('Business model', 'Бизнес модел', 'entrepreneurship', ['model']),
   c('Value proposition', 'Стойностно предложение', 'entrepreneurship', ['model']),
-  c('Assumptions', 'Допускания', 'entrepreneurship', ['lean']),
+  c('Assumption', 'Допускане', 'entrepreneurship', ['lean'], {
+    notes: 'Alias of legacy "Assumptions". Kept singular to align with the practice-first Entrepreneurship dictionary entry.',
+  }),
+  c('Evidence', 'Доказателство', 'entrepreneurship', ['lean', 'analysis'], {
+    notes: 'Entrepreneurship sense — evidence that supports or challenges an assumption. Separate from the Skills-area "Evidence / Доказване" concept.',
+  }),
+  c('Information search', 'Търсене на информация', 'entrepreneurship', ['discovery', 'analysis']),
+  c('Customer interview', 'Клиентско интервю', 'entrepreneurship', ['discovery']),
+  c('Root cause', 'Първопричина', 'entrepreneurship', ['discovery', 'analysis']),
   c('Lean Startup', 'Lean Startup', 'entrepreneurship', ['lean'], { subjectKeys: ['lean-startup'] }),
   c('MVP (Minimum Viable Product)', 'MVP (Minimum Viable Product)', 'entrepreneurship', ['lean'], {
     notes: 'Do not define MVP as simply "a small version of the product". It is the smallest thing that lets you learn about a real assumption.',
@@ -158,8 +166,12 @@ const ENTREPRENEURSHIP: RequiredConcept[] = [
   c('Experiment', 'Експеримент', 'entrepreneurship', ['lean']),
   c('Measurement', 'Измерване', 'entrepreneurship', ['lean']),
   c('Learning', 'Учене', 'entrepreneurship', ['lean']),
+  c('Learning loop', 'Цикъл на учене', 'entrepreneurship', ['lean']),
+  c('Decision', 'Решение', 'entrepreneurship', ['lean', 'decision-making'], {
+    notes: 'Entrepreneurship sense — an argued choice between options based on evidence. Separate from the Skills-area "Decision-making" concept.',
+  }),
   c('Pivot', 'Pivot', 'entrepreneurship', ['lean']),
-  c('Persevere', 'Persevere', 'entrepreneurship', ['lean']),
+  c('Persevere', 'Продължаване без промяна на посоката', 'entrepreneurship', ['lean']),
   c('Design Thinking', 'Design Thinking', 'entrepreneurship', ['methods'], { subjectKeys: ['design-thinking'] }),
   c('Blue Ocean Strategy', 'Blue Ocean Strategy', 'entrepreneurship', ['methods'], {
     subjectKeys: ['blue-ocean-strategy'],
@@ -170,7 +182,7 @@ const ENTREPRENEURSHIP: RequiredConcept[] = [
   c('Market validation', 'Валидация на пазара', 'entrepreneurship', ['gtm']),
   c('First customers', 'Първи клиенти', 'entrepreneurship', ['gtm']),
   c('Go-to-market', 'Go-to-market', 'entrepreneurship', ['gtm']),
-  c('Pitching', 'Питчинг', 'entrepreneurship', ['gtm']),
+  c('Pitch', 'Представяне на идея', 'entrepreneurship', ['gtm']),
 ];
 
 // -------------------- Innovation --------------------
