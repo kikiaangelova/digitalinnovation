@@ -5,6 +5,7 @@ import { useLang } from '@/context/LangContext';
 import { useAuth } from '@/context/AuthContext';
 import { useProgress } from '@/context/ProgressContext';
 import AppHeader from '@/components/layout/AppHeader';
+import KikiCaseLabCard from '@/components/case/KikiCaseLabCard';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { StatusBadge } from '@/components/ui/status-badge';
@@ -513,6 +514,9 @@ export default function CaseLibrary() {
             </div>
           </div>
         </section>
+
+        <KikiCaseLabCard variant="library" lang={lang} />
+
         {activeTheme && (
           <div
             className="mb-4 flex flex-wrap items-center gap-2 rounded-xl border border-primary/30 bg-primary/5 px-3 py-2"

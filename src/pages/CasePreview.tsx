@@ -6,6 +6,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useLang } from '@/context/LangContext';
 import { CASE_TOPIC_TO_MODULE, LEARNING_MODULES } from '@/data/learning-modules';
 import AppHeader from '@/components/layout/AppHeader';
+import KikiCaseLabCard from '@/components/case/KikiCaseLabCard';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
@@ -403,6 +404,8 @@ export default function CasePreview() {
             </div>
           </Card>
         </section>
+
+        <KikiCaseLabCard variant="preview" lang={lang as 'en' | 'bg'} />
 
         {/* CTA Button with completion lock */}
         {completionStatus === 'completed' && !canRetake ? (

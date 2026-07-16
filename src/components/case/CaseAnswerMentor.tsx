@@ -93,6 +93,14 @@ export default function CaseAnswerMentor({
 
   return (
     <div className="mt-3 space-y-3">
+      {/* Kiki AI label */}
+      <div className="flex items-center gap-2">
+        <Bot className="h-4 w-4 text-primary" />
+        <span className="text-sm font-semibold text-foreground">
+          {t('Kiki AI — check your thinking', 'Kiki AI — провери мисленето си')}
+        </span>
+      </div>
+
       {/* Confidence Slider */}
       {!feedback && (
         <div className="rounded-lg border border-border bg-muted/30 p-4 space-y-3">
@@ -142,7 +150,7 @@ export default function CaseAnswerMentor({
               {loading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Bot className="h-3.5 w-3.5" />}
               {loading
                 ? t('Analyzing...', 'Анализиране...')
-                : t('Get AI Mentor Feedback', 'Получи обратна връзка от AI ментор')}
+                : t('Get Kiki AI feedback', 'Получи обратна връзка от Kiki AI')}
             </Button>
             {remaining !== null && (
               <Badge variant="outline" className="text-xs">
@@ -173,7 +181,7 @@ export default function CaseAnswerMentor({
               <Bot className="h-4 w-4 text-primary" />
             </div>
             <span className="text-sm font-semibold text-foreground">
-              {t('AI Mentor Feedback', 'Обратна връзка от AI ментор')}
+            {t('Kiki AI feedback', 'Обратна връзка от Kiki AI')}
             </span>
             <Sparkles className="h-3.5 w-3.5 text-primary ml-auto" />
           </div>
