@@ -678,27 +678,12 @@ export const TERMS: DictionaryTerm[] = [
     category: 'Metrics',
   },
   {
-    term: 'Revenue Streams',
-    termBg: 'Потоци на приходи',
-    definition: 'The different ways a company earns money. A business can have multiple revenue streams, such as subscriptions, advertising, commissions, and one-time sales.',
-    definitionBg: 'Различните начини, по които компанията печели пари. Бизнесът може да има множество потоци на приходи, като абонаменти, реклама, комисионни и еднократни продажби.',
-    category: 'Strategy',
-    example: 'Google earns from ads, YouTube Premium subscriptions, cloud services, and hardware.',
-  },
-  {
     term: 'SaaS (Software as a Service)',
     termBg: 'SaaS (Софтуер като услуга)',
     definition: 'Software that you access through the internet and pay for monthly or yearly, instead of buying and installing it. The company hosts and maintains the software for you.',
     definitionBg: 'Софтуер, до който имате достъп чрез интернет и плащате за него месечно или годишно, вместо да го купувате и инсталирате. Компанията хоства и поддържа софтуера вместо вас.',
     category: 'Technology',
     example: 'Google Workspace, Slack, Zoom, and Canva are all SaaS products.',
-  },
-  {
-    term: 'Scalability',
-    termBg: 'Мащабируемост',
-    definition: 'The ability of a business to grow and serve more customers without proportionally increasing costs. Digital businesses are often highly scalable because software can serve millions at low extra cost.',
-    definitionBg: 'Способността на бизнес да расте и обслужва повече клиенти, без пропорционално да увеличава разходите. Дигиталните бизнеси често са силно мащабируеми, защото софтуерът може да обслужва милиони при нисък допълнителен разход.',
-    category: 'Startup',
   },
   {
     term: 'Seed Funding',
@@ -731,13 +716,6 @@ export const TERMS: DictionaryTerm[] = [
     example: 'Netflix, Spotify, and Adobe Creative Cloud all use subscription models.',
   },
   {
-    term: 'Supply Chain',
-    termBg: 'Верига на доставките',
-    definition: 'The entire process of making and delivering a product — from raw materials, through manufacturing, to the final delivery to customers. Digital tools are making supply chains smarter.',
-    definitionBg: 'Целият процес на производство и доставка на продукт — от суровини, през производство, до крайната доставка до клиентите. Дигиталните инструменти правят веригите на доставки по-умни.',
-    category: 'Strategy',
-  },
-  {
     term: 'SWOT Analysis',
     termBg: 'SWOT анализ',
     definition: 'A planning tool that evaluates a company\'s Strengths, Weaknesses, Opportunities, and Threats. It helps businesses understand their position and make strategic decisions.',
@@ -757,13 +735,6 @@ export const TERMS: DictionaryTerm[] = [
     definition: 'A platform that serves two different groups who need each other. The biggest challenge is attracting both sides — you need sellers to attract buyers, and buyers to attract sellers.',
     definitionBg: 'Платформа, която обслужва две различни групи, които се нуждаят една от друга. Най-голямото предизвикателство е привличането на двете страни — нуждаете се от продавачи, за да привлечете купувачи, и обратно.',
     category: 'Platform',
-  },
-  {
-    term: 'Unit Economics',
-    termBg: 'Икономика на единица',
-    definition: 'The revenue and costs related to a single unit of your business (one customer, one transaction). If your unit economics are positive, each new customer adds profit.',
-    definitionBg: 'Приходите и разходите, свързани с една единица от бизнеса ви (един клиент, една транзакция). Ако икономиката на единица е положителна, всеки нов клиент добавя печалба.',
-    category: 'Metrics',
   },
   {
     term: 'User Experience (UX)',
