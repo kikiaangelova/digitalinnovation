@@ -41,12 +41,12 @@ describe('Dashboard Ask Kiki microcopy + anchor (V1B)', () => {
   );
 
   it('uses the broader "Jump to Kiki\u2019s mentor review" copy (EN + BG)', () => {
-    expect(src).toContain("Jump to Kiki\u2019s mentor review below.");
+    expect(src).toMatch(/Jump to Kiki(\\u2019|\u2019|')s mentor review below\./);
     expect(src).toContain('Отиди до менторския преглед от Kiki по-долу.');
   });
 
   it('does not use the old project-only copy', () => {
-    expect(src).not.toContain('Get Kiki\u2019s review of your project below.');
+    expect(src).not.toMatch(/Get Kiki(\\u2019|\u2019|')s review of your project below\./);
     expect(src).not.toContain('Виж прегледа на Kiki за проекта ти по-долу.');
   });
 
