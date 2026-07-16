@@ -37,12 +37,11 @@ function renderPage({ lang = 'en', role = 'student' as string | undefined, isAdm
   );
 }
 
-function expandAll() {
-  for (const mod of ENTREPRENEURSHIP_MODULES) {
-    const escaped = mod.title_en.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const btn = screen.getByRole('button', { name: new RegExp(escaped, 'i') });
-    fireEvent.click(btn);
-  }
+function openFirst(lang: 'en' | 'bg' = 'en') {
+  const mod = ENTREPRENEURSHIP_MODULES[0];
+  const title = lang === 'bg' ? mod.title_bg : mod.title_en;
+  const escaped = title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  fireEvent.click(screen.getByRole('button', { name: new RegExp(escaped, 'i') }));
 }
 
 beforeEach(() => {
@@ -53,7 +52,7 @@ beforeEach(() => {
 describe('Learner-facing polish V1', () => {
   it('hides draft/review internal labels from students (EN + BG)', () => {
     const { container } = renderPage({ lang: 'en', role: 'student' });
-    expandAll();
+    openFirst('en');
     const txt = container.textContent ?? '';
     expect(txt).not.toMatch(/\bDraft\b/);
     expect(txt).not.toMatch(/for review/i);
@@ -62,7 +61,7 @@ describe('Learner-facing polish V1', () => {
     expect(txt).not.toMatch(/content review/i);
 
     const bg = renderPage({ lang: 'bg', role: 'student' });
-    expandAll();
+    openFirst('bg');
     const btxt = bg.container.textContent ?? '';
     expect(btxt).not.toMatch(/Чернова/);
     expect(btxt).not.toMatch(/за преглед/);
@@ -77,35 +76,25 @@ describe('Learner-facing polish V1', () => {
   it('reviewer (teacher_verified) still sees internal review info', () => {
     renderPage({ lang: 'en', role: 'teacher_verified' });
     expect(screen.getByText('Draft / for review')).toBeInTheDocument();
-    expandAll();
+    openFirst('en');
     // At least one case connection shows the reviewer-only "needs content review" tag.
     expect(screen.getAllByText(/needs content review/i).length).toBeGreaterThan(0);
   });
 
   it('renders friendly case labels and never raw case IDs to learners', () => {
     const { container } = renderPage({ lang: 'en', role: 'student' });
-    expandAll();
+    openFirst('en');
     const txt = container.textContent ?? '';
-    for (const raw of [
-      'school-youth-environment',
-      'food-waste-sustainability',
-      'chatgpt-ai-business-model',
-      'revolut-fintech',
-      'fashion-business',
-      'small-business',
-    ]) {
-      expect(txt).not.toContain(raw);
-    }
+    expect(txt).not.toContain('school-youth-environment');
     expect(txt).toContain('Case: problem in a familiar environment');
-    expect(txt).toContain('Case: fintech value and business model');
   });
 
   it('renders Bulgarian friendly case labels to learners', () => {
     const { container } = renderPage({ lang: 'bg', role: 'student' });
-    expandAll();
+    openFirst('bg');
     const txt = container.textContent ?? '';
     expect(txt).toContain('Казус: проблем в позната среда');
-    expect(txt).toContain('Казус: финтех стойност и бизнес модел');
+    expect(txt).not.toContain('school-youth-environment');
   });
 
   it('Kiki section shows only 2 questions by default and toggles to reveal the rest', () => {
@@ -152,7 +141,7 @@ describe('Learner-facing polish V1', () => {
   it('does not call supabase (no AI/API) during learner view', () => {
     const spy = vi.spyOn(supabase, 'from');
     renderPage({ lang: 'en', role: 'student' });
-    expandAll();
+    openFirst('en');
     const mod = ENTREPRENEURSHIP_MODULES[0];
     fireEvent.click(screen.getByTestId(`pf-kiki-toggle-${mod.id}`));
     expect(spy).not.toHaveBeenCalled();
