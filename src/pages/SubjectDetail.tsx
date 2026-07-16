@@ -37,6 +37,8 @@ import {
 import { LEARNING_MODULES } from '@/data/learning-modules';
 import { useModuleCatalog, type CatalogModule } from '@/hooks/useModuleCatalog';
 import { useMySubjects } from '@/hooks/useMySubjects';
+import { areaOfSubject } from '@/data/learning-areas';
+import { LEARNING_THEMES, type LearningTheme } from '@/data/content-structure';
 
 export default function SubjectDetail() {
   const { subjectKey } = useParams<{ subjectKey: string }>();
@@ -187,20 +189,12 @@ export default function SubjectDetail() {
           subjectKey === 'entrepreneurship-startups' ? (
             <EntrepreneurshipDraftCard lang={lang as 'bg' | 'en'} t={t} />
           ) : (
-            <section className="rounded-xl border border-dashed border-border bg-card p-8 text-center space-y-2">
-              <p className="text-sm text-foreground font-medium">
-                {t(
-                  'Learning content for this subject is being prepared.',
-                  'Съдържанието за този предмет се подготвя.',
-                )}
-              </p>
-              <p className="text-xs text-muted-foreground">
-                {t(
-                  'We will add modules here as they become playable.',
-                  'Ще добавим модули тук, щом станат готови за използване.',
-                )}
-              </p>
-            </section>
+            <SubjectProcessPreview
+              subjectKey={subjectKey!}
+              availability={subject.availability}
+              lang={lang as 'bg' | 'en'}
+              t={t}
+            />
           )
         ) : (
           <>
@@ -347,6 +341,146 @@ function EntrepreneurshipDraftCard({
       <Button asChild className="w-full sm:w-auto">
         <Link to="/learn/practice/entrepreneurship">{cta}</Link>
       </Button>
+    </section>
+  );
+}
+
+function SubjectProcessPreview({
+  subjectKey,
+  availability,
+  lang,
+  t,
+}: {
+  subjectKey: string;
+  availability: 'playable' | 'preview' | 'planned';
+  lang: 'bg' | 'en';
+  t: (en: string, bg: string) => string;
+}) {
+  const areaId = areaOfSubject(subjectKey);
+  const theme: LearningTheme | undefined = areaId
+    ? LEARNING_THEMES.find((th) => th.learningAreaId === areaId)
+    : undefined;
+
+  const framing = lang === 'bg'
+    ? 'Този предмет е в процес на подготовка. Вместо празна страница, тук виждаш как ще бъде структуриран учебният процес: кратка теория, практически задачи, казуси, търсене на информация, решения, обратна връзка и подобрение.'
+    : 'This subject is in preparation. Instead of showing an empty page, this preview shows how the learning process will work: concise theory, practical tasks, cases, information search, decisions, feedback and improvement.';
+
+  const statusLabel = availability === 'preview'
+    ? t('In preparation', 'В процес на подготовка')
+    : t('Planned', 'Планирано');
+
+  const practiceMap: Record<string, { en: string; bg: string }> = {
+    case_study: { en: 'Case studies', bg: 'Казуси' },
+    decision_task: { en: 'Decision tasks', bg: 'Задачи за решения' },
+    information_search: { en: 'Information search', bg: 'Търсене на информация' },
+    experiment: { en: 'Experiments', bg: 'Експерименти' },
+    mvp_build: { en: 'MVP builds', bg: 'MVP разработки' },
+    reflection: { en: 'Reflection', bg: 'Рефлексия' },
+    peer_review: { en: 'Peer review', bg: 'Оценка от съученици' },
+    project: { en: 'Projects', bg: 'Проекти' },
+  };
+
+  return (
+    <section
+      data-testid="subject-process-preview"
+      className="rounded-xl border border-dashed border-border bg-card p-5 space-y-5"
+    >
+      <div className="flex items-start justify-between gap-2 flex-wrap">
+        <h2 className="text-sm font-semibold text-foreground">
+          {t('How you will work in this subject', 'Как ще работиш по този предмет')}
+        </h2>
+        <Badge variant="outline" className="text-[10px]">{statusLabel}</Badge>
+      </div>
+      <p className="text-sm text-foreground/90 leading-relaxed">{framing}</p>
+
+      {theme && (
+        <div className="space-y-1">
+          <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+            {t('Short framing', 'Кратка рамка')}
+          </h3>
+          <p className="text-sm text-foreground/90 leading-relaxed">
+            {lang === 'bg' ? theme.short_bg : theme.short_en}
+          </p>
+        </div>
+      )}
+
+      {theme && theme.practiceTypes.length > 0 && (
+        <div className="space-y-2">
+          <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+            {t('What you will do in practice', 'Какво ще правиш на практика')}
+          </h3>
+          <div className="flex flex-wrap gap-1.5">
+            {theme.practiceTypes.map((p) => {
+              const label = practiceMap[p];
+              return (
+                <Badge key={p} variant="secondary" className="text-[11px]">
+                  {label ? (lang === 'bg' ? label.bg : label.en) : p}
+                </Badge>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {theme && theme.relatedCaseTags.length > 0 && (
+        <div className="space-y-2">
+          <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+            {t('Examples of cases', 'Примери за казуси')}
+          </h3>
+          <div className="flex flex-wrap gap-1.5">
+            {theme.relatedCaseTags.map((tag) => (
+              <Badge key={tag} variant="outline" className="text-[11px]">{tag}</Badge>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {theme && theme.relatedDictionaryConcepts.length > 0 && (
+        <div className="space-y-2">
+          <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+            {t('Concepts you will meet', 'Понятия, които ще срещнеш')}
+          </h3>
+          <p className="text-[12px] text-foreground/80 leading-relaxed">
+            {theme.relatedDictionaryConcepts.slice(0, 12).join(' · ')}
+          </p>
+        </div>
+      )}
+
+      <div className="space-y-2">
+        <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+          {t('Skills you will evidence', 'Какви умения ще доказваш')}
+        </h3>
+        <p className="text-[12px] text-foreground/80 leading-relaxed">
+          {t(
+            'Critical thinking · Problem solving · Decision-making · Research and evidence · Communication · Reflection',
+            'Критично мислене · Решаване на проблеми · Вземане на решения · Изследване и доказване · Комуникация · Рефлексия',
+          )}
+        </p>
+      </div>
+
+      <div className="space-y-2">
+        <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+          {t('Content status', 'Статус на съдържанието')}
+        </h3>
+        <p className="text-[12px] text-muted-foreground">
+          {t(
+            'Modules are not published yet. We will add them here as they become playable — no fake content in the meantime.',
+            'Модулите още не са публикувани. Ще ги добавим тук, щом станат готови — без фалшиво съдържание междувременно.',
+          )}
+        </p>
+      </div>
+
+      <div className="flex flex-col sm:flex-row gap-2 pt-1">
+        <Button asChild variant="outline" className="w-full sm:w-auto">
+          <Link to="/dictionary">{t('Open Dictionary', 'Отвори речника')}</Link>
+        </Button>
+        <Button asChild variant="outline" className="w-full sm:w-auto">
+          <Link to="/cases">{t('Browse Cases', 'Разгледай казусите')}</Link>
+        </Button>
+        <Button asChild variant="ghost" className="w-full sm:w-auto">
+          <Link to="/learn">{t('Back to My Subjects', 'Обратно към Моите предмети')}</Link>
+        </Button>
+      </div>
     </section>
   );
 }
