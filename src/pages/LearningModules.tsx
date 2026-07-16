@@ -150,7 +150,10 @@ export default function LearningModules() {
                           </h2>
                         </div>
                         {area.id === 'entrepreneurship' && (
-                          <PracticeFirstDraftLink lang={lang as 'bg' | 'en'} t={t} />
+                          <PracticeFirstDraftLink theme="entrepreneurship" lang={lang as 'bg' | 'en'} t={t} />
+                        )}
+                        {area.id === 'innovation' && (
+                          <PracticeFirstDraftLink theme="innovation" lang={lang as 'bg' | 'en'} t={t} />
                         )}
                         <ul className="space-y-3">
                           {(byArea.get(area.id) ?? []).map((entry) => (
@@ -214,25 +217,42 @@ export default function LearningModules() {
 
 /* Small link surface for the drafted practice-first modules. */
 function PracticeFirstDraftLink({
+  theme,
   lang,
   t,
 }: {
+  theme: 'entrepreneurship' | 'innovation';
   lang: 'bg' | 'en';
   t: (en: string, bg: string) => string;
 }) {
+  const config =
+    theme === 'innovation'
+      ? {
+          to: '/learn/practice/innovation',
+          testId: 'practice-first-innovation-link',
+          label: t(
+            'Practice-first Innovation drafts',
+            'Практически чернови по иновации',
+          ),
+        }
+      : {
+          to: '/learn/practice/entrepreneurship',
+          testId: 'practice-first-entrepreneurship-link',
+          label: t(
+            'Practice-first drafts (needs review)',
+            'Практически чернови (за преглед)',
+          ),
+        };
   return (
     <Link
-      to="/learn/practice/entrepreneurship"
+      to={config.to}
       className="flex items-center justify-between gap-2 rounded-lg border border-dashed border-border bg-background/60 px-3 py-2 hover:border-primary/40"
-      data-testid="practice-first-entrepreneurship-link"
+      data-testid={config.testId}
     >
       <span className="text-xs text-foreground inline-flex items-center gap-1.5 min-w-0">
         <Sparkles className="h-3 w-3 text-primary shrink-0" />
         <span className="truncate">
-          {t(
-            'Practice-first drafts (needs review)',
-            'Практически чернови (за преглед)',
-          )}
+          {config.label}
         </span>
         <Badge variant="outline" className="text-[10px] shrink-0">
           {t('Draft', 'Чернова')}
@@ -467,7 +487,12 @@ function LearningAreaSection({
           <SubjectGrid subjects={subjects} lang={lang} t={t} onOpen={onOpen} />
           {area.id === 'entrepreneurship' && (
             <div className="mt-3">
-              <PracticeFirstDraftLink lang={lang} t={t} />
+              <PracticeFirstDraftLink theme="entrepreneurship" lang={lang} t={t} />
+            </div>
+          )}
+          {area.id === 'innovation' && (
+            <div className="mt-3">
+              <PracticeFirstDraftLink theme="innovation" lang={lang} t={t} />
             </div>
           )}
         </div>
