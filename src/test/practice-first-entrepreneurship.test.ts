@@ -118,4 +118,46 @@ describe('Practice-first content seed V1A — Entrepreneurship', () => {
       expect(all).not.toContain(phrase);
     }
   });
+
+  it('theory blocks stay within 120 words per language', () => {
+    for (const m of ENTREPRENEURSHIP_MODULES) {
+      expect(m.theoryBlock_en.split(/\s+/).length).toBeLessThanOrEqual(120);
+      expect(m.theoryBlock_bg.split(/\s+/).length).toBeLessThanOrEqual(120);
+    }
+  });
+
+  it('does not use hype words', () => {
+    const banned = ['disruptive', 'game-changing', 'game changing', 'revolutionary', 'unique', 'great idea'];
+    const all = ENTREPRENEURSHIP_MODULES.map((m) =>
+      [
+        m.theoryBlock_en,
+        m.theoryBlock_bg,
+        ...m.practiceTasks.flatMap((t) => [t.title_en, t.title_bg, t.brief_en, t.brief_bg]),
+        ...m.kikiQuestions.flatMap((q) => [q.en, q.bg]),
+      ].join(' '),
+    )
+      .join(' ')
+      .toLowerCase();
+    // "unique value proposition" is a canonical Lean Canvas block name — allow only that exact phrase.
+    const cleaned = all.split('unique value proposition').join('');
+    for (const phrase of banned) {
+      expect(cleaned).not.toContain(phrase);
+    }
+  });
+
+  it('does not carry the old EN evidenceOfSkill labels', () => {
+    const bannedLabels = [
+      'Problem observation',
+      'Framing without solution',
+      'Bias awareness',
+      'Structured observation',
+    ];
+    for (const m of ENTREPRENEURSHIP_MODULES) {
+      for (const label of m.evidenceOfSkill) {
+        for (const b of bannedLabels) {
+          expect(label).not.toBe(b);
+        }
+      }
+    }
+  });
 });
