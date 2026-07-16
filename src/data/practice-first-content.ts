@@ -78,9 +78,9 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
     title_bg: 'Какво означава предприемачество като мислене и действие',
     status: 'needs_review',
     theoryBlock_en:
-      'Entrepreneurship is not a personality type. It is a way of thinking and acting: noticing real problems in the world around you, forming a small, testable hypothesis about a possible solution, and checking that hypothesis with real people before spending serious time or money. A Startup is one vehicle for this — but the same thinking works inside schools, NGOs, teams and existing companies.',
+      'Entrepreneurship is a way of thinking and acting, not a personality type. You notice a real problem, form a small testable hypothesis about a possible solution, and check it with real people before spending serious time or money. A Startup is one form. The same thinking works inside schools, teams, NGOs and existing companies.',
     theoryBlock_bg:
-      'Предприемачеството не е черта на характера. То е начин на мислене и действие: забелязваш реален проблем около теб, формулираш малка проверима хипотеза за възможно решение и я проверяваш с реални хора, преди да вложиш сериозно време или пари. Startup е една от формите — но същият начин на мислене работи и в училище, в екипи, в НПО и в съществуващи компании.',
+      'Предприемачеството е начин на мислене и действие, не черта на характера. Забелязваш реален проблем, формулираш малка проверима хипотеза за възможно решение и я проверяваш с реални хора, преди да вложиш време или пари. Startup е една от формите. Същият начин на мислене работи в училище, в екипи, в НПО и в съществуващи компании.',
     practiceRatio: R,
     keyConcepts: ['Entrepreneurial mindset', 'Action vs intention', 'Startup', 'Small bets'],
     dictionaryConcepts: ['Entrepreneurship', 'Entrepreneurial mindset', 'Startup', 'Lean Startup'],
@@ -91,9 +91,9 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
         title_bg: 'Опиши три реални проблема, които забеляза тази седмица',
         kind: 'observation',
         brief_en:
-          'List 3 problems you personally observed in the last 7 days (school, family, city, online). For each: who has it, where you saw it, and why it matters. No solutions yet.',
+          'List 3 problems you saw in the last 7 days (school, family, city, online). For each: who has it, where you saw it, why it matters. No solutions.',
         brief_bg:
-          'Опиши 3 проблема, които лично си забелязал(а) през последните 7 дни (училище, семейство, град, онлайн). За всеки: кой го има, къде го видя и защо има значение. Без решения на този етап.',
+          'Опиши 3 проблема, които видя през последните 7 дни (училище, семейство, град, онлайн). За всеки: кой го има, къде го видя, защо има значение. Без решения.',
       },
       {
         id: 'entr-01-t2',
@@ -101,9 +101,9 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
         title_bg: 'Превърни едно наблюдение в малка проверима хипотеза',
         kind: 'decision',
         brief_en:
-          'Pick one problem. Write one sentence: "I believe X people would do Y if we offered Z." State what would have to be true for this hypothesis to hold.',
+          'Pick one problem. Write: "I believe X people would do Y if we offered Z." Add what would have to be true for this to hold.',
         brief_bg:
-          'Избери един проблем. Напиши едно изречение: „Вярвам, че X хора биха направили Y, ако им предложим Z.“ Опиши какво трябва да е вярно, за да се потвърди тази хипотеза.',
+          'Избери един проблем. Напиши: „Вярвам, че X хора биха направили Y, ако им предложим Z.“ Добави какво трябва да е вярно, за да е така.',
       },
     ],
     caseConnection: {
@@ -113,20 +113,20 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
       note_bg: 'Използвай като пример за забелязване на проблем в позната среда.',
     },
     kikiQuestions: [
-      { en: 'What exactly is the problem — in one sentence, without a solution?', bg: 'Какъв точно е проблемът — в едно изречение, без решение?' },
-      { en: 'Who specifically has this problem, and how often?', bg: 'Кой конкретно има този проблем и колко често?' },
-      { en: 'What did you actually observe, and what did you assume?', bg: 'Какво реално наблюдава и какво допусна?' },
-      { en: 'What is the smallest action you could take this week to learn more?', bg: 'Кое е най-малкото действие, което можеш да направиш тази седмица, за да научиш повече?' },
-      { en: 'What would make you decide this is not worth pursuing?', bg: 'Какво би те убедило, че този проблем не си струва да се преследва?' },
+      { en: 'What is the problem — in one sentence, without a solution?', bg: 'Какъв е проблемът — в едно изречение, без решение?' },
+      { en: 'Who has this problem, and how often?', bg: 'Кой има този проблем и колко често?' },
+      { en: 'What did you observe, and what did you assume?', bg: 'Какво наблюдава и какво допусна?' },
+      { en: 'What is the smallest action you can take this week to learn more?', bg: 'Кое е най-малкото действие тази седмица, за да научиш повече?' },
+      { en: 'What evidence would tell you this is not worth pursuing?', bg: 'Кое доказателство би показало, че не си струва?' },
     ],
-    evidenceOfSkill: ['Problem observation', 'Framing without solution', 'Bias awareness'],
+    evidenceOfSkill: ['Наблюдение на проблем', 'Формулиране без готово решение', 'Разграничаване на факт и допускане'],
     reflectionPrompt: {
-      en: 'Which of your 3 observed problems felt strongest, and why? Was that a fact or a feeling?',
-      bg: 'Кой от 3-те наблюдавани проблема ти се стори най-силен и защо? Това факт ли беше или усещане?',
+      en: 'Which of the 3 problems felt strongest, and why? Fact or feeling?',
+      bg: 'Кой от 3-те проблема ти се стори най-силен и защо? Факт или усещане?',
     },
     improvementPrompt: {
-      en: 'If you repeated this task next week, how would you observe differently?',
-      bg: 'Ако повториш задачата следващата седмица, как би наблюдавал(а) по различен начин?',
+      en: 'If you repeated this next week, what would you observe differently?',
+      bg: 'Ако повториш задачата следващата седмица, какво би наблюдавал(а) различно?',
     },
   },
 
@@ -137,9 +137,9 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
     title_bg: 'Любопитство, наблюдение и откриване на проблеми',
     status: 'needs_review',
     theoryBlock_en:
-      'Good problems are found, not invented. Curiosity is a working habit: ask more questions than you answer, watch what people actually do (not what they say), and separate the symptom from the underlying problem.',
+      'Good problems are found, not invented. Curiosity is a working habit: ask more than you answer, watch what people do (not what they say), separate the symptom from the underlying problem.',
     theoryBlock_bg:
-      'Добрите проблеми се откриват, а не се измислят. Любопитството е работен навик: задавай повече въпроси, отколкото отговаряш, наблюдавай какво хората реално правят (а не какво казват) и разграничавай симптома от истинския проблем.',
+      'Добрите проблеми се откриват, а не се измислят. Любопитството е работен навик: питай повече, отколкото отговаряш, гледай какво хората правят (не какво казват), разграничавай симптома от истинския проблем.',
     practiceRatio: R,
     keyConcepts: ['Curiosity as method', 'Observation vs interpretation', 'Symptom vs root cause'],
     dictionaryConcepts: ['Problem discovery', 'Customer interview', 'Root cause'],
@@ -150,9 +150,9 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
         title_bg: 'Тиха наблюдателна сесия, 20 минути',
         kind: 'observation',
         brief_en:
-          'Spend 20 minutes in a real place (school hallway, cafe, transport). Write only what you see and hear — no explanations. Then list 3 possible problems, marked as observations vs guesses.',
+          '20 minutes in a real place (school hallway, cafe, transport). Write only what you see and hear — no explanations. Then list 3 possible problems, marked as observation or guess.',
         brief_bg:
-          'Прекарай 20 минути на реално място (коридор в училище, кафене, транспорт). Записвай само това, което виждаш и чуваш — без обяснения. После опиши 3 възможни проблема, като отбележиш кое е наблюдение и кое е предположение.',
+          '20 минути на реално място (коридор, кафене, транспорт). Записвай само това, което виждаш и чуваш — без обяснения. После опиши 3 възможни проблема, като отбележиш кое е наблюдение и кое предположение.',
       },
       {
         id: 'entr-02-t2',
@@ -160,26 +160,26 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
         title_bg: '„Пет пъти защо“ върху един проблем',
         kind: 'analysis',
         brief_en:
-          'Take one problem from Module 1 and ask "why?" five times in a row. Write down each answer. Note where you had evidence and where you had to guess.',
+          'Take one problem from Module 1. Ask "why?" five times. Write each answer. Mark where you had evidence and where you guessed.',
         brief_bg:
-          'Вземи един проблем от Модул 1 и попитай „защо?“ пет пъти подред. Запиши всеки отговор. Отбележи къде имаш доказателство и къде си предположил(а).',
+          'Вземи един проблем от Модул 1. Попитай „защо?“ пет пъти. Запиши всеки отговор. Отбележи къде имаш доказателство и къде си предположил(а).',
       },
     ],
     informationSearchTask: {
-      prompt_en: 'Find 2 sources (article, report, video, interview) that describe the same problem someone else has already investigated. Note who published it and when.',
-      prompt_bg: 'Намери 2 източника (статия, доклад, видео, интервю), които описват същия проблем, вече изследван от други. Запиши кой ги е публикувал и кога.',
+      prompt_en: 'Find 2 sources (article, report, video, interview) on the same problem. Note who published, when.',
+      prompt_bg: 'Намери 2 източника (статия, доклад, видео, интервю) за същия проблем. Запиши кой и кога го е публикувал.',
     },
     caseConnection: {
       caseId: 'food-waste-sustainability',
       reviewStatus: 'needs_content_review',
     },
     kikiQuestions: [
-      { en: 'What did you see with your own eyes vs. what did you read online?', bg: 'Какво видя с очите си и какво прочете онлайн?' },
-      { en: 'What is the symptom and what might be the real problem underneath?', bg: 'Кое е симптомът и кой може да е реалният проблем под него?' },
+      { en: 'What did you see with your own eyes vs. read online?', bg: 'Какво видя с очите си и какво прочете онлайн?' },
+      { en: 'What is the symptom and what may be the real problem under it?', bg: 'Кое е симптомът и кой може да е реалният проблем под него?' },
       { en: 'Who is affected most, and how do you know?', bg: 'Кой е най-засегнат и откъде знаеш?' },
-      { en: 'Which of your questions still has no evidence?', bg: 'Кой от твоите въпроси все още няма доказателство?' },
+      { en: 'Which of your questions still has no evidence?', bg: 'Кой въпрос все още няма доказателство?' },
     ],
-    evidenceOfSkill: ['Structured observation', 'Root cause thinking', 'Source triangulation'],
+    evidenceOfSkill: ['Структурирано наблюдение', 'Мислене за коренова причина', 'Съпоставяне на източници'],
     reflectionPrompt: {
       en: 'Where did you interpret instead of observe? Give one concrete example.',
       bg: 'Къде интерпретира вместо да наблюдаваш? Дай един конкретен пример.',
@@ -197,9 +197,9 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
     title_bg: 'Факт, мнение, допускане и търсене на информация',
     status: 'needs_review',
     theoryBlock_en:
-      'Facts can be checked. Opinions belong to a person. Assumptions are things you treat as true without checking. Most early startup mistakes are assumptions dressed up as facts. Good entrepreneurs label each statement honestly before making decisions.',
+      'Facts can be checked. Opinions belong to a person. Assumptions are things you treat as true without checking. Most early Startup mistakes are assumptions dressed up as facts. Label each statement honestly before you decide.',
     theoryBlock_bg:
-      'Фактите могат да бъдат проверени. Мненията принадлежат на конкретен човек. Допусканията са неща, които приемаш за верни, без да си ги проверил. Повечето ранни грешки в един Startup са допускания, представени като факти. Добрият предприемач честно етикетира всяко твърдение, преди да реши.',
+      'Фактите могат да се проверят. Мненията принадлежат на човек. Допусканията са неща, които приемаш за верни, без да си ги проверил. Повечето ранни грешки в един Startup са допускания, представени като факти. Етикетирай честно всяко твърдение, преди да решиш.',
     practiceRatio: R,
     keyConcepts: ['Fact vs opinion vs assumption', 'Evidence', 'Source quality'],
     dictionaryConcepts: ['Assumptions', 'Evidence', 'Information search'],
@@ -210,9 +210,9 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
         title_bg: 'Етикетирай 10 твърдения',
         kind: 'fact_vs_assumption',
         brief_en:
-          'Take a short article, social post or a founder quote. Extract 10 statements. Label each as fact, opinion or assumption. For every "fact", write the source that could verify it.',
+          'Take a short article, social post or founder quote. Extract 10 statements. Label each: fact, opinion, assumption. For every "fact" write the source that could verify it.',
         brief_bg:
-          'Вземи кратка статия, публикация в социална мрежа или цитат на основател. Извлечи 10 твърдения. Етикетирай всяко като факт, мнение или допускане. За всеки „факт“ запиши източника, който може да го потвърди.',
+          'Вземи кратка статия, публикация или цитат на основател. Извлечи 10 твърдения. Етикетирай всяко: факт, мнение, допускане. За всеки „факт“ запиши източника, който може да го потвърди.',
       },
       {
         id: 'entr-03-t2',
@@ -220,14 +220,14 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
         title_bg: 'Превърни 3 допускания в проверими въпроси',
         kind: 'information_search',
         brief_en:
-          'From your own idea, list 3 assumptions. For each, write one question you could realistically answer this week (a search, a message, a short interview).',
+          'From your own idea, list 3 assumptions. For each, write one question you can answer this week — a search, a message, a short interview.',
         brief_bg:
-          'От собствената си идея запиши 3 допускания. За всяко напиши един въпрос, на който реалистично можеш да отговориш тази седмица (търсене, съобщение, кратко интервю).',
+          'От собствената си идея запиши 3 допускания. За всяко напиши един въпрос, на който можеш да отговориш тази седмица — търсене, съобщение, кратко интервю.',
       },
     ],
     informationSearchTask: {
-      prompt_en: 'For one assumption, find 3 independent sources. Note which agree, which disagree, and which are unclear.',
-      prompt_bg: 'За едно допускане намери 3 независими източника. Отбележи кои се съгласяват, кои не и кои са неясни.',
+      prompt_en: 'For one assumption, find 3 independent sources. Note which agree, which disagree, which are unclear.',
+      prompt_bg: 'За едно допускане намери 3 независими източника. Отбележи кои се съгласяват, кои не, кои са неясни.',
     },
     caseConnection: {
       caseId: 'chatgpt-ai-business-model',
@@ -236,13 +236,13 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
       note_bg: 'Добър пример за уверено изказани допускания за проверка.',
     },
     kikiQuestions: [
-      { en: 'Which of your "facts" would fall apart under a serious source check?', bg: 'Кои от твоите „факти“ биха паднали при сериозна проверка на източника?' },
-      { en: 'What is the strongest evidence you have — and how strong is it really?', bg: 'Кое е най-силното доказателство, което имаш — и колко силно е наистина?' },
+      { en: 'Which of your "facts" would fail a serious source check?', bg: 'Кои от твоите „факти“ биха паднали при сериозна проверка на източника?' },
+      { en: 'What is your strongest evidence — and how strong is it really?', bg: 'Кое е най-силното ти доказателство — и колко силно е наистина?' },
       { en: 'What is still unknown, and does the decision depend on it?', bg: 'Какво все още не знаеш и зависи ли решението от това?' },
-      { en: 'Whose opinion are you quoting, and why do you trust them?', bg: 'Чие мнение цитираш и защо му вярваш?' },
+      { en: 'Whose opinion are you quoting, and why trust them?', bg: 'Чие мнение цитираш и защо му вярваш?' },
       { en: 'What would change your mind?', bg: 'Какво би те накарало да промениш мнението си?' },
     ],
-    evidenceOfSkill: ['Source literacy', 'Assumption mapping', 'Critical reading'],
+    evidenceOfSkill: ['Работа с източници', 'Разграничаване на факт, мнение и допускане', 'Критично четене'],
     reflectionPrompt: {
       en: 'Which assumption were you most attached to, and why?',
       bg: 'Към кое допускане беше най-привързан(а) и защо?',
@@ -260,9 +260,9 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
     title_bg: 'Възможност, създаване на стойност и бизнес модел',
     status: 'needs_review',
     theoryBlock_en:
-      'An opportunity exists when a real problem meets people for whom the problem matters enough to change behavior or pay. Value is what measurably improves in the user\'s life. A business model describes how that value is delivered and how the effort behind it is sustained through revenue, resources or long-term return — often sketched first on a Business Model Canvas or Lean Canvas.',
+      'An opportunity exists when a real problem meets people who care enough to change behavior or pay. Value is what measurably improves in the user\'s life. A business model describes how that value is delivered and how the effort behind it is sustained — through revenue, resources or long-term return. It is often first sketched on a Business Model Canvas or Lean Canvas.',
     theoryBlock_bg:
-      'Възможност съществува, когато реален проблем срещне хора, за които този проблем е достатъчно важен, за да променят поведение или да платят. Стойността е това, което измеримо се подобрява в живота на потребителя. Бизнес моделът описва как тази стойност се доставя и как усилието зад нея се поддържа — чрез устойчив приход, ресурс или дългосрочна възвръщаемост. Най-често се скицира първо на Business Model Canvas или Lean Canvas.',
+      'Възможност съществува, когато реален проблем срещне хора, за които той е достатъчно важен, за да променят поведение или да платят. Стойност е това, което измеримо се подобрява в живота на потребителя. Бизнес моделът описва как тази стойност стига до потребителя и как усилието зад нея се поддържа — чрез приход, ресурс или дългосрочна възвръщаемост. Най-често се скицира първо на Business Model Canvas или Lean Canvas.',
     practiceRatio: R,
     keyConcepts: ['Opportunity', 'Value proposition', 'Business Model Canvas', 'Lean Canvas'],
     dictionaryConcepts: ['Opportunity recognition', 'Value proposition', 'Business model'],
@@ -275,7 +275,7 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
         brief_en:
           'Write: "For [who], who [problem], our [solution] gives [main benefit], unlike [alternative]." Then challenge every word.',
         brief_bg:
-          'Напиши: „За [кой], който [проблем], нашето [решение] дава [основна полза], за разлика от [алтернатива].“ След това предизвикай всяка дума.',
+          'Напиши: „За [кой], който [проблем], нашето [решение] дава [основна полза], за разлика от [алтернатива].“ След това оспори всяка дума.',
       },
       {
         id: 'entr-04-t2',
@@ -283,9 +283,9 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
         title_bg: 'Попълни груб Lean Canvas',
         kind: 'mvp_definition',
         brief_en:
-          'Fill only 5 blocks: problem, customer segment, unique value proposition, solution, and channels. Mark each block as evidence, assumption, or guess.',
+          'Fill only 5 blocks: problem, customer segment, unique value proposition, solution, channels. Mark each as evidence, assumption, or guess.',
         brief_bg:
-          'Попълни само 5 блока: проблем, клиентски сегмент, уникално value proposition, решение и канали. Маркирай всеки блок като доказателство, допускане или предположение.',
+          'Попълни само 5 блока: проблем, клиентски сегмент, уникално value proposition, решение, канали. Маркирай всеки като доказателство, допускане или предположение.',
       },
     ],
     caseConnection: {
@@ -299,9 +299,9 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
       { en: 'What changes in the user\'s life if this works?', bg: 'Какво се променя в живота на потребителя, ако това работи?' },
       { en: 'What are they using today instead, and why?', bg: 'Какво използват днес вместо това и защо?' },
       { en: 'Which block on your canvas has the weakest evidence?', bg: 'Кой блок в твоя canvas има най-слабо доказателство?' },
-      { en: 'How will value actually reach the user — and how will the work behind it earn a sustainable return in revenue, resources or long-term value?', bg: 'Как реално стойността ще стигне до потребителя — и как работата зад нея ще получи устойчив приход, ресурс или дългосрочна възвръщаемост?' },
+      { en: 'How does value reach the user, and how does the work behind it sustain itself?', bg: 'Как стойността стига до потребителя и как работата зад нея се поддържа?' },
     ],
-    evidenceOfSkill: ['Value framing', 'Business model literacy', 'Segmentation clarity'],
+    evidenceOfSkill: ['Формулиране на стойност', 'Разбиране на бизнес модел', 'Ясен клиентски сегмент'],
     reflectionPrompt: {
       en: 'Which block did you fill from real evidence, and which from imagination?',
       bg: 'Кой блок попълни от реални доказателства и кой от въображение?',
@@ -319,9 +319,9 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
     title_bg: 'MVP, експерименти и учене',
     status: 'needs_review',
     theoryBlock_en:
-      'An MVP (Minimum Viable Product) is the smallest thing you can put in front of real users to learn one specific thing. It is not a small version of the final product — it is a learning tool. Each experiment must state what you expect, what would surprise you, and what you will do with the answer.',
+      'An MVP is the smallest thing you can put in front of real users to learn one specific thing. It is not a small version of the final product — it is a learning tool. Every experiment states what you expect, what would surprise you, and what you will do with the answer.',
     theoryBlock_bg:
-      'MVP (Minimum Viable Product) е най-малкото нещо, което можеш да покажеш на реални потребители, за да научиш едно конкретно нещо. Не е умалена версия на финалния продукт — това е инструмент за учене. Всеки експеримент трябва да казва какво очакваш, какво би те изненадало и какво ще направиш с отговора.',
+      'MVP е най-малкото нещо, което показваш на реални потребители, за да научиш едно конкретно нещо. Не е умалена версия на финалния продукт — инструмент за учене е. Всеки експеримент казва какво очакваш, какво би те изненадало и какво ще направиш с отговора.',
     practiceRatio: R,
     keyConcepts: ['MVP', 'Experiment design', 'Learning goal', 'Lean Startup'],
     dictionaryConcepts: ['MVP (Minimum Viable Product)', 'Experiment', 'Lean Startup'],
@@ -332,9 +332,9 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
         title_bg: 'Проектирай един MVP в 5 реда',
         kind: 'mvp_definition',
         brief_en:
-          'Write: what you will build, who will test it, what you want to learn, what result would confirm it, what result would kill it.',
+          'Write: what you will build, who will test it, what you want to learn, what result confirms it, what result kills it.',
         brief_bg:
-          'Напиши: какво ще направиш, кой ще го тества, какво искаш да научиш, какъв резултат би го потвърдил, какъв резултат би го отхвърлил.',
+          'Напиши: какво ще направиш, кой ще го тества, какво искаш да научиш, какъв резултат го потвърждава, какъв резултат го отхвърля.',
       },
       {
         id: 'entr-05-t2',
@@ -342,9 +342,9 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
         title_bg: 'Планирай експеримент, който можеш да проведеш за 7 дни',
         kind: 'experiment_design',
         brief_en:
-          'Define: hypothesis, method, sample size (even if small), success signal, honest failure signal. No perfect setups — real, small, this week.',
+          'Define: hypothesis, method, sample size (even if small), success signal, honest failure signal. Real, small, this week.',
         brief_bg:
-          'Дефинирай: хипотеза, метод, размер на извадката (дори малък), сигнал за успех, честен сигнал за провал. Без идеални условия — реално, малко, тази седмица.',
+          'Дефинирай: хипотеза, метод, размер на извадката (дори малък), сигнал за успех, честен сигнал за провал. Реално, малко, тази седмица.',
       },
     ],
     caseConnection: {
@@ -354,13 +354,13 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
       note_bg: 'Пример за евтин MVP (предварителни поръчки, единичен drop, една колекция).',
     },
     kikiQuestions: [
-      { en: 'What exactly are you trying to learn from this MVP?', bg: 'Какво точно се опитваш да научиш от този MVP?' },
+      { en: 'What are you trying to learn from this MVP?', bg: 'Какво се опитваш да научиш от този MVP?' },
       { en: 'What result would honestly surprise you?', bg: 'Какъв резултат честно би те изненадал?' },
-      { en: 'How will you know it worked vs. that people were just being polite?', bg: 'Как ще разбереш, че е работило, а не че хората просто са били учтиви?' },
+      { en: 'How will you tell success from polite feedback?', bg: 'Как ще разграничиш успех от учтив отговор?' },
       { en: 'What would you refuse to change even if users asked, and why?', bg: 'Какво не би променил(а), дори потребителите да го поискат, и защо?' },
-      { en: 'What is the smallest version of this experiment you could run this week?', bg: 'Кой е най-малкият вариант на този експеримент, който можеш да проведеш тази седмица?' },
+      { en: 'What is the smallest version of this experiment you can run this week?', bg: 'Кой е най-малкият вариант на този експеримент тази седмица?' },
     ],
-    evidenceOfSkill: ['Experiment design', 'Falsifiable hypotheses', 'Learning discipline'],
+    evidenceOfSkill: ['Формулиране на хипотеза', 'Дизайн на експеримент', 'Дисциплина на учене'],
     reflectionPrompt: {
       en: 'What did you learn that you could not have learned by thinking alone?',
       bg: 'Какво научи, което не би могъл(а) да научиш само чрез размисъл?',
@@ -378,9 +378,9 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
     title_bg: 'Аргументирано решение, pivot / persevere и pitch',
     status: 'needs_review',
     theoryBlock_en:
-      'After experiments come decisions. Persevere means the evidence supports staying the course. Pivot means changing a key element (segment, problem, solution, channel, business model) while keeping what you learned. A Pitch is not a sales trick — it is the honest, compressed story of the problem, the evidence, the decision and what you need next.',
+      'After experiments come decisions. Persevere means the evidence supports staying the course. Pivot means changing a key element — segment, problem, solution, channel, business model — while keeping what you learned. A Pitch is not a sales trick. It is the honest, compressed story of the problem, the evidence, the decision and what you need next.',
     theoryBlock_bg:
-      'След експериментите идват решенията. Persevere означава, че доказателствата подкрепят продължаване в същата посока. Pivot означава промяна на ключов елемент (сегмент, проблем, решение, канал, бизнес модел), като запазваш наученото. Pitch не е търговски трик — това е честната, кратка история на проблема, доказателствата, решението и това, което ти трябва след това.',
+      'След експериментите идват решенията. Persevere значи, че доказателствата подкрепят същата посока. Pivot значи промяна на ключов елемент — сегмент, проблем, решение, канал, бизнес модел — като запазваш наученото. Pitch не е търговски трик. Той е честна, кратка история за проблема, доказателствата, решението и това, което ти трябва оттук нататък.',
     practiceRatio: R,
     keyConcepts: ['Argued decision', 'Pivot', 'Persevere', 'Pitch', 'Product-market fit'],
     dictionaryConcepts: ['Pivot', 'Go-to-market', 'Product-market fit'],
@@ -391,9 +391,9 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
         title_bg: 'Напиши аргументирано решение pivot или persevere',
         kind: 'decision',
         brief_en:
-          'Based on your last experiment, write a 1-page decision: what you learned, what evidence supports it, which option you choose (pivot / persevere / kill), and what you will do in the next 2 weeks.',
+          'Based on your last experiment, write a 1-page decision: what you learned, what evidence supports it, which option you choose (pivot / persevere / kill), what you will do in the next 2 weeks.',
         brief_bg:
-          'Въз основа на последния си експеримент напиши решение на 1 страница: какво научи, какви доказателства го подкрепят, кой вариант избираш (pivot / persevere / прекратяване) и какво ще направиш през следващите 2 седмици.',
+          'Въз основа на последния си експеримент напиши решение на 1 страница: какво научи, какви доказателства го подкрепят, кой вариант избираш (pivot / persevere / прекратяване), какво ще направиш през следващите 2 седмици.',
       },
       {
         id: 'entr-06-t2',
@@ -401,9 +401,9 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
         title_bg: 'Направи 90-секунден честен pitch',
         kind: 'iteration',
         brief_en:
-          'Structure: problem, who has it, evidence you gathered, current solution, what you learned, what you are asking for. No hype words, no promises you cannot back up.',
+          'Structure: problem, who has it, evidence you gathered, current solution, what you learned, what you are asking for. No hype, no promises you cannot back up.',
         brief_bg:
-          'Структура: проблем, кой го има, доказателства, които събра, текущо решение, какво научи, какво искаш. Без хайп думи и без обещания, които не можеш да подкрепиш.',
+          'Структура: проблем, кой го има, доказателства, които събра, текущо решение, какво научи, какво искаш. Без хайп и без обещания, които не можеш да подкрепиш.',
       },
     ],
     caseConnection: {
@@ -416,13 +416,13 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
       { en: 'What evidence supports your decision — and what evidence contradicts it?', bg: 'Кои доказателства подкрепят твоето решение — и кои му противоречат?' },
       { en: 'Are you pivoting because of learning or because of fear?', bg: 'Правиш ли pivot заради наученото или заради страх?' },
       { en: 'What would you change in version 2 of your pitch?', bg: 'Какво би променил(а) във версия 2 на твоя pitch?' },
-      { en: 'What is still unknown, and how could you learn it before the next decision?', bg: 'Какво все още не знаеш и как би могъл(а) да го научиш преди следващото решение?' },
+      { en: 'What is still unknown, and how will you learn it before the next decision?', bg: 'Какво все още не знаеш и как ще го научиш преди следващото решение?' },
       { en: 'If someone challenged your strongest claim, could you defend it with data?', bg: 'Ако някой оспори най-силното ти твърдение, можеш ли да го защитиш с данни?' },
     ],
-    evidenceOfSkill: ['Argued decision-making', 'Honest communication', 'Iteration under uncertainty'],
+    evidenceOfSkill: ['Аргументирано решение', 'Честна комуникация', 'Итерация при несигурност'],
     reflectionPrompt: {
       en: 'Where in your pitch were you tempted to overstate? What kept you honest?',
-      bg: 'Къде в pitch-а ти беше изкушен(а) да преувеличиш? Какво те задържа честен(а)?',
+      bg: 'Къде в pitch-а беше изкушен(а) да преувеличиш? Какво те задържа честен(а)?',
     },
     improvementPrompt: {
       en: 'What is one concrete change for the next iteration?',
