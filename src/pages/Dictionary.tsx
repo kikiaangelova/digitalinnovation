@@ -11,6 +11,7 @@ import { TERMS, getReviewStatus, type DictionaryTerm, type ReviewStatus, type Le
 import { isRequiredConcept } from '@/data/dictionary-required-concepts';
 import { LEARNING_AREAS } from '@/data/learning-areas';
 import { awardXp } from '@/lib/xp';
+import { filterTerms } from '@/lib/dictionary-filter';
 import QuickTest from '@/components/dictionary/QuickTest';
 import PhaseBadge from '@/components/ui/phase-badge';
 
@@ -95,15 +96,13 @@ export default function Dictionary() {
   }, [user]);
 
   const filtered = useMemo(() => {
-    const q = search.toLowerCase();
-    return TERMS.filter(t => {
-      if (catFilter !== 'all' && t.category !== catFilter) return false;
-      if (areaFilter !== 'all' && t.learningAreaId !== areaFilter) return false;
-      if (reviewFilter !== 'all' && getReviewStatus(t) !== reviewFilter) return false;
-      if (letterFilter && !t.term.toUpperCase().startsWith(letterFilter)) return false;
-      if (q && !t.term.toLowerCase().includes(q) && !t.termBg.toLowerCase().includes(q) && !t.definition.toLowerCase().includes(q) && !t.definitionBg.toLowerCase().includes(q)) return false;
-      return true;
-    }).sort((a, b) => a.term.localeCompare(b.term));
+    return filterTerms(TERMS, {
+      search,
+      category: catFilter,
+      letter: letterFilter,
+      area: areaFilter,
+      review: reviewFilter,
+    });
   }, [search, catFilter, letterFilter, areaFilter, reviewFilter]);
 
   const availableLetters = useMemo(() => {
@@ -195,7 +194,7 @@ export default function Dictionary() {
           <Input
             placeholder={lang === 'bg' ? 'Търсете термини на английски или български...' : 'Search terms in English or Bulgarian...'}
             value={search}
-            onChange={e => { setSearch(e.target.value); setLetterFilter(''); }}
+            onChange={e => setSearch(e.target.value)}
             className="pl-9"
           />
         </div>
@@ -301,7 +300,7 @@ export default function Dictionary() {
               {lang === 'bg' ? 'Няма съвпадащи термини' : 'No matching terms'}
             </h3>
             <p className="text-muted-foreground text-sm">
-              {lang === 'bg' ? 'Опитайте друго търсене или категория.' : 'Try a different search query or category filter.'}
+              {lang === 'bg' ? 'Опитай друга буква, търсене или категория.' : 'Try another letter, search or category.'}
             </p>
           </div>
         ) : (
