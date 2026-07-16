@@ -629,6 +629,40 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
           'Write: what you will build, who will test it, what you want to learn, what result confirms it, what result kills it.',
         brief_bg:
           'Напиши: какво ще направиш, кой ще го тества, какво искаш да научиш, какъв резултат го потвърждава, какъв резултат го отхвърля.',
+        cefe: {
+          action_en:
+            'Write 5 lines on one page: (1) what you will build (as small as possible), (2) who will test it, (3) what you want to learn, (4) what result confirms it, (5) what result rejects it. Treat the MVP as a learning tool, not a small final product.',
+          action_bg:
+            'Напиши 5 реда на една страница: (1) какво ще направиш (възможно най-малко), (2) кой ще го тества, (3) какво искаш да научиш, (4) какъв резултат го потвърждава, (5) какъв резултат го отхвърля. Гледай на MVP като на инструмент за учене, не като на умалена версия на финалния продукт.',
+          visibleResult_en:
+            'A 5-line MVP card focused on learning, not on shipping a product.',
+          visibleResult_bg:
+            'MVP-карта от 5 реда, фокусирана върху ученето, не върху издаването на продукт.',
+          processingQuestions_en: [
+            'Is this the smallest thing that answers the learning question?',
+            'Would the confirming result honestly convince someone who doubts you?',
+            'What are you refusing to build for now, and why?',
+          ],
+          processingQuestions_bg: [
+            'Това ли е най-малкото нещо, което отговаря на въпроса за учене?',
+            'Потвърждаващият резултат би ли убедил честно някой, който се съмнява?',
+            'Какво отказваш да направиш засега и защо?',
+          ],
+          generalizing_en:
+            'An MVP is a learning tool, not a small version of the final product. Its job is to produce evidence quickly.',
+          generalizing_bg:
+            'MVP е инструмент за учене, а не умалена версия на финалния продукт. Задачата му е бързо да произвежда доказателства.',
+          applying_en:
+            'Cut the MVP in half. What remains that still tests the same thing?',
+          applying_bg:
+            'Намали MVP наполовина. Какво остава, което пак тества същото нещо?',
+          teacherCheck_en:
+            'Card has all 5 lines; learning goal is specific; both confirming and rejecting results are testable.',
+          teacherCheck_bg:
+            'Картата има всичките 5 реда; целта на учене е конкретна; и потвърждаващият, и отхвърлящият резултат са проверими.',
+          evidence_en: 'MVP learning card (5 lines).',
+          evidence_bg: 'MVP-карта за учене (5 реда).',
+        },
       },
       {
         id: 'entr-05-t2',
@@ -639,6 +673,40 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
           'Define: hypothesis, method, sample size (even if small), success signal, honest failure signal. Real, small, this week.',
         brief_bg:
           'Дефинирай: хипотеза, метод, размер на извадката (дори малък), сигнал за успех, честен сигнал за провал. Реално, малко, тази седмица.',
+        cefe: {
+          action_en:
+            'Write a one-page experiment plan: hypothesis, method, sample (even if 5 people), success signal, honest failure signal, timeline. Keep it doable without spending money, without paid ads and without public social accounts. The MVP behind it stays a learning tool.',
+          action_bg:
+            'Напиши едностраничен план на експеримент: хипотеза, метод, извадка (дори 5 души), сигнал за успех, честен сигнал за провал, срок. Изпълним без разходи, без платена реклама и без публични профили. MVP-то зад него остава инструмент за учене.',
+          visibleResult_en:
+            'A one-page experiment plan you could hand to a peer to run.',
+          visibleResult_bg:
+            'Едностраничен план на експеримент, който можеш да подадеш на съученик за изпълнение.',
+          processingQuestions_en: [
+            'Which signal is real evidence and which is polite feedback?',
+            'What could bias your sample, and how will you note it?',
+            'What decision will you take if the failure signal appears?',
+          ],
+          processingQuestions_bg: [
+            'Кой сигнал е реално доказателство и кой е учтива реакция?',
+            'Какво може да изкриви извадката и как ще го отбележиш?',
+            'Какво решение ще вземеш, ако се появи сигналът за провал?',
+          ],
+          generalizing_en:
+            'Good experiments are decided before they start. You commit to a signal, then respect what the data says.',
+          generalizing_bg:
+            'Добрите експерименти се решават преди да започнат. Обвързваш се със сигнал и уважаваш какво казват данните.',
+          applying_en:
+            'Run one small step this week and log what actually happened vs. what you expected.',
+          applying_bg:
+            'Направи една малка стъпка тази седмица и запиши какво реално се случи спрямо очакваното.',
+          teacherCheck_en:
+            'Plan states hypothesis, sample, both signals and a decision rule; safe for minors; no public accounts or paid ads required.',
+          teacherCheck_bg:
+            'Планът съдържа хипотеза, извадка, двата сигнала и правило за решение; безопасен за непълнолетни; не изисква публични профили или платена реклама.',
+          evidence_en: 'One-page experiment plan.',
+          evidence_bg: 'Едностраничен план на експеримент.',
+        },
       },
     ],
     caseConnection: {
