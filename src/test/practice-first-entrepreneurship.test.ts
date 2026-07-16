@@ -139,7 +139,7 @@ describe('Practice-first content seed V1A — Entrepreneurship', () => {
       .join(' ')
       .toLowerCase();
     // "unique value proposition" is a canonical Lean Canvas block name — allow only that exact phrase.
-    const cleaned = all.replaceAll('unique value proposition', '');
+    const cleaned = all.split('unique value proposition').join('');
     for (const phrase of banned) {
       expect(cleaned).not.toContain(phrase);
     }
