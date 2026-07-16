@@ -116,4 +116,38 @@ describe('Practice-first content seed V1B — Innovation', () => {
     expect(ENTREPRENEURSHIP_MODULES.every((m) => m.themeId === 'entrepreneurship')).toBe(true);
     expect(ENTREPRENEURSHIP_MODULES.every((m) => m.status === 'needs_review')).toBe(true);
   });
+
+  it('no theory block exceeds 120 words per language (tightening pass)', () => {
+    for (const m of INNOVATION_MODULES) {
+      expect(m.theoryBlock_en.split(/\s+/).length).toBeLessThanOrEqual(120);
+      expect(m.theoryBlock_bg.split(/\s+/).length).toBeLessThanOrEqual(120);
+    }
+  });
+
+  it('does not use banned English evidenceOfSkill labels', () => {
+    const banned = ['Concept discrimination', 'Adoption reasoning', 'Evidence over enthusiasm'];
+    for (const m of INNOVATION_MODULES) {
+      for (const label of m.evidenceOfSkill) {
+        for (const b of banned) {
+          expect(label).not.toBe(b);
+        }
+      }
+    }
+  });
+
+  it('avoids awkward BG phrases from the earlier draft', () => {
+    const forbiddenBg = ['стойност при употреба', 'улавяне на стойност'];
+    const allBg = INNOVATION_MODULES.map((m) =>
+      [
+        m.theoryBlock_bg,
+        ...m.practiceTasks.flatMap((t) => [t.title_bg, t.brief_bg]),
+        ...m.kikiQuestions.map((q) => q.bg),
+      ].join(' '),
+    )
+      .join(' ')
+      .toLowerCase();
+    for (const phrase of forbiddenBg) {
+      expect(allBg).not.toContain(phrase);
+    }
+  });
 });
