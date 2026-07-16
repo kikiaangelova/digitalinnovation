@@ -210,6 +210,26 @@ export default function StudentDashboard() {
     fetchData();
   }, [user, authLoading, navigate]);
 
+  // Scroll to hash target (e.g. /dashboard#kiki-mentor) once loading is done.
+  useEffect(() => {
+    if (loading) return;
+    if (typeof window === 'undefined') return;
+    const hash = window.location.hash?.replace('#', '');
+    if (!hash) return;
+    const timer = window.setTimeout(() => {
+      const el = document.getElementById(hash);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        el.classList.add('ring-2', 'ring-primary', 'ring-offset-2');
+        window.setTimeout(
+          () => el.classList.remove('ring-2', 'ring-primary', 'ring-offset-2'),
+          2000,
+        );
+      }
+    }, 300);
+    return () => window.clearTimeout(timer);
+  }, [loading]);
+
   const completedSubs = submissions.filter(s => !s.is_draft);
   const casesCompleted = completedSubs.length;
   const casesAbove80Percent = completedSubs.filter(s => s.total_score && s.max_score && (s.total_score / s.max_score) >= 0.8).length;
