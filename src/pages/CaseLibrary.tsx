@@ -175,18 +175,21 @@ export default function CaseLibrary() {
 
   // Filter domains for grid view
   const filteredDomains = useMemo(() => {
-    if (!search && !hasActiveFilters) return INDUSTRY_DOMAINS;
+    // When no theme, no search, and no filters are active, keep the full
+    // industry grid so the default browse view is unchanged.
+    if (!activeTheme && !search && !hasActiveFilters) return INDUSTRY_DOMAINS;
     return INDUSTRY_DOMAINS.filter(d => {
       const domainCases = filterCases(casesByDomain[d.id] || []);
       if (domainCases.length > 0) return true;
-      // Also match domain name in search
-      if (search) {
+      // Also match domain name in search (only when there is no active theme,
+      // otherwise empty domains would sneak back in on a domain-name match).
+      if (search && !activeTheme) {
         const q = search.toLowerCase();
         if (d.nameEn.toLowerCase().includes(q) || d.nameBg.toLowerCase().includes(q)) return true;
       }
       return false;
     });
-  }, [search, casesByDomain, difficultyFilter, timeFilter, statusFilter, industryFilter]);
+  }, [activeTheme, search, casesByDomain, difficultyFilter, timeFilter, statusFilter, industryFilter]);
 
   const diffColor = (d: string) => {
     if (d === 'beginner') return 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20';
