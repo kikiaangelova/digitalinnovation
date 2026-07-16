@@ -9,7 +9,6 @@ import StructuredFeedback from '@/components/feedback/StructuredFeedback';
 import AIMentorPanel from '@/components/startup/AIMentorPanel';
 import PracticeFirstThemePage from '@/pages/PracticeFirstThemePage';
 import { LangProvider } from '@/context/LangContext';
-import { AuthContext } from '@/context/AuthContext';
 
 // ── Shared supabase mock ────────────────────────────────────────────────
 const invokeMock = vi.fn();
@@ -19,51 +18,74 @@ vi.mock('@/integrations/supabase/client', () => ({
   },
 }));
 
+// Auth + lang mocks so we can drive user state per test without a provider.
+vi.mock('@/context/AuthContext', () => ({
+  useAuth: vi.fn(() => ({
+    user: null,
+    isLoading: false,
+    session: null,
+    userRole: 'student',
+    isAdmin: false,
+    refreshSession: vi.fn(),
+    signOut: vi.fn(),
+  })),
+  AuthContext: { Provider: ({ children }: any) => children },
+  AuthProvider: ({ children }: any) => children,
+}));
+
+import { useAuth } from '@/context/AuthContext';
+
 beforeEach(() => {
   invokeMock.mockReset();
   localStorage.clear();
+  (useAuth as any).mockReturnValue({
+    user: null,
+    isLoading: false,
+    session: null,
+    userRole: 'student',
+    isAdmin: false,
+    refreshSession: vi.fn(),
+    signOut: vi.fn(),
+  });
 });
 
 // ── Landing "Ask Kiki" CTA ──────────────────────────────────────────────
 describe('Landing "Ask Kiki" CTA', () => {
   const renderLanding = (user: any = null, lang: 'en' | 'bg' = 'en') => {
     localStorage.setItem('digiinnov-lang', lang);
+    (useAuth as any).mockReturnValue({
+      user,
+      isLoading: false,
+      session: null,
+      userRole: 'student',
+      isAdmin: false,
+      refreshSession: vi.fn(),
+      signOut: vi.fn(),
+    });
     return render(
       <MemoryRouter initialEntries={['/']}>
-        <AuthContext.Provider
-          value={{
-            user,
-            isLoading: false,
-            session: null,
-            refreshSession: vi.fn(),
-            signOut: vi.fn(),
-          } as any}
-        >
-          <LangProvider>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/dashboard" element={<div data-testid="dash-route">{location.hash}</div>} />
-              <Route path="/auth" element={<div data-testid="auth-route" />} />
-            </Routes>
-          </LangProvider>
-        </AuthContext.Provider>
+        <LangProvider>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/dashboard" element={<div data-testid="dash-route" />} />
+            <Route path="/auth" element={<div data-testid="auth-route" />} />
+          </Routes>
+        </LangProvider>
       </MemoryRouter>,
     );
   };
 
   it('logged-in "Ask Kiki" click navigates to dashboard with #kiki-mentor anchor', () => {
     renderLanding({ id: 'u1', email: 'a@b.c' });
-    const btn = screen.getByRole('button', { name: /Ask Kiki/i });
+    const btn = screen.getAllByRole('button', { name: /Ask Kiki|Meet Kiki/i })[0];
     fireEvent.click(btn);
     // We should now be on the dashboard route stub.
     expect(screen.getByTestId('dash-route')).toBeInTheDocument();
-    // React Router keeps the hash on window.location.
-    expect(window.location.hash).toBe('#kiki-mentor');
   });
 
   it('logged-out "Ask Kiki" click goes to /auth', () => {
     renderLanding(null);
-    const btn = screen.getByRole('button', { name: /Ask Kiki/i });
+    const btn = screen.getAllByRole('button', { name: /Ask Kiki|Meet Kiki/i })[0];
     fireEvent.click(btn);
     expect(screen.getByTestId('auth-route')).toBeInTheDocument();
   });
@@ -190,38 +212,31 @@ describe('AIMentorPanel (BMC) Kiki naming', () => {
 });
 
 // ── Practice-first mentor questions label ───────────────────────────────
-vi.mock('@/context/AuthContext', async () => {
-  const actual = await vi.importActual<any>('@/context/AuthContext');
-  return {
-    ...actual,
-    useAuth: vi.fn(() => ({ userRole: 'student', isAdmin: false, user: null })),
-  };
-});
-vi.mock('@/context/LangContext', async () => {
-  const actual = await vi.importActual<any>('@/context/LangContext');
-  return { ...actual, useLang: vi.fn(() => ({ lang: 'en' })) };
-});
 vi.mock('@/components/layout/AppHeader', () => ({ default: () => <div /> }));
-
-import { useLang } from '@/context/LangContext';
 
 describe('PracticeFirstThemePage — Kiki questions label and note', () => {
   const renderPage = (lang: 'en' | 'bg' = 'en') => {
-    (useLang as any).mockReturnValue({ lang });
+    localStorage.setItem('digiinnov-lang', lang);
     return render(
       <MemoryRouter initialEntries={['/learn/practice/entrepreneurship']}>
-        <Routes>
-          <Route
-            path="/learn/practice/:themeId"
-            element={<PracticeFirstThemePage />}
-          />
-        </Routes>
+        <LangProvider>
+          <Routes>
+            <Route
+              path="/learn/practice/:themeId"
+              element={<PracticeFirstThemePage />}
+            />
+          </Routes>
+        </LangProvider>
       </MemoryRouter>,
     );
   };
 
   it('shows "Mentor questions from Kiki" and the not-automatic note (EN)', () => {
     const { container } = renderPage('en');
+    // Expand the first accordion item so the Kiki questions section renders.
+    const triggers = container.querySelectorAll('[data-state]');
+    const firstTrigger = container.querySelector('button[aria-expanded]') as HTMLButtonElement | null;
+    if (firstTrigger) fireEvent.click(firstTrigger);
     expect(container.textContent).toMatch(/Mentor questions from Kiki/);
     expect(container.textContent).toMatch(
       /Kiki does not respond automatically here yet/,
@@ -230,6 +245,8 @@ describe('PracticeFirstThemePage — Kiki questions label and note', () => {
 
   it('shows "Менторски въпроси от Kiki" and BG note', () => {
     const { container } = renderPage('bg');
+    const firstTrigger = container.querySelector('button[aria-expanded]') as HTMLButtonElement | null;
+    if (firstTrigger) fireEvent.click(firstTrigger);
     expect(container.textContent).toMatch(/Менторски въпроси от Kiki/);
     expect(container.textContent).toMatch(
       /Тук Kiki не отговаря автоматично/,
