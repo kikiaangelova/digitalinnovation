@@ -29,6 +29,28 @@ export interface PracticeTask {
     | 'iteration';
   brief_en: string;
   brief_bg: string;
+  /**
+   * Optional CEFE-style experiential learning block. Non-breaking:
+   * when present the practice page can render an action → visible result →
+   * processing → generalizing → applying flow with a teacher check and a
+   * named evidence artifact. Content-only — no submissions, no XP.
+   */
+  cefe?: {
+    action_en: string;
+    action_bg: string;
+    visibleResult_en: string;
+    visibleResult_bg: string;
+    processingQuestions_en: string[];
+    processingQuestions_bg: string[];
+    generalizing_en: string;
+    generalizing_bg: string;
+    applying_en: string;
+    applying_bg: string;
+    teacherCheck_en: string;
+    teacherCheck_bg: string;
+    evidence_en: string;
+    evidence_bg: string;
+  };
 }
 
 export interface CaseConnection {
@@ -94,6 +116,40 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
           'List 3 problems you saw in the last 7 days (school, family, city, online). For each: who has it, where you saw it, why it matters. No solutions.',
         brief_bg:
           'Опиши 3 проблема, които видя през последните 7 дни (училище, семейство, град, онлайн). За всеки: кой го има, къде го видя, защо има значение. Без решения.',
+        cefe: {
+          action_en:
+            'Spend 30 minutes walking through 2 different environments (school, home, transport, a shop). Record 3 concrete problems in a short log with time, place and who was affected.',
+          action_bg:
+            'Отдели 30 минути и премини през 2 различни среди (училище, дом, транспорт, магазин). Запиши 3 конкретни проблема в кратък журнал с час, място и кого засяга.',
+          visibleResult_en:
+            'A written observation log with 3 dated entries. Each entry: time, place, who, what happened, why it matters. No solutions in the problem line.',
+          visibleResult_bg:
+            'Писмен журнал с 3 датирани записа. Всеки запис: час, място, кой, какво се случи, защо има значение. В реда за проблема не се появява решение.',
+          processingQuestions_en: [
+            'Which of the 3 problems did you see with your own eyes, and which did you only hear about?',
+            'For each problem, what did you observe vs. what did you assume?',
+            'Which problem repeats and which was a one-off?',
+          ],
+          processingQuestions_bg: [
+            'Кои от 3-те проблема видя с очите си, а за кои само чу?',
+            'За всеки проблем: какво наблюдава и какво допусна?',
+            'Кой проблем се повтаря и кой беше еднократен?',
+          ],
+          generalizing_en:
+            'Real problems are located in time, place and people. A problem you can point to is more useful than a problem you can only describe.',
+          generalizing_bg:
+            'Реалните проблеми имат време, място и хора. Проблем, който можеш да посочиш, е по-полезен от такъв, който само описваш.',
+          applying_en:
+            'Rewrite one entry as a one-sentence problem statement without a solution, ready for the next task.',
+          applying_bg:
+            'Пренапиши един запис като изречение-проблем без решение, готово за следващата задача.',
+          teacherCheck_en:
+            'Log has 3 dated entries; each names a person or group; no solution appears in the problem line.',
+          teacherCheck_bg:
+            'Журналът има 3 датирани записа; всеки посочва човек или група; в реда за проблема няма решение.',
+          evidence_en: 'Observation log with 3 entries.',
+          evidence_bg: 'Журнал с 3 наблюдения.',
+        },
       },
       {
         id: 'entr-01-t2',
@@ -104,6 +160,40 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
           'Pick one problem. Write: "I believe X people would do Y if we offered Z." Add what would have to be true for this to hold.',
         brief_bg:
           'Избери един проблем. Напиши: „Вярвам, че X хора биха направили Y, ако им предложим Z.“ Добави какво трябва да е вярно, за да е така.',
+        cefe: {
+          action_en:
+            'Pick one problem from your log. Write it as: "I believe [X people] would [do Y] if we offered [Z], because [reason]. This is true if [measurable signal]. This is false if [measurable signal]."',
+          action_bg:
+            'Избери един проблем от журнала. Напиши го така: „Вярвам, че [X хора] биха [направили Y], ако им предложим [Z], защото [причина]. Ще е вярно, ако [измерим сигнал]. Ще е грешно, ако [измерим сигнал].“',
+          visibleResult_en:
+            'One written hypothesis card with an explicit confirming signal and an explicit disconfirming signal.',
+          visibleResult_bg:
+            'Една хипотеза-карта с ясен сигнал за потвърждение и ясен сигнал за опровергаване.',
+          processingQuestions_en: [
+            'What in your hypothesis is evidence and what is guess?',
+            'How would you know within 7 days that the hypothesis is wrong?',
+            'Which word could you delete without weakening the hypothesis?',
+          ],
+          processingQuestions_bg: [
+            'Кое в хипотезата е доказателство и кое е предположение?',
+            'Как за 7 дни ще разбереш, че хипотезата е грешна?',
+            'Коя дума можеш да махнеш, без да отслабиш хипотезата?',
+          ],
+          generalizing_en:
+            'A hypothesis is only useful if it can be shown wrong. Vague hypotheses cannot be tested.',
+          generalizing_bg:
+            'Хипотезата е полезна само ако може да бъде показана като грешна. Размитите хипотези не се тестват.',
+          applying_en:
+            'Rewrite the hypothesis after a peer challenges the weakest word.',
+          applying_bg:
+            'Пренапиши хипотезата, след като съученик оспори най-слабата дума.',
+          teacherCheck_en:
+            'Card includes a specific group, an action, an offer and at least one measurable disconfirming signal.',
+          teacherCheck_bg:
+            'Картата съдържа конкретна група, действие, предложение и поне един измерим сигнал за опровергаване.',
+          evidence_en: 'Hypothesis card.',
+          evidence_bg: 'Хипотеза-карта.',
+        },
       },
     ],
     caseConnection: {
@@ -153,6 +243,40 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
           '20 minutes in a real place (school hallway, cafe, transport). Write only what you see and hear — no explanations. Then list 3 possible problems, marked as observation or guess.',
         brief_bg:
           '20 минути на реално място (коридор, кафене, транспорт). Записвай само това, което виждаш и чуваш — без обяснения. После опиши 3 възможни проблема, като отбележиш кое е наблюдение и кое предположение.',
+        cefe: {
+          action_en:
+            'Go to a real public place (school corridor, canteen, bus, cafe). For 20 minutes record only what you see and hear. No interpretation. Add a timestamp every 2–3 minutes.',
+          action_bg:
+            'Отиди на реално обществено място (коридор, столова, автобус, кафене). За 20 минути записвай само какво виждаш и чуваш. Без интерпретации. Слагай часова отметка на всеки 2–3 минути.',
+          visibleResult_en:
+            'A raw observation sheet with timestamps and a second column that separates "observed" from "assumed".',
+          visibleResult_bg:
+            'Суров лист за наблюдение с часови отметки и втора колона, която разделя „наблюдавано“ от „допуснато“.',
+          processingQuestions_en: [
+            'Where did you slip from observation into interpretation?',
+            'What surprised you compared to what you expected before you started?',
+            'Which 3 possible problems emerged — and are they problems for the users or for you?',
+          ],
+          processingQuestions_bg: [
+            'Къде премина от наблюдение към интерпретация?',
+            'Какво те изненада спрямо това, което очакваше преди началото?',
+            'Кои 3 възможни проблема излязоха — и проблем ли са за потребителите или за теб?',
+          ],
+          generalizing_en:
+            'Observation without interpretation is a discipline. Most people describe what they think, not what actually happened.',
+          generalizing_bg:
+            'Наблюдението без интерпретация е дисциплина. Повечето хора описват какво си мислят, а не какво се случи.',
+          applying_en:
+            'Design one 10-minute follow-up observation focused on one behavior you noticed.',
+          applying_bg:
+            'Проектирай едно допълващо 10-минутно наблюдение, фокусирано върху едно поведение, което забеляза.',
+          teacherCheck_en:
+            'Sheet has ≥8 timestamped entries; observed and assumed columns are separated; 3 candidate problems listed.',
+          teacherCheck_bg:
+            'Листът има ≥8 записа с часови отметки; колоните „наблюдавано“ и „допуснато“ са отделени; 3 възможни проблема са изброени.',
+          evidence_en: 'Timestamped observation sheet.',
+          evidence_bg: 'Лист за наблюдение с часови отметки.',
+        },
       },
       {
         id: 'entr-02-t2',
@@ -163,6 +287,40 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
           'Take one problem from Module 1. Ask "why?" five times. Write each answer. Mark where you had evidence and where you guessed.',
         brief_bg:
           'Вземи един проблем от Модул 1. Попитай „защо?“ пет пъти. Запиши всеки отговор. Отбележи къде имаш доказателство и къде си предположил(а).',
+        cefe: {
+          action_en:
+            'Take one problem from Module 1. Write it at the top. Ask "why does this happen?" five times, writing each answer on a new line. After each answer, mark [evidence] or [guess].',
+          action_bg:
+            'Вземи един проблем от Модул 1. Напиши го най-отгоре. Попитай „защо се случва това?“ пет пъти, като записваш всеки отговор на нов ред. След всеки отговор отбележи [доказателство] или [предположение].',
+          visibleResult_en:
+            'A five-level "why" chain, each level marked evidence or guess.',
+          visibleResult_bg:
+            'Верига „защо“ с 5 нива, всяко ниво отбелязано като доказателство или предположение.',
+          processingQuestions_en: [
+            'At which level did guesses start replacing evidence?',
+            'Does the root cause you reached match the symptom you started from?',
+            'Which "why" would need an interview or a source to be answered honestly?',
+          ],
+          processingQuestions_bg: [
+            'На кое ниво предположенията започнаха да заменят доказателствата?',
+            'Съвпада ли достигнатата коренова причина със симптома, от който тръгна?',
+            'Кое „защо“ се нуждае от интервю или източник, за да получи честен отговор?',
+          ],
+          generalizing_en:
+            'Symptoms are what you notice. Root causes are one or two "whys" deeper than most people go.',
+          generalizing_bg:
+            'Симптомите са това, което забелязваш. Кореновите причини са едно-две „защо“ по-дълбоко от там, докъдето стигат повечето хора.',
+          applying_en:
+            'Turn the deepest "why" without evidence into a question you can answer with one interview or 3 sources.',
+          applying_bg:
+            'Превърни най-дълбокото „защо“ без доказателство във въпрос, на който можеш да отговориш с едно интервю или 3 източника.',
+          teacherCheck_en:
+            'Chain has 5 levels; at least one level marked as guess; the final line reframes the problem, not just the symptom.',
+          teacherCheck_bg:
+            'Веригата има 5 нива; поне едно ниво е отбелязано като предположение; последният ред преформулира проблема, а не симптома.',
+          evidence_en: 'Five whys chain.',
+          evidence_bg: 'Верига „пет пъти защо“.',
+        },
       },
     ],
     informationSearchTask: {
@@ -213,6 +371,40 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
           'Take a short article, social post or founder quote. Extract 10 statements. Label each: fact, opinion, assumption. For every "fact" write the source that could verify it.',
         brief_bg:
           'Вземи кратка статия, публикация или цитат на основател. Извлечи 10 твърдения. Етикетирай всяко: факт, мнение, допускане. За всеки „факт“ запиши източника, който може да го потвърди.',
+        cefe: {
+          action_en:
+            'Pick a short article, social media post or founder interview (max 500 words). Extract exactly 10 statements. In a three-column table label each as fact / opinion / assumption. For every "fact" add the source that would verify it.',
+          action_bg:
+            'Избери кратка статия, публикация или интервю на основател (до 500 думи). Извлечи точно 10 твърдения. В таблица с три колони отбележи всяко като факт / мнение / допускане. За всеки „факт“ добави източник, който може да го провери.',
+          visibleResult_en:
+            'A 10-row table: statement | label | source (only for facts).',
+          visibleResult_bg:
+            'Таблица от 10 реда: твърдение | етикет | източник (само за фактите).',
+          processingQuestions_en: [
+            'Which statements were dressed as facts but are actually assumptions?',
+            'Which opinion is presented as if everyone shared it?',
+            'Which "fact" would be hardest to verify — and why?',
+          ],
+          processingQuestions_bg: [
+            'Кои твърдения са облечени като факти, но всъщност са допускания?',
+            'Кое мнение е представено така, сякаш всички го споделят?',
+            'Кой „факт“ би бил най-труден за проверка — и защо?',
+          ],
+          generalizing_en:
+            'A confident tone is not evidence. Statements count as facts only when they have a source.',
+          generalizing_bg:
+            'Уверен тон не е доказателство. Твърденията се броят като факти само ако имат източник.',
+          applying_en:
+            'Choose the weakest "fact" and rewrite it honestly as an opinion or assumption.',
+          applying_bg:
+            'Избери най-слабия „факт“ и го пренапиши честно като мнение или допускане.',
+          teacherCheck_en:
+            'Table has 10 rows; every "fact" has a source; at least one label was reclassified during the task.',
+          teacherCheck_bg:
+            'Таблицата има 10 реда; всеки „факт“ има източник; поне един етикет е бил преоценен по време на задачата.',
+          evidence_en: 'Labeled 10-row table.',
+          evidence_bg: 'Таблица с 10 етикетирани твърдения.',
+        },
       },
       {
         id: 'entr-03-t2',
@@ -223,6 +415,40 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
           'From your own idea, list 3 assumptions. For each, write one question you can answer this week — a search, a message, a short interview.',
         brief_bg:
           'От собствената си идея запиши 3 допускания. За всяко напиши един въпрос, на който можеш да отговориш тази седмица — търсене, съобщение, кратко интервю.',
+        cefe: {
+          action_en:
+            'From your own idea list 3 unverified assumptions. For each, write one specific question you can answer within 7 days (search, message, 5-minute interview). Set a check-by date.',
+          action_bg:
+            'От собствената си идея запиши 3 непроверени допускания. За всяко напиши един конкретен въпрос, на който можеш да отговориш до 7 дни (търсене, съобщение, 5-минутно интервю). Задай краен срок.',
+          visibleResult_en:
+            'An "assumption → question" table with 3 rows and a deadline per row.',
+          visibleResult_bg:
+            'Таблица „допускане → въпрос“ с 3 реда и срок за всеки ред.',
+          processingQuestions_en: [
+            'Which assumption were you most tempted to leave unchecked, and why?',
+            'Which question is answerable within 7 days without spending money?',
+            'Which answer would force you to change the idea?',
+          ],
+          processingQuestions_bg: [
+            'Кое допускане най-много ти се искаше да оставиш непроверено и защо?',
+            'Кой въпрос е разрешим за 7 дни без разход?',
+            'Кой отговор би те принудил да промениш идеята?',
+          ],
+          generalizing_en:
+            'Assumptions become useful only when they turn into small, answerable questions.',
+          generalizing_bg:
+            'Допусканията стават полезни само когато се превърнат в малки въпроси, на които може да се отговори.',
+          applying_en:
+            'Answer one question this week and log the result next to it.',
+          applying_bg:
+            'Отговори на един въпрос тази седмица и запиши резултата до него.',
+          teacherCheck_en:
+            'Table has 3 rows; each question is specific and has a source or method plus a date.',
+          teacherCheck_bg:
+            'Таблицата има 3 реда; всеки въпрос е конкретен и има източник или метод плюс дата.',
+          evidence_en: 'Assumption-to-question table.',
+          evidence_bg: 'Таблица „допускане → въпрос“.',
+        },
       },
     ],
     informationSearchTask: {
@@ -276,6 +502,40 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
           'Write: "For [who], who [problem], our [solution] gives [main benefit], unlike [alternative]." Then challenge every word.',
         brief_bg:
           'Напиши: „За [кой], който [проблем], нашето [решение] дава [основна полза], за разлика от [алтернатива].“ След това оспори всяка дума.',
+        cefe: {
+          action_en:
+            'Write your value proposition using: "For [who], who [problem], our [solution] gives [main benefit], unlike [alternative]." Then challenge every word — cross out any word that is vague or unproven.',
+          action_bg:
+            'Напиши своето value proposition по формулата: „За [кой], който [проблем], нашето [решение] дава [основна полза], за разлика от [алтернатива].“ След това оспори всяка дума — зачеркни всяка размита или недоказана.',
+          visibleResult_en:
+            'Two versions of the sentence: original and challenged, plus a short note per crossed-out word explaining why it was weak.',
+          visibleResult_bg:
+            'Две версии на изречението: оригинал и оспорена, плюс кратка бележка защо всяка зачеркната дума е слаба.',
+          processingQuestions_en: [
+            'Which word was hardest to defend?',
+            'Is your "who" a specific group or a general audience?',
+            'Is your "unlike" honest — is that really the current alternative for these users?',
+          ],
+          processingQuestions_bg: [
+            'Коя дума беше най-трудна за защита?',
+            'Твоето „кой“ е конкретна група или обща аудитория?',
+            'Твоето „за разлика от“ честно ли е — това ли използват тези хора днес?',
+          ],
+          generalizing_en:
+            'A value proposition is a claim that can be checked. Vague words hide untested assumptions.',
+          generalizing_bg:
+            'Value proposition е твърдение, което подлежи на проверка. Размитите думи крият непроверени допускания.',
+          applying_en:
+            'Rewrite the sentence in a second version that removes every vague word.',
+          applying_bg:
+            'Пренапиши изречението във втора версия, която премахва всяка размита дума.',
+          teacherCheck_en:
+            'Both versions present; at least 2 words challenged with reasons; final version names a specific group and a concrete alternative.',
+          teacherCheck_bg:
+            'Двете версии присъстват; поне 2 думи са оспорени с причина; финалната версия посочва конкретна група и конкретна алтернатива.',
+          evidence_en: 'Two-version value proposition sheet.',
+          evidence_bg: 'Лист с две версии на value proposition.',
+        },
       },
       {
         id: 'entr-04-t2',
@@ -286,6 +546,40 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
           'Fill only 5 blocks: problem, customer segment, unique value proposition, solution, channels. Mark each as evidence, assumption, or guess.',
         brief_bg:
           'Попълни само 5 блока: проблем, клиентски сегмент, уникално value proposition, решение, канали. Маркирай всеки като доказателство, допускане или предположение.',
+        cefe: {
+          action_en:
+            'On paper or one page, fill only 5 Lean Canvas blocks: problem, customer segment, unique value proposition, solution, channels. Next to each block write "evidence", "assumption" or "guess".',
+          action_bg:
+            'На хартия или на една страница попълни само 5 блока от Lean Canvas: проблем, клиентски сегмент, уникално value proposition, решение, канали. До всеки блок напиши „доказателство“, „допускане“ или „предположение“.',
+          visibleResult_en:
+            'A one-page 5-block canvas with an evidence-quality tag on every block.',
+          visibleResult_bg:
+            'Едностраничен canvas с 5 блока, всеки маркиран по качеството на доказателството.',
+          processingQuestions_en: [
+            'Which block is fully evidence — and how strong is that evidence?',
+            'Which block is fully guess, and does the whole idea depend on it?',
+            'Where does the customer segment not match the channel you chose?',
+          ],
+          processingQuestions_bg: [
+            'Кой блок е изцяло доказателство — и колко силно е това доказателство?',
+            'Кой блок е изцяло предположение и зависи ли цялата идея от него?',
+            'Къде клиентският сегмент не съвпада с избрания канал?',
+          ],
+          generalizing_en:
+            'A canvas is honest only when each block is labeled by evidence quality. It is a map, not a claim.',
+          generalizing_bg:
+            'Canvas е честен само когато всеки блок е маркиран по качеството на доказателството. Той е карта, не претенция.',
+          applying_en:
+            'Pick the weakest block and write one action to convert a guess into evidence within 7 days.',
+          applying_bg:
+            'Избери най-слабия блок и напиши едно действие, което ще превърне предположение в доказателство за 7 дни.',
+          teacherCheck_en:
+            '5 blocks filled; every block tagged by evidence quality; at least one improvement action written.',
+          teacherCheck_bg:
+            '5 блока попълнени; всеки маркиран по качество на доказателството; поне едно действие за подобрение.',
+          evidence_en: 'Tagged Lean Canvas page.',
+          evidence_bg: 'Маркиран Lean Canvas.',
+        },
       },
     ],
     caseConnection: {
@@ -335,6 +629,40 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
           'Write: what you will build, who will test it, what you want to learn, what result confirms it, what result kills it.',
         brief_bg:
           'Напиши: какво ще направиш, кой ще го тества, какво искаш да научиш, какъв резултат го потвърждава, какъв резултат го отхвърля.',
+        cefe: {
+          action_en:
+            'Write 5 lines on one page: (1) what you will build (as small as possible), (2) who will test it, (3) what you want to learn, (4) what result confirms it, (5) what result rejects it. Treat the MVP as a learning tool, not a small final product.',
+          action_bg:
+            'Напиши 5 реда на една страница: (1) какво ще направиш (възможно най-малко), (2) кой ще го тества, (3) какво искаш да научиш, (4) какъв резултат го потвърждава, (5) какъв резултат го отхвърля. Гледай на MVP като на инструмент за учене, не като на умалена версия на финалния продукт.',
+          visibleResult_en:
+            'A 5-line MVP card focused on learning, not on shipping a product.',
+          visibleResult_bg:
+            'MVP-карта от 5 реда, фокусирана върху ученето, не върху издаването на продукт.',
+          processingQuestions_en: [
+            'Is this the smallest thing that answers the learning question?',
+            'Would the confirming result honestly convince someone who doubts you?',
+            'What are you refusing to build for now, and why?',
+          ],
+          processingQuestions_bg: [
+            'Това ли е най-малкото нещо, което отговаря на въпроса за учене?',
+            'Потвърждаващият резултат би ли убедил честно някой, който се съмнява?',
+            'Какво отказваш да направиш засега и защо?',
+          ],
+          generalizing_en:
+            'An MVP is a learning tool, not a small version of the final product. Its job is to produce evidence quickly.',
+          generalizing_bg:
+            'MVP е инструмент за учене, а не умалена версия на финалния продукт. Задачата му е бързо да произвежда доказателства.',
+          applying_en:
+            'Cut the MVP in half. What remains that still tests the same thing?',
+          applying_bg:
+            'Намали MVP наполовина. Какво остава, което пак тества същото нещо?',
+          teacherCheck_en:
+            'Card has all 5 lines; learning goal is specific; both confirming and rejecting results are testable.',
+          teacherCheck_bg:
+            'Картата има всичките 5 реда; целта на учене е конкретна; и потвърждаващият, и отхвърлящият резултат са проверими.',
+          evidence_en: 'MVP learning card (5 lines).',
+          evidence_bg: 'MVP-карта за учене (5 реда).',
+        },
       },
       {
         id: 'entr-05-t2',
@@ -345,6 +673,40 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
           'Define: hypothesis, method, sample size (even if small), success signal, honest failure signal. Real, small, this week.',
         brief_bg:
           'Дефинирай: хипотеза, метод, размер на извадката (дори малък), сигнал за успех, честен сигнал за провал. Реално, малко, тази седмица.',
+        cefe: {
+          action_en:
+            'Write a one-page experiment plan: hypothesis, method, sample (even if 5 people), success signal, honest failure signal, timeline. Keep it doable without spending money, without paid ads and without public social accounts. The MVP behind it stays a learning tool.',
+          action_bg:
+            'Напиши едностраничен план на експеримент: хипотеза, метод, извадка (дори 5 души), сигнал за успех, честен сигнал за провал, срок. Изпълним без разходи, без платена реклама и без публични профили. MVP-то зад него остава инструмент за учене.',
+          visibleResult_en:
+            'A one-page experiment plan you could hand to a peer to run.',
+          visibleResult_bg:
+            'Едностраничен план на експеримент, който можеш да подадеш на съученик за изпълнение.',
+          processingQuestions_en: [
+            'Which signal is real evidence and which is polite feedback?',
+            'What could bias your sample, and how will you note it?',
+            'What decision will you take if the failure signal appears?',
+          ],
+          processingQuestions_bg: [
+            'Кой сигнал е реално доказателство и кой е учтива реакция?',
+            'Какво може да изкриви извадката и как ще го отбележиш?',
+            'Какво решение ще вземеш, ако се появи сигналът за провал?',
+          ],
+          generalizing_en:
+            'Good experiments are decided before they start. You commit to a signal, then respect what the data says.',
+          generalizing_bg:
+            'Добрите експерименти се решават преди да започнат. Обвързваш се със сигнал и уважаваш какво казват данните.',
+          applying_en:
+            'Run one small step this week and log what actually happened vs. what you expected.',
+          applying_bg:
+            'Направи една малка стъпка тази седмица и запиши какво реално се случи спрямо очакваното.',
+          teacherCheck_en:
+            'Plan states hypothesis, sample, both signals and a decision rule; safe for minors; no public accounts or paid ads required.',
+          teacherCheck_bg:
+            'Планът съдържа хипотеза, извадка, двата сигнала и правило за решение; безопасен за непълнолетни; не изисква публични профили или платена реклама.',
+          evidence_en: 'One-page experiment plan.',
+          evidence_bg: 'Едностраничен план на експеримент.',
+        },
       },
     ],
     caseConnection: {
@@ -394,6 +756,40 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
           'Based on your last experiment, write a 1-page decision: what you learned, what evidence supports it, which option you choose (pivot / persevere / kill), what you will do in the next 2 weeks.',
         brief_bg:
           'Въз основа на последния си експеримент напиши решение на 1 страница: какво научи, какви доказателства го подкрепят, кой вариант избираш (pivot / persevere / прекратяване), какво ще направиш през следващите 2 седмици.',
+        cefe: {
+          action_en:
+            'Based on your latest experiment, write a one-page evidence-based decision: what you learned, evidence for and against, explicit choice of pivot / persevere / stop, and concrete next steps for the next 2 weeks.',
+          action_bg:
+            'Въз основа на последния си експеримент напиши едностранично аргументирано решение: какво научи, доказателства „за“ и „против“, ясен избор pivot / persevere / прекратяване и конкретни следващи стъпки за следващите 2 седмици.',
+          visibleResult_en:
+            'A one-page decision memo with an explicit pivot / persevere / stop choice and a review date.',
+          visibleResult_bg:
+            'Едностраничен меморандум за решение с ясен избор pivot / persevere / прекратяване и дата за преглед.',
+          processingQuestions_en: [
+            'What evidence supports your choice — and what evidence contradicts it?',
+            'Are you pivoting because of learning, or because of discomfort?',
+            'What would have to be true in 2 weeks for this decision to still hold?',
+          ],
+          processingQuestions_bg: [
+            'Кои доказателства подкрепят избора ти — и кои му противоречат?',
+            'Правиш ли pivot заради наученото или заради дискомфорт?',
+            'Какво трябва да е вярно след 2 седмици, за да остане това решение валидно?',
+          ],
+          generalizing_en:
+            'A decision under uncertainty is judged by the reasoning behind it, not by outcome alone. Pivot, persevere and stop are all valid — dressing an assumption as a decision is not.',
+          generalizing_bg:
+            'Решение при несигурност се оценява по аргументите зад него, а не само по резултата. Pivot, persevere и прекратяване са валидни — представянето на допускане за решение — не.',
+          applying_en:
+            'Add a review date to check the decision against new evidence.',
+          applying_bg:
+            'Добави дата за преглед, на която ще провериш решението спрямо новите доказателства.',
+          teacherCheck_en:
+            'Memo includes learnings, evidence on both sides, an explicit pivot / persevere / stop choice, 2-week actions and a review date.',
+          teacherCheck_bg:
+            'Меморандумът съдържа наученото, доказателства и в двете посоки, ясен избор pivot / persevere / прекратяване, 2-седмични действия и дата за преглед.',
+          evidence_en: 'One-page decision memo.',
+          evidence_bg: 'Едностраничен меморандум за решение.',
+        },
       },
       {
         id: 'entr-06-t2',
@@ -404,6 +800,40 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
           'Structure: problem, who has it, evidence you gathered, current solution, what you learned, what you are asking for. No hype, no promises you cannot back up.',
         brief_bg:
           'Структура: проблем, кой го има, доказателства, които събра, текущо решение, какво научи, какво искаш. Без хайп и без обещания, които не можеш да подкрепиш.',
+        cefe: {
+          action_en:
+            'Prepare a 90-second spoken pitch: problem, who has it, evidence you gathered, current solution, what you learned, what you are asking for. Time it. Record it once (audio or video for yourself only) or deliver it in front of a peer. No public posting.',
+          action_bg:
+            'Подготви 90-секунден изговорен pitch: проблем, кой го има, събрани доказателства, текущо решение, какво научи, какво искаш. Засичай времето. Запиши го веднъж (аудио или видео само за себе си) или го представи пред съученик. Без публикуване.',
+          visibleResult_en:
+            'A short pitch outline plus a 90-second delivery and one line of peer feedback. This is an evidence-based decision to keep, adjust or pivot the story.',
+          visibleResult_bg:
+            'Кратка структура на pitch плюс 90-секундно изпълнение и един ред обратна връзка от съученик. Това е аргументирано решение дали да запазиш, коригираш или направиш pivot на историята.',
+          processingQuestions_en: [
+            'Which sentence in your pitch is not backed by evidence?',
+            'Where were you tempted to overstate — and what kept you honest?',
+            'What did the listener understand differently than you intended?',
+          ],
+          processingQuestions_bg: [
+            'Кое изречение в pitch-а не е подкрепено с доказателство?',
+            'Къде беше изкушен(а) да преувеличиш — и какво те задържа честен(а)?',
+            'Какво разбра слушателят различно от това, което имаше предвид?',
+          ],
+          generalizing_en:
+            'A pitch is a compressed honest story. Its job is to earn attention and feedback, not to sell a fantasy.',
+          generalizing_bg:
+            'Pitch е компактна честна история. Задачата му е да спечели внимание и обратна връзка, не да продаде фантазия.',
+          applying_en:
+            'Deliver version 2 after one round of feedback, changing at most 3 things.',
+          applying_bg:
+            'Представи версия 2 след един кръг обратна връзка, като промениш най-много 3 неща.',
+          teacherCheck_en:
+            'Outline present; delivery close to 90 seconds; at least one honest weakness named; no unsupported claims of traction; no public posting required.',
+          teacherCheck_bg:
+            'Структурата присъства; изпълнението е около 90 секунди; посочена е поне една честна слабост; няма недоказани твърдения за трактион; не се изисква публикуване.',
+          evidence_en: 'Pitch outline + 90-second delivery + 1 line of feedback.',
+          evidence_bg: 'Структура на pitch + 90-секундно изпълнение + 1 ред обратна връзка.',
+        },
       },
     ],
     caseConnection: {
