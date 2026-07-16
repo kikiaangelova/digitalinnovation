@@ -184,20 +184,24 @@ export default function SubjectDetail() {
         {loading || catalogLoading ? (
           <p className="text-sm text-muted-foreground">{t('Loading…', 'Зареждане…')}</p>
         ) : total === 0 ? (
-          <section className="rounded-xl border border-dashed border-border bg-card p-8 text-center space-y-2">
-            <p className="text-sm text-foreground font-medium">
-              {t(
-                'Learning content for this subject is being prepared.',
-                'Съдържанието за този предмет се подготвя.',
-              )}
-            </p>
-            <p className="text-xs text-muted-foreground">
-              {t(
-                'We will add modules here as they become playable.',
-                'Ще добавим модули тук, щом станат готови за използване.',
-              )}
-            </p>
-          </section>
+          subjectKey === 'entrepreneurship-startups' ? (
+            <EntrepreneurshipDraftCard lang={lang as 'bg' | 'en'} t={t} />
+          ) : (
+            <section className="rounded-xl border border-dashed border-border bg-card p-8 text-center space-y-2">
+              <p className="text-sm text-foreground font-medium">
+                {t(
+                  'Learning content for this subject is being prepared.',
+                  'Съдържанието за този предмет се подготвя.',
+                )}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {t(
+                  'We will add modules here as they become playable.',
+                  'Ще добавим модули тук, щом станат готови за използване.',
+                )}
+              </p>
+            </section>
+          )
         ) : (
           <>
             {assignedModules.length > 0 && (
