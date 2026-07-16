@@ -19,10 +19,19 @@ import { supabase } from '@/integrations/supabase/client';
 import { useMySubjects, type MySubjectEntry } from '@/hooks/useMySubjects';
 import {
   SUBJECT_CATALOG,
+  SUBJECT_BY_KEY,
   subjectShort,
   subjectTitle,
   type Subject,
 } from '@/data/subject-catalog';
+import {
+  LEARNING_AREAS,
+  areaOfSubject,
+  areaShort,
+  areaTitle,
+  type LearningArea,
+  type LearningAreaId,
+} from '@/data/learning-areas';
 import { useModuleCatalog } from '@/hooks/useModuleCatalog';
 
 export default function LearningModules() {
@@ -115,26 +124,75 @@ export default function LearningModules() {
             onExplore={() => setShowCatalog(true)}
           />
         ) : (
-          <ul className="space-y-3">
-            {entries.map((entry) => (
-              <SubjectRow
-                key={entry.subjectKey}
-                entry={entry}
-                progress={progressBySubject[entry.subjectKey]}
-                lang={lang as 'bg' | 'en'}
-                t={t}
-                onOpen={() => navigate(`/learn/subject/${entry.subjectKey}`)}
-              />
-            ))}
-            <li className="pt-2 text-right">
-              <Button variant="ghost" size="sm" onClick={() => setShowCatalog((v) => !v)}>
-                <Compass className="h-4 w-4 mr-1" />
-                {showCatalog
-                  ? t('Hide subject catalog', 'Скрий каталога')
-                  : t('Explore all subjects', 'Разгледай всички предмети')}
-              </Button>
-            </li>
-          </ul>
+          <div className="space-y-6">
+            {(() => {
+              const byArea = new Map<LearningAreaId | '__other__', MySubjectEntry[]>();
+              for (const entry of entries) {
+                const areaId = areaOfSubject(entry.subjectKey) ?? '__other__';
+                const list = byArea.get(areaId) ?? [];
+                list.push(entry);
+                byArea.set(areaId, list);
+              }
+              const orderedAreas = LEARNING_AREAS.filter((a) => byArea.has(a.id));
+              const otherEntries = byArea.get('__other__') ?? [];
+              return (
+                <>
+                  {orderedAreas.map((area) => {
+                    const Icon = area.icon;
+                    return (
+                      <section key={area.id} className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <Icon className="h-4 w-4 text-primary" />
+                          <h2 className="text-xs uppercase tracking-wide font-bold text-muted-foreground">
+                            {areaTitle(area, lang as 'bg' | 'en')}
+                          </h2>
+                        </div>
+                        <ul className="space-y-3">
+                          {(byArea.get(area.id) ?? []).map((entry) => (
+                            <SubjectRow
+                              key={entry.subjectKey}
+                              entry={entry}
+                              progress={progressBySubject[entry.subjectKey]}
+                              lang={lang as 'bg' | 'en'}
+                              t={t}
+                              onOpen={() => navigate(`/learn/subject/${entry.subjectKey}`)}
+                            />
+                          ))}
+                        </ul>
+                      </section>
+                    );
+                  })}
+                  {otherEntries.length > 0 && (
+                    <section className="space-y-2">
+                      <h2 className="text-xs uppercase tracking-wide font-bold text-muted-foreground">
+                        {t('Other', 'Други')}
+                      </h2>
+                      <ul className="space-y-3">
+                        {otherEntries.map((entry) => (
+                          <SubjectRow
+                            key={entry.subjectKey}
+                            entry={entry}
+                            progress={progressBySubject[entry.subjectKey]}
+                            lang={lang as 'bg' | 'en'}
+                            t={t}
+                            onOpen={() => navigate(`/learn/subject/${entry.subjectKey}`)}
+                          />
+                        ))}
+                      </ul>
+                    </section>
+                  )}
+                  <div className="pt-2 text-right">
+                    <Button variant="ghost" size="sm" onClick={() => setShowCatalog((v) => !v)}>
+                      <Compass className="h-4 w-4 mr-1" />
+                      {showCatalog
+                        ? t('Hide learning areas', 'Скрий учебните области')
+                        : t('Explore all learning areas', 'Разгледай всички учебни области')}
+                    </Button>
+                  </div>
+                </>
+              );
+            })()}
+          </div>
         )}
 
         {(showCatalog || noSubjects) && (
@@ -273,80 +331,162 @@ function SubjectCatalog({
   t: (en: string, bg: string) => string;
   onOpen: (subjectKey: string) => void;
 }) {
-  const grouped = useMemo(() => {
-    const g: Record<'playable' | 'preview' | 'planned', Subject[]> = {
-      playable: [],
-      preview: [],
-      planned: [],
-    };
-    for (const s of SUBJECT_CATALOG) g[s.availability].push(s);
-    return g;
-  }, []);
-
-  const section = (
-    label: string,
-    items: Subject[],
-    tone: 'primary' | 'muted' | 'faint',
-  ) => {
-    if (items.length === 0) return null;
-    return (
-      <div>
-        <h3 className="text-xs uppercase tracking-wide font-semibold text-muted-foreground mb-2">
-          {label}
-        </h3>
-        <ul className="grid gap-2 sm:grid-cols-2">
-          {items.map((s) => (
-            <li
-              key={s.key}
-              className={`rounded-lg border p-3 ${
-                tone === 'primary'
-                  ? 'border-border bg-background hover:border-primary/40 cursor-pointer'
-                  : tone === 'muted'
-                    ? 'border-border/70 bg-background/60 hover:border-primary/30 cursor-pointer'
-                    : 'border-border/50 bg-background/40 opacity-80'
-              }`}
-              onClick={() =>
-                tone === 'faint' ? undefined : onOpen(s.key)
-              }
-            >
-              <div className="flex items-center gap-2">
-                <p className="text-sm font-semibold text-foreground truncate">
-                  {subjectTitle(s, lang)}
-                </p>
-                {s.availability !== 'playable' && (
-                  <Badge variant="outline" className="text-[10px]">
-                    {s.availability === 'preview'
-                      ? t('Preview', 'Преглед')
-                      : t('Planned', 'Планиран')}
-                  </Badge>
-                )}
-              </div>
-              <p className="text-[11px] text-muted-foreground mt-1 line-clamp-2">
-                {subjectShort(s, lang)}
-              </p>
-            </li>
-          ))}
-        </ul>
-      </div>
-    );
-  };
+  // Subjects that live in a listed area (all of the 14 current subjects).
+  const unmapped = useMemo(
+    () => SUBJECT_CATALOG.filter((s) => !areaOfSubject(s.key)),
+    [],
+  );
 
   return (
-    <section className="rounded-xl border border-border bg-card p-5 space-y-5">
+    <section className="rounded-xl border border-border bg-card p-5 space-y-6">
       <div>
         <h2 className="text-sm font-semibold text-foreground">
-          {t('Subject catalog', 'Каталог на предметите')}
+          {t('Learning areas', 'Учебни области')}
         </h2>
         <p className="text-xs text-muted-foreground mt-1">
           {t(
-            'Content status — we only mark a subject as ready when it truly is.',
-            'Състояние на съдържанието — маркираме предмет като готов, само когато наистина е.',
+            'Subjects are grouped into 6 educational areas — not a flat list. Content status is honest: a subject is marked ready only when it truly is.',
+            'Предметите са групирани в 6 учебни области — не са плосък списък. Статусът на съдържанието е честен: маркираме предмет като готов само когато наистина е.',
           )}
         </p>
       </div>
-      {section(t('Available now', 'Достъпни сега'), grouped.playable, 'primary')}
-      {section(t('Preview', 'Преглед'), grouped.preview, 'muted')}
-      {section(t('Planned', 'Планирани'), grouped.planned, 'faint')}
+
+      <div className="space-y-5">
+        {LEARNING_AREAS.map((area) => (
+          <LearningAreaSection
+            key={area.id}
+            area={area}
+            lang={lang}
+            t={t}
+            onOpen={onOpen}
+          />
+        ))}
+
+        {unmapped.length > 0 && (
+          <div>
+            <h3 className="text-xs uppercase tracking-wide font-semibold text-muted-foreground mb-2">
+              {t('Other', 'Други')}
+            </h3>
+            <SubjectGrid subjects={unmapped} lang={lang} t={t} onOpen={onOpen} />
+          </div>
+        )}
+      </div>
     </section>
+  );
+}
+
+/* ── Area section with topics + subject grid ─────────────────────── */
+
+function LearningAreaSection({
+  area,
+  lang,
+  t,
+  onOpen,
+}: {
+  area: LearningArea;
+  lang: 'bg' | 'en';
+  t: (en: string, bg: string) => string;
+  onOpen: (subjectKey: string) => void;
+}) {
+  const subjects = area.subjectKeys
+    .map((k) => SUBJECT_BY_KEY[k])
+    .filter((s): s is Subject => !!s);
+  const Icon = area.icon;
+  const isSkillsArea = area.id === 'skills';
+
+  return (
+    <div className="rounded-xl border border-border/70 bg-background/60 p-4">
+      <div className="flex items-start gap-3">
+        <div className="mt-0.5 flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary shrink-0">
+          <Icon className="h-5 w-5" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <h3 className="text-sm font-bold text-foreground">
+            {areaTitle(area, lang)}
+          </h3>
+          <p className="text-xs text-muted-foreground mt-0.5">
+            {areaShort(area, lang)}
+          </p>
+        </div>
+      </div>
+
+      {area.topics.length > 0 && (
+        <ul className="mt-3 flex flex-wrap gap-1.5">
+          {area.topics.map((topic, i) => (
+            <li
+              key={i}
+              className="rounded-full bg-accent/60 px-2 py-0.5 text-[11px] text-muted-foreground"
+            >
+              {lang === 'bg' ? topic.bg : topic.en}
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {subjects.length > 0 ? (
+        <div className="mt-4">
+          <p className="text-[10px] uppercase tracking-wide font-semibold text-muted-foreground mb-2">
+            {t('Subjects & pathways', 'Предмети и пътища')}
+          </p>
+          <SubjectGrid subjects={subjects} lang={lang} t={t} onOpen={onOpen} />
+        </div>
+      ) : isSkillsArea ? (
+        <p className="mt-3 text-[11px] italic text-muted-foreground">
+          {t(
+            'Not a stack of subjects — skills are proven through your tasks, projects, decisions and reflection across every area.',
+            'Това не е поредица от предмети — уменията се доказват чрез задачите, проектите, решенията и рефлексията във всяка област.',
+          )}
+        </p>
+      ) : null}
+    </div>
+  );
+}
+
+function SubjectGrid({
+  subjects,
+  lang,
+  t,
+  onOpen,
+}: {
+  subjects: Subject[];
+  lang: 'bg' | 'en';
+  t: (en: string, bg: string) => string;
+  onOpen: (subjectKey: string) => void;
+}) {
+  return (
+    <ul className="grid gap-2 sm:grid-cols-2">
+      {subjects.map((s) => {
+        const clickable = s.availability !== 'planned';
+        return (
+          <li
+            key={s.key}
+            className={`rounded-lg border p-3 ${
+              s.availability === 'playable'
+                ? 'border-border bg-background hover:border-primary/40 cursor-pointer'
+                : s.availability === 'preview'
+                  ? 'border-border/70 bg-background/60 hover:border-primary/30 cursor-pointer'
+                  : 'border-border/50 bg-background/40 opacity-80'
+            }`}
+            onClick={() => (clickable ? onOpen(s.key) : undefined)}
+          >
+            <div className="flex items-center gap-2">
+              <p className="text-sm font-semibold text-foreground truncate">
+                {subjectTitle(s, lang)}
+              </p>
+              {s.availability !== 'playable' && (
+                <Badge variant="outline" className="text-[10px]">
+                  {s.availability === 'preview'
+                    ? t('Preview', 'Преглед')
+                    : t('Planned', 'Планиран')}
+                </Badge>
+              )}
+            </div>
+            <p className="text-[11px] text-muted-foreground mt-1 line-clamp-2">
+              {subjectShort(s, lang)}
+            </p>
+          </li>
+        );
+      })}
+    </ul>
   );
 }
