@@ -29,6 +29,28 @@ export interface PracticeTask {
     | 'iteration';
   brief_en: string;
   brief_bg: string;
+  /**
+   * Optional CEFE-style experiential learning block. Non-breaking:
+   * when present the practice page can render an action → visible result →
+   * processing → generalizing → applying flow with a teacher check and a
+   * named evidence artifact. Content-only — no submissions, no XP.
+   */
+  cefe?: {
+    action_en: string;
+    action_bg: string;
+    visibleResult_en: string;
+    visibleResult_bg: string;
+    processingQuestions_en: string[];
+    processingQuestions_bg: string[];
+    generalizing_en: string;
+    generalizing_bg: string;
+    applying_en: string;
+    applying_bg: string;
+    teacherCheck_en: string;
+    teacherCheck_bg: string;
+    evidence_en: string;
+    evidence_bg: string;
+  };
 }
 
 export interface CaseConnection {
