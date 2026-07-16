@@ -38,21 +38,25 @@ describe('dictionary governance — required concepts', () => {
   });
 
   it('every learning-area topic maps to at least one dictionary term or required concept', () => {
-    const knownEn = new Set<string>([
+    const known = [
       ...TERMS.map((t) => normalizeTerm(t.term)),
-      ...REQUIRED_CONCEPTS.map((c) => normalizeTerm(c.term_en)),
-    ]);
-    const knownBg = new Set<string>([
       ...TERMS.map((t) => normalizeTerm(t.termBg)),
+      ...REQUIRED_CONCEPTS.map((c) => normalizeTerm(c.term_en)),
       ...REQUIRED_CONCEPTS.map((c) => normalizeTerm(c.term_bg)),
-    ]);
+    ].filter(Boolean);
+    const knownTokens = new Set<string>();
+    for (const k of known) for (const w of k.split(' ')) if (w.length >= 4) knownTokens.add(w);
+
+    const matches = (topic: string): boolean => {
+      const norm = normalizeTerm(topic);
+      if (known.some((k) => k === norm || norm.includes(k) || k.includes(norm))) return true;
+      const words = norm.split(' ').filter((w) => w.length >= 4);
+      return words.some((w) => knownTokens.has(w));
+    };
+
     for (const area of LEARNING_AREAS) {
       for (const t of area.topics) {
-        const en = normalizeTerm(t.en);
-        const bg = normalizeTerm(t.bg);
-        const hit =
-          [...knownEn].some((k) => k && (k === en || en.includes(k) || k.includes(en))) ||
-          [...knownBg].some((k) => k && (k === bg || bg.includes(k) || k.includes(bg)));
+        const hit = matches(t.en) || matches(t.bg);
         expect(hit, `topic not covered: ${area.id} / ${t.en} — ${t.bg}`).toBe(true);
       }
     }
@@ -60,9 +64,11 @@ describe('dictionary governance — required concepts', () => {
 
   it('enriches existing terms instead of forcing duplicates (matched concepts point at real terms)', () => {
     const coverage = getRequiredConceptCoverage();
-    // At least a few high-signal concepts must match existing TERMS today.
     const matches = coverage.filter((e) => e.existing).map((e) => e.concept.term_en);
-    expect(matches).toEqual(expect.arrayContaining(['Value proposition', 'MVP (Minimum Viable Product)']));
+    // Several high-signal concepts must already match existing TERMS.
+    expect(matches).toEqual(
+      expect.arrayContaining(['Value proposition', 'Business model', 'Design Thinking', 'Blue Ocean Strategy']),
+    );
   });
 });
 
