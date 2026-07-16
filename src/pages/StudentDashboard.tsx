@@ -366,8 +366,8 @@ export default function StudentDashboard() {
             </a>
             <span className="text-xs text-muted-foreground">
               {t(
-                'Get Kiki\u2019s review of your project below.',
-                'Виж прегледа на Kiki за проекта ти по-долу.',
+                'Jump to Kiki\u2019s mentor review below.',
+                'Отиди до менторския преглед от Kiki по-долу.',
               )}
             </span>
           </div>
@@ -491,7 +491,7 @@ export default function StudentDashboard() {
             <section
               id="kiki-mentor"
               aria-label={t('Ask Kiki', 'Попитай Kiki')}
-              className="scroll-mt-24 rounded-2xl transition-shadow"
+              className="scroll-mt-28 md:scroll-mt-24 rounded-2xl transition-shadow mb-32 md:mb-0"
             >
               <AIMentorWidget
                 lang={lang}
