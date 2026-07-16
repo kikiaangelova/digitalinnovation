@@ -7,7 +7,9 @@ import { Search, Book, Lightbulb, ChevronDown, ChevronUp, Star, Trophy, BarChart
 import { useLang } from '@/context/LangContext';
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
-import { TERMS, type DictionaryTerm } from '@/data/dictionary-terms';
+import { TERMS, getReviewStatus, type DictionaryTerm, type ReviewStatus, type LearningAreaId } from '@/data/dictionary-terms';
+import { isRequiredConcept } from '@/data/dictionary-required-concepts';
+import { LEARNING_AREAS } from '@/data/learning-areas';
 import { awardXp } from '@/lib/xp';
 import QuickTest from '@/components/dictionary/QuickTest';
 import PhaseBadge from '@/components/ui/phase-badge';
@@ -67,6 +69,8 @@ export default function Dictionary() {
   const [search, setSearch] = useState('');
   const [catFilter, setCatFilter] = useState('all');
   const [letterFilter, setLetterFilter] = useState('');
+  const [areaFilter, setAreaFilter] = useState<'all' | LearningAreaId>('all');
+  const [reviewFilter, setReviewFilter] = useState<'all' | ReviewStatus>('all');
   const viewedTermsRef = useRef<Set<string>>(new Set());
   const [quizStats, setQuizStats] = useState<{ count: number; avg: number; last: number | null } | null>(null);
 
@@ -94,11 +98,13 @@ export default function Dictionary() {
     const q = search.toLowerCase();
     return TERMS.filter(t => {
       if (catFilter !== 'all' && t.category !== catFilter) return false;
+      if (areaFilter !== 'all' && t.learningAreaId !== areaFilter) return false;
+      if (reviewFilter !== 'all' && getReviewStatus(t) !== reviewFilter) return false;
       if (letterFilter && !t.term.toUpperCase().startsWith(letterFilter)) return false;
       if (q && !t.term.toLowerCase().includes(q) && !t.termBg.toLowerCase().includes(q) && !t.definition.toLowerCase().includes(q) && !t.definitionBg.toLowerCase().includes(q)) return false;
       return true;
     }).sort((a, b) => a.term.localeCompare(b.term));
-  }, [search, catFilter, letterFilter]);
+  }, [search, catFilter, letterFilter, areaFilter, reviewFilter]);
 
   const availableLetters = useMemo(() => {
     const letters = new Set(TERMS.map(t => t.term[0].toUpperCase()));
@@ -238,6 +244,48 @@ export default function Dictionary() {
               className={`px-4 py-2.5 min-h-11 sm:min-h-0 sm:py-1.5 rounded-full text-xs font-medium transition-colors ${catFilter === c ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:text-foreground'}`}
             >
               {lang === 'bg' ? (CATEGORY_TRANSLATIONS[c] || c) : c}
+            </button>
+          ))}
+        </div>
+
+        {/* Learning area + review-status filters (Dictionary Governance V1) */}
+        <div className="flex flex-wrap gap-2 mb-3">
+          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider self-center mr-1">
+            {lang === 'bg' ? 'Област' : 'Area'}
+          </span>
+          <button
+            onClick={() => setAreaFilter('all')}
+            className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${areaFilter === 'all' ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:text-foreground'}`}
+          >
+            {lang === 'bg' ? 'Всички' : 'All'}
+          </button>
+          {LEARNING_AREAS.map(a => (
+            <button
+              key={a.id}
+              onClick={() => setAreaFilter(a.id === areaFilter ? 'all' : a.id)}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${areaFilter === a.id ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:text-foreground'}`}
+            >
+              {lang === 'bg' ? a.title_bg : a.title_en}
+            </button>
+          ))}
+        </div>
+        <div className="flex flex-wrap gap-2 mb-6">
+          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider self-center mr-1">
+            {lang === 'bg' ? 'Преглед' : 'Review'}
+          </span>
+          {([
+            ['all', lang === 'bg' ? 'Всички' : 'All'],
+            ['needs_review', lang === 'bg' ? 'За преглед' : 'Needs review'],
+            ['needs_rewrite', lang === 'bg' ? 'Нуждае се от редакция' : 'Needs rewrite'],
+            ['educator_approved', lang === 'bg' ? 'Одобрено от преподавател' : 'Educator approved'],
+            ['deprecated', lang === 'bg' ? 'Дублирано / за сливане' : 'Duplicate / merge needed'],
+          ] as const).map(([k, label]) => (
+            <button
+              key={k}
+              onClick={() => setReviewFilter(k as 'all' | ReviewStatus)}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${reviewFilter === k ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:text-foreground'}`}
+            >
+              {label}
             </button>
           ))}
         </div>
