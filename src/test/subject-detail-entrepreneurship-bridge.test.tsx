@@ -79,7 +79,9 @@ async function renderEntrepreneurship(lang: 'en' | 'bg') {
   await setup(lang);
   return render(
     <MemoryRouter initialEntries={['/learn/subject/entrepreneurship-startups']}>
-      <SubjectDetail />
+      <Routes>
+        <Route path="/learn/subject/:subjectKey" element={<SubjectDetail />} />
+      </Routes>
     </MemoryRouter>,
   );
 }
