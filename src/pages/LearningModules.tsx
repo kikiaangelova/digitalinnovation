@@ -9,6 +9,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, BookOpen, Calendar, ClipboardList, Compass, GraduationCap, School } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Sparkles } from 'lucide-react';
 import AppHeader from '@/components/layout/AppHeader';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -147,6 +149,9 @@ export default function LearningModules() {
                             {areaTitle(area, lang as 'bg' | 'en')}
                           </h2>
                         </div>
+                        {area.id === 'entrepreneurship' && (
+                          <PracticeFirstDraftLink lang={lang as 'bg' | 'en'} t={t} />
+                        )}
                         <ul className="space-y-3">
                           {(byArea.get(area.id) ?? []).map((entry) => (
                             <SubjectRow
@@ -204,6 +209,37 @@ export default function LearningModules() {
         )}
       </main>
     </div>
+  );
+}
+
+/* Small link surface for the drafted practice-first modules. */
+function PracticeFirstDraftLink({
+  lang,
+  t,
+}: {
+  lang: 'bg' | 'en';
+  t: (en: string, bg: string) => string;
+}) {
+  return (
+    <Link
+      to="/learn/practice/entrepreneurship"
+      className="flex items-center justify-between gap-2 rounded-lg border border-dashed border-border bg-background/60 px-3 py-2 hover:border-primary/40"
+      data-testid="practice-first-entrepreneurship-link"
+    >
+      <span className="text-xs text-foreground inline-flex items-center gap-1.5 min-w-0">
+        <Sparkles className="h-3 w-3 text-primary shrink-0" />
+        <span className="truncate">
+          {t(
+            'Practice-first drafts (needs review)',
+            'Практически чернови (за преглед)',
+          )}
+        </span>
+        <Badge variant="outline" className="text-[10px] shrink-0">
+          {t('Draft', 'Чернова')}
+        </Badge>
+      </span>
+      <ArrowRight className="h-3 w-3 text-muted-foreground shrink-0" />
+    </Link>
   );
 }
 
@@ -429,6 +465,11 @@ function LearningAreaSection({
             {t('Subjects & pathways', 'Предмети и учебни пътеки')}
           </p>
           <SubjectGrid subjects={subjects} lang={lang} t={t} onOpen={onOpen} />
+          {area.id === 'entrepreneurship' && (
+            <div className="mt-3">
+              <PracticeFirstDraftLink lang={lang} t={t} />
+            </div>
+          )}
         </div>
       ) : isSkillsArea ? (
         <p className="mt-3 text-[11px] italic text-muted-foreground">
