@@ -497,18 +497,28 @@ function SubjectGrid({
   return (
     <ul className="grid gap-2 sm:grid-cols-2">
       {subjects.map((s) => {
-        const clickable = s.availability !== 'planned';
+        // Every subject is clickable — preview/planned open a process preview
+        // instead of a dead empty state.
         return (
           <li
             key={s.key}
-            className={`rounded-lg border p-3 ${
+            role="button"
+            tabIndex={0}
+            data-subject-key={s.key}
+            className={`rounded-lg border p-3 min-h-[64px] cursor-pointer transition-colors ${
               s.availability === 'playable'
-                ? 'border-border bg-background hover:border-primary/40 cursor-pointer'
+                ? 'border-border bg-background hover:border-primary/40'
                 : s.availability === 'preview'
-                  ? 'border-border/70 bg-background/60 hover:border-primary/30 cursor-pointer'
-                  : 'border-border/50 bg-background/40 opacity-80'
+                  ? 'border-border/70 bg-background/60 hover:border-primary/30'
+                  : 'border-dashed border-border/60 bg-background/40 hover:border-primary/30'
             }`}
-            onClick={() => (clickable ? onOpen(s.key) : undefined)}
+            onClick={() => onOpen(s.key)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onOpen(s.key);
+              }
+            }}
           >
             <div className="flex items-center gap-2">
               <p className="text-sm font-semibold text-foreground truncate">
