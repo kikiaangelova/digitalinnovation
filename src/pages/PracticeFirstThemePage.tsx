@@ -61,6 +61,13 @@ export default function PracticeFirstThemePage() {
   const showReviewerBadge =
     isAdmin || userRole === 'admin' || userRole === 'teacher_verified';
 
+  const draftBadgeLabel = lang === 'bg' ? 'Чернова / за преглед' : 'Draft / for review';
+  const draftBadgeShort = lang === 'bg' ? 'Чернова' : 'Draft';
+  const draftNotice = t(
+    'This content is a draft and still needs educator review.',
+    'Съдържанието е в чернова и предстои преподавателски преглед.',
+  );
+
   return (
     <div className="min-h-screen bg-background">
       <AppHeader />
@@ -83,15 +90,10 @@ export default function PracticeFirstThemePage() {
                 : t('Practice-first drafts', 'Практически чернови')}
             </h1>
             <Badge variant="outline" className="text-[10px]">
-              {t('Draft / За преглед', 'Draft / За преглед')}
+              {draftBadgeLabel}
             </Badge>
           </div>
-          <p className="typo-helper max-w-2xl">
-            {t(
-              'Practice-first draft modules for review inside the platform. All content is needs_review — not educator-approved.',
-              'Практически чернови модули за преглед в платформата. Цялото съдържание е needs_review — не е одобрено от преподавател.',
-            )}
-          </p>
+          <p className="typo-helper max-w-2xl">{draftNotice}</p>
           {showReviewerBadge && (
             <p className="text-[11px] text-muted-foreground">
               {t(
@@ -122,7 +124,7 @@ export default function PracticeFirstThemePage() {
           <Accordion
             type="single"
             collapsible
-            className="rounded-xl border border-border bg-card"
+            className="space-y-3"
           >
             {modules.map((mod, idx) => (
               <ModuleAccordionItem
@@ -131,6 +133,7 @@ export default function PracticeFirstThemePage() {
                 index={idx + 1}
                 lang={lang as 'bg' | 'en'}
                 t={t}
+                draftBadgeShort={draftBadgeShort}
               />
             ))}
           </Accordion>
@@ -154,37 +157,45 @@ function ModuleAccordionItem({
   index,
   lang,
   t,
+  draftBadgeShort,
 }: {
   mod: PracticeFirstModule;
   index: number;
   lang: 'bg' | 'en';
   t: (en: string, bg: string) => string;
+  draftBadgeShort: string;
 }) {
   const title = lang === 'bg' ? mod.title_bg : mod.title_en;
   const theory = lang === 'bg' ? mod.theoryBlock_bg : mod.theoryBlock_en;
   const info = mod.informationSearchTask;
   return (
-    <AccordionItem value={mod.id} className="border-border">
-      <AccordionTrigger className="px-4 py-3 hover:no-underline">
-        <div className="flex items-center gap-3 min-w-0 text-left">
-          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent text-xs font-bold text-muted-foreground">
+    <AccordionItem
+      value={mod.id}
+      className="rounded-xl border border-border bg-card overflow-hidden"
+    >
+      <AccordionTrigger className="px-4 py-4 hover:no-underline gap-3 items-start">
+        <div className="flex items-start gap-3 min-w-0 text-left w-full">
+          <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-accent text-xs font-bold text-muted-foreground">
             {index}
           </span>
-          <span className="text-sm font-semibold text-foreground truncate">
+          <span className="text-sm font-semibold text-foreground leading-snug break-words min-w-0 flex-1">
             {title}
           </span>
-          <Badge variant="outline" className="text-[10px] shrink-0">
-            {t('Draft', 'Чернова')}
+          <Badge variant="outline" className="text-[10px] shrink-0 mt-0.5">
+            {draftBadgeShort}
           </Badge>
         </div>
       </AccordionTrigger>
-      <AccordionContent className="px-4 pb-5 space-y-5">
+      <AccordionContent className="px-4 pb-6 pt-1 space-y-6 border-t border-border/60">
         {/* 2. Short theory */}
         <Section
           icon={BookOpen}
-          label={t('Short theory (10–15%)', 'Кратка теория (10–15%)')}
+          label={t('Short theory', 'Кратка теория')}
+          muted
         >
-          <p className="text-sm text-foreground/90 leading-relaxed">{theory}</p>
+          <p className="text-[13px] text-muted-foreground leading-relaxed">
+            {theory}
+          </p>
         </Section>
 
         {/* 3. Practice tasks — prominent */}
@@ -326,18 +337,24 @@ function Section({
   icon: Icon,
   label,
   emphasize,
+  muted,
   children,
 }: {
   icon: React.ComponentType<{ className?: string }>;
   label: string;
   emphasize?: boolean;
+  muted?: boolean;
   children: React.ReactNode;
 }) {
   return (
     <section>
       <h3
-        className={`text-[11px] uppercase tracking-wide font-bold flex items-center gap-1.5 mb-2 ${
-          emphasize ? 'text-primary' : 'text-muted-foreground'
+        className={`text-[10px] uppercase tracking-wide flex items-center gap-1.5 mb-2 ${
+          emphasize
+            ? 'text-primary font-bold'
+            : muted
+              ? 'text-muted-foreground/70 font-medium'
+              : 'text-muted-foreground font-bold'
         }`}
       >
         <Icon className="h-3 w-3" />
