@@ -649,12 +649,16 @@ function EntrepreneurshipDecisionCaseCTA({
   lang: 'bg' | 'en';
   t: (en: string, bg: string) => string;
 }) {
-  const title = lang === 'bg'
-    ? 'Реши казус: MVP или пълен продукт?'
-    : 'Decision case: MVP or full product?';
+  const title = lang === 'bg' ? 'Казуси по предприемачество' : 'Entrepreneurship cases';
   const body = lang === 'bg'
-    ? 'Приложи наученото в ситуация с избор, последствия и рефлексия.'
-    : 'Apply the theme in a situation with choice, consequences and reflection.';
+    ? 'Приложи темата в казуси с избор, доказателства и рефлексия. Започни с ниво, което отговаря на готовността ти.'
+    : 'Apply the theme in cases with choices, evidence and reflection. Start with a level that matches your readiness.';
+  const buttonLabel = lang === 'bg' ? 'Виж казусите' : 'View cases';
+  const reviewerNote = lang === 'bg'
+    ? 'Следваща стъпка: съдържателен upgrade на избрани казуси с последствия и рефлексия.'
+    : 'Next step: content upgrade of selected cases with consequences and reflection.';
+  const { userRole, isAdmin } = useAuth();
+  const showReviewerNote = isAdmin || userRole === 'admin' || userRole === 'teacher_verified';
 
   return (
     <section
@@ -669,16 +673,20 @@ function EntrepreneurshipDecisionCaseCTA({
           </p>
           <p className="text-xs text-muted-foreground leading-relaxed">{body}</p>
         </div>
-        <Badge variant="outline" className="text-[10px] shrink-0">
-          {t('Content pending', 'Очаква съдържание')}
-        </Badge>
       </div>
-      <p className="text-[11px] text-muted-foreground">
-        {t(
-          'The case study for this decision is being prepared and reviewed. No link is shown until the case exists.',
-          'Казусът за това решение се подготвя и преглежда. Линк не се показва, докато казусът не съществува.',
-        )}
-      </p>
+      <div className="flex flex-wrap items-center gap-2 pt-1">
+        <Button asChild size="sm" data-testid="pf-decision-case-cta-link">
+          <Link to="/cases?theme=entrepreneurship">{buttonLabel}</Link>
+        </Button>
+      </div>
+      {showReviewerNote && (
+        <p
+          className="text-[11px] text-muted-foreground pt-1"
+          data-testid="pf-decision-case-cta-reviewer-note"
+        >
+          {reviewerNote}
+        </p>
+      )}
     </section>
   );
 }
