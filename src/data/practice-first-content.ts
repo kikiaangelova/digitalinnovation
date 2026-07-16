@@ -371,6 +371,40 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
           'Take a short article, social post or founder quote. Extract 10 statements. Label each: fact, opinion, assumption. For every "fact" write the source that could verify it.',
         brief_bg:
           'Вземи кратка статия, публикация или цитат на основател. Извлечи 10 твърдения. Етикетирай всяко: факт, мнение, допускане. За всеки „факт“ запиши източника, който може да го потвърди.',
+        cefe: {
+          action_en:
+            'Pick a short article, social media post or founder interview (max 500 words). Extract exactly 10 statements. In a three-column table label each as fact / opinion / assumption. For every "fact" add the source that would verify it.',
+          action_bg:
+            'Избери кратка статия, публикация или интервю на основател (до 500 думи). Извлечи точно 10 твърдения. В таблица с три колони отбележи всяко като факт / мнение / допускане. За всеки „факт“ добави източник, който може да го провери.',
+          visibleResult_en:
+            'A 10-row table: statement | label | source (only for facts).',
+          visibleResult_bg:
+            'Таблица от 10 реда: твърдение | етикет | източник (само за фактите).',
+          processingQuestions_en: [
+            'Which statements were dressed as facts but are actually assumptions?',
+            'Which opinion is presented as if everyone shared it?',
+            'Which "fact" would be hardest to verify — and why?',
+          ],
+          processingQuestions_bg: [
+            'Кои твърдения са облечени като факти, но всъщност са допускания?',
+            'Кое мнение е представено така, сякаш всички го споделят?',
+            'Кой „факт“ би бил най-труден за проверка — и защо?',
+          ],
+          generalizing_en:
+            'A confident tone is not evidence. Statements count as facts only when they have a source.',
+          generalizing_bg:
+            'Уверен тон не е доказателство. Твърденията се броят като факти само ако имат източник.',
+          applying_en:
+            'Choose the weakest "fact" and rewrite it honestly as an opinion or assumption.',
+          applying_bg:
+            'Избери най-слабия „факт“ и го пренапиши честно като мнение или допускане.',
+          teacherCheck_en:
+            'Table has 10 rows; every "fact" has a source; at least one label was reclassified during the task.',
+          teacherCheck_bg:
+            'Таблицата има 10 реда; всеки „факт“ има източник; поне един етикет е бил преоценен по време на задачата.',
+          evidence_en: 'Labeled 10-row table.',
+          evidence_bg: 'Таблица с 10 етикетирани твърдения.',
+        },
       },
       {
         id: 'entr-03-t2',
@@ -381,6 +415,40 @@ export const ENTREPRENEURSHIP_MODULES: PracticeFirstModule[] = [
           'From your own idea, list 3 assumptions. For each, write one question you can answer this week — a search, a message, a short interview.',
         brief_bg:
           'От собствената си идея запиши 3 допускания. За всяко напиши един въпрос, на който можеш да отговориш тази седмица — търсене, съобщение, кратко интервю.',
+        cefe: {
+          action_en:
+            'From your own idea list 3 unverified assumptions. For each, write one specific question you can answer within 7 days (search, message, 5-minute interview). Set a check-by date.',
+          action_bg:
+            'От собствената си идея запиши 3 непроверени допускания. За всяко напиши един конкретен въпрос, на който можеш да отговориш до 7 дни (търсене, съобщение, 5-минутно интервю). Задай краен срок.',
+          visibleResult_en:
+            'An "assumption → question" table with 3 rows and a deadline per row.',
+          visibleResult_bg:
+            'Таблица „допускане → въпрос“ с 3 реда и срок за всеки ред.',
+          processingQuestions_en: [
+            'Which assumption were you most tempted to leave unchecked, and why?',
+            'Which question is answerable within 7 days without spending money?',
+            'Which answer would force you to change the idea?',
+          ],
+          processingQuestions_bg: [
+            'Кое допускане най-много ти се искаше да оставиш непроверено и защо?',
+            'Кой въпрос е разрешим за 7 дни без разход?',
+            'Кой отговор би те принудил да промениш идеята?',
+          ],
+          generalizing_en:
+            'Assumptions become useful only when they turn into small, answerable questions.',
+          generalizing_bg:
+            'Допусканията стават полезни само когато се превърнат в малки въпроси, на които може да се отговори.',
+          applying_en:
+            'Answer one question this week and log the result next to it.',
+          applying_bg:
+            'Отговори на един въпрос тази седмица и запиши резултата до него.',
+          teacherCheck_en:
+            'Table has 3 rows; each question is specific and has a source or method plus a date.',
+          teacherCheck_bg:
+            'Таблицата има 3 реда; всеки въпрос е конкретен и има източник или метод плюс дата.',
+          evidence_en: 'Assumption-to-question table.',
+          evidence_bg: 'Таблица „допускане → въпрос“.',
+        },
       },
     ],
     informationSearchTask: {
