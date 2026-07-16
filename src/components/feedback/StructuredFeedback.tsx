@@ -87,10 +87,13 @@ export default function StructuredFeedback({ context, lang, autoLoad = false, cl
         </div>
         <div className="flex-1">
           <h3 className="text-sm font-semibold text-foreground">
-            {t('AI Learning Feedback', 'AI обратна връзка за напредъка ти')}
+            {t('Kiki feedback', 'Обратна връзка от Kiki')}
           </h3>
           <p className="text-xs text-muted-foreground">
-            {t('Personalized guidance based on your performance', 'Персонализирани насоки на базата на твоите резултати')}
+            {t(
+              'Kiki reviews your work — mentor-style, not a grade.',
+              'Kiki преглежда работата ти — менторски, не като оценка.',
+            )}
           </p>
         </div>
         <Sparkles className="h-4 w-4 text-primary" />
@@ -101,13 +104,13 @@ export default function StructuredFeedback({ context, lang, autoLoad = false, cl
           <div className="text-center py-4">
             <p className="text-sm text-muted-foreground mb-4">
               {t(
-                'Get structured feedback on what you did well, what needs improvement, and your recommended next step.',
-                'Получи структурирана обратна връзка за силните си страни, какво да подобриш и каква е следващата ти стъпка.'
+                "Ask Kiki for feedback on what you did well, what needs improvement, and your next step.",
+                'Поискай обратна връзка от Kiki за силните ти страни, какво да подобриш и каква е следващата ти стъпка.'
               )}
             </p>
             <Button onClick={requestFeedback} className="gap-2">
               <Bot className="h-4 w-4" />
-              {t('Get Feedback', 'Получи обратна връзка')}
+              {t('Ask Kiki for feedback', 'Поискай обратна връзка от Kiki')}
             </Button>
           </div>
         )}
@@ -116,7 +119,7 @@ export default function StructuredFeedback({ context, lang, autoLoad = false, cl
           <div className="flex items-center justify-center gap-3 py-8">
             <Loader2 className="h-5 w-5 animate-spin text-primary" />
             <span className="text-sm text-muted-foreground">
-              {t('Analyzing your work...', 'Анализиране на работата ви...')}
+              {t('Kiki is reading your work...', 'Kiki чете работата ти...')}
             </span>
           </div>
         )}

@@ -260,7 +260,16 @@ function ModuleAccordionItem({
         )}
 
         {/* 6. Kiki questions */}
-        <Section icon={MessageCircle} label={t('Kiki questions', 'Въпроси от Kiki')}>
+        <Section
+          icon={MessageCircle}
+          label={t('Mentor questions from Kiki', 'Менторски въпроси от Kiki')}
+        >
+          <p className="text-[11px] text-muted-foreground italic mb-2">
+            {t(
+              'Kiki does not respond automatically here yet. Use these questions for self-check and discussion.',
+              'Тук Kiki не отговаря автоматично. Използвай въпросите за самопроверка и обсъждане.',
+            )}
+          </p>
           <ul className="space-y-1.5">
             {mod.kikiQuestions.map((q, i) => (
               <li

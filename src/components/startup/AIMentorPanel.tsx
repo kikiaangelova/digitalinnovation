@@ -92,10 +92,13 @@ export default function AIMentorPanel({ data, lang }: Props) {
         </div>
         <div className="flex-1">
           <h3 className="text-base font-semibold text-foreground">
-            {t('AI Startup Mentor', 'AI Стартъп Ментор')}
+            {t('Kiki BMC review', 'BMC преглед от Kiki')}
           </h3>
           <p className="text-xs text-muted-foreground">
-            {t('Get intelligent feedback on your Business Model Canvas', 'Получи интелигентна обратна връзка за твоя Business Model Canvas')}
+            {t(
+              "Get Kiki's feedback on your Business Model Canvas.",
+              'Получи обратна връзка от Kiki за твоя Business Model Canvas.',
+            )}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -111,7 +114,9 @@ export default function AIMentorPanel({ data, lang }: Props) {
             className="gap-1.5"
           >
             {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
-            {loading ? t('Analyzing...', 'Анализиране...') : t('Get Feedback', 'Поискай обратна връзка')}
+            {loading
+              ? t('Kiki is reading...', 'Kiki чете...')
+              : t('Ask Kiki for feedback', 'Поискай обратна връзка от Kiki')}
           </Button>
         </div>
       </div>
@@ -119,8 +124,8 @@ export default function AIMentorPanel({ data, lang }: Props) {
       {filledCount < 3 && !feedback && (
         <p className="text-xs text-muted-foreground bg-accent/50 rounded-lg p-3">
           {t(
-            `Fill in at least 3 blocks to unlock AI feedback. Currently ${filledCount}/9 filled.`,
-            `Попълнете поне 3 блока, за да отключите AI обратна връзка. Попълнени: ${filledCount}/9.`
+            `Fill in at least 3 blocks so Kiki can give real feedback. Currently ${filledCount}/9 filled.`,
+            `Попълни поне 3 блока, за да може Kiki да даде реална обратна връзка. Попълнени: ${filledCount}/9.`
           )}
         </p>
       )}

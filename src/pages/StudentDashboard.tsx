@@ -17,7 +17,7 @@ import Leaderboard from '@/components/dashboard/Leaderboard';
 import WelcomeOnboarding from '@/components/onboarding/WelcomeOnboarding';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { Zap, BookOpen, Rocket, BarChart3, FileText, Users, Star, Award, ArrowRight, CheckCircle2, GraduationCap } from 'lucide-react';
+import { Zap, BookOpen, Rocket, BarChart3, FileText, Users, Star, Award, ArrowRight, CheckCircle2, GraduationCap, Sparkles } from 'lucide-react';
 import ChallengeHub from '@/components/dashboard/ChallengeHub';
 import HypothesisTracker from '@/components/dashboard/HypothesisTracker';
 import { LEARNING_MODULES } from '@/data/learning-modules';
@@ -35,6 +35,7 @@ export default function StudentDashboard() {
   const navigate = useNavigate();
   const progress = useProgress();
   const t = (en: string, bg: string) => lang === 'bg' ? bg : en;
+
 
   const [cases, setCases] = useState<CaseRow[]>([]);
   const [submissions, setSubmissions] = useState<SubRow[]>([]);
@@ -209,6 +210,26 @@ export default function StudentDashboard() {
     fetchData();
   }, [user, authLoading, navigate]);
 
+  // Scroll to hash target (e.g. /dashboard#kiki-mentor) once loading is done.
+  useEffect(() => {
+    if (loading) return;
+    if (typeof window === 'undefined') return;
+    const hash = window.location.hash?.replace('#', '');
+    if (!hash) return;
+    const timer = window.setTimeout(() => {
+      const el = document.getElementById(hash);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        el.classList.add('ring-2', 'ring-primary', 'ring-offset-2');
+        window.setTimeout(
+          () => el.classList.remove('ring-2', 'ring-primary', 'ring-offset-2'),
+          2000,
+        );
+      }
+    }, 300);
+    return () => window.clearTimeout(timer);
+  }, [loading]);
+
   const completedSubs = submissions.filter(s => !s.is_draft);
   const casesCompleted = completedSubs.length;
   const casesAbove80Percent = completedSubs.filter(s => s.total_score && s.max_score && (s.total_score / s.max_score) >= 0.8).length;
@@ -324,6 +345,32 @@ export default function StudentDashboard() {
 
           {/* ── Primary zone: Today ── */}
           <TodayHero lang={lang} action={canonical} />
+
+          {/* ── Kiki quick-anchor chip — visible under Today, links to Kiki widget ── */}
+          <div className="flex flex-wrap items-center gap-2">
+            <a
+              href="#kiki-mentor"
+              onClick={(e) => {
+                e.preventDefault();
+                const el = document.getElementById('kiki-mentor');
+                if (el) {
+                  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  history.replaceState(null, '', '#kiki-mentor');
+                }
+              }}
+              className="inline-flex min-h-[44px] items-center gap-2 rounded-full border-2 border-foreground bg-primary/10 px-4 py-2 text-sm font-bold text-foreground quest-shadow-sm hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all"
+            >
+              <Sparkles className="h-4 w-4 text-primary" strokeWidth={2.5} aria-hidden />
+              {t('Ask Kiki', 'Попитай Kiki')}
+              <ArrowRight className="h-3.5 w-3.5" aria-hidden />
+            </a>
+            <span className="text-xs text-muted-foreground">
+              {t(
+                'Get Kiki\u2019s review of your project below.',
+                'Виж прегледа на Kiki за проекта ти по-долу.',
+              )}
+            </span>
+          </div>
 
           {/* ── Secondary zone: Your Learning (max 3 cards) ── */}
           <section aria-label={t('Your learning', 'Твоето учене')} className="space-y-4">
@@ -441,11 +488,17 @@ export default function StudentDashboard() {
                 );
               })}
             </div>
-            <AIMentorWidget
-              lang={lang}
-              startupData={startupProject}
-              onFeedbackReceived={() => setUsedAIMentor(true)}
-            />
+            <section
+              id="kiki-mentor"
+              aria-label={t('Ask Kiki', 'Попитай Kiki')}
+              className="scroll-mt-24 rounded-2xl transition-shadow"
+            >
+              <AIMentorWidget
+                lang={lang}
+                startupData={startupProject}
+                onFeedbackReceived={() => setUsedAIMentor(true)}
+              />
+            </section>
             <TestInsights lang={lang} userId={user?.id} />
           </section>
 

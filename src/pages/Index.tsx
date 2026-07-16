@@ -125,7 +125,11 @@ const Index = () => {
             </div>
           </div>
           <button
-            onClick={() => go("/dashboard")}
+            onClick={() =>
+              user
+                ? navigate("/dashboard#kiki-mentor")
+                : navigate(`/auth?redirect=${encodeURIComponent("/dashboard#kiki-mentor")}`)
+            }
             className="inline-flex items-center gap-1.5 rounded-full bg-primary px-4 py-2 text-xs font-bold text-primary-foreground transition hover:scale-105"
           >
             {T("Ask Kiki", "Попитай Kiki")} <ArrowRight className="h-3.5 w-3.5" />
@@ -270,7 +274,11 @@ const Index = () => {
               )}
             </p>
             <button
-              onClick={() => go("/dashboard")}
+              onClick={() =>
+                user
+                  ? navigate("/dashboard#kiki-mentor")
+                  : navigate(`/auth?redirect=${encodeURIComponent("/dashboard#kiki-mentor")}`)
+              }
               className="mt-5 inline-flex min-h-[48px] items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-bold text-primary-foreground transition active:scale-95 sm:hover:scale-105"
               style={{ boxShadow: "var(--shadow-warm)" }}
             >
