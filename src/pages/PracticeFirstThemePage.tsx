@@ -10,11 +10,28 @@
  * an honest "content not yet drafted" empty state.
  */
 
-import { useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, BookOpen, FileText, Lightbulb, MessageCircle, Rocket, Search, Sparkles, Target } from 'lucide-react';
+import {
+  ArrowLeft,
+  BookOpen,
+  CheckCircle2,
+  ClipboardCheck,
+  Compass,
+  Eye,
+  FileText,
+  HelpCircle,
+  Lightbulb,
+  MessageCircle,
+  PlayCircle,
+  Rocket,
+  Search,
+  Sparkles,
+  Target,
+} from 'lucide-react';
 import AppHeader from '@/components/layout/AppHeader';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
   Accordion,
   AccordionContent,
@@ -26,9 +43,16 @@ import { useLang } from '@/context/LangContext';
 import {
   PRACTICE_FIRST_MODULES,
   type PracticeFirstModule,
+  type PracticeTask,
 } from '@/data/practice-first-content';
 import { themeById } from '@/data/content-structure';
 import type { ThemeId } from '@/data/content-structure';
+import KikiInlineHint from '@/components/mentor/KikiInlineHint';
+import {
+  countReadModules,
+  isModuleRead,
+  setModuleRead,
+} from '@/lib/practice-first-progress';
 
 const KNOWN_THEME_IDS: ThemeId[] = [
   'entrepreneurship',
@@ -45,7 +69,7 @@ function isThemeId(x: string | undefined): x is ThemeId {
 export default function PracticeFirstThemePage() {
   const { themeId } = useParams<{ themeId: string }>();
   const { lang } = useLang();
-  const { userRole, isAdmin } = useAuth();
+  const { user, userRole, isAdmin } = useAuth();
   const t = (en: string, bg: string) => (lang === 'bg' ? bg : en);
 
   const validTheme = isThemeId(themeId) ? themeId : null;
@@ -60,6 +84,37 @@ export default function PracticeFirstThemePage() {
 
   const showReviewerBadge =
     isAdmin || userRole === 'admin' || userRole === 'teacher_verified';
+
+  const uid = user?.id ?? null;
+  const moduleIds = useMemo(() => modules.map((m) => m.id), [modules]);
+  const [readMap, setReadMap] = useState<Record<string, boolean>>({});
+
+  // Rehydrate read-state from localStorage when the user or module set changes.
+  useEffect(() => {
+    const next: Record<string, boolean> = {};
+    for (const id of moduleIds) next[id] = isModuleRead(uid, id);
+    setReadMap(next);
+  }, [uid, moduleIds]);
+
+  const toggleRead = useCallback(
+    (moduleId: string) => {
+      setReadMap((prev) => {
+        const nextVal = !prev[moduleId];
+        setModuleRead(uid, moduleId, nextVal);
+        return { ...prev, [moduleId]: nextVal };
+      });
+    },
+    [uid],
+  );
+
+  const readCount = moduleIds.reduce(
+    (acc, id) => acc + (readMap[id] ? 1 : 0),
+    0,
+  );
+  // Fallback (SSR / first paint) — use raw storage count so `countReadModules`
+  // is exercised and the number is right even before the effect runs.
+  const initialReadCount = countReadModules(uid, moduleIds);
+  const displayReadCount = Object.keys(readMap).length > 0 ? readCount : initialReadCount;
 
   const draftBadgeLabel = lang === 'bg' ? 'Чернова / за преглед' : 'Draft / for review';
   const draftBadgeShort = lang === 'bg' ? 'Чернова' : 'Draft';
@@ -102,7 +157,29 @@ export default function PracticeFirstThemePage() {
               )}
             </p>
           )}
+          {modules.length > 0 && (
+            <p
+              className="text-[11px] text-muted-foreground"
+              data-testid="pf-read-summary"
+            >
+              {t(
+                `Read ${displayReadCount} of ${modules.length}`,
+                `Прочетени ${displayReadCount} от ${modules.length}`,
+              )}
+              {' · '}
+              <span className="opacity-70">
+                {t(
+                  'personal read-state, not graded, not shared',
+                  'лично отбелязване, без оценка, не се споделя',
+                )}
+              </span>
+            </p>
+          )}
         </header>
+
+        {validTheme === 'entrepreneurship' && modules.length > 0 && (
+          <EntrepreneurshipDecisionCaseCTA lang={lang as 'bg' | 'en'} t={t} />
+        )}
 
         {!validTheme ? (
           <EmptyState
@@ -134,6 +211,8 @@ export default function PracticeFirstThemePage() {
                 lang={lang as 'bg' | 'en'}
                 t={t}
                 draftBadgeShort={draftBadgeShort}
+                isRead={!!readMap[mod.id]}
+                onToggleRead={() => toggleRead(mod.id)}
               />
             ))}
           </Accordion>
@@ -158,12 +237,16 @@ function ModuleAccordionItem({
   lang,
   t,
   draftBadgeShort,
+  isRead,
+  onToggleRead,
 }: {
   mod: PracticeFirstModule;
   index: number;
   lang: 'bg' | 'en';
   t: (en: string, bg: string) => string;
   draftBadgeShort: string;
+  isRead: boolean;
+  onToggleRead: () => void;
 }) {
   const title = lang === 'bg' ? mod.title_bg : mod.title_en;
   const theory = lang === 'bg' ? mod.theoryBlock_bg : mod.theoryBlock_en;
@@ -181,6 +264,16 @@ function ModuleAccordionItem({
           <span className="text-sm font-semibold text-foreground leading-snug break-words min-w-0 flex-1">
             {title}
           </span>
+          {isRead && (
+            <Badge
+              variant="outline"
+              className="text-[10px] shrink-0 mt-0.5 border-primary/40 text-primary"
+              data-testid={`pf-read-badge-${mod.id}`}
+            >
+              <CheckCircle2 className="h-3 w-3 mr-1" />
+              {t('Read', 'Прочетено')}
+            </Badge>
+          )}
           <Badge variant="outline" className="text-[10px] shrink-0 mt-0.5">
             {draftBadgeShort}
           </Badge>
@@ -221,6 +314,9 @@ function ModuleAccordionItem({
                 <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
                   {lang === 'bg' ? task.brief_bg : task.brief_en}
                 </p>
+                {task.cefe && (
+                  <CefeBlock task={task} lang={lang} t={t} />
+                )}
               </li>
             ))}
           </ul>
@@ -259,7 +355,7 @@ function ModuleAccordionItem({
           </Section>
         )}
 
-        {/* 6. Kiki questions */}
+        {/* 6. Kiki mentor questions — inline, static */}
         <Section
           icon={MessageCircle}
           label={t('Mentor questions from Kiki', 'Менторски въпроси от Kiki')}
@@ -270,16 +366,11 @@ function ModuleAccordionItem({
               'Тук Kiki не отговаря автоматично. Използвай въпросите за самопроверка и обсъждане.',
             )}
           </p>
-          <ul className="space-y-1.5">
-            {mod.kikiQuestions.map((q, i) => (
-              <li
-                key={i}
-                className="text-sm text-foreground/90 leading-relaxed pl-3 border-l-2 border-primary/40"
-              >
-                {lang === 'bg' ? q.bg : q.en}
-              </li>
-            ))}
-          </ul>
+          <KikiInlineHint
+            questions={mod.kikiQuestions}
+            lang={lang}
+            max={mod.kikiQuestions.length}
+          />
         </Section>
 
         {/* 7. Reflection + improvement */}
@@ -316,14 +407,19 @@ function ModuleAccordionItem({
               </div>
             )}
             {mod.dictionaryConcepts.length > 0 && (
-              <div className="flex flex-wrap gap-1.5">
+              <div
+                className="flex flex-wrap gap-1.5"
+                data-testid={`pf-dict-chips-${mod.id}`}
+              >
                 {mod.dictionaryConcepts.map((c) => (
-                  <span
+                  <Link
                     key={`d-${c}`}
-                    className="rounded-full border border-border px-2 py-0.5 text-[11px] text-muted-foreground"
+                    to={`/dictionary?q=${encodeURIComponent(c)}`}
+                    className="rounded-full border border-border px-2 py-0.5 text-[11px] text-muted-foreground hover:border-primary/60 hover:text-primary transition-colors"
+                    data-testid="pf-dict-chip"
                   >
                     {c}
-                  </span>
+                  </Link>
                 ))}
               </div>
             )}
@@ -337,8 +433,186 @@ function ModuleAccordionItem({
             )}
           </div>
         </Section>
+
+        {/* 9. Personal read-state — client-only, not graded */}
+        <div className="pt-1 flex flex-wrap items-center gap-2">
+          <Button
+            type="button"
+            size="sm"
+            variant={isRead ? 'outline' : 'default'}
+            onClick={onToggleRead}
+            data-testid={`pf-read-toggle-${mod.id}`}
+          >
+            {isRead
+              ? t('Mark unread', 'Отмени прочитане')
+              : t('Mark as read', 'Маркирай като прочетено')}
+          </Button>
+          <span className="text-[11px] text-muted-foreground">
+            {t(
+              'Personal read-state — not graded, not shared.',
+              'Лично отбелязване — без оценка, не се споделя.',
+            )}
+          </span>
+        </div>
       </AccordionContent>
     </AccordionItem>
+  );
+}
+
+function CefeBlock({
+  task,
+  lang,
+  t,
+}: {
+  task: PracticeTask;
+  lang: 'bg' | 'en';
+  t: (en: string, bg: string) => string;
+}) {
+  const c = task.cefe!;
+  const pick = (en: string, bg: string) => (lang === 'bg' ? bg : en);
+  const questions = lang === 'bg' ? c.processingQuestions_bg : c.processingQuestions_en;
+
+  return (
+    <div
+      className="mt-3 rounded-md border border-border/80 bg-muted/30 p-3 space-y-3"
+      data-testid={`pf-cefe-${task.id}`}
+    >
+      <CefeRow
+        icon={PlayCircle}
+        label={t('Action', 'Действие')}
+        body={pick(c.action_en, c.action_bg)}
+        emphasize
+      />
+      <CefeRow
+        icon={Eye}
+        label={t('Visible result', 'Видим резултат')}
+        body={pick(c.visibleResult_en, c.visibleResult_bg)}
+      />
+      <div>
+        <CefeLabel icon={HelpCircle} label={t('Processing questions', 'Въпроси за анализ')} />
+        <ul className="mt-1 space-y-1">
+          {questions.map((q, i) => (
+            <li
+              key={i}
+              className="text-xs text-foreground/90 leading-relaxed pl-3 border-l border-primary/30"
+            >
+              {q}
+            </li>
+          ))}
+        </ul>
+      </div>
+      <CefeRow
+        icon={Compass}
+        label={t('Generalizing principle', 'Принцип')}
+        body={pick(c.generalizing_en, c.generalizing_bg)}
+      />
+      <CefeRow
+        icon={Rocket}
+        label={t('Apply', 'Приложи')}
+        body={pick(c.applying_en, c.applying_bg)}
+      />
+      <CefeRow
+        icon={ClipboardCheck}
+        label={t('Teacher check', 'Проверка от учител')}
+        body={pick(c.teacherCheck_en, c.teacherCheck_bg)}
+      />
+      <CefeRow
+        icon={FileText}
+        label={t('Evidence', 'Доказателство')}
+        body={pick(c.evidence_en, c.evidence_bg)}
+      />
+    </div>
+  );
+}
+
+function CefeLabel({
+  icon: Icon,
+  label,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+}) {
+  return (
+    <h5 className="text-[10px] uppercase tracking-wide font-semibold text-muted-foreground flex items-center gap-1.5">
+      <Icon className="h-3 w-3" />
+      {label}
+    </h5>
+  );
+}
+
+function CefeRow({
+  icon,
+  label,
+  body,
+  emphasize,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  label: string;
+  body: string;
+  emphasize?: boolean;
+}) {
+  return (
+    <div>
+      <CefeLabel icon={icon} label={label} />
+      <p
+        className={
+          'text-xs leading-relaxed mt-1 ' +
+          (emphasize ? 'text-foreground font-medium' : 'text-foreground/90')
+        }
+      >
+        {body}
+      </p>
+    </div>
+  );
+}
+
+/**
+ * Entrepreneurship decision-case CTA (V1).
+ *
+ * We intentionally do NOT link to a specific case route — no dynamic case
+ * catalog is available on the client here, and the seed case for
+ * "MVP vs full product" has not been content-reviewed yet. Render the
+ * card in a "content pending" state so we never point students at a
+ * broken or fabricated route.
+ */
+function EntrepreneurshipDecisionCaseCTA({
+  lang,
+  t,
+}: {
+  lang: 'bg' | 'en';
+  t: (en: string, bg: string) => string;
+}) {
+  const title = lang === 'bg'
+    ? 'Реши казус: MVP или пълен продукт?'
+    : 'Decision case: MVP or full product?';
+  const body = lang === 'bg'
+    ? 'Приложи наученото в ситуация с избор, последствия и рефлексия.'
+    : 'Apply the theme in a situation with choice, consequences and reflection.';
+
+  return (
+    <section
+      className="rounded-xl border border-dashed border-primary/40 bg-primary/5 p-4 space-y-2"
+      data-testid="pf-decision-case-cta"
+    >
+      <div className="flex items-start gap-2 flex-wrap">
+        <FileText className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+        <div className="min-w-0 flex-1 space-y-1">
+          <p className="text-sm font-semibold text-foreground leading-snug">
+            {title}
+          </p>
+          <p className="text-xs text-muted-foreground leading-relaxed">{body}</p>
+        </div>
+        <Badge variant="outline" className="text-[10px] shrink-0">
+          {t('Content pending', 'Очаква съдържание')}
+        </Badge>
+      </div>
+      <p className="text-[11px] text-muted-foreground">
+        {t(
+          'The case study for this decision is being prepared and reviewed. No link is shown until the case exists.',
+          'Казусът за това решение се подготвя и преглежда. Линк не се показва, докато казусът не съществува.',
+        )}
+      </p>
+    </section>
   );
 }
 
