@@ -510,6 +510,39 @@ export default function CaseLibrary() {
             </div>
           </div>
         </section>
+        {activeTheme && (
+          <div
+            className="mb-4 flex flex-wrap items-center gap-2 rounded-xl border border-primary/30 bg-primary/5 px-3 py-2"
+            data-testid="case-theme-chip"
+          >
+            <span className="text-xs font-medium text-foreground">
+              {tl(
+                `Filtered by: ${THEME_LABELS[activeTheme].en}`,
+                `Филтър: ${THEME_LABELS[activeTheme].bg}`,
+              )}
+            </span>
+            <button
+              type="button"
+              onClick={clearThemeFilter}
+              data-testid="case-theme-chip-clear"
+              className="inline-flex items-center gap-1 rounded-full border border-border bg-card px-2 py-0.5 text-[11px] text-muted-foreground hover:border-primary/50 hover:text-primary transition-colors"
+            >
+              <X className="h-3 w-3" />
+              {tl('Show all cases', 'Покажи всички казуси')}
+            </button>
+          </div>
+        )}
+        {activeTheme === 'entrepreneurship' && (
+          <p
+            className="mb-4 text-xs sm:text-sm text-muted-foreground leading-relaxed"
+            data-testid="case-theme-entrepreneurship-note"
+          >
+            {tl(
+              'Choose a case by level: beginner cases train problem and assumption thinking, intermediate cases focus on business model and MVP, and advanced cases deal with uncertainty, growth and strategic decisions.',
+              'Избери казус според нивото си: начинаещите казуси тренират проблем и допускания, средните — бизнес модел и MVP, а напредналите — решения при несигурност и растеж.',
+            )}
+          </p>
+        )}
         <div className="hidden">
           {/* View mode toggle */}
           <div className="flex items-center gap-1 rounded-lg border border-border bg-card p-0.5 shrink-0">
