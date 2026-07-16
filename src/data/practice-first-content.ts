@@ -446,9 +446,9 @@ export const INNOVATION_MODULES: PracticeFirstModule[] = [
     title_bg: 'Идея, изобретение и иновация',
     status: 'needs_review',
     theoryBlock_en:
-      'An idea is a thought about how something could be different. An invention is a new working thing — a device, method or design. An innovation is an invention or improvement that actually reaches people and creates measurable value in use. Most ideas never become inventions. Most inventions never become innovations. The gap is adoption and value in real conditions.',
+      'An idea is a thought that something could be different. An invention is a new working thing: a device, a method, a design. An innovation is an invention or improvement that reaches real users and measurably changes what they do. Most ideas never become inventions. Most inventions never become innovations. The gap is adoption.',
     theoryBlock_bg:
-      'Идеята е мисъл, че нещо може да е различно. Изобретението е ново работещо нещо — устройство, метод или дизайн. Иновацията е изобретение или подобрение, което реално стига до хора и създава измерима стойност при употреба. Повечето идеи не стават изобретения. Повечето изобретения не стават иновации. Разликата е в приемането и стойността в реални условия.',
+      'Идеята е мисъл, че нещо може да е различно. Изобретението е ново работещо нещо: устройство, метод, дизайн. Иновацията е изобретение или подобрение, което стига до реални потребители и измеримо променя какво правят. Повечето идеи не стават изобретения. Повечето изобретения не стават иновации. Разликата е в реалното приемане.',
     practiceRatio: R,
     keyConcepts: ['Idea', 'Invention', 'Innovation', 'Adoption', 'Value in use'],
     dictionaryConcepts: ['Innovation', 'Invention', 'Adoption', 'Value creation'],
@@ -459,9 +459,9 @@ export const INNOVATION_MODULES: PracticeFirstModule[] = [
         title_bg: 'Подреди 6 примера като идея, изобретение или иновация',
         kind: 'comparison',
         brief_en:
-          'Pick 6 things you know (a product, an app feature, a school project, a service, a method, a device). For each: is it currently an idea, an invention or an innovation? Explain your reasoning in one line per item.',
+          'Pick 6 things you know: a product, an app feature, a school project, a service, a method, a device. Label each as idea, invention or innovation. One line of reasoning per item.',
         brief_bg:
-          'Избери 6 неща, които познаваш (продукт, функция в приложение, училищен проект, услуга, метод, устройство). За всяко: в момента идея ли е, изобретение ли е или иновация? Обясни разсъждението си в един ред на елемент.',
+          'Избери 6 неща, които познаваш: продукт, функция в приложение, училищен проект, услуга, метод, устройство. Определи всяко като идея, изобретение или иновация. По един ред обосновка на елемент.',
       },
       {
         id: 'inno-01-t2',
@@ -469,35 +469,35 @@ export const INNOVATION_MODULES: PracticeFirstModule[] = [
         title_bg: 'Намери едно изобретение, което не е станало иновация',
         kind: 'information_search',
         brief_en:
-          'Search for one invention that was patented or built but did not reach real users at scale. Note two likely reasons: adoption, cost, timing, distribution, or lack of clear value.',
+          'Find an invention that was patented or built but never reached real users at scale. Name two likely reasons: adoption, cost, timing, distribution or unclear value.',
         brief_bg:
-          'Намери едно изобретение, което е било патентовано или създадено, но не е стигнало до реални потребители в широк мащаб. Опиши две вероятни причини: приемане, цена, момент, дистрибуция или липса на ясна стойност.',
+          'Намери изобретение, което е патентовано или създадено, но не е стигнало до реални потребители в мащаб. Посочи две вероятни причини: приемане, цена, момент, дистрибуция или неясна стойност.',
       },
     ],
     informationSearchTask: {
-      prompt_en: 'Find one recent innovation (2023–2026) and one older one. For each, note who uses it, and what measurable thing improved.',
-      prompt_bg: 'Намери една скорошна иновация (2023–2026) и една по-стара. За всяка: кой я използва и какво измеримо се е подобрило.',
+      prompt_en: 'Find one recent innovation (2023–2026) and one older one. For each: who uses it and what measurably improved.',
+      prompt_bg: 'Намери една скорошна иновация (2023–2026) и една по-стара. За всяка: кой я използва и какво измеримо се подобри.',
     },
     caseConnection: {
       caseId: 'chatgpt-ai-business-model',
       reviewStatus: 'needs_content_review',
-      note_en: 'Useful to separate the invention (LLM) from the innovation (product accessible to millions).',
-      note_bg: 'Полезен, за да отделиш изобретението (LLM) от иновацията (продукт, достъпен за милиони).',
+      note_en: 'Separate the invention (LLM) from the innovation (a product used by millions).',
+      note_bg: 'Отдели изобретението (LLM) от иновацията (продукт, използван от милиони).',
     },
     kikiQuestions: [
-      { en: 'What exactly is new here — the idea, the invention or the way it reaches people?', bg: 'Какво точно е ново тук — идеята, изобретението или начинът, по който стига до хората?' },
+      { en: 'What is new here: the idea, the invention, or the way it reaches people?', bg: 'Какво е новото: идеята, изобретението или начинът, по който стига до хората?' },
       { en: 'For whom does this create value, and how do you know?', bg: 'За кого създава стойност това и откъде знаеш?' },
       { en: 'What had to be true for this invention to become an innovation?', bg: 'Какво трябваше да е вярно, за да стане това изобретение иновация?' },
-      { en: 'What is the evidence of adoption, not just interest?', bg: 'Кои са доказателствата за реално приемане, а не само за интерес?' },
+      { en: 'What evidence shows real adoption, not just interest?', bg: 'Какво доказателство показва реално приемане, а не само интерес?' },
     ],
-    evidenceOfSkill: ['Concept discrimination', 'Adoption reasoning', 'Evidence over enthusiasm'],
+    evidenceOfSkill: ['Разграничаване на понятия', 'Работа с доказателства', 'Аргументирано класифициране'],
     reflectionPrompt: {
       en: 'Which of your 6 examples was hardest to classify, and why?',
       bg: 'Кой от 6-те примера ти беше най-труден за класифициране и защо?',
     },
     improvementPrompt: {
-      en: 'Rewrite your reasoning for one item after seeing what adoption really means.',
-      bg: 'Пренапиши разсъждението си за един елемент, след като видя какво означава реално приемане.',
+      en: 'Rewrite your reasoning for one item after checking what adoption really means.',
+      bg: 'Пренапиши обосновката за един елемент, след като провериш какво означава реално приемане.',
     },
   },
 
@@ -508,9 +508,9 @@ export const INNOVATION_MODULES: PracticeFirstModule[] = [
     title_bg: 'Видове иновации',
     status: 'needs_review',
     theoryBlock_en:
-      'Innovation is not only new products. There are several types: product innovation (a new or improved product), service innovation (a new or improved service), process innovation (a better way to do the work), business model innovation (a new way to create, deliver and capture value) and digital innovation (using digital tools to change any of the above). One organisation can innovate in more than one type at the same time.',
+      'Innovation is not only new products. Main types: product innovation (new or improved product), service innovation (new or improved service), process innovation (a better way to do the work), business model innovation (a new way to earn from the value delivered) and digital innovation (using digital tools to change any of these). One organisation can combine several types at once.',
     theoryBlock_bg:
-      'Иновацията не е само нов продукт. Има няколко вида: product innovation (нов или подобрен продукт), service innovation (нова или подобрена услуга), process innovation (по-добър начин работата да се свърши), business model innovation (нов начин за създаване, доставяне и улавяне на стойност) и digital innovation (използване на дигитални инструменти, за да се промени някой от горните). Една организация може да прави няколко вида иновация едновременно.',
+      'Иновацията не е само нов продукт. Основни видове: product innovation (нов или подобрен продукт), service innovation (нова или подобрена услуга), process innovation (по-добър начин работата да се свърши), business model innovation (нов начин да се печели от доставената стойност) и digital innovation (използване на дигитални инструменти, за да се промени някой от горните). Една организация може да комбинира няколко вида едновременно.',
     practiceRatio: R,
     keyConcepts: [
       'Product innovation',
@@ -533,9 +533,9 @@ export const INNOVATION_MODULES: PracticeFirstModule[] = [
         title_bg: 'Класифицирай 5 реални примера по вид',
         kind: 'analysis',
         brief_en:
-          'Pick 5 companies or public services you know. For each, name the type of innovation you can observe. Some will be more than one type — say why.',
+          'Pick 5 companies or public services you know. Name the type of innovation you observe in each. If more than one type applies, say which and why.',
         brief_bg:
-          'Избери 5 компании или обществени услуги, които познаваш. За всяка посочи вида иновация, който наблюдаваш. Някои ще са от повече от един вид — обясни защо.',
+          'Избери 5 компании или обществени услуги, които познаваш. За всяка посочи вида иновация, който наблюдаваш. Ако важат повече от един, кажи кои и защо.',
       },
       {
         id: 'inno-02-t2',
@@ -543,27 +543,27 @@ export const INNOVATION_MODULES: PracticeFirstModule[] = [
         title_bg: 'Един и същ проблем, два вида иновация',
         kind: 'comparison',
         brief_en:
-          'Take one problem (for example: long waiting time in a clinic). Design one product/service innovation and one process or business model innovation that address it. Compare who benefits in each case.',
+          'Take one problem (e.g. long waiting time in a clinic). Design one product or service innovation and one process or business model innovation for it. Compare who benefits in each.',
         brief_bg:
-          'Вземи един проблем (например: дълго чакане в клиника). Опиши една product/service иновация и една process или business model иновация, които го адресират. Сравни кой печели във всеки от случаите.',
+          'Вземи един проблем (напр. дълго чакане в клиника). Опиши една product или service иновация и една process или business model иновация за него. Сравни кой печели във всеки случай.',
       },
     ],
     caseConnection: {
       caseId: 'digital-platform',
       reviewStatus: 'needs_content_review',
-      note_en: 'Digital platforms often combine service, process and business model innovation.',
-      note_bg: 'Дигиталните платформи често комбинират service, process и business model innovation.',
+      note_en: 'Digital platforms usually combine service, process and business model innovation.',
+      note_bg: 'Дигиталните платформи обикновено комбинират service, process и business model innovation.',
     },
     kikiQuestions: [
-      { en: 'Which type of innovation is actually doing the work here?', bg: 'Кой вид иновация реално върши работата тук?' },
+      { en: 'Which type of innovation is doing the real work here?', bg: 'Кой вид иновация върши реалната работа тук?' },
       { en: 'What would change if you removed the digital part?', bg: 'Какво би се променило, ако махнеш дигиталната част?' },
-      { en: 'Who benefits from each type — and who does not?', bg: 'Кой печели от всеки вид — и кой не?' },
-      { en: 'What process quietly had to change to make this work?', bg: 'Кой процес тихо трябваше да се промени, за да работи това?' },
+      { en: 'Who benefits from each type, and who does not?', bg: 'Кой печели от всеки вид и кой не?' },
+      { en: 'Which process had to change behind the scenes for this to work?', bg: 'Кой процес трябваше да се промени зад кулисите, за да работи това?' },
     ],
-    evidenceOfSkill: ['Typology use', 'Multi-lens analysis', 'Separating hype from mechanism'],
+    evidenceOfSkill: ['Използване на класификация', 'Анализ от няколко ъгъла', 'Разграничаване на промяна и хайп'],
     reflectionPrompt: {
-      en: 'Which type of innovation do you understand least well? Where is your gap?',
-      bg: 'Кой вид иновация разбираш най-слабо? Къде е пропускът ти?',
+      en: 'Which type of innovation do you understand least well?',
+      bg: 'Кой вид иновация разбираш най-слабо?',
     },
     improvementPrompt: {
       en: 'Redo one classification after checking one source about the company.',
@@ -578,9 +578,9 @@ export const INNOVATION_MODULES: PracticeFirstModule[] = [
     title_bg: 'Иновацията като подобрение и управляван процес',
     status: 'needs_review',
     theoryBlock_en:
-      'Most innovation is improvement, not invention from zero. It starts with understanding the current process, finding what does not work well, and deciding what to improve: value, efficiency, experience or access. Implementation must be managed — who does what, by when, with which resources, and how you check that the improvement really happened.',
+      'Most innovation is improvement, not invention from zero. Start by understanding the current process. Find what does not work. Decide what to improve: value, efficiency, experience or access. Then manage the change: who does what, by when, with which resources, and how you check the result.',
     theoryBlock_bg:
-      'Повечето иновации са подобрение, а не създаване от нулата. Започват с разбиране на текущия процес, откриване на това, което не работи добре, и решение какво да се подобри: стойност, ефективност, преживяване или достъп. Внедряването трябва да е управляван процес — кой какво прави, до кога, с какви ресурси и как проверяваш, че подобрението наистина се е случило.',
+      'Повечето иновации са подобрение, не създаване от нулата. Започваш с това да разбереш текущия процес. Намираш какво не работи. Решаваш какво да подобриш: стойност, ефективност, преживяване или достъп. След това управляваш промяната: кой какво прави, до кога, с какви ресурси и как проверяваш резултата.',
     practiceRatio: R,
     keyConcepts: ['Improvement', 'Process understanding', 'Implementation', 'Managed change'],
     dictionaryConcepts: ['Process innovation', 'Continuous improvement', 'Implementation'],
@@ -591,9 +591,9 @@ export const INNOVATION_MODULES: PracticeFirstModule[] = [
         title_bg: 'Опиши процес преди и след',
         kind: 'analysis',
         brief_en:
-          'Pick a real process you know well (a school procedure, a café order, a support request). List its steps today. Then rewrite it after one clear improvement. Note what improved: value, efficiency, experience or access.',
+          'Pick a real process you know: a school procedure, a café order, a support request. List its steps today. Rewrite the steps after one clear improvement. Mark what improved: value, efficiency, experience or access.',
         brief_bg:
-          'Избери реален процес, който познаваш добре (училищна процедура, поръчка в кафене, заявка към поддръжка). Опиши стъпките му днес. После го пренапиши след едно ясно подобрение. Отбележи какво се подобрява: стойност, ефективност, преживяване или достъп.',
+          'Избери реален процес, който познаваш: училищна процедура, поръчка в кафене, заявка към поддръжка. Опиши стъпките днес. Пренапиши ги след едно ясно подобрение. Отбележи какво се подобрява: стойност, ефективност, преживяване или достъп.',
       },
       {
         id: 'inno-03-t2',
@@ -601,9 +601,9 @@ export const INNOVATION_MODULES: PracticeFirstModule[] = [
         title_bg: 'Планирай внедряването',
         kind: 'decision',
         brief_en:
-          'For the improvement above, write a short plan: who does what, by when, with which resources, and one check that shows whether it worked.',
+          'Write a short plan for that improvement: who does what, by when, with which resources, and one check that shows whether it worked.',
         brief_bg:
-          'За подобрението по-горе напиши кратък план: кой какво прави, до кога, с какви ресурси и една проверка, която показва дали е сработило.',
+          'Напиши кратък план за това подобрение: кой какво прави, до кога, с какви ресурси и една проверка, която показва дали е сработило.',
       },
       {
         id: 'inno-03-t3',
@@ -611,25 +611,25 @@ export const INNOVATION_MODULES: PracticeFirstModule[] = [
         title_bg: 'Опиши какво може да се провали',
         kind: 'fact_vs_assumption',
         brief_en:
-          'List 3 things that could go wrong during implementation. For each, mark whether it is a known risk (evidence) or an assumption you would need to check.',
+          'List 3 things that could go wrong during implementation. Mark each as a known risk (with evidence) or an assumption you still need to check.',
         brief_bg:
-          'Опиши 3 неща, които може да се объркат по време на внедряването. За всяко отбележи дали е известен риск (с доказателство) или допускане, което би трябвало да провериш.',
+          'Опиши 3 неща, които може да се объркат при внедряването. Отбележи всяко като известен риск (с доказателство) или допускане, което още трябва да провериш.',
       },
     ],
     caseConnection: {
       caseId: 'small-business',
       reviewStatus: 'needs_content_review',
-      note_en: 'Small businesses show clearly how process improvements affect daily operations.',
-      note_bg: 'Малкият бизнес показва ясно как подобренията на процеса влияят върху ежедневната работа.',
+      note_en: 'Small businesses show clearly how process changes affect daily operations.',
+      note_bg: 'Малкият бизнес показва ясно как промените в процеса влияят на ежедневната работа.',
     },
     kikiQuestions: [
-      { en: 'What exactly is being improved — value, efficiency, experience or access?', bg: 'Какво точно се подобрява — стойност, ефективност, преживяване или достъп?' },
-      { en: 'What process must change for this improvement to survive real use?', bg: 'Кой процес трябва да се промени, за да оцелее това подобрение при реална употреба?' },
-      { en: 'What could fail during implementation, and who would notice first?', bg: 'Какво може да се провали при внедряването и кой ще забележи първи?' },
-      { en: 'How will you know it worked — with what evidence?', bg: 'Как ще разбереш, че е сработило — с какви доказателства?' },
-      { en: 'What would you not change, and why?', bg: 'Какво не би променил(а) и защо?' },
+      { en: 'What exactly is being improved: value, efficiency, experience or access?', bg: 'Какво точно се подобрява: стойност, ефективност, преживяване или достъп?' },
+      { en: 'Which process must change for this improvement to hold in real use?', bg: 'Кой процес трябва да се промени, за да се задържи подобрението при реална употреба?' },
+      { en: 'What could fail during implementation, and who notices first?', bg: 'Какво може да се провали при внедряването и кой ще забележи първи?' },
+      { en: 'How will you know it worked, and with what evidence?', bg: 'Как ще разбереш, че е сработило, и с какво доказателство?' },
+      { en: 'What would you leave unchanged, and why?', bg: 'Какво не би променил(а) и защо?' },
     ],
-    evidenceOfSkill: ['Process mapping', 'Implementation planning', 'Risk labeling'],
+    evidenceOfSkill: ['Процесно мислене', 'Планиране на внедряване', 'Разграничаване на риск и допускане'],
     reflectionPrompt: {
       en: 'Where did your process map skip a step you actually rely on?',
       bg: 'Къде в описанието на процеса пропусна стъпка, на която реално разчиташ?',
@@ -647,9 +647,9 @@ export const INNOVATION_MODULES: PracticeFirstModule[] = [
     title_bg: 'Платформи, екосистеми и network effects',
     status: 'needs_review',
     theoryBlock_en:
-      'A platform connects two or more groups (for example: buyers and sellers, riders and drivers, learners and teachers). An ecosystem is the wider set of companies, tools and rules around a platform. Network effects mean the platform becomes more useful as more people use it. They are powerful, but not automatic — a platform without value on day one usually never gets to day 100.',
+      'A platform connects two or more groups: buyers and sellers, riders and drivers, learners and teachers. An ecosystem is the wider set of companies, tools and rules around it. Network effects mean the platform gets more useful as more people use it. They are powerful but not automatic. A platform without value on day one rarely reaches day 100.',
     theoryBlock_bg:
-      'Платформа свързва две или повече групи (например: купувачи и продавачи, пътници и шофьори, ученици и преподаватели). Екосистемата е по-широкият набор от компании, инструменти и правила около платформата. Network effects означават, че платформата става по-полезна, когато повече хора я използват. Те са силни, но не са автоматични — платформа без стойност на ден 1 обикновено не стига до ден 100.',
+      'Платформа свързва две или повече групи: купувачи и продавачи, пътници и шофьори, ученици и преподаватели. Екосистемата е по-широкият набор от компании, инструменти и правила около нея. Network effects означават, че платформата става по-полезна, когато повече хора я използват. Силни са, но не са автоматични. Платформа без стойност на ден 1 рядко стига до ден 100.',
     practiceRatio: R,
     keyConcepts: ['Platform', 'Ecosystem', 'Network effects', 'Two-sided market'],
     dictionaryConcepts: ['Platform', 'Ecosystem', 'Network effects'],
@@ -660,9 +660,9 @@ export const INNOVATION_MODULES: PracticeFirstModule[] = [
         title_bg: 'Опиши една платформа и двете ѝ страни',
         kind: 'analysis',
         brief_en:
-          'Pick one platform you use. Name the two (or more) groups it connects. For each side: what value do they get, and what value do they give?',
+          'Pick one platform you use. Name the groups it connects. For each side: what value does it get, and what value does it give?',
         brief_bg:
-          'Избери една платформа, която използваш. Опиши двете (или повече) групи, които тя свързва. За всяка страна: каква стойност получава и каква стойност дава?',
+          'Избери една платформа, която използваш. Опиши групите, които тя свързва. За всяка страна: каква стойност получава и каква дава?',
       },
       {
         id: 'inno-04-t2',
@@ -670,9 +670,9 @@ export const INNOVATION_MODULES: PracticeFirstModule[] = [
         title_bg: 'Опиши възможните network effects',
         kind: 'analysis',
         brief_en:
-          'For the same platform: describe how it becomes more useful when more users join one side, the other side, or both. Where does more users make it worse, not better?',
+          'For the same platform: describe how it becomes more useful when more users join one side, the other, or both. Where do more users make it worse?',
         brief_bg:
-          'За същата платформа: опиши как става по-полезна, когато се присъединят повече потребители от едната страна, от другата или от двете. Къде повече потребители я правят по-лоша, а не по-добра?',
+          'За същата платформа: опиши как става по-полезна, когато се присъединят повече потребители от едната страна, другата или и двете. Къде повече потребители я правят по-лоша?',
       },
       {
         id: 'inno-04-t3',
@@ -680,9 +680,9 @@ export const INNOVATION_MODULES: PracticeFirstModule[] = [
         title_bg: 'Скицирай нейната екосистема',
         kind: 'analysis',
         brief_en:
-          'List 3 companies, tools or rules around the platform that make it work (payment providers, delivery, moderation, regulators). What breaks if one of them disappears?',
+          'List 3 companies, tools or rules around the platform that make it work: payments, delivery, moderation, regulators. What breaks if one of them disappears?',
         brief_bg:
-          'Опиши 3 компании, инструмента или правила около платформата, които я карат да работи (платежни доставчици, доставка, модерация, регулатори). Какво се чупи, ако някой от тях изчезне?',
+          'Опиши 3 компании, инструмента или правила около платформата, които я карат да работи: разплащания, доставка, модерация, регулатори. Какво се чупи, ако един от тях изчезне?',
       },
     ],
     caseConnection: {
@@ -691,18 +691,18 @@ export const INNOVATION_MODULES: PracticeFirstModule[] = [
     },
     kikiQuestions: [
       { en: 'Which side of the platform is harder to attract, and why?', bg: 'Коя страна на платформата е по-трудна за привличане и защо?' },
-      { en: 'What value does each side get on day one, before scale?', bg: 'Каква стойност получава всяка страна още в началото, преди да има мащаб?' },
+      { en: 'What value does each side get on day one, before scale?', bg: 'Каква стойност получава всяка страна на ден 1, преди мащаб?' },
       { en: 'Where do network effects work against the platform?', bg: 'Къде network effects работят срещу платформата?' },
-      { en: 'What part of the ecosystem is the biggest single point of failure?', bg: 'Коя част от екосистемата е най-голямата единична точка на провал?' },
+      { en: 'Which part of the ecosystem is the biggest single point of failure?', bg: 'Коя част от екосистемата е най-голямата единична точка на провал?' },
     ],
-    evidenceOfSkill: ['Platform reasoning', 'Multi-sided value analysis', 'Systems thinking'],
+    evidenceOfSkill: ['Разбиране на платформи', 'Анализ на многостранна стойност', 'Системно мислене'],
     reflectionPrompt: {
-      en: 'Which platform in your own life became less useful as it grew? Why?',
-      bg: 'Коя платформа в собствения ти живот стана по-малко полезна, когато нарасна? Защо?',
+      en: 'Which platform in your life became less useful as it grew? Why?',
+      bg: 'Коя платформа в живота ти стана по-малко полезна, когато нарасна? Защо?',
     },
     improvementPrompt: {
-      en: 'Redesign one rule of the platform to improve value for the weaker side.',
-      bg: 'Прередактирай едно правило на платформата, за да подобри стойността за по-слабата страна.',
+      en: 'Redesign one platform rule to improve value for the weaker side.',
+      bg: 'Промени едно правило на платформата, за да подобри стойността за по-слабата страна.',
     },
   },
 
@@ -713,9 +713,9 @@ export const INNOVATION_MODULES: PracticeFirstModule[] = [
     title_bg: 'Спортни иновации като приложен казус',
     status: 'needs_review',
     theoryBlock_en:
-      'Sports innovation is not only new equipment. It can involve the training process, athlete data, wellbeing and recovery, fan experience, club management, digital tools and performance tracking. This makes sports a strong applied area to practice innovation thinking: the goals are measurable and the users (athletes, coaches, fans, clubs) are clearly defined.',
+      'Sports innovation is not only new equipment. It can involve the training process, athlete data, wellbeing and recovery, fan experience, club management, digital tools and performance tracking. Sports is a strong applied area: goals are measurable and the users are clear — athletes, coaches, fans, clubs.',
     theoryBlock_bg:
-      'Спортната иновация не е само ново оборудване. Тя може да включва тренировъчен процес, данни за спортиста, благополучие и възстановяване, преживяване за феновете, управление на клуба, дигитални инструменти и проследяване на представянето. Това прави спорта силна приложна област за упражняване на иновационно мислене: целите са измерими, а потребителите (спортисти, треньори, фенове, клубове) са ясно дефинирани.',
+      'Спортната иновация не е само ново оборудване. Може да засяга тренировъчния процес, данните на спортиста, възстановяването, преживяването на феновете, управлението на клуба, дигиталните инструменти и проследяването на представянето. Спортът е силна приложна област: целите са измерими, а потребителите са ясни — спортисти, треньори, фенове, клубове.',
     practiceRatio: R,
     keyConcepts: [
       'Training process',
@@ -733,9 +733,9 @@ export const INNOVATION_MODULES: PracticeFirstModule[] = [
         title_bg: 'Избери потребител и задача, която да се подобри',
         kind: 'decision',
         brief_en:
-          'Choose one user in sports: athlete, coach, fan, or club manager. Describe one specific job they need to do better. Do not name a solution yet.',
+          'Choose one user in sports: athlete, coach, fan or club manager. Describe one specific job they need to do better. Do not name a solution yet.',
         brief_bg:
-          'Избери един потребител в спорта: спортист, треньор, фен или клубен мениджър. Опиши една конкретна задача, която трябва да върши по-добре. Още не назовавай решение.',
+          'Избери един потребител в спорта: спортист, треньор, фен или клубен мениджър. Опиши една конкретна задача, която трябва да върши по-добре. Още без решение.',
       },
       {
         id: 'inno-05-t2',
@@ -743,9 +743,9 @@ export const INNOVATION_MODULES: PracticeFirstModule[] = [
         title_bg: 'Създай малък концепт за спортна иновация',
         kind: 'mvp_definition',
         brief_en:
-          'For that user and job, design one small innovation. Say whether it is product, service, process, business model or digital innovation. Describe how it works in one paragraph.',
+          'For that user and job, design one small innovation. Say whether it is product, service, process, business model or digital innovation. Describe how it works in one short paragraph.',
         brief_bg:
-          'За този потребител и задача създай една малка иновация. Посочи дали е product, service, process, business model или digital innovation. Опиши как работи в един абзац.',
+          'За този потребител и задача създай една малка иновация. Посочи дали е product, service, process, business model или digital innovation. Опиши как работи в кратък абзац.',
       },
       {
         id: 'inno-05-t3',
@@ -753,9 +753,9 @@ export const INNOVATION_MODULES: PracticeFirstModule[] = [
         title_bg: 'Дефинирай един показател за представяне',
         kind: 'experiment_design',
         brief_en:
-          'Choose one KPI that would show whether your concept helps the chosen user. Explain how you would measure it and over what period.',
+          'Choose one KPI that would show whether the concept helps the chosen user. State how you would measure it and over what period.',
         brief_bg:
-          'Избери един KPI, който би показал дали твоят концепт помага на избрания потребител. Обясни как би го измервал(а) и в какъв период.',
+          'Избери един KPI, който би показал дали концептът помага на избрания потребител. Посочи как ще го измерваш и за какъв период.',
       },
     ],
     caseConnection: {
@@ -765,20 +765,20 @@ export const INNOVATION_MODULES: PracticeFirstModule[] = [
       note_bg: 'Основен казус за този модул.',
     },
     kikiQuestions: [
-      { en: 'Whose life exactly does your concept improve, and how do they measure it?', bg: 'Чий живот точно подобрява твоят концепт и как този човек го измерва?' },
+      { en: 'Whose work does the concept improve, and how would that person measure it?', bg: 'Чия работа подобрява концептът и как този човек би я измерил?' },
       { en: 'Is the change in the product, the process, the data or the business model?', bg: 'Промяната в продукта ли е, в процеса, в данните или в бизнес модела?' },
       { en: 'What would you need to observe at a training or a match to test this?', bg: 'Какво би трябвало да наблюдаваш на тренировка или мач, за да провериш това?' },
       { en: 'What could go wrong for the athlete, the coach or the fan?', bg: 'Какво може да се обърка за спортиста, треньора или фена?' },
-      { en: 'What is one KPI you can defend as honest?', bg: 'Кой е един KPI, който можеш да защитиш като честен?' },
+      { en: 'Which KPI can you defend as honest?', bg: 'Кой KPI можеш да защитиш като честен?' },
     ],
-    evidenceOfSkill: ['Applied user framing', 'Concept design', 'Metric selection'],
+    evidenceOfSkill: ['Работа с конкретен потребител', 'Дизайн на концепт', 'Избор на честен показател'],
     reflectionPrompt: {
       en: 'What surprised you about the user you chose?',
       bg: 'Какво те изненада относно потребителя, който избра?',
     },
     improvementPrompt: {
-      en: 'Improve version 2 of your concept based on one thing that would likely fail in reality.',
-      bg: 'Подобри версия 2 на своя концепт въз основа на едно нещо, което вероятно би се провалило в реалността.',
+      en: 'Improve version 2 of the concept based on one thing that would likely fail in real conditions.',
+      bg: 'Подобри версия 2 на концепта на база едно нещо, което вероятно би се провалило в реални условия.',
     },
   },
 
@@ -789,9 +789,9 @@ export const INNOVATION_MODULES: PracticeFirstModule[] = [
     title_bg: 'Измерване, комуникиране и подобряване на иновации',
     status: 'needs_review',
     theoryBlock_en:
-      'An innovation is real when someone can show that something measurably improved. Measurement should be defined before implementation, not after. Communication matters too: users, colleagues and decision-makers must understand what changed, for whom, and what evidence supports it. Version 2 exists because version 1 was measured honestly.',
+      'An innovation is real when someone can show that something measurably improved. Define the measurement before implementation, not after. Communication matters too. Users, colleagues and decision-makers need to know what changed, for whom, and with what evidence. Version 2 exists because version 1 was measured honestly.',
     theoryBlock_bg:
-      'Иновацията е реална, когато някой може да покаже, че нещо измеримо се е подобрило. Измерването се дефинира преди внедряването, а не след него. Комуникацията също е важна: потребителите, колегите и хората, които вземат решения, трябва да разбират какво се е променило, за кого и с какви доказателства. Версия 2 съществува, защото версия 1 е измерена честно.',
+      'Иновацията е реална, когато някой може да покаже, че нещо измеримо се е подобрило. Измерването се дефинира преди внедряването, не след. Комуникацията също има значение. Потребители, колеги и хора, които вземат решения, трябва да знаят какво се е променило, за кого и с какво доказателство. Версия 2 съществува, защото версия 1 е измерена честно.',
     practiceRatio: R,
     keyConcepts: ['KPI', 'Baseline', 'Evidence of impact', 'Iteration'],
     dictionaryConcepts: ['KPI', 'Baseline', 'Iteration', 'Impact measurement'],
@@ -802,9 +802,9 @@ export const INNOVATION_MODULES: PracticeFirstModule[] = [
         title_bg: 'Дефинирай базова стойност и цел',
         kind: 'experiment_design',
         brief_en:
-          'Take one innovation you designed in earlier modules. Write the current baseline (what is happening today) and the target (what you want after the change). Be specific with numbers where possible.',
+          'Take one innovation from earlier modules. Write the baseline (what is happening today) and the target (what you want after the change). Use numbers where possible.',
         brief_bg:
-          'Вземи една иновация, която създаде в предходните модули. Опиши текущата базова стойност (какво се случва днес) и целта (какво искаш след промяната). Бъди конкретен(на) с числа, където е възможно.',
+          'Вземи една иновация от предходните модули. Опиши базовата стойност (какво се случва днес) и целта (какво искаш след промяната). Използвай числа, където е възможно.',
       },
       {
         id: 'inno-06-t2',
@@ -812,9 +812,9 @@ export const INNOVATION_MODULES: PracticeFirstModule[] = [
         title_bg: 'Избери 1–2 честни KPI',
         kind: 'decision',
         brief_en:
-          'Choose one or two KPIs that would show whether the innovation actually works. Explain why each is honest — that is, hard to fake and connected to real value.',
+          'Choose 1–2 KPIs that would show whether the innovation works. Explain why each is honest: hard to fake and tied to real value.',
         brief_bg:
-          'Избери един или два KPI, които биха показали дали иновацията реално работи. Обясни защо всеки е честен — тоест труден за манипулиране и свързан с реална стойност.',
+          'Избери 1–2 KPI, които биха показали дали иновацията работи. Обясни защо всеки е честен: труден за манипулиране и свързан с реална стойност.',
       },
       {
         id: 'inno-06-t3',
@@ -822,9 +822,9 @@ export const INNOVATION_MODULES: PracticeFirstModule[] = [
         title_bg: 'Напиши 6-редов вътрешен ъпдейт',
         kind: 'reflection',
         brief_en:
-          'Write a short update for a colleague or teacher: what changed, for whom, what evidence you have, what is still unknown, what is next. No hype language.',
+          'Write a short update for a colleague or teacher: what changed, for whom, what evidence you have, what is still unknown, what is next. No hype.',
         brief_bg:
-          'Напиши кратък ъпдейт за колега или преподавател: какво се е променило, за кого, с какви доказателства, какво все още не се знае и какво следва. Без хайп език.',
+          'Напиши кратък ъпдейт за колега или преподавател: какво се промени, за кого, какви доказателства имаш, какво още не се знае, какво следва. Без хайп.',
       },
       {
         id: 'inno-06-t4',
@@ -832,7 +832,7 @@ export const INNOVATION_MODULES: PracticeFirstModule[] = [
         title_bg: 'Опиши версия 2',
         kind: 'iteration',
         brief_en:
-          'Based on your baseline, KPIs and update, describe two concrete changes for version 2 and why they follow from the evidence.',
+          'Based on the baseline, KPIs and update, describe two concrete changes for version 2 and why they follow from the evidence.',
         brief_bg:
           'На база базовата стойност, KPI и ъпдейта опиши две конкретни промени за версия 2 и защо следват от доказателствата.',
       },
@@ -840,24 +840,24 @@ export const INNOVATION_MODULES: PracticeFirstModule[] = [
     caseConnection: {
       caseId: 'school-youth-environment',
       reviewStatus: 'needs_content_review',
-      note_en: 'Small, familiar context to practice honest measurement.',
+      note_en: 'A small, familiar context to practise honest measurement.',
       note_bg: 'Малък познат контекст за упражняване на честно измерване.',
     },
     kikiQuestions: [
       { en: 'What is the honest evidence that this innovation worked?', bg: 'Кое е честното доказателство, че тази иновация е сработила?' },
       { en: 'Which KPI could be gamed without creating real value?', bg: 'Кой KPI би могъл да бъде манипулиран, без да се създаде реална стойност?' },
-      { en: 'Who needs to understand this update — and what would confuse them?', bg: 'Кой трябва да разбере този ъпдейт — и какво би го объркало?' },
+      { en: 'Who needs to understand this update, and what would confuse them?', bg: 'Кой трябва да разбере този ъпдейт и какво би го объркало?' },
       { en: 'What in version 1 would you not repeat?', bg: 'Какво от версия 1 не би повторил(а)?' },
       { en: 'What would you improve in version 2, and what evidence supports that?', bg: 'Какво би подобрил(а) във версия 2 и какво доказателство подкрепя това?' },
     ],
-    evidenceOfSkill: ['Honest measurement', 'Clear communication', 'Evidence-based iteration'],
+    evidenceOfSkill: ['Честно измерване', 'Ясна комуникация', 'Итерация на база доказателства'],
     reflectionPrompt: {
       en: 'Where were you tempted to pick a KPI that looks good instead of one that is honest?',
-      bg: 'Къде беше изкушен(а) да избереш KPI, който изглежда добре, вместо такъв, който е честен?',
+      bg: 'Къде беше изкушен(а) да избереш KPI, който изглежда добре, вместо честен?',
     },
     improvementPrompt: {
-      en: 'Rewrite one line of your update to be more precise and less impressive.',
-      bg: 'Пренапиши един ред от ъпдейта, така че да е по-точен и по-малко впечатляващ.',
+      en: 'Rewrite one line of the update to be more precise and less impressive.',
+      bg: 'Пренапиши един ред от ъпдейта да е по-точен и по-малко впечатляващ.',
     },
   },
 ];
