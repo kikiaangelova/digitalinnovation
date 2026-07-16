@@ -44,7 +44,7 @@ export default function CycleFAB() {
   if (pathname === config.path) return null;
 
   return (
-    <div className="fixed bottom-24 md:bottom-6 right-6 z-50">
+    <div className="fixed bottom-24 md:bottom-6 right-6 z-50 hidden md:block">
       <Button
         onClick={() => navigate(config.path)}
         className="bg-primary text-primary-foreground hover:bg-primary/90 border-0 shadow-lg gap-2 rounded-full px-5 h-11 text-sm font-semibold"
