@@ -124,26 +124,75 @@ export default function LearningModules() {
             onExplore={() => setShowCatalog(true)}
           />
         ) : (
-          <ul className="space-y-3">
-            {entries.map((entry) => (
-              <SubjectRow
-                key={entry.subjectKey}
-                entry={entry}
-                progress={progressBySubject[entry.subjectKey]}
-                lang={lang as 'bg' | 'en'}
-                t={t}
-                onOpen={() => navigate(`/learn/subject/${entry.subjectKey}`)}
-              />
-            ))}
-            <li className="pt-2 text-right">
-              <Button variant="ghost" size="sm" onClick={() => setShowCatalog((v) => !v)}>
-                <Compass className="h-4 w-4 mr-1" />
-                {showCatalog
-                  ? t('Hide subject catalog', 'Скрий каталога')
-                  : t('Explore all subjects', 'Разгледай всички предмети')}
-              </Button>
-            </li>
-          </ul>
+          <div className="space-y-6">
+            {(() => {
+              const byArea = new Map<LearningAreaId | '__other__', MySubjectEntry[]>();
+              for (const entry of entries) {
+                const areaId = areaOfSubject(entry.subjectKey) ?? '__other__';
+                const list = byArea.get(areaId) ?? [];
+                list.push(entry);
+                byArea.set(areaId, list);
+              }
+              const orderedAreas = LEARNING_AREAS.filter((a) => byArea.has(a.id));
+              const otherEntries = byArea.get('__other__') ?? [];
+              return (
+                <>
+                  {orderedAreas.map((area) => {
+                    const Icon = area.icon;
+                    return (
+                      <section key={area.id} className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <Icon className="h-4 w-4 text-primary" />
+                          <h2 className="text-xs uppercase tracking-wide font-bold text-muted-foreground">
+                            {areaTitle(area, lang as 'bg' | 'en')}
+                          </h2>
+                        </div>
+                        <ul className="space-y-3">
+                          {(byArea.get(area.id) ?? []).map((entry) => (
+                            <SubjectRow
+                              key={entry.subjectKey}
+                              entry={entry}
+                              progress={progressBySubject[entry.subjectKey]}
+                              lang={lang as 'bg' | 'en'}
+                              t={t}
+                              onOpen={() => navigate(`/learn/subject/${entry.subjectKey}`)}
+                            />
+                          ))}
+                        </ul>
+                      </section>
+                    );
+                  })}
+                  {otherEntries.length > 0 && (
+                    <section className="space-y-2">
+                      <h2 className="text-xs uppercase tracking-wide font-bold text-muted-foreground">
+                        {t('Other', 'Други')}
+                      </h2>
+                      <ul className="space-y-3">
+                        {otherEntries.map((entry) => (
+                          <SubjectRow
+                            key={entry.subjectKey}
+                            entry={entry}
+                            progress={progressBySubject[entry.subjectKey]}
+                            lang={lang as 'bg' | 'en'}
+                            t={t}
+                            onOpen={() => navigate(`/learn/subject/${entry.subjectKey}`)}
+                          />
+                        ))}
+                      </ul>
+                    </section>
+                  )}
+                  <div className="pt-2 text-right">
+                    <Button variant="ghost" size="sm" onClick={() => setShowCatalog((v) => !v)}>
+                      <Compass className="h-4 w-4 mr-1" />
+                      {showCatalog
+                        ? t('Hide learning areas', 'Скрий учебните области')
+                        : t('Explore all learning areas', 'Разгледай всички учебни области')}
+                    </Button>
+                  </div>
+                </>
+              );
+            })()}
+          </div>
         )}
 
         {(showCatalog || noSubjects) && (
