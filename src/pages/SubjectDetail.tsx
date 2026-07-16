@@ -37,6 +37,8 @@ import {
 import { LEARNING_MODULES } from '@/data/learning-modules';
 import { useModuleCatalog, type CatalogModule } from '@/hooks/useModuleCatalog';
 import { useMySubjects } from '@/hooks/useMySubjects';
+import { areaOfSubject } from '@/data/learning-areas';
+import { LEARNING_THEMES, type LearningTheme } from '@/data/content-structure';
 
 export default function SubjectDetail() {
   const { subjectKey } = useParams<{ subjectKey: string }>();
@@ -187,20 +189,12 @@ export default function SubjectDetail() {
           subjectKey === 'entrepreneurship-startups' ? (
             <EntrepreneurshipDraftCard lang={lang as 'bg' | 'en'} t={t} />
           ) : (
-            <section className="rounded-xl border border-dashed border-border bg-card p-8 text-center space-y-2">
-              <p className="text-sm text-foreground font-medium">
-                {t(
-                  'Learning content for this subject is being prepared.',
-                  'Съдържанието за този предмет се подготвя.',
-                )}
-              </p>
-              <p className="text-xs text-muted-foreground">
-                {t(
-                  'We will add modules here as they become playable.',
-                  'Ще добавим модули тук, щом станат готови за използване.',
-                )}
-              </p>
-            </section>
+            <SubjectProcessPreview
+              subjectKey={subjectKey!}
+              availability={subject.availability}
+              lang={lang as 'bg' | 'en'}
+              t={t}
+            />
           )
         ) : (
           <>
