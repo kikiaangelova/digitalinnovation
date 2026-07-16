@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, within } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Index from '@/pages/Index';
@@ -6,7 +6,7 @@ import { LangProvider } from '@/context/LangContext';
 import { AuthContext } from '@/context/AuthContext';
 
 const renderHome = (lang: 'en' | 'bg' = 'en', user = null) => {
-  window.localStorage.setItem('digilab-lang', lang);
+  localStorage.setItem('digiinnov-lang', lang);
   return render(
     <MemoryRouter>
       <AuthContext.Provider value={{ user, isLoading: false, session: null, refreshSession: vi.fn(), signOut: vi.fn() } as any}>
@@ -19,6 +19,10 @@ const renderHome = (lang: 'en' | 'bg' = 'en', user = null) => {
 };
 
 describe('Kiki homepage card copy', () => {
+  beforeEach(() => {
+    localStorage.clear();
+  });
+
   it('does not imply Kiki AI has 20 years of experience (BG)', () => {
     renderHome('bg');
     const main = screen.getByRole('main');
