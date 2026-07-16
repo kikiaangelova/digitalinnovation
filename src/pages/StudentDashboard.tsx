@@ -346,6 +346,32 @@ export default function StudentDashboard() {
           {/* ── Primary zone: Today ── */}
           <TodayHero lang={lang} action={canonical} />
 
+          {/* ── Kiki quick-anchor chip — visible under Today, links to Kiki widget ── */}
+          <div className="flex flex-wrap items-center gap-2">
+            <a
+              href="#kiki-mentor"
+              onClick={(e) => {
+                e.preventDefault();
+                const el = document.getElementById('kiki-mentor');
+                if (el) {
+                  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  history.replaceState(null, '', '#kiki-mentor');
+                }
+              }}
+              className="inline-flex min-h-[44px] items-center gap-2 rounded-full border-2 border-foreground bg-primary/10 px-4 py-2 text-sm font-bold text-foreground quest-shadow-sm hover:translate-x-[1px] hover:translate-y-[1px] hover:shadow-none transition-all"
+            >
+              <Sparkles className="h-4 w-4 text-primary" strokeWidth={2.5} aria-hidden />
+              {t('Ask Kiki', 'Попитай Kiki')}
+              <ArrowRight className="h-3.5 w-3.5" aria-hidden />
+            </a>
+            <span className="text-xs text-muted-foreground">
+              {t(
+                'Get Kiki\u2019s review of your project below.',
+                'Виж прегледа на Kiki за проекта ти по-долу.',
+              )}
+            </span>
+          </div>
+
           {/* ── Secondary zone: Your Learning (max 3 cards) ── */}
           <section aria-label={t('Your learning', 'Твоето учене')} className="space-y-4">
             <div className="section-chip-amber -rotate-1">
