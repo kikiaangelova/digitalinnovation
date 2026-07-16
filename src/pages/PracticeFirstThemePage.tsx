@@ -236,6 +236,41 @@ function EmptyState({ title, body }: { title: string; body: string }) {
   );
 }
 
+const FRIENDLY_CASE_LABELS: Record<string, { en: string; bg: string }> = {
+  'school-youth-environment': {
+    en: 'Case: problem in a familiar environment',
+    bg: 'Казус: проблем в позната среда',
+  },
+  'food-waste-sustainability': {
+    en: 'Case: food waste and sustainability',
+    bg: 'Казус: разхищение на храна и устойчивост',
+  },
+  'chatgpt-ai-business-model': {
+    en: 'Case: AI product and business model',
+    bg: 'Казус: AI продукт и бизнес модел',
+  },
+  'revolut-fintech': {
+    en: 'Case: fintech value and business model',
+    bg: 'Казус: финтех стойност и бизнес модел',
+  },
+  'fashion-business': {
+    en: 'Case: fashion idea and MVP',
+    bg: 'Казус: модна идея и MVP',
+  },
+  'small-business': {
+    en: 'Case: small business and decision under uncertainty',
+    bg: 'Казус: малък бизнес и решение при несигурност',
+  },
+};
+
+function friendlyCaseLabel(caseId: string, lang: 'bg' | 'en'): string {
+  const found = FRIENDLY_CASE_LABELS[caseId];
+  if (found) return lang === 'bg' ? found.bg : found.en;
+  return lang === 'bg'
+    ? 'Казусът към този модул се подготвя.'
+    : 'The case for this module is being prepared.';
+}
+
 function ModuleAccordionItem({
   mod,
   index,
