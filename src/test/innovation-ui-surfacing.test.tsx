@@ -139,17 +139,17 @@ describe('Innovation UI surfacing V1', () => {
     });
   });
 
-  it('shows the BG draft badge "Чернова / за преглед"', async () => {
-    await renderInnovationTheme('bg');
+  it('hides the BG draft badge from student learners', async () => {
+    const { container } = await renderInnovationTheme('bg');
     await waitFor(() => {
-      expect(screen.getAllByText(/Чернова \/ за преглед/i).length).toBeGreaterThan(0);
+      expect(container.textContent ?? '').not.toMatch(/Чернова \/ за преглед/);
     });
   });
 
-  it('shows the EN draft badge "Draft / for review"', async () => {
-    await renderInnovationTheme('en');
+  it('hides the EN draft badge from student learners', async () => {
+    const { container } = await renderInnovationTheme('en');
     await waitFor(() => {
-      expect(screen.getAllByText(/Draft \/ for review/i).length).toBeGreaterThan(0);
+      expect(container.textContent ?? '').not.toMatch(/Draft \/ for review/);
     });
   });
 

@@ -33,15 +33,27 @@ function renderPage({ lang = 'en', role = 'student', isAdmin = false } = {}) {
 }
 
 describe('Practice-first mobile readability polish V1', () => {
-  it('shows EN draft badge as "Draft / for review"', () => {
-    renderPage({ lang: 'en' });
+  it('shows EN draft badge as "Draft / for review" to reviewers only', () => {
+    renderPage({ lang: 'en', role: 'teacher_verified' });
     expect(screen.getByText('Draft / for review')).toBeInTheDocument();
   });
 
-  it('shows BG draft badge as "Чернова / за преглед"', () => {
-    renderPage({ lang: 'bg' });
+  it('shows BG draft badge as "Чернова / за преглед" to reviewers only', () => {
+    renderPage({ lang: 'bg', role: 'teacher_verified' });
     expect(screen.getByText('Чернова / за преглед')).toBeInTheDocument();
     expect(screen.queryByText(/Draft \/ За преглед/)).toBeNull();
+  });
+
+  it('hides draft/review labels from student learners', () => {
+    const { container } = renderPage({ lang: 'bg', role: 'student' });
+    expect(container.textContent).not.toMatch(/Чернова/);
+    expect(container.textContent).not.toMatch(/за преглед/);
+    const en = renderPage({ lang: 'en', role: 'student' });
+    expect(en.container.textContent).not.toMatch(/\bDraft\b/);
+    expect(en.container.textContent).not.toMatch(/for review/i);
+    expect(en.container.textContent).not.toMatch(/needs_review/);
+    expect(en.container.textContent).not.toMatch(/needs_content_review/);
+    expect(en.container.textContent).not.toMatch(/content review/i);
   });
 
   it('does not expose raw "needs_review" in user-facing copy', () => {

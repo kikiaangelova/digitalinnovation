@@ -144,11 +144,15 @@ export default function PracticeFirstThemePage() {
                   : theme.title_en
                 : t('Practice-first drafts', 'Практически чернови')}
             </h1>
-            <Badge variant="outline" className="text-[10px]">
-              {draftBadgeLabel}
-            </Badge>
+            {showReviewerBadge && (
+              <Badge variant="outline" className="text-[10px]">
+                {draftBadgeLabel}
+              </Badge>
+            )}
           </div>
-          <p className="typo-helper max-w-2xl">{draftNotice}</p>
+          {showReviewerBadge && (
+            <p className="typo-helper max-w-2xl">{draftNotice}</p>
+          )}
           {showReviewerBadge && (
             <p className="text-[11px] text-muted-foreground">
               {t(
@@ -211,6 +215,7 @@ export default function PracticeFirstThemePage() {
                 lang={lang as 'bg' | 'en'}
                 t={t}
                 draftBadgeShort={draftBadgeShort}
+                showReviewerBadge={showReviewerBadge}
                 isRead={!!readMap[mod.id]}
                 onToggleRead={() => toggleRead(mod.id)}
               />
@@ -231,12 +236,48 @@ function EmptyState({ title, body }: { title: string; body: string }) {
   );
 }
 
+const FRIENDLY_CASE_LABELS: Record<string, { en: string; bg: string }> = {
+  'school-youth-environment': {
+    en: 'Case: problem in a familiar environment',
+    bg: 'Казус: проблем в позната среда',
+  },
+  'food-waste-sustainability': {
+    en: 'Case: food waste and sustainability',
+    bg: 'Казус: разхищение на храна и устойчивост',
+  },
+  'chatgpt-ai-business-model': {
+    en: 'Case: AI product and business model',
+    bg: 'Казус: AI продукт и бизнес модел',
+  },
+  'revolut-fintech': {
+    en: 'Case: fintech value and business model',
+    bg: 'Казус: финтех стойност и бизнес модел',
+  },
+  'fashion-business': {
+    en: 'Case: fashion idea and MVP',
+    bg: 'Казус: модна идея и MVP',
+  },
+  'small-business': {
+    en: 'Case: small business and decision under uncertainty',
+    bg: 'Казус: малък бизнес и решение при несигурност',
+  },
+};
+
+function friendlyCaseLabel(caseId: string, lang: 'bg' | 'en'): string {
+  const found = FRIENDLY_CASE_LABELS[caseId];
+  if (found) return lang === 'bg' ? found.bg : found.en;
+  return lang === 'bg'
+    ? 'Казусът към този модул се подготвя.'
+    : 'The case for this module is being prepared.';
+}
+
 function ModuleAccordionItem({
   mod,
   index,
   lang,
   t,
   draftBadgeShort,
+  showReviewerBadge,
   isRead,
   onToggleRead,
 }: {
@@ -245,12 +286,16 @@ function ModuleAccordionItem({
   lang: 'bg' | 'en';
   t: (en: string, bg: string) => string;
   draftBadgeShort: string;
+  showReviewerBadge: boolean;
   isRead: boolean;
   onToggleRead: () => void;
 }) {
   const title = lang === 'bg' ? mod.title_bg : mod.title_en;
   const theory = lang === 'bg' ? mod.theoryBlock_bg : mod.theoryBlock_en;
   const info = mod.informationSearchTask;
+  const [showAllKiki, setShowAllKiki] = useState(false);
+  const kikiTotal = mod.kikiQuestions?.length ?? 0;
+  const kikiVisible = showAllKiki ? kikiTotal : Math.min(2, kikiTotal);
   return (
     <AccordionItem
       value={mod.id}
@@ -274,9 +319,11 @@ function ModuleAccordionItem({
               {t('Read', 'Прочетено')}
             </Badge>
           )}
-          <Badge variant="outline" className="text-[10px] shrink-0 mt-0.5">
-            {draftBadgeShort}
-          </Badge>
+          {showReviewerBadge && (
+            <Badge variant="outline" className="text-[10px] shrink-0 mt-0.5">
+              {draftBadgeShort}
+            </Badge>
+          )}
         </div>
       </AccordionTrigger>
       <AccordionContent className="px-4 pb-6 pt-1 space-y-6 border-t border-border/60">
@@ -337,13 +384,21 @@ function ModuleAccordionItem({
         {/* 5. Case connection */}
         {mod.caseConnection && (
           <Section icon={FileText} label={t('Case connection', 'Връзка с казус')}>
-            <p className="text-xs">
+            <p className="text-xs" data-testid={`pf-case-label-${mod.id}`}>
               <span className="font-semibold text-foreground">
-                {mod.caseConnection.caseId}
-              </span>{' '}
-              <Badge variant="outline" className="text-[10px] ml-1">
-                {t('needs content review', 'нуждае се от преглед на съдържанието')}
-              </Badge>
+                {friendlyCaseLabel(mod.caseConnection.caseId, lang)}
+              </span>
+              {showReviewerBadge && (
+                <>
+                  {' '}
+                  <Badge variant="outline" className="text-[10px] ml-1">
+                    {t('needs content review', 'нуждае се от преглед на съдържанието')}
+                  </Badge>
+                  <span className="ml-1 text-[10px] text-muted-foreground/70">
+                    ({mod.caseConnection.caseId})
+                  </span>
+                </>
+              )}
             </p>
             {(mod.caseConnection.note_en || mod.caseConnection.note_bg) && (
               <p className="text-xs text-muted-foreground mt-1">
@@ -358,19 +413,31 @@ function ModuleAccordionItem({
         {/* 6. Kiki mentor questions — inline, static */}
         <Section
           icon={MessageCircle}
-          label={t('Mentor questions from Kiki', 'Менторски въпроси от Kiki')}
+          label={t('Check your thinking', 'Провери мисленето си')}
         >
           <p className="text-[11px] text-muted-foreground italic mb-2">
             {t(
-              'Kiki does not respond automatically here yet. Use these questions for self-check and discussion.',
-              'Тук Kiki не отговаря автоматично. Използвай въпросите за самопроверка и обсъждане.',
+              'These are self-check questions. Kiki does not answer automatically here.',
+              'Това са въпроси за самопроверка. Kiki не отговаря автоматично тук.',
             )}
           </p>
           <KikiInlineHint
             questions={mod.kikiQuestions}
             lang={lang}
-            max={mod.kikiQuestions.length}
+            max={kikiVisible}
           />
+          {kikiTotal > 2 && (
+            <button
+              type="button"
+              onClick={() => setShowAllKiki((v) => !v)}
+              data-testid={`pf-kiki-toggle-${mod.id}`}
+              className="mt-2 text-[11px] font-medium text-primary hover:underline"
+            >
+              {showAllKiki
+                ? t('Hide extra questions', 'Скрий допълнителните въпроси')
+                : t('Show more questions', 'Покажи още въпроси')}
+            </button>
+          )}
         </Section>
 
         {/* 7. Reflection + improvement */}
