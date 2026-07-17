@@ -1861,6 +1861,312 @@ export const MARKETING_MODULES: PracticeFirstModule[] = [
       bg: 'Пренапиши маркетинговата цел така, че да назове аудитория, резултат и срок.',
     },
   },
+
+  {
+    id: 'mkt-05-campaigns-codes-and-kpi',
+    themeId: 'marketing',
+    title_en: 'Campaigns, codes and KPI',
+    title_bg: 'Кампании, кодове и KPI',
+    status: 'needs_review',
+    theoryBlock_en:
+      'A marketing campaign is a planned set of actions with a goal, an audience, a message, a channel mix, a timeline, resources, measurement and an improvement cycle. A campaign goal is the outcome you want (awareness, traffic, engagement, leads, sales); a channel action is what happens on a platform; a KPI is the number that tells you whether the goal is moving. Organic and paid campaigns follow different logic — this module stays in a safe classroom simulation, no ad spend and no personal customer data. Campaign codes, promo codes, referral codes, coupon codes, campaign keywords, UTMs and tracking links are all ways to connect a visible action to a decision. Useful metrics support decisions; vanity metrics only look impressive. Optimisation means learning from evidence, not guessing.',
+    theoryBlock_bg:
+      'Маркетинговата кампания е планиран набор от действия с цел, аудитория, послание, комбинация от канали, времева рамка, ресурси, измерване и цикъл на подобрение. Целта на кампанията е резултатът, който искаш (awareness, traffic, engagement, leads, sales); действието в канала е какво се случва на платформата; KPI е числото, което ти казва дали целта се движи. Органичните и платените кампании имат различна логика — този модул остава в безопасна класна симулация, без реален бюджет за реклама и без лични клиентски данни. Кампанийни кодове, промо кодове, referral кодове, купон кодове, кампанийни ключови думи, UTM и tracking линкове са начини да свържеш видимо действие с решение. Полезните метрики подкрепят решения; vanity metrics само изглеждат впечатляващо. Оптимизацията е учене от доказателства, а не гадаене.',
+    practiceRatio: R,
+    keyConcepts: ['Campaign objective', 'Campaign / promo / referral codes', 'UTM and tracking links', 'KPI vs vanity metric', 'Evidence-based optimisation'],
+    dictionaryConcepts: [
+      'Marketing Campaign',
+      'Campaign Objective',
+      'Promo Code',
+      'Referral Code',
+      'Campaign Code',
+      'UTM',
+      'Tracking Link',
+      'CTR',
+      'CPA',
+      'CAC',
+      'Conversion Rate',
+      'CLV',
+      'ROI',
+      'Lead',
+      'Remarketing',
+      'Optimization',
+      'Vanity Metric',
+    ],
+    practiceTasks: [
+      {
+        id: 'mkt-05-t1',
+        title_en: 'Campaign code simulation',
+        title_bg: 'Симулация на кампаниен код',
+        kind: 'decision',
+        brief_en:
+          'Design a simulated campaign for the student brand from previous modules. Define the campaign name, objective, audience, main message, 2 channels, one campaign / promo / referral code (for example BRAND10, CLASS2026, TRYDIGI, START25, CLUBFIRST), what the code is supposed to measure, where it would appear, what result would count as success and what would make the result unreliable. Do not run a real campaign and do not collect personal data.',
+        brief_bg:
+          'Проектирай симулирана кампания за ученическия бранд от предишните модули. Дефинирай име на кампанията, цел, аудитория, основно послание, 2 канала, един кампаниен / промо / referral код (например BRAND10, CLASS2026, TRYDIGI, START25, CLUBFIRST), какво трябва да измерва кодът, къде би се появил, какво би се броило за успех и какво би направило резултата ненадежден. Не пускай реална кампания и не събирай лични данни.',
+        cefe: {
+          action_en:
+            'Create a campaign code card for your student brand and show where the code would be used in a simulated campaign. Use only fictional or classroom data.',
+          action_bg:
+            'Направи карта с кампаниен код за ученическия бранд и покажи къде би се използвал кодът в симулирана кампания. Използвай само измислени или класни данни.',
+          visibleResult_en:
+            'A campaign code card with campaign name, objective, audience, message, channels, code, what it measures, success signal and one named limitation.',
+          visibleResult_bg:
+            'Карта с кампаниен код: име на кампанията, цел, аудитория, послание, канали, код, какво измерва, сигнал за успех и едно посочено ограничение.',
+          processingQuestions_en: [
+            'What does the code actually measure?',
+            'What does the code not measure?',
+            'Could someone use the code without being a real customer?',
+            'What would make the result misleading?',
+            'Is the code connected to the campaign objective?',
+          ],
+          processingQuestions_bg: [
+            'Какво реално измерва кодът?',
+            'Какво кодът не измерва?',
+            'Може ли някой да използва кода, без да е реален клиент?',
+            'Какво би направило резултата подвеждащ?',
+            'Кодът свързан ли е с целта на кампанията?',
+          ],
+          generalizing_en:
+            'A campaign code is useful only when it connects a visible action to a decision. Codes do not prove everything; they give one piece of evidence.',
+          generalizing_bg:
+            'Кампанийният код е полезен само когато свързва видимо действие с решение. Кодовете не доказват всичко; те дават едно парче доказателство.',
+          applying_en:
+            'Improve the code logic by adding one limitation (who or when it should not count) and one stronger measurement rule.',
+          applying_bg:
+            'Подобри логиката на кода, като добавиш едно ограничение (кой или кога да не се брои) и едно по-силно правило за измерване.',
+          teacherCheck_en:
+            'Card includes objective, audience, channels, code, measurement logic, success signal and one limitation. All data is fictional or simulated.',
+          teacherCheck_bg:
+            'Картата включва цел, аудитория, канали, код, логика на измерване, сигнал за успех и едно ограничение. Всички данни са измислени или симулирани.',
+          evidence_en: 'Campaign code card.',
+          evidence_bg: 'Карта с кампаниен код.',
+        },
+      },
+      {
+        id: 'mkt-05-t2',
+        title_en: 'KPI decision board',
+        title_bg: 'KPI дъска за решения',
+        kind: 'analysis',
+        brief_en:
+          'Choose one campaign goal and build a KPI decision board. Include one attention metric, one action metric, one business / result metric and one vanity metric you will not use as main evidence. For each metric write why it matters, what high means, what low means and what decision follows. Suggested metrics: Reach, Impressions, Engagement Rate, CTR, Conversion Rate, CPA, CAC, CLV, ROI, Leads, Email sign-ups, Coupon / code uses, Landing page visits, Demo requests.',
+          brief_bg:
+          'Избери една цел на кампанията и направи KPI дъска за решения. Включи една метрика за внимание, една за действие, една бизнес / резултатна и една vanity metric, която няма да използваш като основно доказателство. За всяка метрика запиши защо е важна, какво означава високо, какво означава ниско и какво решение следва. Възможни метрики: Reach, Impressions, Engagement Rate, CTR, Conversion Rate, CPA, CAC, CLV, ROI, Leads, регистрации за имейл, използвания на код / купон, посещения на landing page, заявки за демо.',
+        cefe: {
+          action_en:
+            'Build a KPI decision board as a table with columns: metric, type, why it matters, what high means, what low means, decision that follows.',
+          action_bg:
+            'Направи KPI дъска като таблица с колони: метрика, тип, защо е важна, какво означава високо, какво означава ниско, решение, което следва.',
+          visibleResult_en:
+            'A KPI table with 3 useful metrics and 1 named vanity metric, each with interpretation and a decision rule.',
+          visibleResult_bg:
+            'KPI таблица с 3 полезни метрики и 1 посочена vanity metric, всяка с тълкуване и правило за решение.',
+          processingQuestions_en: [
+            'Which metric helps you decide what to change?',
+            'Which metric only looks impressive?',
+            'Which metric is closest to business value?',
+            'Which metric could be misleading without context?',
+          ],
+          processingQuestions_bg: [
+            'Коя метрика ти помага да решиш какво да промениш?',
+            'Коя метрика само изглежда впечатляващо?',
+            'Коя метрика е най-близо до бизнес стойност?',
+            'Коя метрика може да е подвеждаща без контекст?',
+          ],
+          generalizing_en:
+            'KPIs are not decoration. A useful KPI helps you decide whether to continue, change, stop or investigate.',
+          generalizing_bg:
+            'KPI не са украса. Полезният KPI ти помага да решиш дали да продължиш, да промениш, да спреш или да проучиш.',
+          applying_en:
+            'Replace one weak metric with a stronger one and explain why the new metric supports a better decision.',
+          applying_bg:
+            'Замени една слаба метрика с по-силна и обясни защо новата метрика подкрепя по-добро решение.',
+          teacherCheck_en:
+            'Board includes attention / action / result metrics, one named vanity metric, interpretation of high / low and a decision rule for each metric.',
+          teacherCheck_bg:
+            'Дъската включва метрики за внимание / действие / резултат, една посочена vanity metric, тълкуване на високо / ниско и правило за решение за всяка метрика.',
+          evidence_en: 'KPI decision board.',
+          evidence_bg: 'KPI дъска за решения.',
+        },
+      },
+    ],
+    kikiQuestions: [
+      { en: 'What is the campaign trying to achieve?', bg: 'Какво се опитва да постигне кампанията?' },
+      { en: 'What does your campaign code actually measure?', bg: 'Какво реално измерва кампанийният ти код?' },
+      { en: 'What could make the code result misleading?', bg: 'Какво би направило резултата от кода подвеждащ?' },
+      { en: 'Which KPI would help you make a decision?', bg: 'Кой KPI би ти помогнал да вземеш решение?' },
+      { en: 'Which metric looks good but does not prove real value?', bg: 'Коя метрика изглежда добре, но не доказва реална стойност?' },
+      { en: 'What would you change if the KPI is weak?', bg: 'Какво би променил(а), ако KPI е слаб?' },
+    ],
+    evidenceOfSkill: [
+      'Ясно формулирана цел на кампанията',
+      'Симулиран кампаниен код с ограничение',
+      'Избор на метрики за решения',
+      'Разграничаване на KPI и vanity metric',
+      'Решение за оптимизация на база доказателство',
+    ],
+    reflectionPrompt: {
+      en: 'Which metric would you defend as real evidence, and which one is only decoration?',
+      bg: 'Коя метрика би защитил(а) като реално доказателство и коя е само украса?',
+    },
+    improvementPrompt: {
+      en: 'Rewrite one KPI so it names what will be measured, when, and what decision it will support.',
+      bg: 'Пренапиши един KPI така, че да казва какво ще се измерва, кога и какво решение ще подкрепи.',
+    },
+  },
+
+  {
+    id: 'mkt-06-seo-search-and-aio-visibility',
+    themeId: 'marketing',
+    title_en: 'SEO, search and AIO visibility',
+    title_bg: 'SEO, търсене и AIO видимост',
+    status: 'needs_review',
+    theoryBlock_en:
+      'SEO is the practice of making content easier for people and search systems to find, understand and trust. A keyword is a clue about what someone is trying to learn, compare or do; search intent is the reason behind it. People search differently on Google, TikTok, Instagram, LinkedIn and AI tools, so the same question may need different content. AIO / AI visibility means being useful and readable enough that AI-generated answers can safely refer to your content; AEO and GEO are labels people use for similar ideas. There is no guaranteed trick for AI Overviews or AI Mode. Google Search Central says standard SEO fundamentals still apply and no special optimisation is required for AI features. Visibility improves with clear topic, real search intent, useful answer, reliable evidence, readable structure, descriptive headings, internal links where relevant, crawlable and indexable text, structured data that matches visible content, up-to-date information and human usefulness first. Put important information in text, not only in images. Check current sources instead of yesterday’s hacks.',
+    theoryBlock_bg:
+      'SEO е практиката да правиш съдържанието по-лесно за намиране, разбиране и доверие от хора и от търсещи системи. Ключовата дума е сигнал какво човек се опитва да научи, сравни или направи; search intent е причината зад това. Хората търсят различно в Google, TikTok, Instagram, LinkedIn и AI инструменти, затова един и същи въпрос може да иска различно съдържание. AIO / AI видимост означава да си достатъчно полезен и четим, че AI отговорите да могат безопасно да се позоват на съдържанието ти; AEO и GEO са етикети, които хората използват за подобни идеи. Няма гарантиран трик за AI Overviews или AI Mode. Google Search Central посочва, че стандартните SEO основи продължават да важат и не се изисква специална оптимизация за AI функциите. Видимостта се подобрява с ясна тема, реален search intent, полезен отговор, надеждни доказателства, четима структура, описателни заглавия, вътрешни връзки където е уместно, crawlable и indexable текст, структурирани данни, които съвпадат с видимото съдържание, актуална информация и полза за хората на първо място. Важната информация се пише като текст, не само в изображение. Проверявай актуални източници вместо вчерашни трикове.',
+    practiceRatio: R,
+    keyConcepts: ['Keyword vs search intent', 'Platform-aware search behaviour', 'AIO fundamentals, not hacks', 'Structured, cite-worthy writing', 'Proof and current sources'],
+    dictionaryConcepts: [
+      'SEO',
+      'Keyword',
+      'Search Intent',
+      'Search Query',
+      'AIO',
+      'AEO',
+      'GEO',
+      'AI Visibility',
+      'AI Overview',
+      'AI Mode',
+      'Zero-click Search',
+      'Structured Content',
+      'Internal Linking',
+      'Schema Markup',
+      'Crawlability',
+      'Indexability',
+      'Helpful Content',
+      'Cite-worthy Content',
+      'Source Credibility',
+    ],
+    practiceTasks: [
+      {
+        id: 'mkt-06-t1',
+        title_en: 'Keyword and search intent map',
+        title_bg: 'Карта на ключови думи и search intent',
+        kind: 'analysis',
+        brief_en:
+          'Create a keyword and intent map for your student brand. Include one main keyword, 5 related keywords, 5 questions the audience might ask, the search intent behind each question (informational, comparison, transactional / action, local / community), the likely search place (Google, TikTok, Instagram, LinkedIn, AI assistant) and the content format that would answer it best.',
+        brief_bg:
+          'Направи карта на ключови думи и intent за ученическия бранд. Включи една основна ключова дума, 5 свързани ключови думи, 5 въпроса, които аудиторията може да задава, search intent зад всеки въпрос (informational, сравнителен, transactional / действие, локален / общностен), вероятното място за търсене (Google, TikTok, Instagram, LinkedIn, AI асистент) и формата на съдържание, което би отговорило най-добре.',
+        cefe: {
+          action_en:
+            'Build a table with columns: keyword, user question, search intent, likely search place and best content format. Connect each keyword to a real question and a reason someone would search.',
+          action_bg:
+            'Направи таблица с колони: ключова дума, въпрос на потребителя, search intent, вероятно място за търсене и най-подходящ формат на съдържание. Свържи всяка ключова дума с реален въпрос и причина, поради която някой би търсил.',
+          visibleResult_en:
+            'A keyword and intent map with main keyword, related keywords, audience questions, intent labels, likely search place and content format.',
+          visibleResult_bg:
+            'Карта на ключови думи и intent с основна ключова дума, свързани ключови думи, въпроси от аудиторията, етикети за intent, вероятно място за търсене и формат на съдържание.',
+          processingQuestions_en: [
+            'Which keyword is too broad?',
+            'Which question shows real intent?',
+            'Which platform changes how the answer should be written?',
+            'Which search phrase would need proof or a source?',
+          ],
+          processingQuestions_bg: [
+            'Коя ключова дума е прекалено обща?',
+            'Кой въпрос показва реален intent?',
+            'Коя платформа променя как трябва да е написан отговорът?',
+            'Коя фраза за търсене би поискала доказателство или източник?',
+          ],
+          generalizing_en:
+            'Keywords are not magic words. They are clues about what people are trying to understand, compare or do.',
+          generalizing_bg:
+            'Ключовите думи не са магически думи. Те са сигнали за това какво хората се опитват да разберат, сравнят или направят.',
+          applying_en:
+            'Rewrite one broad keyword into a more specific question and choose a better content format for it.',
+          applying_bg:
+            'Пренапиши една обща ключова дума в по-конкретен въпрос и избери по-подходящ формат за съдържание.',
+          teacherCheck_en:
+            'Map has main keyword, related keywords, audience questions, intent labels, likely search place and content format. At least one broad keyword is improved.',
+          teacherCheck_bg:
+            'Картата има основна ключова дума, свързани ключови думи, въпроси от аудиторията, етикети за intent, вероятно място за търсене и формат на съдържание. Поне една обща ключова дума е подобрена.',
+          evidence_en: 'Keyword and search intent map.',
+          evidence_bg: 'Карта на ключови думи и search intent.',
+        },
+      },
+      {
+        id: 'mkt-06-t2',
+        title_en: 'AIO / AI-visible content rewrite',
+        title_bg: 'AIO / AI-видимо пренаписване на съдържание',
+        kind: 'iteration',
+        brief_en:
+          'Take a deliberately weak paragraph about your brand — for example: "We are an innovative brand that helps young people succeed with modern solutions." — and rewrite it to be clearer, more useful and more cite-worthy. The rewrite must have a clear title, a direct answer in the first 1–2 sentences, a useful explanation, evidence or example, descriptive headings, readable bullet points if useful, an updated date if relevant, a source or proof note for any factual claim and no unsupported hype. There is no trick that guarantees AI Overviews — clarity, structure and trust come first.',
+        brief_bg:
+          'Вземи умишлено слаб абзац за бранда — например: „Ние сме иновативен бранд, който помага на младите хора да успяват с модерни решения.“ — и го пренапиши да е по-ясен, по-полезен и по-cite-worthy. Пренаписаното трябва да има ясно заглавие, директен отговор в първите 1–2 изречения, полезно обяснение, доказателство или пример, описателни заглавия, четими bullet points ако са полезни, актуализирана дата ако е уместно, бележка за източник или доказателство при всяко фактологично твърдение и без необосновани обещания. Няма трик, който гарантира AI Overviews — първо идват яснотата, структурата и доверието.',
+        cefe: {
+          action_en:
+            'Produce a before / after rewrite. Keep the weak version visible for comparison and place the improved version next to it.',
+          action_bg:
+            'Направи пренаписване „преди / след“. Остави слабата версия видима за сравнение и постави подобрената версия до нея.',
+          visibleResult_en:
+            'Before / after content rewrite with title, direct answer, structured explanation, evidence and clearer language.',
+          visibleResult_bg:
+            'Пренаписване „преди / след“ със заглавие, директен отговор, структурирано обяснение, доказателство и по-ясен език.',
+          processingQuestions_en: [
+            'What became clearer?',
+            'Which claim still needs evidence?',
+            'What did you remove because it was hype?',
+            'Would a reader understand the value without seeing an image?',
+            'Would AI or search systems have enough text to understand the topic?',
+          ],
+          processingQuestions_bg: [
+            'Кое стана по-ясно?',
+            'Кое твърдение все още има нужда от доказателство?',
+            'Какво премахна, защото беше празно обещание?',
+            'Читателят би ли разбрал стойността, без да види изображение?',
+            'AI и търсещите системи биха ли имали достатъчно текст, за да разберат темата?',
+          ],
+          generalizing_en:
+            'AI visibility starts with clarity, structure and trust. If a human cannot understand or verify the content, AI visibility should not be the goal.',
+          generalizing_bg:
+            'AI видимостта започва с яснота, структура и доверие. Ако човек не може да разбере или провери съдържанието, AI видимостта не бива да е целта.',
+          applying_en:
+            'Improve the rewritten version one more time by adding a stronger proof point or removing one unsupported claim.',
+          applying_bg:
+            'Подобри пренаписаната версия още веднъж, като добавиш по-силно доказателство или премахнеш едно необосновано твърдение.',
+          teacherCheck_en:
+            'Before / after rewrite is present. Final version has title, direct answer, structured explanation, proof or source note for factual claims and no empty hype.',
+          teacherCheck_bg:
+            'Пренаписването „преди / след“ е налице. Финалната версия има заглавие, директен отговор, структурирано обяснение, бележка за източник или доказателство при фактологичните твърдения и без празни обещания.',
+          evidence_en: 'AIO / AI-visible content rewrite.',
+          evidence_bg: 'AIO / AI-видимо пренаписване на съдържание.',
+        },
+      },
+    ],
+    kikiQuestions: [
+      { en: 'What is the audience really searching for?', bg: 'Какво реално търси аудиторията?' },
+      { en: 'Is this keyword a word, or a real question?', bg: 'Тази ключова дума е просто дума или реален въпрос?' },
+      { en: 'What would make this content trustworthy?', bg: 'Какво би направило това съдържание достойно за доверие?' },
+      { en: 'Which claim needs proof?', bg: 'Кое твърдение има нужда от доказателство?' },
+      { en: 'What did you write as readable text instead of hiding inside an image?', bg: 'Какво написа като четим текст, вместо да го скриеш в изображение?' },
+      { en: 'Are you trying to help the reader or trick the algorithm?', bg: 'Опитваш ли се да помогнеш на читателя или да излъжеш алгоритъма?' },
+    ],
+    evidenceOfSkill: [
+      'Карта на ключови думи и search intent',
+      'Разграничаване на keyword и въпрос с реален intent',
+      'Пренаписване на съдържание с ясна структура',
+      'Бележка за източник или доказателство при фактологично твърдение',
+      'Отговорно отношение към AI видимост, без обещания за трикове',
+    ],
+    reflectionPrompt: {
+      en: 'Where were you tempted to add hype, and what did you replace it with?',
+      bg: 'Къде беше изкушен(а) да добавиш празно обещание и с какво го замени?',
+    },
+    improvementPrompt: {
+      en: 'Rewrite the opening sentence so it answers the reader’s question directly, without marketing decoration.',
+      bg: 'Пренапиши първото изречение така, че директно да отговаря на въпроса на читателя, без маркетингова украса.',
+    },
+  },
 ];
 
 export const PRACTICE_FIRST_MODULES: PracticeFirstModule[] = [
