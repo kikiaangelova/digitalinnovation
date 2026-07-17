@@ -190,6 +190,8 @@ export default function SubjectDetail() {
             <EntrepreneurshipDraftCard lang={lang as 'bg' | 'en'} t={t} />
           ) : subjectKey === 'digital-innovation' ? (
             <InnovationDraftCard lang={lang as 'bg' | 'en'} t={t} />
+          ) : subjectKey === 'digital-marketing' || subjectKey === 'marketing-foundations' ? (
+            <MarketingDraftCard lang={lang as 'bg' | 'en'} t={t} />
           ) : (
             <SubjectProcessPreview
               subjectKey={subjectKey!}
