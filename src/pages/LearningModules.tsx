@@ -155,6 +155,9 @@ export default function LearningModules() {
                         {area.id === 'innovation' && (
                           <PracticeFirstDraftLink theme="innovation" lang={lang as 'bg' | 'en'} t={t} />
                         )}
+                        {area.id === 'marketing' && (
+                          <PracticeFirstDraftLink theme="marketing" lang={lang as 'bg' | 'en'} t={t} />
+                        )}
                         <ul className="space-y-3">
                           {(byArea.get(area.id) ?? []).map((entry) => (
                             <SubjectRow
