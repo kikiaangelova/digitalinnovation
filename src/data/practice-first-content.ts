@@ -2174,7 +2174,7 @@ export const MARKETING_MODULES: PracticeFirstModule[] = [
     title_bg: 'Case Lab 2026',
     status: 'needs_review',
     theoryBlock_en:
-      'A case analysis is not admiration. A campaign example is something to question, not copy. Current examples are useful only when you check the source, date, platform context and evidence — platform norms change fast. When you study a case, separate fact, platform claim, interpretation, assumption and improvement idea. Connect message, audience, channel, format, KPI and risk. No campaign is universally correct or guaranteed; strong marketers learn the logic behind an example instead of the surface.',
+      'A case analysis is not admiration. A campaign example is something to question, not copy. Current examples are useful only when you check the source, date, platform context and evidence — platform norms change fast. When you study a case, separate fact, platform claim, interpretation, assumption and improvement idea. Connect message, audience, channel, format, KPI and risk. No campaign is universal or guaranteed; strong marketers learn the logic behind an example instead of the surface.',
     theoryBlock_bg:
       'Анализът на кейс не е възхищение. Кампанията е за поставяне под въпрос, не за сляпо копиране. Текущите примери са полезни само когато проверяваш източник, дата, контекст на платформата и доказателства — правилата на платформите се променят бързо. Когато изучаваш кейс, разделяй факт, твърдение на платформата, интерпретация, допускане и идея за подобрение. Свързвай посланието, аудиторията, канала, формата, KPI и риска. Никоя кампания не е универсално правилна или гарантирана; силните маркетолози учат логиката зад примера, не повърхността.',
     practiceRatio: R,
