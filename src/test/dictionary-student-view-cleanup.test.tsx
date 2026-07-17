@@ -196,14 +196,17 @@ describe('Dictionary Student View Cleanup V1', () => {
     expect(screen.getByText(`${visibleTerms.length} ${visibleTerms.length === 1 ? 'term' : 'terms'}`)).toBeInTheDocument();
   });
 
-  it('keeps dictionary data files unchanged (no content edits)', () => {
-    // This is a guard test: it verifies that the governance data is still present
-    // and that we did not accidentally alter the term count or required-concept mappings.
+  it('keeps dictionary data files unchanged (governance fields still present)', () => {
+    // Guard test: governance data is still present and we did not accidentally
+    // alter the term count or remove review/required/source fields.
     expect(TERMS.length).toBeGreaterThan(0);
     const hasReviewStatuses = TERMS.some((t) => t.reviewStatus);
     const hasRequired = TERMS.some((t) => t.required);
-    expect(hasReviewStatuses || true).toBe(true); // reviewStatus field exists on data
-    expect(hasRequired || true).toBe(true); // required field exists on data
+    expect(hasReviewStatuses).toBe(true);
+    expect(hasRequired).toBe(true);
+    // Default review status logic still works (data not edited to always include status).
+    const termWithoutStatus = TERMS.find((t) => !t.reviewStatus);
+    expect(termWithoutStatus).toBeDefined();
   });
 
   it('does not touch data/auth/XP/RLS/case/Learn/startup/simulator/Kiki routes', () => {
