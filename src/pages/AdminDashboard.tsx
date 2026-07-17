@@ -533,13 +533,13 @@ export default function AdminDashboard() {
                 <div key={s.id} className="rounded-xl border border-border bg-card">
                   <button
                     onClick={() => viewSubmission(s.id, s.user_id, s.case_study_id)}
-                    className="w-full p-4 flex items-center justify-between text-left"
+                    className="w-full p-4 flex items-start justify-between gap-3 text-left"
                   >
-                    <div>
-                      <p className="text-sm font-medium text-foreground">{profiles[s.user_id] || t('Unknown Student', 'Неизвестен ученик')}</p>
-                      <p className="text-xs text-muted-foreground">{caseName} · {s.submitted_at ? new Date(s.submitted_at).toLocaleDateString() : ''}</p>
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-medium text-foreground break-words">{profiles[s.user_id] || t('Unknown Student', 'Неизвестен ученик')}</p>
+                      <p className="text-xs text-muted-foreground break-words">{caseName} · {s.submitted_at ? new Date(s.submitted_at).toLocaleDateString() : ''}</p>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 shrink-0 flex-wrap justify-end">
                       {session && <Badge variant="outline">XP {session.xp_earned}</Badge>}
                       <Badge variant="outline">{s.total_score || 0}/{s.max_score || 0}</Badge>
                       {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
