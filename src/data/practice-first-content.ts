@@ -1295,5 +1295,6 @@ export const INNOVATION_MODULES: PracticeFirstModule[] = [
 export const PRACTICE_FIRST_MODULES: PracticeFirstModule[] = [
   ...ENTREPRENEURSHIP_MODULES,
   ...INNOVATION_MODULES,
+  // MARKETING_MODULES appended below via spread — see const declaration.
 ];
 
