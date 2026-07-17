@@ -498,6 +498,11 @@ function LearningAreaSection({
               <PracticeFirstDraftLink theme="innovation" lang={lang} t={t} />
             </div>
           )}
+          {area.id === 'marketing' && (
+            <div className="mt-3">
+              <PracticeFirstDraftLink theme="marketing" lang={lang} t={t} />
+            </div>
+          )}
         </div>
       ) : isSkillsArea ? (
         <p className="mt-3 text-[11px] italic text-muted-foreground">
