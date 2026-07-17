@@ -2167,6 +2167,298 @@ export const MARKETING_MODULES: PracticeFirstModule[] = [
       bg: 'Пренапиши първото изречение така, че директно да отговаря на въпроса на читателя, без маркетингова украса.',
     },
   },
+  {
+    id: 'mkt-07-case-lab-2026',
+    themeId: 'marketing',
+    title_en: 'Case Lab 2026',
+    title_bg: 'Case Lab 2026',
+    status: 'needs_review',
+    theoryBlock_en:
+      'A case analysis is not admiration. A campaign example is something to question, not copy. Current examples are useful only when you check the source, date, platform context and evidence — platform norms change fast. When you study a case, separate fact, platform claim, interpretation, assumption and improvement idea. Connect message, audience, channel, format, KPI and risk. No campaign is universal or guaranteed; strong marketers learn the logic behind an example instead of the surface.',
+    theoryBlock_bg:
+      'Анализът на кейс не е възхищение. Кампанията е за поставяне под въпрос, не за сляпо копиране. Текущите примери са полезни само когато проверяваш източник, дата, контекст на платформата и доказателства — правилата на платформите се променят бързо. Когато изучаваш кейс, разделяй факт, твърдение на платформата, интерпретация, допускане и идея за подобрение. Свързвай посланието, аудиторията, канала, формата, KPI и риска. Никоя кампания не е универсално правилна или гарантирана; силните маркетолози учат логиката зад примера, не повърхността.',
+    practiceRatio: R,
+    keyConcepts: ['Fact vs claim vs interpretation', 'Platform-aware analysis', 'Current source check', 'KPI and risk reasoning', 'Safe case adaptation'],
+    dictionaryConcepts: [
+      'Case Analysis',
+      'Campaign Analysis',
+      'Platform Claim',
+      'Current Source Check',
+      'Creative Analysis',
+      'Source Evidence',
+      'Case Redesign',
+      'Campaign Risk',
+      'AI Content Optimization',
+      'Search Visibility Audit',
+    ],
+    practiceTasks: [
+      {
+        id: 'mkt-07-t1',
+        title_en: 'Current Case Analysis',
+        title_bg: 'Анализ на актуален кейс',
+        kind: 'analysis',
+        brief_en:
+          'Choose one case direction — Lovable positioning, LinkedIn AI content optimization guidance, a TikTok Creative Center example, a Meta objective simulation, or a Google SEO / AIO audit. Use only teacher-provided materials, public pages, screenshots or simulated examples. Do not use personal accounts and do not publish anything. Fill in a structured Current Case Analysis table with: product / service, audience, main message, channel, format, campaign objective, expected action, evidence, platform claim, assumption, KPI that would make sense, risk and one improvement idea for 2026.',
+        brief_bg:
+          'Избери една посока за кейс — позициониране на Lovable, насоки на LinkedIn за AI оптимизация на съдържание, пример от TikTok Creative Center, симулация на Meta цели или Google SEO / AIO одит. Използвай само материали, дадени от учителя, публични страници, скрийншотове или симулирани примери. Не използвай личен акаунт и не публикувай нищо. Попълни структурирана таблица „Анализ на актуален кейс“ с: продукт / услуга, аудитория, основно послание, канал, формат, цел на кампанията, очаквано действие, доказателство, твърдение на платформата, допускане, KPI който има смисъл, риск и една идея за подобрение за 2026.',
+        cefe: {
+          action_en:
+            'Fill in the Current Case Analysis table for one chosen case direction. Separate what is fact, what is platform claim, what is your interpretation and what is assumption.',
+          action_bg:
+            'Попълни таблицата „Анализ на актуален кейс“ за избраната посока. Раздели кое е факт, кое е твърдение на платформата, кое е твоя интерпретация и кое е допускане.',
+          visibleResult_en:
+            'A completed Current Case Analysis table with product, audience, message, channel, format, objective, action, evidence, claim, assumption, KPI, risk and improvement.',
+          visibleResult_bg:
+            'Попълнена таблица с продукт, аудитория, послание, канал, формат, цел, действие, доказателство, твърдение, допускане, KPI, риск и подобрение.',
+          processingQuestions_en: [
+            'Which part is fact and which part is platform claim?',
+            'Which part is your interpretation?',
+            'What evidence is missing?',
+            'Which KPI would actually support a decision?',
+            'What should not be copied blindly?',
+          ],
+          processingQuestions_bg: [
+            'Кое е факт и кое е твърдение на платформата?',
+            'Кое е твоя интерпретация?',
+            'Какви доказателства липсват?',
+            'Кой KPI наистина би подкрепил решение?',
+            'Какво не бива да се копира сляпо?',
+          ],
+          generalizing_en:
+            'Case analysis is disciplined questioning. A strong marketer learns from examples without treating them as universal formulas.',
+          generalizing_bg:
+            'Анализът на кейс е дисциплинирано задаване на въпроси. Силният маркетолог се учи от примери, без да ги приема като универсални формули.',
+          applying_en:
+            'Rewrite one improvement recommendation so it is specific, evidence-based and safe for a student brand.',
+          applying_bg:
+            'Пренапиши една препоръка за подобрение така, че да е конкретна, базирана на доказателства и безопасна за ученически бранд.',
+          teacherCheck_en:
+            'The table separates fact, claim, interpretation and assumption. It names one useful KPI, one risk and one specific improvement. No public posting, personal account, ad spend or real customer data is required.',
+          teacherCheck_bg:
+            'Таблицата разделя факт, твърдение, интерпретация и допускане. Посочен е един полезен KPI, един риск и едно конкретно подобрение. Не се изисква публикуване, личен акаунт, платена реклама или реални клиентски данни.',
+          evidence_en: 'Current Case Analysis table.',
+          evidence_bg: 'Таблица „Анализ на актуален кейс“.',
+        },
+      },
+      {
+        id: 'mkt-07-t2',
+        title_en: 'Case Redesign Challenge',
+        title_bg: 'Предизвикателство за редизайн на кейс',
+        kind: 'iteration',
+        brief_en:
+          'Take the same case and redesign one part of it for a student brand or a fictional small brand. Adapt audience, message, channel, format, proof, CTA, KPI and one risk / constraint. Do not copy the original campaign — translate the logic into a safe, small-scale version. No public posting, no personal account, no ad spend, no real customer data.',
+        brief_bg:
+          'Вземи същия кейс и редизайнирай една част от него за ученически бранд или измислен малък бранд. Адаптирай аудитория, послание, канал, формат, доказателство, CTA, KPI и един риск / ограничение. Не копирай оригиналната кампания — преведи логиката в безопасна, малка версия. Без публикуване, без личен акаунт, без платена реклама, без реални клиентски данни.',
+        cefe: {
+          action_en:
+            'Produce a one-page Case Redesign Card with original insight, adapted audience, message, channel, format, proof, CTA, KPI and risk.',
+          action_bg:
+            'Направи едностранична карта за редизайн с оригиналната идея, адаптирана аудитория, послание, канал, формат, доказателство, CTA, KPI и риск.',
+          visibleResult_en:
+            'A one-page Case Redesign Card visibly different from the original case.',
+          visibleResult_bg:
+            'Едностранична карта за редизайн, видимо различна от оригиналния кейс.',
+          processingQuestions_en: [
+            'What did you keep from the case logic?',
+            'What did you change because the context is different?',
+            'What would be unsafe or unrealistic to copy?',
+            'Which assumption in your redesign still needs testing?',
+          ],
+          processingQuestions_bg: [
+            'Какво запази от логиката на кейса?',
+            'Какво промени, защото контекстът е различен?',
+            'Какво би било небезопасно или нереалистично да се копира?',
+            'Кое допускане в редизайна ти все още иска проверка?',
+          ],
+          generalizing_en:
+            'A case becomes useful when its logic is translated to a new context. Copying the surface usually fails.',
+          generalizing_bg:
+            'Кейсът става полезен, когато логиката му се преведе в нов контекст. Копирането на повърхността обикновено не работи.',
+          applying_en:
+            'Improve the redesign by removing one unrealistic element and adding one stronger proof point.',
+          applying_bg:
+            'Подобри редизайна, като премахнеш един нереалистичен елемент и добавиш едно по-силно доказателство.',
+          teacherCheck_en:
+            'The redesign is visibly different from the original case, fits a student / fictional brand, includes KPI and risk, and avoids real posting, real ads and personal data.',
+          teacherCheck_bg:
+            'Редизайнът е видимо различен от оригинала, подхожда за ученически / измислен бранд, включва KPI и риск и избягва реално публикуване, реални реклами и лични данни.',
+          evidence_en: 'Case Redesign Card.',
+          evidence_bg: 'Карта за редизайн на кейс.',
+        },
+      },
+    ],
+    kikiQuestions: [
+      { en: 'What exactly are you learning from this case?', bg: 'Какво точно научаваш от този кейс?' },
+      { en: 'Which part is fact and which part is a brand or platform claim?', bg: 'Кое е факт и кое е твърдение на бранда или платформата?' },
+      { en: 'What evidence is missing?', bg: 'Какви доказателства липсват?' },
+      { en: 'What would be risky to copy?', bg: 'Какво би било рисковано да се копира?' },
+      { en: 'Which KPI would help you decide whether the idea works?', bg: 'Кой KPI би ти помогнал да решиш дали идеята работи?' },
+      { en: 'How would you adapt this for a smaller student brand?', bg: 'Как би адаптирал(а) това за по-малък ученически бранд?' },
+    ],
+    evidenceOfSkill: [
+      'Структуриран анализ на кейс',
+      'Разграничаване на факт / твърдение / допускане',
+      'Мислене, съобразено с платформата',
+      'Разсъждение около KPI',
+      'Безопасна адаптация на кейс',
+      'Подобрение, базирано на доказателства',
+    ],
+    reflectionPrompt: {
+      en: 'Where did you almost accept a platform claim as fact, and how did you catch it?',
+      bg: 'Къде почти прие твърдение на платформата за факт и как го хвана?',
+    },
+    improvementPrompt: {
+      en: 'Rewrite one recommendation so it is safe, specific and testable for a student brand.',
+      bg: 'Пренапиши една препоръка така, че да е безопасна, конкретна и проверима за ученически бранд.',
+    },
+  },
+  {
+    id: 'mkt-08-final-project-digital-marketing-plan-2026',
+    themeId: 'marketing',
+    title_en: 'Final Project: Digital Marketing Plan 2026',
+    title_bg: 'Финален проект: Дигитален маркетинг план 2026',
+    status: 'needs_review',
+    theoryBlock_en:
+      'The final marketing plan connects brand, audience, content, channels, campaign, KPI, SEO / AIO and reflection into one document. It must be realistic for limited resources and include evidence, assumptions and one improvement after feedback. AI can support drafts, but you must log what AI generated, what you verified and what you changed. Self-assessment and revision are part of the evidence. This is not a perfect final answer — it is your best current strategy, honestly explained.',
+    theoryBlock_bg:
+      'Финалният маркетинг план свързва бранд, аудитория, съдържание, канали, кампания, KPI, SEO / AIO и рефлексия в един документ. Той трябва да е реалистичен за ограничени ресурси и да включва доказателства, допускания и едно подобрение след обратна връзка. AI може да помага при чернови, но трябва да документираш какво е генерирал AI, какво си проверил(а) и какво си променил(а). Самооценката и ревизията са част от доказателствата. Това не е перфектен финален отговор — това е най-добрата ти текуща стратегия, честно обяснена.',
+    practiceRatio: R,
+    keyConcepts: ['Integrated marketing plan', 'Evidence and assumptions', 'KPI logic', 'Responsible AI use', 'Self-assessment and revision'],
+    dictionaryConcepts: [
+      'Digital Marketing Plan',
+      'Marketing Portfolio',
+      'AI-use Log',
+      'Self-Assessment',
+      'Feedback-based Revision',
+      'Presentation Evidence',
+      'Risk and Constraint',
+      'Strategy Fit',
+      'Final Project',
+    ],
+    practiceTasks: [
+      {
+        id: 'mkt-08-t1',
+        title_en: 'Build the Digital Marketing Plan 2026',
+        title_bg: 'Изгради Дигитален маркетинг план 2026',
+        kind: 'iteration',
+        brief_en:
+          'Compile your strongest work from Modules 1–7 into one Digital Marketing Plan 2026. Required sections: brand name, Why / How / What, brand promise, target audience, positioning statement, 4 content pillars, 3 chosen channels and why, campaign objective, campaign message, campaign code simulation, 3 KPIs, SEO / AIO keyword and intent map, 3 sample content drafts, risk / constraint and next improvement. Use simulated / fictional / classroom-safe data only. No public posting, no personal account, no paid ads, no real customer data, no real tracking pixels.',
+        brief_bg:
+          'Събери най-силните си работи от Модули 1–7 в един Дигитален маркетинг план 2026. Задължителни секции: име на бранда, Why / How / What, обещание на бранда, целева аудитория, позициониране, 4 съдържателни стълба, 3 избрани канала и защо, цел на кампанията, послание на кампанията, симулация на кампаниен код, 3 KPI, карта на ключови думи и intent за SEO / AIO, 3 примерни съдържателни чернови, риск / ограничение и следващо подобрение. Използвай само симулирани / измислени / безопасни за клас данни. Без публикуване, без личен акаунт, без платена реклама, без реални клиентски данни, без реални tracking pixels.',
+        cefe: {
+          action_en:
+            'Assemble the full plan. Rewrite weak parts instead of copy-pasting old drafts.',
+          action_bg:
+            'Сглоби целия план. Пренапиши слабите части, вместо да копираш стари чернови.',
+          visibleResult_en:
+            'A complete Digital Marketing Plan 2026 with all required sections.',
+          visibleResult_bg:
+            'Пълен Дигитален маркетинг план 2026 с всички задължителни секции.',
+          processingQuestions_en: [
+            'Which section is strongest?',
+            'Which section is still based on assumption?',
+            'Which KPI best supports a decision?',
+            'Which claim needs better proof?',
+            'Which part would fail first in real use?',
+          ],
+          processingQuestions_bg: [
+            'Коя секция е най-силна?',
+            'Коя секция все още е базирана на допускане?',
+            'Кой KPI най-добре подкрепя решение?',
+            'Кое твърдение има нужда от по-добро доказателство?',
+            'Коя част би се пропукала първа в реална употреба?',
+          ],
+          generalizing_en:
+            'A marketing plan is valuable when its parts fit together. Brand, audience, message, channel, campaign, KPI and search visibility must support the same strategy.',
+          generalizing_bg:
+            'Маркетинговият план е ценен, когато частите му си пасват. Бранд, аудитория, послание, канал, кампания, KPI и видимост в търсенето трябва да подкрепят една и съща стратегия.',
+          applying_en:
+            'Revise one weak section after feedback and explain what changed and why.',
+          applying_bg:
+            'Ревизирай една слаба секция след обратна връзка и обясни какво и защо си променил(а).',
+          teacherCheck_en:
+            'The plan includes all required sections, uses safe simulated data, identifies assumptions, includes KPIs and has at least one revised section after critique.',
+          teacherCheck_bg:
+            'Планът включва всички задължителни секции, използва безопасни симулирани данни, посочва допускания, включва KPI и има поне една ревизирана секция след критика.',
+          evidence_en: 'Complete Digital Marketing Plan 2026.',
+          evidence_bg: 'Пълен Дигитален маркетинг план 2026.',
+        },
+      },
+      {
+        id: 'mkt-08-t2',
+        title_en: 'AI-use log, reflection and presentation',
+        title_bg: 'AI-use лог, рефлексия и презентация',
+        kind: 'reflection',
+        brief_en:
+          'Prepare a 3–5 minute presentation and an AI-use log. The AI-use log must answer: what did AI generate, what did you verify, which claims needed evidence, what did you change, what did you reject, what remained your responsibility, and what information should not be shared with AI. The presentation must include brand, audience, main message, channel choices, campaign idea, KPI logic, SEO / AIO visibility logic, one risk and one improvement after feedback. Present to a peer, teacher or small group — no public posting required.',
+          brief_bg:
+          'Подготви 3–5 минутна презентация и AI-use лог. Логът трябва да отговаря на: какво генерира AI, какво провери, кои твърдения имаха нужда от доказателство, какво промени, какво отхвърли, какво остана твоя отговорност и каква информация не бива да се споделя с AI. Презентацията трябва да включва бранд, аудитория, основно послание, избор на канали, идея за кампания, логика на KPI, логика за SEO / AIO видимост, един риск и едно подобрение след обратна връзка. Презентирай пред съученик, учител или малка група — не се изисква публично публикуване.',
+        cefe: {
+          action_en:
+            'Deliver the 3–5 minute presentation with the AI-use log attached, then note one improvement made after feedback.',
+          action_bg:
+            'Изнеси 3–5 минутната презентация с прикачен AI-use лог и запиши едно подобрение след обратна връзка.',
+          visibleResult_en:
+            'Presentation outline, AI-use log and one feedback-based revision.',
+          visibleResult_bg:
+            'План на презентацията, AI-use лог и една ревизия след обратна връзка.',
+          processingQuestions_en: [
+            'Which part of your plan did the listener understand quickly?',
+            'Which part caused confusion?',
+            'Where did AI help and where did it weaken the work?',
+            'Which claim did you have to verify?',
+            'What would you improve before version 2?',
+          ],
+          processingQuestions_bg: [
+            'Коя част от плана слушателят разбра бързо?',
+            'Коя част създаде объркване?',
+            'Къде AI помогна и къде отслаби работата?',
+            'Кое твърдение трябваше да провериш?',
+            'Какво би подобрил(а) преди версия 2?',
+          ],
+          generalizing_en:
+            'Responsible digital marketing combines creation, evidence, explanation and revision. AI can speed up drafts, but judgment and accountability stay human.',
+          generalizing_bg:
+            'Отговорният дигитален маркетинг съчетава създаване, доказателства, обяснение и ревизия. AI може да ускори черновите, но преценката и отговорността остават човешки.',
+          applying_en:
+            'Revise one slide, one message or one KPI after feedback.',
+          applying_bg:
+            'Ревизирай един слайд, едно послание или един KPI след обратна връзка.',
+          teacherCheck_en:
+            'Presentation is 3–5 minutes, includes the required elements, AI-use log is completed honestly, and one improvement is made after feedback.',
+          teacherCheck_bg:
+            'Презентацията е 3–5 минути, включва задължителните елементи, AI-use логът е попълнен честно и е направено едно подобрение след обратна връзка.',
+          evidence_en: 'Presentation outline + AI-use log + feedback-based revision.',
+          evidence_bg: 'План на презентация + AI-use лог + ревизия след обратна връзка.',
+        },
+      },
+    ],
+    kikiQuestions: [
+      { en: 'Does your plan connect brand, audience, channel and KPI clearly?', bg: 'Планът ти свързва ли ясно бранд, аудитория, канал и KPI?' },
+      { en: 'Which part is evidence and which part is still assumption?', bg: 'Кое е доказателство и кое все още е допускане?' },
+      { en: 'What did AI help with, and what did you change yourself?', bg: 'С какво помогна AI и какво промени сам(а)?' },
+      { en: 'Which claim needs a source?', bg: 'Кое твърдение има нужда от източник?' },
+      { en: 'What would you improve after feedback?', bg: 'Какво би подобрил(а) след обратна връзка?' },
+      { en: 'Could someone understand your strategy in 3 minutes?', bg: 'Някой би ли разбрал стратегията ти за 3 минути?' },
+    ],
+    evidenceOfSkill: [
+      'Интегриран дигитален маркетинг план',
+      'Безопасно кампанийно мислене',
+      'Разсъждение за канали и KPI',
+      'SEO / AIO видимост без митове',
+      'Отговорна употреба на AI',
+      'Презентация и рефлексия',
+      'Подобрение след обратна връзка',
+    ],
+    reflectionPrompt: {
+      en: 'Which part of your plan changed the most between draft and final version, and why?',
+      bg: 'Коя част от плана се промени най-много между черновата и финала и защо?',
+    },
+    improvementPrompt: {
+      en: 'Choose one section and revise it after feedback; describe what changed and what evidence supports the change.',
+      bg: 'Избери една секция и я ревизирай след обратна връзка; опиши какво се промени и какви доказателства подкрепят промяната.',
+    },
+  },
 ];
 
 export const PRACTICE_FIRST_MODULES: PracticeFirstModule[] = [

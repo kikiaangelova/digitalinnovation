@@ -4,9 +4,9 @@ import {
   PRACTICE_FIRST_MODULES,
 } from '@/data/practice-first-content';
 
-describe('Practice-first content seed V1A+V1B+V1C — Digital Marketing (Modules 1-6)', () => {
-  it('exposes exactly the 6 Marketing modules in order', () => {
-    expect(MARKETING_MODULES).toHaveLength(6);
+describe('Practice-first content seed V1A-V1D — Digital Marketing (Modules 1-8)', () => {
+  it('exposes exactly the 8 Marketing modules in order', () => {
+    expect(MARKETING_MODULES).toHaveLength(8);
     expect(MARKETING_MODULES.map((m) => m.id)).toEqual([
       'mkt-01-brand-foundations-2026',
       'mkt-02-content-strategy-and-creation',
@@ -14,6 +14,8 @@ describe('Practice-first content seed V1A+V1B+V1C — Digital Marketing (Modules
       'mkt-04-marketing-planning',
       'mkt-05-campaigns-codes-and-kpi',
       'mkt-06-seo-search-and-aio-visibility',
+      'mkt-07-case-lab-2026',
+      'mkt-08-final-project-digital-marketing-plan-2026',
     ]);
     expect(MARKETING_MODULES.every((m) => m.themeId === 'marketing')).toBe(true);
   });
@@ -194,6 +196,102 @@ describe('Practice-first content seed V1A+V1B+V1C — Digital Marketing (Modules
     // Responsible framing: no magic tricks / hacks / guarantees
     for (const banned of ['ai search hack', 'magic formula', 'hack the algorithm', 'seo hack']) {
       expect(blob).not.toContain(banned);
+    }
+  });
+
+  it('Module 7 covers Case Lab 2026 with all five case directions and no absolutism', () => {
+    const m7 = MARKETING_MODULES.find((m) => m.id === 'mkt-07-case-lab-2026')!;
+    expect(m7.practiceTasks.map((t) => t.id)).toEqual(['mkt-07-t1', 'mkt-07-t2']);
+    const blob = [
+      m7.theoryBlock_en,
+      m7.theoryBlock_bg,
+      ...m7.practiceTasks.flatMap((t) => [t.brief_en, t.brief_bg]),
+    ].join(' ');
+    for (const direction of ['Lovable', 'LinkedIn', 'TikTok', 'Meta', 'Google']) {
+      expect(blob).toContain(direction);
+    }
+    const lower = blob.toLowerCase();
+    for (const banned of [
+      'perfect campaign',
+      'is universally correct',
+      'guaranteed campaign',
+      'best campaign ever',
+      'the perfect example',
+    ]) {
+      expect(lower).not.toContain(banned);
+    }
+    expect(m7.dictionaryConcepts).toEqual(
+      expect.arrayContaining([
+        'Case Analysis',
+        'Campaign Analysis',
+        'Platform Claim',
+        'Current Source Check',
+        'Case Redesign',
+        'AI Content Optimization',
+        'Search Visibility Audit',
+      ]),
+    );
+  });
+
+  it('Module 8 is the Digital Marketing Plan 2026 final project with safe scope', () => {
+    const m8 = MARKETING_MODULES.find(
+      (m) => m.id === 'mkt-08-final-project-digital-marketing-plan-2026',
+    )!;
+    expect(m8.practiceTasks.map((t) => t.id)).toEqual(['mkt-08-t1', 'mkt-08-t2']);
+    expect(m8.dictionaryConcepts).toEqual(
+      expect.arrayContaining([
+        'Digital Marketing Plan',
+        'AI-use Log',
+        'Self-Assessment',
+        'Feedback-based Revision',
+        'Presentation Evidence',
+        'Risk and Constraint',
+        'Strategy Fit',
+        'Final Project',
+      ]),
+    );
+    const blob = [
+      m8.theoryBlock_en,
+      m8.theoryBlock_bg,
+      ...m8.practiceTasks.flatMap((t) => [t.brief_en, t.brief_bg]),
+    ].join(' ').toLowerCase();
+    // Explicit safety scope
+    for (const req of ['no public posting', 'no personal account', 'no paid ads', 'no real customer data', 'no real tracking pixels']) {
+      expect(blob).toContain(req);
+    }
+    // Required deliverables mentioned
+    for (const section of ['brand promise', 'positioning', 'content pillars', 'campaign', 'kpi', 'seo']) {
+      expect(blob).toContain(section);
+    }
+  });
+
+  it('Modules 7-8 never require ad spend, personal accounts, real customer data or tracking pixels', () => {
+    const later = MARKETING_MODULES.filter((m) =>
+      ['mkt-07-case-lab-2026', 'mkt-08-final-project-digital-marketing-plan-2026'].includes(m.id),
+    );
+    for (const m of later) {
+      const blob = [
+        m.theoryBlock_en,
+        m.theoryBlock_bg,
+        ...m.practiceTasks.flatMap((t) => [
+          t.brief_en,
+          t.brief_bg,
+          t.cefe?.action_en ?? '',
+          t.cefe?.action_bg ?? '',
+          t.cefe?.teacherCheck_en ?? '',
+          t.cefe?.teacherCheck_bg ?? '',
+        ]),
+      ].join(' ').toLowerCase();
+      for (const forbidden of [
+        'install a tracking pixel',
+        'install tracking pixel',
+        'buy real ads',
+        'collect personal data from real',
+        'ad spend required',
+        'publish this publicly',
+      ]) {
+        expect(blob).not.toContain(forbidden);
+      }
     }
   });
 });
