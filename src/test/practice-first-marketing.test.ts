@@ -4,14 +4,16 @@ import {
   PRACTICE_FIRST_MODULES,
 } from '@/data/practice-first-content';
 
-describe('Practice-first content seed V1A+V1B — Digital Marketing (Modules 1-4)', () => {
-  it('exposes exactly the 4 Marketing modules in order', () => {
-    expect(MARKETING_MODULES).toHaveLength(4);
+describe('Practice-first content seed V1A+V1B+V1C — Digital Marketing (Modules 1-6)', () => {
+  it('exposes exactly the 6 Marketing modules in order', () => {
+    expect(MARKETING_MODULES).toHaveLength(6);
     expect(MARKETING_MODULES.map((m) => m.id)).toEqual([
       'mkt-01-brand-foundations-2026',
       'mkt-02-content-strategy-and-creation',
       'mkt-03-channels-and-platform-logic',
       'mkt-04-marketing-planning',
+      'mkt-05-campaigns-codes-and-kpi',
+      'mkt-06-seo-search-and-aio-visibility',
     ]);
     expect(MARKETING_MODULES.every((m) => m.themeId === 'marketing')).toBe(true);
   });
@@ -130,5 +132,68 @@ describe('Practice-first content seed V1A+V1B — Digital Marketing (Modules 1-4
     const m2 = MARKETING_MODULES.find((m) => m.id === 'mkt-02-content-strategy-and-creation')!;
     expect(m2.theoryBlock_bg).not.toContain('пусаш');
     expect(m2.theoryBlock_bg).toContain('пускаш');
+  });
+
+  it('Module 5 covers campaign codes, UTM and KPI decision content', () => {
+    const m5 = MARKETING_MODULES.find((m) => m.id === 'mkt-05-campaigns-codes-and-kpi')!;
+    expect(m5.practiceTasks.map((t) => t.id)).toEqual(['mkt-05-t1', 'mkt-05-t2']);
+    expect(m5.dictionaryConcepts).toEqual(
+      expect.arrayContaining([
+        'Marketing Campaign',
+        'Campaign Objective',
+        'Promo Code',
+        'Referral Code',
+        'Campaign Code',
+        'UTM',
+        'Tracking Link',
+        'CTR',
+        'CPA',
+        'Conversion Rate',
+        'ROI',
+        'Vanity Metric',
+      ]),
+    );
+    const blob = [
+      m5.theoryBlock_en,
+      m5.theoryBlock_bg,
+      ...m5.practiceTasks.flatMap((t) => [t.brief_en, t.brief_bg]),
+    ].join(' ').toLowerCase();
+    expect(blob).toContain('promo');
+    expect(blob).toContain('referral');
+    expect(blob).toContain('kpi');
+    expect(blob).toContain('vanity');
+  });
+
+  it('Module 6 covers SEO, search intent and responsible AIO framing', () => {
+    const m6 = MARKETING_MODULES.find((m) => m.id === 'mkt-06-seo-search-and-aio-visibility')!;
+    expect(m6.practiceTasks.map((t) => t.id)).toEqual(['mkt-06-t1', 'mkt-06-t2']);
+    expect(m6.dictionaryConcepts).toEqual(
+      expect.arrayContaining([
+        'SEO',
+        'Keyword',
+        'Search Intent',
+        'AIO',
+        'AEO',
+        'GEO',
+        'AI Visibility',
+        'AI Overview',
+        'AI Mode',
+        'Structured Content',
+        'Schema Markup',
+        'Helpful Content',
+        'Cite-worthy Content',
+      ]),
+    );
+    const blob = [
+      m6.theoryBlock_en,
+      m6.theoryBlock_bg,
+      ...m6.practiceTasks.flatMap((t) => [t.brief_en, t.brief_bg]),
+    ].join(' ').toLowerCase();
+    expect(blob).toContain('search intent');
+    expect(blob).toContain('aio');
+    // Responsible framing: no magic tricks / hacks / guarantees
+    for (const banned of ['ai search hack', 'magic formula', 'hack the algorithm', 'seo hack']) {
+      expect(blob).not.toContain(banned);
+    }
   });
 });
