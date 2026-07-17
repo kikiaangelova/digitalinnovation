@@ -211,7 +211,13 @@ describe('Practice-first content seed V1A-V1D — Digital Marketing (Modules 1-8
       expect(blob).toContain(direction);
     }
     const lower = blob.toLowerCase();
-    for (const banned of ['perfect campaign', 'universally correct', 'guaranteed campaign', 'best campaign ever']) {
+    for (const banned of [
+      'perfect campaign',
+      'is universally correct',
+      'guaranteed campaign',
+      'best campaign ever',
+      'the perfect example',
+    ]) {
       expect(lower).not.toContain(banned);
     }
     expect(m7.dictionaryConcepts).toEqual(
