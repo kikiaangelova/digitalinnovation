@@ -66,14 +66,22 @@ function getTermOfTheWeek(): DictionaryTerm {
 
 export default function Dictionary() {
   const { lang } = useLang();
-  const { user } = useAuth();
+  const { user, isAdmin, userRole } = useAuth();
   const [search, setSearch] = useState('');
   const [catFilter, setCatFilter] = useState('all');
   const [letterFilter, setLetterFilter] = useState('');
   const [areaFilter, setAreaFilter] = useState<'all' | LearningAreaId>('all');
   const [reviewFilter, setReviewFilter] = useState<'all' | ReviewStatus>('all');
+  const isReviewer = isAdmin || userRole === 'teacher_verified';
   const viewedTermsRef = useRef<Set<string>>(new Set());
   const [quizStats, setQuizStats] = useState<{ count: number; avg: number; last: number | null } | null>(null);
+
+  // Non-reviewers cannot use review filters; always treat as 'all'.
+  useEffect(() => {
+    if (!isReviewer) setReviewFilter('all');
+  }, [isReviewer]);
+
+  const effectiveReviewFilter = isReviewer ? reviewFilter : 'all';
 
   const termOfTheWeek = useMemo(() => getTermOfTheWeek(), []);
   const categories = useMemo(() => [...new Set(TERMS.map(t => t.category))].sort(), []);
@@ -101,9 +109,9 @@ export default function Dictionary() {
       category: catFilter,
       letter: letterFilter,
       area: areaFilter,
-      review: reviewFilter,
+      review: effectiveReviewFilter,
     });
-  }, [search, catFilter, letterFilter, areaFilter, reviewFilter]);
+  }, [search, catFilter, letterFilter, areaFilter, effectiveReviewFilter]);
 
   const availableLetters = useMemo(() => {
     const letters = new Set(TERMS.map(t => t.term[0].toUpperCase()));
@@ -268,26 +276,28 @@ export default function Dictionary() {
             </button>
           ))}
         </div>
-        <div className="flex flex-wrap gap-2 mb-6">
-          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider self-center mr-1">
-            {lang === 'bg' ? 'Преглед' : 'Review'}
-          </span>
-          {([
-            ['all', lang === 'bg' ? 'Всички' : 'All'],
-            ['needs_review', lang === 'bg' ? 'За преглед' : 'Needs review'],
-            ['needs_rewrite', lang === 'bg' ? 'Нуждае се от редакция' : 'Needs rewrite'],
-            ['educator_approved', lang === 'bg' ? 'Одобрено от преподавател' : 'Educator approved'],
-            ['deprecated', lang === 'bg' ? 'Дублирано / за сливане' : 'Duplicate / merge needed'],
-          ] as const).map(([k, label]) => (
-            <button
-              key={k}
-              onClick={() => setReviewFilter(k as 'all' | ReviewStatus)}
-              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${reviewFilter === k ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:text-foreground'}`}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
+        {isReviewer && (
+          <div className="flex flex-wrap gap-2 mb-6" data-testid="review-filter-panel">
+            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider self-center mr-1">
+              {lang === 'bg' ? 'Преглед' : 'Review'}
+            </span>
+            {([
+              ['all', lang === 'bg' ? 'Всички' : 'All'],
+              ['needs_review', lang === 'bg' ? 'За преглед' : 'Needs review'],
+              ['needs_rewrite', lang === 'bg' ? 'Нуждае се от редакция' : 'Needs rewrite'],
+              ['educator_approved', lang === 'bg' ? 'Одобрено от преподавател' : 'Educator approved'],
+              ['deprecated', lang === 'bg' ? 'Дублирано / за сливане' : 'Duplicate / merge needed'],
+            ] as const).map(([k, label]) => (
+              <button
+                key={k}
+                onClick={() => setReviewFilter(k as 'all' | ReviewStatus)}
+                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors ${reviewFilter === k ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:text-foreground'}`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        )}
 
         <p className="text-sm text-muted-foreground mb-4">
           {filtered.length} {lang === 'bg' ? (filtered.length !== 1 ? 'термина' : 'термин') : (filtered.length !== 1 ? 'terms' : 'term')}
@@ -306,7 +316,7 @@ export default function Dictionary() {
         ) : (
           <div className="space-y-3">
             {filtered.map(t => (
-              <TermCard key={t.term} term={t} catColor={catColor} lang={lang} user={user} viewedTermsRef={viewedTermsRef} />
+              <TermCard key={t.term} term={t} catColor={catColor} lang={lang} user={user} viewedTermsRef={viewedTermsRef} isReviewer={isReviewer} />
             ))}
           </div>
         )}
@@ -315,12 +325,12 @@ export default function Dictionary() {
   );
 }
 
-function TermCard({ term: t, catColor, lang, user, viewedTermsRef }: { term: DictionaryTerm; catColor: (c: string) => string; lang: string; user: any; viewedTermsRef: React.MutableRefObject<Set<string>> }) {
+function TermCard({ term: t, catColor, lang, user, viewedTermsRef, isReviewer }: { term: DictionaryTerm; catColor: (c: string) => string; lang: string; user: any; viewedTermsRef: React.MutableRefObject<Set<string>>; isReviewer: boolean }) {
   const [expanded, setExpanded] = useState(false);
   const reviewStatus = getReviewStatus(t);
   const required = isRequiredConcept(t);
   const isApproved = reviewStatus === 'educator_approved';
-  const showPendingBanner = required && !isApproved;
+  const showPendingBanner = isReviewer && required && !isApproved;
 
   const reviewLabel: Record<ReviewStatus, { en: string; bg: string; cls: string }> = {
     needs_review: {
@@ -366,15 +376,17 @@ function TermCard({ term: t, catColor, lang, user, viewedTermsRef }: { term: Dic
         </div>
         <div className="flex items-center gap-2 shrink-0 flex-wrap justify-end">
           <Badge variant="outline" className={`text-xs ${catColor(t.category)}`}>{lang === 'bg' ? (CATEGORY_TRANSLATIONS[t.category] || t.category) : t.category}</Badge>
-          <Badge variant="outline" className={`text-[10px] ${rl.cls}`}>
-            {lang === 'bg' ? rl.bg : rl.en}
-          </Badge>
+          {isReviewer && (
+            <Badge variant="outline" className={`text-[10px] ${rl.cls}`} data-testid="review-badge">
+              {lang === 'bg' ? rl.bg : rl.en}
+            </Badge>
+          )}
           {expanded ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
         </div>
       </div>
 
       {showPendingBanner && (
-        <div className="mx-4 mb-2 rounded-md border border-amber-500/30 bg-amber-500/5 px-3 py-2 text-[11px] text-amber-900/90 leading-snug">
+        <div className="mx-4 mb-2 rounded-md border border-amber-500/30 bg-amber-500/5 px-3 py-2 text-[11px] text-amber-900/90 leading-snug" data-testid="pending-review-banner">
           {lang === 'bg'
             ? 'Задължително понятие — определението подлежи на преглед.'
             : 'Required concept — definition pending review.'}
