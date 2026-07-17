@@ -47,8 +47,8 @@ describe('Practice-first surfacing V1 — Entrepreneurship only', () => {
     }
   });
 
-  it('only surfaces approved themes (entrepreneurship, innovation) in this pass', () => {
-    const allowed = new Set(['entrepreneurship', 'innovation']);
+  it('only surfaces approved themes (entrepreneurship, innovation, marketing) in this pass', () => {
+    const allowed = new Set(['entrepreneurship', 'innovation', 'marketing']);
     for (const m of PRACTICE_FIRST_MODULES) {
       expect(allowed.has(m.themeId)).toBe(true);
     }
