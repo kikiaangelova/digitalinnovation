@@ -57,7 +57,10 @@ describe('Subject click experience — process preview', () => {
   beforeEach(() => vi.clearAllMocks());
 
   it('shows process preview instead of dead empty state for a preview subject (EN)', async () => {
-    await renderSubject('marketing-foundations', 'en');
+    // Use design-thinking: a preview subject that has no dedicated practice-first bridge,
+    // so it should fall through to the generic subject process preview.
+    // marketing-foundations now bridges to /learn/practice/marketing (see marketing bridge test below).
+    await renderSubject('design-thinking', 'en');
     await waitFor(() => {
       expect(screen.getByTestId('subject-process-preview')).toBeInTheDocument();
     });
@@ -100,5 +103,24 @@ describe('Subject click experience — process preview', () => {
       ).toHaveAttribute('href', '/learn/practice/entrepreneurship');
     });
     expect(screen.queryByTestId('subject-process-preview')).not.toBeInTheDocument();
+  });
+
+  it('marketing-foundations bridges to the shared Marketing practice-first path', async () => {
+    await renderSubject('marketing-foundations', 'en');
+    await waitFor(() => {
+      expect(
+        screen.getByRole('link', { name: /Open practice-first modules/i }),
+      ).toHaveAttribute('href', '/learn/practice/marketing');
+    });
+    expect(screen.queryByTestId('subject-process-preview')).not.toBeInTheDocument();
+  });
+
+  it('digital-marketing bridges to the same shared Marketing practice-first path', async () => {
+    await renderSubject('digital-marketing', 'en');
+    await waitFor(() => {
+      expect(
+        screen.getByRole('link', { name: /Open practice-first modules/i }),
+      ).toHaveAttribute('href', '/learn/practice/marketing');
+    });
   });
 });
