@@ -343,13 +343,13 @@ export default function AdminDashboard() {
     <div className="min-h-screen bg-background">
       <AppHeader />
       <main className="container mx-auto px-4 py-8 space-y-8">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <h1 className="text-2xl font-bold text-foreground">{t('Admin Dashboard', 'Администраторско табло')}</h1>
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" onClick={exportCSV}>
+          <div className="flex flex-col gap-2 sm:flex-row sm:gap-2">
+            <Button variant="outline" size="sm" onClick={exportCSV} className="w-full sm:w-auto justify-center">
               <Download className="h-4 w-4 mr-1" /> {t('Export Grades', 'Експорт на оценки')}
             </Button>
-            <Button size="sm" onClick={() => setShowCreate(!showCreate)} className="sim-gradient border-0">
+            <Button size="sm" onClick={() => setShowCreate(!showCreate)} className="sim-gradient border-0 w-full sm:w-auto justify-center">
               <Plus className="h-4 w-4 mr-1" /> {t('New Case', 'Нов казус')}
             </Button>
           </div>
@@ -430,7 +430,48 @@ export default function AdminDashboard() {
         {/* Cases */}
         <div>
           <h2 className="text-lg font-semibold text-foreground mb-4">{t('Case Studies', 'Казуси')}</h2>
-          <div className="rounded-xl border border-border overflow-hidden">
+          {/* Mobile cards */}
+          <div className="md:hidden space-y-3">
+            {cases.map(c => {
+              const diffLabel = DIFFICULTY_LABELS[c.difficulty];
+              const isEditingSteps = editingCaseSteps === c.id;
+              return (
+                <div key={c.id} className="rounded-xl border border-border bg-card p-4 space-y-3">
+                  <div>
+                    <p className="text-sm font-semibold text-foreground break-words">{c.title}</p>
+                    {c.topic && <p className="text-xs text-muted-foreground mt-0.5 break-words">{c.topic}</p>}
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="outline" className="text-xs">{diffLabel ? (lang === 'bg' ? diffLabel.bg : diffLabel.en) : c.difficulty}</Badge>
+                    {c.published ? (
+                      <Badge className="bg-sim-success/10 text-sim-success border-0 text-xs">{t('Published', 'Публикуван')}</Badge>
+                    ) : (
+                      <Badge variant="outline" className="text-xs">{t('Draft', 'Чернова')}</Badge>
+                    )}
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <Button variant="outline" size="sm" onClick={() => togglePublish(c.id, c.published)} className="flex-1 min-w-[44px]">
+                      {c.published ? <EyeOff className="h-4 w-4 mr-1" /> : <Eye className="h-4 w-4 mr-1" />}
+                      {c.published ? t('Unpublish', 'Скрий') : t('Publish', 'Публикувай')}
+                    </Button>
+                    <Button variant="outline" size="sm" onClick={() => setEditingCaseSteps(isEditingSteps ? null : c.id)} className="flex-1 min-w-[44px]">
+                      <Edit className="h-4 w-4 mr-1" /> {t('Edit Steps', 'Стъпки')}
+                    </Button>
+                  </div>
+                  {isEditingSteps && (
+                    <div className="rounded-lg bg-accent/30 p-3">
+                      <CaseStepEditor caseId={c.id} caseTopic={c.topic} />
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+            {cases.length === 0 && (
+              <p className="text-center py-6 text-sm text-muted-foreground">{t('No cases yet', 'Все още няма казуси')}</p>
+            )}
+          </div>
+          {/* Desktop table */}
+          <div className="hidden md:block rounded-xl border border-border overflow-hidden">
             <table className="w-full">
               <thead className="bg-muted/50">
                 <tr>
@@ -569,7 +610,69 @@ export default function AdminDashboard() {
             <Users className="h-5 w-5 text-primary" />
             {t('All Participants', 'Всички участници')} ({studentXpData.length})
           </h2>
-          <div className="rounded-xl border border-border overflow-x-auto">
+          {/* Mobile cards */}
+          <div className="md:hidden space-y-3">
+            {studentXpData.map(s => {
+              const level = getLevel(s.total_xp);
+              const roleLabel: Record<string, string> = {
+                admin: 'Admin',
+                teacher_verified: lang === 'bg' ? 'Учител' : 'Teacher',
+                teacher_pending: lang === 'bg' ? 'Учител (чакащ)' : 'Teacher (pending)',
+                student: lang === 'bg' ? 'Студент' : 'Student',
+              };
+              return (
+                <div key={s.user_id} className="rounded-xl border border-border bg-card p-4 space-y-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-semibold text-foreground break-words">{s.full_name}</p>
+                      {s.display_name && <p className="text-xs text-muted-foreground break-words">@{s.display_name}</p>}
+                      {s.email && <p className="text-xs text-muted-foreground break-all mt-0.5">{s.email}</p>}
+                    </div>
+                    <Badge variant={s.role === 'admin' ? 'default' : 'outline'} className="text-xs shrink-0">
+                      {roleLabel[s.role] || s.role}
+                    </Badge>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div className="rounded-lg bg-muted/40 p-2">
+                      <p className="text-muted-foreground">XP</p>
+                      <p className="font-semibold text-foreground">{s.total_xp} <span className="text-muted-foreground font-normal">· {level}</span></p>
+                    </div>
+                    <div className="rounded-lg bg-muted/40 p-2">
+                      <p className="text-muted-foreground">{t('Quiz Avg', 'Ср. тест')}</p>
+                      <p className="font-semibold text-foreground">
+                        {s.quiz_count > 0 ? <>{s.quiz_avg}% <span className="text-muted-foreground font-normal">({s.quiz_count})</span></> : '—'}
+                      </p>
+                    </div>
+                    <div className="rounded-lg bg-muted/40 p-2">
+                      <p className="text-muted-foreground">{t('Cases', 'Казуси')}</p>
+                      <p className="font-semibold text-foreground">{s.cases_completed}</p>
+                    </div>
+                    <div className="rounded-lg bg-muted/40 p-2">
+                      <p className="text-muted-foreground">{t('Simulator', 'Симулатор')}</p>
+                      <p className="font-semibold text-foreground">
+                        {s.sim_week > 0 ? <>{t('Wk', 'Сд')} {s.sim_week}{s.sim_complete ? ` · ${s.sim_grade || '✓'}` : ''}</> : '—'}
+                      </p>
+                    </div>
+                    <div className="rounded-lg bg-muted/40 p-2">
+                      <p className="text-muted-foreground">{t('Startup %', 'Стартъп %')}</p>
+                      <p className={`font-semibold ${s.startup_submitted ? 'text-emerald-600' : 'text-foreground'}`}>
+                        {s.startup_pct > 0 ? `${s.startup_pct}%${s.startup_submitted ? ' ✓' : ''}` : '—'}
+                      </p>
+                    </div>
+                    <div className="rounded-lg bg-muted/40 p-2">
+                      <p className="text-muted-foreground">{t('Last Active', 'Последно активен')}</p>
+                      <p className="font-semibold text-foreground">{s.last_active ? new Date(s.last_active).toLocaleDateString() : '—'}</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+            {studentXpData.length === 0 && (
+              <p className="text-center py-6 text-sm text-muted-foreground">{loading ? t('Loading...', 'Зареждане...') : t('No participants yet', 'Все още няма участници')}</p>
+            )}
+          </div>
+          {/* Desktop table */}
+          <div className="hidden md:block rounded-xl border border-border overflow-x-auto">
             <table className="w-full min-w-[1100px]">
               <thead className="bg-muted/50">
                 <tr>
