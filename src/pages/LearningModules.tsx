@@ -155,6 +155,9 @@ export default function LearningModules() {
                         {area.id === 'innovation' && (
                           <PracticeFirstDraftLink theme="innovation" lang={lang as 'bg' | 'en'} t={t} />
                         )}
+                        {area.id === 'marketing' && (
+                          <PracticeFirstDraftLink theme="marketing" lang={lang as 'bg' | 'en'} t={t} />
+                        )}
                         <ul className="space-y-3">
                           {(byArea.get(area.id) ?? []).map((entry) => (
                             <SubjectRow
@@ -221,7 +224,7 @@ function PracticeFirstDraftLink({
   lang,
   t,
 }: {
-  theme: 'entrepreneurship' | 'innovation';
+  theme: 'entrepreneurship' | 'innovation' | 'marketing';
   lang: 'bg' | 'en';
   t: (en: string, bg: string) => string;
 }) {
@@ -233,6 +236,15 @@ function PracticeFirstDraftLink({
           label: t(
             'Practice-first Innovation drafts',
             'Практически чернови по иновации',
+          ),
+        }
+      : theme === 'marketing'
+      ? {
+          to: '/learn/practice/marketing',
+          testId: 'practice-first-marketing-link',
+          label: t(
+            'Practice-first Marketing drafts',
+            'Практически чернови по маркетинг',
           ),
         }
       : {
@@ -493,6 +505,11 @@ function LearningAreaSection({
           {area.id === 'innovation' && (
             <div className="mt-3">
               <PracticeFirstDraftLink theme="innovation" lang={lang} t={t} />
+            </div>
+          )}
+          {area.id === 'marketing' && (
+            <div className="mt-3">
+              <PracticeFirstDraftLink theme="marketing" lang={lang} t={t} />
             </div>
           )}
         </div>

@@ -1292,8 +1292,288 @@ export const INNOVATION_MODULES: PracticeFirstModule[] = [
   },
 ];
 
+/**
+ * Batch 3 — Digital Marketing (Marketing theme).
+ * V1A seeds first two modules. Drafts only (`needs_review`).
+ */
+export const MARKETING_MODULES: PracticeFirstModule[] = [
+  {
+    id: 'mkt-01-brand-foundations-2026',
+    themeId: 'marketing',
+    title_en: 'Brand foundations 2026',
+    title_bg: 'Основи на бранда 2026',
+    status: 'needs_review',
+    theoryBlock_en:
+      'A brand is not a logo. A brand is a promise, an expectation, a tone and a reason to be trusted. In digital marketing you build a brand by being clear about Why you exist, How you deliver value and What you actually offer. Name, logo, tone of voice, visual identity, slogan and key messages must line up so the same audience recognises you across channels. AI can help draft options, but clarity, truthfulness and judgment stay with you.',
+    theoryBlock_bg:
+      'Брандът не е лого. Брандът е обещание, очакване, тон и причина да ти вярват. В дигиталния маркетинг го изграждаш, като си ясен за Защо съществуваш, Как създаваш стойност и Какво всъщност предлагаш. Име, лого, тон на комуникация, визуална идентичност, слоган и ключови послания трябва да си пасват, за да те разпознава една и съща аудитория в различни канали. AI може да помогне с чернови, но яснотата, честността и преценката остават твои.',
+    practiceRatio: R,
+    keyConcepts: ['Brand promise', 'Why/How/What', 'Tone of voice', 'Positioning', 'AI-assisted content'],
+    dictionaryConcepts: [
+      'Brand',
+      'Brand Promise',
+      'Brand Identity',
+      'Tone of Voice',
+      'Slogan',
+      'Key Message',
+      'Target Audience',
+      'Positioning',
+      'AI-assisted Content',
+      'Human Oversight',
+    ],
+    practiceTasks: [
+      {
+        id: 'mkt-01-t1',
+        title_en: 'Brand DNA Card',
+        title_bg: 'Карта на бранда (Brand DNA)',
+        kind: 'decision',
+        brief_en:
+          'Create a one-page Brand DNA Card for a student brand, school project, club or fictional product: name, Why/How/What, audience, brand promise, tone of voice, 3 key messages, 1 slogan and 3 words the brand must NOT sound like.',
+        brief_bg:
+          'Направи едностранична Карта на бранда за ученически бранд, училищен проект, клуб или измислен продукт: име, Защо/Как/Какво, аудитория, обещание, тон на комуникация, 3 ключови послания, 1 слоган и 3 думи, на които брандът НЕ трябва да звучи.',
+        cefe: {
+          action_en:
+            'Fill in a Brand DNA Card for one chosen brand. All fields must be written by you (AI is not used here). Keep it on one page.',
+          action_bg:
+            'Попълни Карта на бранда за един избран бранд. Всички полета се пишат от теб (без AI на тази стъпка). Помести се на една страница.',
+          visibleResult_en:
+            'A completed one-page Brand DNA Card with all fields filled in: name, Why/How/What, audience, promise, tone, 3 key messages, slogan, 3 forbidden tones.',
+          visibleResult_bg:
+            'Готова едностранична Карта на бранда с всички попълнени полета: име, Защо/Как/Какво, аудитория, обещание, тон, 3 ключови послания, слоган, 3 забранени тона.',
+          processingQuestions_en: [
+            'Which field is clear and which sounds generic?',
+            'Would your audience understand the promise in 5 seconds?',
+            'Which key message could confuse a first-time viewer?',
+          ],
+          processingQuestions_bg: [
+            'Кое поле е ясно и кое звучи общо?',
+            'Аудиторията би ли разбрала обещанието за 5 секунди?',
+            'Кое ключово послание може да обърка човек, който вижда бранда за първи път?',
+          ],
+          generalizing_en:
+            'A brand gives people a reason to remember and trust the product. Vague promises produce vague trust.',
+          generalizing_bg:
+            'Брандът дава на хората причина да запомнят и да се доверят. Размитите обещания раждат размито доверие.',
+          applying_en:
+            'Rewrite one weak key message into a sharper one, using concrete words about who the audience is and what they get.',
+          applying_bg:
+            'Пренапиши едно слабо ключово послание в по-ясно — с конкретни думи за кого е аудиторията и какво получава.',
+          teacherCheck_en:
+            'Card fits on one page, all fields are filled, promise names a specific audience and a concrete benefit, 3 forbidden tones are listed.',
+          teacherCheck_bg:
+            'Картата е на една страница, всички полета са попълнени, обещанието посочва конкретна аудитория и конкретна полза, изброени са 3 забранени тона.',
+          evidence_en: 'One-page Brand DNA Card.',
+          evidence_bg: 'Едностранична Карта на бранда.',
+        },
+      },
+      {
+        id: 'mkt-01-t2',
+        title_en: 'AI-assisted brand draft — before / after',
+        title_bg: 'Чернова на бранд с AI — преди / след',
+        kind: 'iteration',
+        brief_en:
+          'Ask an AI tool for 3 brand name or slogan options, then improve them by hand. Document what AI generated, what you changed, which suggestion was too generic and which was most useful.',
+        brief_bg:
+          'Помоли AI за 3 варианта на име или слоган на бранда, след което ги подобри на ръка. Запиши какво генерира AI, какво промени, кое предложение звучеше най-общо и кое беше най-полезно.',
+        cefe: {
+          action_en:
+            'Generate 3 AI options for the brand name or slogan. In a two-column sheet write "AI draft" on the left and your "Human-edited version" on the right for each option.',
+          action_bg:
+            'Генерирай с AI 3 варианта за име или слоган на бранда. Направи таблица с 2 колони: „AI чернова“ вляво и „Редакция от мен“ вдясно за всеки от вариантите.',
+          visibleResult_en:
+            'A before/after sheet with 3 AI drafts, 3 edited versions, 1 short note per option on what changed and why.',
+          visibleResult_bg:
+            'Лист „преди / след“ с 3 AI чернови, 3 редактирани версии и по 1 кратка бележка какво е променено и защо.',
+          processingQuestions_en: [
+            'Which AI suggestion sounded empty or exaggerated?',
+            'Which suggestion was most useful and why?',
+            'What did you keep as your own responsibility, not the tool’s?',
+          ],
+          processingQuestions_bg: [
+            'Кое AI предложение звучеше празно или преувеличено?',
+            'Кое беше най-полезно и защо?',
+            'Кое остана твоя отговорност, а не на инструмента?',
+          ],
+          generalizing_en:
+            'AI can support variation and speed, but brand judgment — who we are, what we promise, how we sound — belongs to the marketer.',
+          generalizing_bg:
+            'AI подпомага вариацията и скоростта, но преценката за бранда — кои сме, какво обещаваме, как звучим — остава при маркетолога.',
+          applying_en:
+            'Choose one final version of the name or slogan and write 2 sentences explaining why it fits the audience in the Brand DNA Card.',
+          applying_bg:
+            'Избери една финална версия на името или слогана и напиши 2 изречения защо пасва на аудиторията от Картата на бранда.',
+          teacherCheck_en:
+            'Sheet shows 3 clearly separated AI drafts and human-edited versions, one reasoned final choice, and no invented facts.',
+          teacherCheck_bg:
+            'Листът показва 3 ясно разделени AI чернови и редактирани версии, един аргументиран финален избор и няма измислени факти.',
+          evidence_en: 'Before/after sheet + final choice note.',
+          evidence_bg: 'Лист „преди / след“ и бележка за финалния избор.',
+        },
+      },
+    ],
+    kikiQuestions: [
+      { en: 'What is your brand promising, in one sentence?', bg: 'Какво обещава брандът ти в едно изречение?' },
+      { en: 'Would your audience understand it in 5 seconds?', bg: 'Аудиторията ти би ли го разбрала за 5 секунди?' },
+      { en: 'Which part still sounds too generic?', bg: 'Коя част още звучи прекалено общо?' },
+      { en: 'What did you change from the AI draft, and why?', bg: 'Какво промени спрямо AI черновата и защо?' },
+      { en: 'What here should not be delegated to AI?', bg: 'Кое тук не бива да се делегира на AI?' },
+    ],
+    evidenceOfSkill: [
+      'Попълнена Карта на бранда',
+      'Подобрено ключово послание или слоган',
+      'Кратка рефлексия за ползата и границите на AI',
+    ],
+    reflectionPrompt: {
+      en: 'Where did AI help, and where did you have to overrule it?',
+      bg: 'Къде AI помогна и къде трябваше да го отхвърлиш?',
+    },
+    improvementPrompt: {
+      en: 'Rewrite the slogan once more, aiming for one concrete promise instead of a general mood.',
+      bg: 'Пренапиши слогана още веднъж — с едно конкретно обещание вместо общо настроение.',
+    },
+  },
+
+  {
+    id: 'mkt-02-content-strategy-and-creation',
+    themeId: 'marketing',
+    title_en: 'Content strategy and creation',
+    title_bg: 'Стратегия и създаване на съдържание',
+    status: 'needs_review',
+    theoryBlock_en:
+      'Marketing content always has a goal: attract attention, explain value, build trust, support a decision or trigger action. Strong content has a hook (why keep reading), value (what the audience gets), proof (why to believe it) and a call to action (what to do next). Content pillars organise messages around goals instead of random posting. Formats matter in 2026 — short-form video, carousels, educational posts and creator-style content each behave differently. Put key information in text, not only inside an image, so people and AI search can read it. Platform practices change; check current sources instead of assuming yesterday’s formula still works.',
+    theoryBlock_bg:
+      'Маркетинговото съдържание винаги има цел: да привлече внимание, да обясни стойност, да изгради доверие, да подкрепи решение или да предизвика действие. Силното съдържание има hook (защо да продължа да чета), стойност (какво получавам), proof (защо да вярвам) и call to action (какво следва). Content pillars подреждат посланията около цели, вместо да пусаш случайни постове. Форматите през 2026 значат много — short-form видео, carousels, образователни постове и creator-style съдържание работят различно. Основната информация се пише като текст, не само в картинка, за да я четат и хора, и AI търсене. Практиките в платформите се променят; проверявай актуални източници, вместо да разчиташ на вчерашна формула.',
+    practiceRatio: R,
+    keyConcepts: ['Content goal', 'Hook / Value / Proof / CTA', 'Content pillars', 'Platform fit', 'AI-visible content'],
+    dictionaryConcepts: [
+      'Marketing Content',
+      'Content Strategy',
+      'Content Pillar',
+      'Hook',
+      'Call to Action',
+      'Proof',
+      'Carousel',
+      'Short-form Video',
+      'Educational Post',
+      'Platform Fit',
+      'Content Calendar',
+    ],
+    practiceTasks: [
+      {
+        id: 'mkt-02-t1',
+        title_en: 'Content pillars for a student brand',
+        title_bg: 'Content pillars за ученически бранд',
+        kind: 'analysis',
+        brief_en:
+          'Using the brand from Module 1, define 4 content pillars — educational, trust/proof, product/service, community/story — with 3 concrete content ideas under each.',
+        brief_bg:
+          'Използвай бранда от Модул 1 и дефинирай 4 content pillars — образователен, доверие/proof, продукт/услуга, общност/история — с по 3 конкретни идеи за съдържание във всеки.',
+        cefe: {
+          action_en:
+            'Build a simple 4-column table. In each column: pillar name, its goal, audience it serves, and 3 concrete content ideas that could actually be produced by one person.',
+          action_bg:
+            'Направи проста таблица с 4 колони. Във всяка: име на pillar, целта му, аудиторията, за която е, и 3 конкретни идеи за съдържание, които реалистично може да направи един човек.',
+          visibleResult_en:
+            'A one-page content pillar map: 4 pillars × 3 ideas, each idea named clearly enough that another student could recognise it.',
+          visibleResult_bg:
+            'Едностранична карта на pillars: 4 pillars × 3 идеи, всяка идея описана достатъчно ясно, че друг ученик да я разпознае.',
+          processingQuestions_en: [
+            'Which pillar is strongest and why?',
+            'Which pillar is vague and needs a sharper goal?',
+            'Which pillar actually builds trust vs. only entertains?',
+          ],
+          processingQuestions_bg: [
+            'Кой pillar е най-силен и защо?',
+            'Кой pillar е размит и има нужда от по-ясна цел?',
+            'Кой pillar реално гради доверие, а не само забавлява?',
+          ],
+          generalizing_en:
+            'Content strategy is not random posting. It organises messages around a small number of goals, so the audience recognises a pattern.',
+          generalizing_bg:
+            'Стратегията на съдържание не е случайно пускане на постове. Тя подрежда посланията около малък брой цели, за да разпознае аудиторията модел.',
+          applying_en:
+            'Improve one weak pillar: rewrite its goal and add one stronger, more specific content idea in its place.',
+          applying_bg:
+            'Подобри един слаб pillar: пренапиши целта му и добави една по-силна и по-конкретна идея за съдържание.',
+          teacherCheck_en:
+            'Map has 4 pillars, each with a stated goal, audience and 3 concrete ideas; at least one pillar has been rewritten in the applying step.',
+          teacherCheck_bg:
+            'Картата има 4 pillars, всеки с посочена цел, аудитория и 3 конкретни идеи; поне един pillar е пренаписан в стъпката „приложи“.',
+          evidence_en: 'Content pillar map (one page).',
+          evidence_bg: 'Едностранична карта на content pillars.',
+        },
+      },
+      {
+        id: 'mkt-02-t2',
+        title_en: 'One message, three formats',
+        title_bg: 'Едно послание, три формата',
+        kind: 'iteration',
+        brief_en:
+          'Take one key message from the brand and adapt it into 3 drafts: an Instagram carousel outline, a TikTok short-video concept and a LinkedIn educational post. Each draft has hook, value, proof and CTA.',
+        brief_bg:
+          'Вземи едно ключово послание от бранда и го адаптирай в 3 чернови: план за Instagram carousel, концепт за TikTok short-video и образователен пост за LinkedIn. Всяка чернова има hook, value, proof и call to action.',
+        cefe: {
+          action_en:
+            'For each of the 3 formats, write: a 1-sentence hook, 2–3 lines of value, 1 line of proof (evidence, example, source or reasoning), and a specific CTA. No public posting is required.',
+          action_bg:
+            'За всеки от 3-те формата напиши: 1 изречение hook, 2–3 реда стойност, 1 ред proof (доказателство, пример, източник или логика) и конкретен call to action. Не се изисква публикуване.',
+          visibleResult_en:
+            'Three side-by-side drafts (carousel, short-video, educational post) with hook / value / proof / CTA visible for each.',
+          visibleResult_bg:
+            'Три чернови една до друга (carousel, short-video, образователен пост), с ясни hook / value / proof / CTA за всяка.',
+          processingQuestions_en: [
+            'What changed between formats — tone, length, hook?',
+            'What stayed the same — the core message and the promise?',
+            'Which claim in your drafts still needs real proof?',
+          ],
+          processingQuestions_bg: [
+            'Какво се промени между форматите — тон, дължина, hook?',
+            'Какво остана същото — основното послание и обещанието?',
+            'Кое твърдение в черновите ти още се нуждае от реален proof?',
+          ],
+          generalizing_en:
+            'Good marketing adapts format and tone without losing the core message. Platform fit is a translation task, not a rewrite of the promise.',
+          generalizing_bg:
+            'Добрият маркетинг адаптира формата и тона, без да губи основното послание. Platform fit е задача по превод, не пренаписване на обещанието.',
+          applying_en:
+            'Choose the strongest of the 3 drafts and revise it once, tightening hook and CTA. Explain in 1–2 sentences why this platform fits the message.',
+          applying_bg:
+            'Избери най-силната от 3-те чернови и я редактирай веднъж, като изостриш hook и CTA. Обясни в 1–2 изречения защо тази платформа пасва на посланието.',
+          teacherCheck_en:
+            'Three drafts exist; each shows hook, value, proof and CTA; the chosen draft has a revised, tighter version and a short platform-fit note.',
+          teacherCheck_bg:
+            'Има 3 чернови; всяка показва hook, value, proof и CTA; избраната чернова има преработена, по-стегната версия и кратка бележка за platform fit.',
+          evidence_en: 'Three format drafts + revised strongest draft + platform-fit note.',
+          evidence_bg: 'Три чернови по формати + подобрената най-силна + бележка за platform fit.',
+        },
+      },
+    ],
+    kikiQuestions: [
+      { en: 'What is the goal of this content?', bg: 'Каква е целта на това съдържание?' },
+      { en: 'Who is it for, exactly?', bg: 'За кого точно е?' },
+      { en: 'What should the audience understand or do after seeing it?', bg: 'Какво трябва аудиторията да разбере или да направи, след като го види?' },
+      { en: 'Which claim in your draft needs real proof?', bg: 'Кое твърдение в черновата ти има нужда от реален proof?' },
+      { en: 'What would you improve after honest feedback?', bg: 'Какво би подобрил(а) след честен feedback?' },
+    ],
+    evidenceOfSkill: [
+      'Карта на content pillars',
+      '3 адаптирани чернови по формати',
+      'Кратко обяснение за platform fit',
+    ],
+    reflectionPrompt: {
+      en: 'Which format felt easiest, and which felt fake? Why?',
+      bg: 'Кой формат ти беше най-лесен и кой ти прозвуча фалшиво? Защо?',
+    },
+    improvementPrompt: {
+      en: 'Rewrite the hook of the weakest draft so it names the audience and the value in one line.',
+      bg: 'Пренапиши hook-а на най-слабата чернова така, че в един ред да назове аудиторията и стойността.',
+    },
+  },
+];
+
 export const PRACTICE_FIRST_MODULES: PracticeFirstModule[] = [
   ...ENTREPRENEURSHIP_MODULES,
   ...INNOVATION_MODULES,
+  ...MARKETING_MODULES,
 ];
 
