@@ -2340,7 +2340,7 @@ export const MARKETING_MODULES: PracticeFirstModule[] = [
         id: 'mkt-08-t1',
         title_en: 'Build the Digital Marketing Plan 2026',
         title_bg: 'Изгради Дигитален маркетинг план 2026',
-        kind: 'build',
+        kind: 'iteration',
         brief_en:
           'Compile your strongest work from Modules 1–7 into one Digital Marketing Plan 2026. Required sections: brand name, Why / How / What, brand promise, target audience, positioning statement, 4 content pillars, 3 chosen channels and why, campaign objective, campaign message, campaign code simulation, 3 KPIs, SEO / AIO keyword and intent map, 3 sample content drafts, risk / constraint and next improvement. Use simulated / fictional / classroom-safe data only. No public posting, no personal account, no paid ads, no real customer data, no real tracking pixels.',
         brief_bg:
