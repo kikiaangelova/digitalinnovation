@@ -280,9 +280,9 @@ describe('Practice-first content seed V1A-V1D — Digital Marketing (Modules 1-8
         'install a tracking pixel',
         'install tracking pixel',
         'buy real ads',
-        'real customer data',
-        'personal account required',
-        'must publish publicly',
+        'collect personal data from real',
+        'ad spend required',
+        'publish this publicly',
       ]) {
         expect(blob).not.toContain(forbidden);
       }
