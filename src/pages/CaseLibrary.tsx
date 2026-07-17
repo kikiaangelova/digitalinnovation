@@ -486,8 +486,8 @@ export default function CaseLibrary() {
               </h1>
               <p className="mt-3 max-w-xl text-sm text-muted-foreground sm:text-base">
                 {tl(
-                  'Pick an industry. Step into a founder\u2019s chair. Read the story, feel the pressure, choose A, B or C — and watch what happens next.',
-                  'Избери индустрия. Седни на стола на фаундъра. Прочети историята, усети напрежението, избери A, B или C — и виж какво следва.'
+                  'Pick an industry. Step into a founder\u2019s chair. Read the story, analyze the situation, make a decision, and explain your reasoning.',
+                  'Избери индустрия. Седни на стола на фаундъра. Прочети историята, анализирай ситуацията, вземи решение и обясни логиката си.'
                 )}
               </p>
             </div>
