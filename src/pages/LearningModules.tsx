@@ -224,7 +224,7 @@ function PracticeFirstDraftLink({
   lang,
   t,
 }: {
-  theme: 'entrepreneurship' | 'innovation';
+  theme: 'entrepreneurship' | 'innovation' | 'marketing';
   lang: 'bg' | 'en';
   t: (en: string, bg: string) => string;
 }) {
@@ -236,6 +236,15 @@ function PracticeFirstDraftLink({
           label: t(
             'Practice-first Innovation drafts',
             'Практически чернови по иновации',
+          ),
+        }
+      : theme === 'marketing'
+      ? {
+          to: '/learn/practice/marketing',
+          testId: 'practice-first-marketing-link',
+          label: t(
+            'Practice-first Marketing drafts',
+            'Практически чернови по маркетинг',
           ),
         }
       : {
