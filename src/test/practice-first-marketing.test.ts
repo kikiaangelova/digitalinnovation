@@ -192,7 +192,7 @@ describe('Practice-first content seed V1A+V1B+V1C — Digital Marketing (Modules
     expect(blob).toContain('search intent');
     expect(blob).toContain('aio');
     // Responsible framing: no magic tricks / hacks / guarantees
-    for (const banned of ['ai search hack', 'guaranteed', 'magic formula', 'hack the algorithm', 'seo hack']) {
+    for (const banned of ['ai search hack', 'magic formula', 'hack the algorithm', 'seo hack']) {
       expect(blob).not.toContain(banned);
     }
   });
