@@ -1442,7 +1442,7 @@ export const MARKETING_MODULES: PracticeFirstModule[] = [
     theoryBlock_en:
       'Marketing content always has a goal: attract attention, explain value, build trust, support a decision or trigger action. Strong content has a hook (why keep reading), value (what the audience gets), proof (why to believe it) and a call to action (what to do next). Content pillars organise messages around goals instead of random posting. Formats matter in 2026 — short-form video, carousels, educational posts and creator-style content each behave differently. Put key information in text, not only inside an image, so people and AI search can read it. Platform practices change; check current sources instead of assuming yesterday’s formula still works.',
     theoryBlock_bg:
-      'Маркетинговото съдържание винаги има цел: да привлече внимание, да обясни стойност, да изгради доверие, да подкрепи решение или да предизвика действие. Силното съдържание има hook (защо да продължа да чета), стойност (какво получавам), proof (защо да вярвам) и call to action (какво следва). Content pillars подреждат посланията около цели, вместо да пусаш случайни постове. Форматите през 2026 значат много — short-form видео, carousels, образователни постове и creator-style съдържание работят различно. Основната информация се пише като текст, не само в картинка, за да я четат и хора, и AI търсене. Практиките в платформите се променят; проверявай актуални източници, вместо да разчиташ на вчерашна формула.',
+      'Маркетинговото съдържание винаги има цел: да привлече внимание, да обясни стойност, да изгради доверие, да подкрепи решение или да предизвика действие. Силното съдържание има hook (защо да продължа да чета), стойност (какво получавам), proof (защо да вярвам) и call to action (какво следва). Content pillars подреждат посланията около цели, вместо да пускаш случайни постове. Форматите през 2026 значат много — short-form видео, carousels, образователни постове и creator-style съдържание работят различно. Основната информация се пише като текст, не само в картинка, за да я четат и хора, и AI търсене. Практиките в платформите се променят; проверявай актуални източници, вместо да разчиташ на вчерашна формула.',
     practiceRatio: R,
     keyConcepts: ['Content goal', 'Hook / Value / Proof / CTA', 'Content pillars', 'Platform fit', 'AI-visible content'],
     dictionaryConcepts: [
@@ -1567,6 +1567,298 @@ export const MARKETING_MODULES: PracticeFirstModule[] = [
     improvementPrompt: {
       en: 'Rewrite the hook of the weakest draft so it names the audience and the value in one line.',
       bg: 'Пренапиши hook-а на най-слабата чернова така, че в един ред да назове аудиторията и стойността.',
+    },
+  },
+
+  {
+    id: 'mkt-03-channels-and-platform-logic',
+    themeId: 'marketing',
+    title_en: 'Channels and platform logic',
+    title_bg: 'Канали и логика на платформите',
+    status: 'needs_review',
+    theoryBlock_en:
+      'A marketing channel is a route to reach a specific audience with a specific message. Organic channels rely on content, community and search visibility; paid channels use budget to reach people faster or more precisely. Platform fit matters: Instagram is visual and community-driven; TikTok rewards short-form video with a strong hook and native tone; LinkedIn is a professional context for B2B, career and expertise; Facebook / Meta is strong for local business, groups and campaign objectives such as awareness, traffic, engagement, leads and sales. The same message must be adapted per platform — format, hook, tone and proof change even when the promise stays the same. Platform practices shift often; check current sources instead of memorising old rules. Choose a channel because it fits audience, objective, format, resources and the evidence you can collect, not because it is popular.',
+    theoryBlock_bg:
+      'Маркетинговият канал е път да достигнеш до конкретна аудитория с конкретно послание. Органичните канали разчитат на съдържание, общност и видимост в търсенето; платените използват бюджет за по-бърз или по-точен обхват. Platform fit има значение: Instagram е визуален и общностен; TikTok залага на кратко видео със силен hook и естествен тон; LinkedIn е професионален контекст за B2B, кариера и експертиза; Facebook / Meta работи за локален бизнес, групи и кампанийни цели като awareness, трафик, engagement, лийдове и продажби. Едно и също послание се адаптира за всяка платформа — формат, hook, тон и proof се променят, дори обещанието да остава същото. Практиките в платформите се менят често; проверявай актуални източници, вместо да помниш стари правила. Избирай канал, защото пасва на аудитория, цел, формат, ресурси и доказателства, а не защото е популярен.',
+    practiceRatio: R,
+    keyConcepts: ['Organic vs paid', 'Platform fit', 'Channel choice', 'Message adaptation', 'KPI per channel'],
+    dictionaryConcepts: [
+      'Marketing Channel',
+      'Organic Channel',
+      'Paid Channel',
+      'Platform Fit',
+      'Instagram Marketing',
+      'TikTok Marketing',
+      'LinkedIn Marketing',
+      'Facebook Marketing',
+      'Meta Ads',
+      'Channel Strategy',
+      'Audience Segment',
+      'Campaign Objective',
+      'Engagement',
+      'Reach',
+    ],
+    practiceTasks: [
+      {
+        id: 'mkt-03-t1',
+        title_en: 'Channel fit decision',
+        title_bg: 'Решение за channel fit',
+        kind: 'decision',
+        brief_en:
+          'Using the brand from Module 1, choose 3 channels from Instagram, TikTok, LinkedIn and Facebook / Meta. For each channel decide why this channel, which audience segment is there, what format fits, how the message changes, what proof or KPI makes sense and what the brand should NOT do there.',
+        brief_bg:
+          'С бранда от Модул 1 избери 3 канала измежду Instagram, TikTok, LinkedIn и Facebook / Meta. За всеки канал реши защо точно този канал, коя аудитория е там, какъв формат пасва, как се променя посланието, кой proof или KPI има смисъл и какво брандът НЕ трябва да прави там.',
+        cefe: {
+          action_en:
+            'Fill in a channel-fit table with 3 channels. Columns: channel, audience segment, objective, format, adapted message, proof / KPI, one thing you will not do there.',
+          action_bg:
+            'Попълни таблица за channel fit с 3 канала. Колони: канал, аудитория, цел, формат, адаптирано послание, proof / KPI, едно нещо, което няма да правиш там.',
+          visibleResult_en:
+            'A completed channel-fit table with 3 channels, one row per channel, every column filled.',
+          visibleResult_bg:
+            'Готова таблица за channel fit с 3 канала, по един ред на канал и всяка колона попълнена.',
+          processingQuestions_en: [
+            'Which channel is strongest for this brand and why?',
+            'Which channel is popular but weak for this brand?',
+            'Where did the message need the biggest adaptation?',
+            'Which choice is based on evidence, and which is still assumption?',
+          ],
+          processingQuestions_bg: [
+            'Кой канал е най-силен за този бранд и защо?',
+            'Кой канал е популярен, но слаб за този бранд?',
+            'Къде посланието имаше нужда от най-голяма адаптация?',
+            'Кой избор е на база доказателство и кой все още е допускане?',
+          ],
+          generalizing_en:
+            'A channel is a strategic choice, not a place to copy-paste content. The right channel is where audience, message, format and evidence line up.',
+          generalizing_bg:
+            'Каналът е стратегически избор, а не място за copy-paste на съдържание. Правилният канал е там, където аудитория, послание, формат и доказателства си пасват.',
+          applying_en:
+            'Remove one weak channel or rewrite the reason for choosing it. Add one stronger alternative or a better justification.',
+          applying_bg:
+            'Махни един слаб канал или пренапиши причината за избора му. Добави един по-силен алтернативен канал или по-добра обосновка.',
+          teacherCheck_en:
+            'Table has 3 channels; each row has audience, objective, format, adapted message, proof / KPI and a "do not do" note. At least one channel choice is challenged or improved.',
+          teacherCheck_bg:
+            'Таблицата има 3 канала; всеки ред включва аудитория, цел, формат, адаптирано послание, proof / KPI и бележка „няма да правя“. Поне един избор е преосмислен или подобрен.',
+          evidence_en: 'Channel-fit decision table.',
+          evidence_bg: 'Таблица за channel fit.',
+        },
+      },
+      {
+        id: 'mkt-03-t2',
+        title_en: 'One core message, four platform adaptations',
+        title_bg: 'Едно основно послание, четири адаптации по платформи',
+        kind: 'iteration',
+        brief_en:
+          'Take one core message from Module 1 or Module 2 and adapt it into 4 mini drafts for Instagram, TikTok, LinkedIn and Facebook / Meta. Do not publish anything. Each draft has platform, format, hook, tone, proof, CTA and one risk or mistake to avoid.',
+        brief_bg:
+          'Вземи едно основно послание от Модул 1 или Модул 2 и го адаптирай в 4 мини чернови за Instagram, TikTok, LinkedIn и Facebook / Meta. Не се публикува нищо. Всяка чернова има платформа, формат, hook, тон, proof, call to action и един риск или грешка, която да избегнеш.',
+        cefe: {
+          action_en:
+            'Write four platform-specific mini drafts side by side. For each: platform, format, hook, tone, proof, CTA and one risk or mistake to avoid.',
+          action_bg:
+            'Напиши четири мини чернови по платформи една до друга. За всяка: платформа, формат, hook, тон, proof, call to action и един риск или грешка, която да избегнеш.',
+          visibleResult_en:
+            'Four mini drafts (Instagram, TikTok, LinkedIn, Facebook / Meta), each with all fields visible.',
+          visibleResult_bg:
+            'Четири мини чернови (Instagram, TikTok, LinkedIn, Facebook / Meta), всяка с всички полета.',
+          processingQuestions_en: [
+            'What stayed consistent across all four platforms?',
+            'What changed because of platform behaviour, not personal taste?',
+            'Which draft sounds forced or fake?',
+            'Which draft has the weakest proof?',
+          ],
+          processingQuestions_bg: [
+            'Какво остана еднакво във всичките четири платформи?',
+            'Какво се промени заради поведението на платформата, а не заради личен вкус?',
+            'Коя чернова звучи изкуствено или фалшиво?',
+            'Коя чернова има най-слаб proof?',
+          ],
+          generalizing_en:
+            'Platform adaptation keeps the core promise stable while changing format, tone and evidence. Consistency is not sameness.',
+          generalizing_bg:
+            'Адаптацията по платформи запазва основното обещание, но променя формат, тон и доказателства. Последователността не означава еднаквост.',
+          applying_en:
+            'Choose the weakest platform draft and revise it once. Make the hook clearer and the proof stronger.',
+          applying_bg:
+            'Избери най-слабата чернова и я редактирай веднъж. Направи hook-а по-ясен и proof-а по-силен.',
+          teacherCheck_en:
+            'Four drafts exist, one per platform; each has hook, tone, proof, CTA and risk / mistake. One draft is revised after critique.',
+          teacherCheck_bg:
+            'Има четири чернови — по една на платформа; всяка с hook, тон, proof, CTA и риск / грешка. Една чернова е преработена след критика.',
+          evidence_en: 'Four platform-adapted drafts and one revised draft.',
+          evidence_bg: 'Четири адаптирани чернови и една преработена чернова.',
+        },
+      },
+    ],
+    kikiQuestions: [
+      { en: 'Why this channel, not just why this platform is popular?', bg: 'Защо точно този канал, а не просто защото платформата е популярна?' },
+      { en: 'Where is your audience actually likely to pay attention?', bg: 'Къде наистина е вероятно аудиторията ти да обърне внимание?' },
+      { en: 'What changes when the same message moves from Instagram to LinkedIn?', bg: 'Какво се променя, когато същото послание мине от Instagram към LinkedIn?' },
+      { en: 'Which KPI would show that this channel is working?', bg: 'Кой KPI би показал, че този канал работи?' },
+      { en: 'What is the biggest mistake your brand could make on this platform?', bg: 'Коя е най-голямата грешка, която брандът ти може да направи на тази платформа?' },
+    ],
+    evidenceOfSkill: [
+      'Таблица за channel fit',
+      'Четири адаптации по платформи',
+      'Аргументиран избор на канали',
+      'Разграничаване на популярност от стратегическо съответствие',
+    ],
+    reflectionPrompt: {
+      en: 'Which channel choice would you defend to a teacher, and which one is still weak?',
+      bg: 'Кой избор на канал би защитил(а) пред учител и кой все още е слаб?',
+    },
+    improvementPrompt: {
+      en: 'Rewrite the weakest platform draft so the hook and the proof both get sharper.',
+      bg: 'Пренапиши най-слабата чернова по платформа така, че и hook-ът, и proof-ът да станат по-ясни.',
+    },
+  },
+
+  {
+    id: 'mkt-04-marketing-planning',
+    themeId: 'marketing',
+    title_en: 'Marketing planning',
+    title_bg: 'Маркетингово планиране',
+    status: 'needs_review',
+    theoryBlock_en:
+      'A marketing plan is a set of connected decisions, not a wish list. It links a measurable goal to a specific audience, a clear positioning, chosen channels, a message, realistic resources, a timeline and evidence you will collect. A goal describes an outcome; a task describes an action. Segmentation groups the market by shared traits; targeting picks the segment you will actually serve; positioning explains why this audience should choose you. A persona is a portrait of one person inside a segment. The customer journey shows how people move from not knowing you to trusting you. Safe classroom marketing uses no personal data, no ad spend and no public posting requirement. A plan is only useful when it names what will be measured and what will be improved after the first version.',
+    theoryBlock_bg:
+      'Маркетинговият план е набор от свързани решения, а не списък с желания. Той свързва измерима цел с конкретна аудитория, ясно позициониране, избрани канали, послание, реалистични ресурси, времева рамка и доказателства, които ще събереш. Целта описва резултат; задачата описва действие. Сегментирането групира пазара по общи характеристики; таргетирането избира сегмента, на който наистина ще служиш; позиционирането обяснява защо тази аудитория да избере теб. Персоната е портрет на един човек от сегмента. Клиентското пътуване показва как хората минават от „не те познават“ до „вярват ти“. Безопасен класен маркетинг не използва лични данни, няма рекламен бюджет и не изисква публично публикуване. Планът е полезен само когато казва какво ще се измерва и какво ще се подобри след първата версия.',
+    practiceRatio: R,
+    keyConcepts: ['Goal vs task', 'Segment and persona', 'Positioning', 'Resources and timeline', 'KPIs vs vanity metrics'],
+    dictionaryConcepts: [
+      'Marketing Plan',
+      'Marketing Goal',
+      'Segmentation',
+      'Targeting',
+      'Positioning',
+      'Persona',
+      'Customer Journey',
+      'Resource Planning',
+      'Timeline',
+      'KPI',
+      'Vanity Metric',
+      'Marketing Risk',
+      'Marketing Budget',
+    ],
+    practiceTasks: [
+      {
+        id: 'mkt-04-t1',
+        title_en: 'Audience segment and customer problem',
+        title_bg: 'Аудиторен сегмент и проблем на клиента',
+        kind: 'analysis',
+        brief_en:
+          'Define one primary audience segment for your brand. Describe who they are, what problem or need they have, what they care about, what they hesitate about, where they search for information, where they trust information, what evidence you have and what is still an assumption.',
+        brief_bg:
+          'Дефинирай една основна аудитория за бранда. Опиши кои са, какъв проблем или нужда имат, какво им е важно, за какво се колебаят, къде търсят информация, къде вярват на информация, кое имаш като доказателство и кое още е допускане.',
+        cefe: {
+          action_en:
+            'Fill in a one-page audience segment sheet with two visible columns for each field: what you actually know (evidence) and what you assume (assumption).',
+          action_bg:
+            'Попълни едностраничен лист за аудиторен сегмент с две видими колони за всяко поле: какво реално знаеш (доказателство) и какво предполагаш (допускане).',
+          visibleResult_en:
+            'A one-page audience segment sheet with problem, motivation, hesitation, search behaviour, trust sources, evidence and assumptions.',
+          visibleResult_bg:
+            'Едностраничен лист за аудиторен сегмент с проблем, мотивация, колебание, поведение при търсене, източници на доверие, доказателства и допускания.',
+          processingQuestions_en: [
+            'Which part is based on evidence?',
+            'Which part is only your guess?',
+            'What would you need to ask or research?',
+            'Where could this audience be misunderstood?',
+          ],
+          processingQuestions_bg: [
+            'Коя част е на база доказателство?',
+            'Коя част е само твое предположение?',
+            'Какво трябва да попиташ или да проучиш?',
+            'Къде тази аудитория може да бъде разбрана погрешно?',
+          ],
+          generalizing_en:
+            'A target audience is not "everyone who might like this." It is a specific group with a problem, context, motivation and hesitation.',
+          generalizing_bg:
+            'Целевата аудитория не е „всеки, на когото може да му хареса“. Тя е конкретна група с проблем, контекст, мотивация и колебание.',
+          applying_en:
+            'Rewrite the audience segment more narrowly and add one question you need to answer before planning the campaign.',
+          applying_bg:
+            'Пренапиши аудиторния сегмент по-тясно и добави един въпрос, на който трябва да отговориш, преди да планираш кампанията.',
+          teacherCheck_en:
+            'Audience segment is specific, not "everyone." It includes problem, motivation, hesitation, search / trust behaviour, evidence and assumptions.',
+          teacherCheck_bg:
+            'Аудиторният сегмент е конкретен, а не „всички“. Включва проблем, мотивация, колебание, поведение при търсене / доверие, доказателства и допускания.',
+          evidence_en: 'Audience segment sheet.',
+          evidence_bg: 'Лист за аудиторен сегмент.',
+        },
+      },
+      {
+        id: 'mkt-04-t2',
+        title_en: 'One-page marketing plan',
+        title_bg: 'Едностраничен маркетингов план',
+        kind: 'decision',
+        brief_en:
+          'Build a one-page marketing plan for the same brand and audience. Include a marketing goal, the audience segment, a positioning statement, 3 channels, 3 content ideas, a timeline, resources, 3 KPIs, one risk or constraint and one improvement step. Keep it realistic for a student project with limited time and no ad spend.',
+        brief_bg:
+          'Направи едностраничен маркетингов план за същия бранд и аудитория. Включи маркетингова цел, аудиторен сегмент, позициониращо изречение, 3 канала, 3 идеи за съдържание, времева рамка, ресурси, 3 KPI, един риск или ограничение и една стъпка за подобрение. Дръж го реалистичен за ученически проект с ограничено време и без бюджет за реклама.',
+        cefe: {
+          action_en:
+            'Write a one-page marketing plan with all required sections visible on a single page. No ad spend, no personal customer data.',
+          action_bg:
+            'Напиши едностраничен маркетингов план с всички задължителни секции, видими на една страница. Без бюджет за реклама, без лични клиентски данни.',
+          visibleResult_en:
+            'A one-page marketing plan showing goal, audience, positioning, 3 channels, 3 content ideas, timeline, resources, 3 KPIs, risk and improvement step.',
+          visibleResult_bg:
+            'Едностраничен маркетингов план с цел, аудитория, позициониране, 3 канала, 3 идеи за съдържание, времева рамка, ресурси, 3 KPI, риск и стъпка за подобрение.',
+          processingQuestions_en: [
+            'Is the goal measurable, or just a wish?',
+            'Do the channels match the audience?',
+            'Are the resources realistic for one student and a limited timeframe?',
+            'Which KPI is useful and which is a vanity metric?',
+            'What could fail first?',
+          ],
+          processingQuestions_bg: [
+            'Целта измерима ли е, или е само пожелание?',
+            'Каналите пасват ли на аудиторията?',
+            'Ресурсите реалистични ли са за един ученик и ограничено време?',
+            'Кой KPI е полезен и кой е vanity metric?',
+            'Кое би се провалило първо?',
+          ],
+          generalizing_en:
+            'A marketing plan connects choices. It is useful only when goal, audience, message, channels, resources and evidence line up.',
+          generalizing_bg:
+            'Маркетинговият план свързва избори. Полезен е само когато цел, аудитория, послание, канали, ресурси и доказателства си пасват.',
+          applying_en:
+            'Revise one part of the plan after critique — goal, audience, channel, KPI or timeline — and note in one sentence why you changed it.',
+          applying_bg:
+            'Редактирай една част от плана след критика — цел, аудитория, канал, KPI или времева рамка — и запиши в едно изречение защо си го променил(а).',
+          teacherCheck_en:
+            'Plan fits on one page and includes goal, audience, positioning, channels, content ideas, timeline, resources, KPIs, risk and improvement step. At least one part is revised.',
+          teacherCheck_bg:
+            'Планът се събира на една страница и включва цел, аудитория, позициониране, канали, идеи за съдържание, времева рамка, ресурси, KPI, риск и стъпка за подобрение. Поне една част е преработена.',
+          evidence_en: 'One-page marketing plan and revised decision note.',
+          evidence_bg: 'Едностраничен маркетингов план и бележка за преработеното решение.',
+        },
+      },
+    ],
+    kikiQuestions: [
+      { en: 'Is your goal measurable or just a nice sentence?', bg: 'Целта ти измерима ли е, или е просто хубаво изречение?' },
+      { en: 'Who exactly are you trying to reach?', bg: 'До кого точно се опитваш да достигнеш?' },
+      { en: 'What problem does this audience actually care about?', bg: 'Кой проблем наистина вълнува тази аудитория?' },
+      { en: 'Which part of your plan is based on assumption?', bg: 'Коя част от плана ти е на база допускане?' },
+      { en: 'Which KPI would help you make a better decision?', bg: 'Кой KPI би ти помогнал да вземеш по-добро решение?' },
+      { en: 'What will you improve after the first version?', bg: 'Какво ще подобриш след първата версия?' },
+    ],
+    evidenceOfSkill: [
+      'Аудиторен сегмент с разделени доказателства и допускания',
+      'Едностраничен маркетингов план',
+      'Аргументирано подобрение след критика',
+      'Разграничаване на KPI и vanity metric',
+    ],
+    reflectionPrompt: {
+      en: 'Which part of the plan would collapse first if reality does not match your assumptions?',
+      bg: 'Коя част от плана ще падне първа, ако реалността не съвпадне с допусканията ти?',
+    },
+    improvementPrompt: {
+      en: 'Rewrite the marketing goal so it names an audience, an outcome and a timeframe.',
+      bg: 'Пренапиши маркетинговата цел така, че да назове аудитория, резултат и срок.',
     },
   },
 ];
