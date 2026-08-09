@@ -1,0 +1,1 @@
+REVOKE ALL ON FUNCTION public.protect_peer_review_assignment_fields() FROM anon, authenticated, public;
