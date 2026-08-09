@@ -425,6 +425,7 @@ function ModuleAccordionItem({
             questions={mod.kikiQuestions}
             lang={lang}
             max={kikiVisible}
+            mood={isRead ? 'approved' : 'thinking'}
           />
           {kikiTotal > 2 && (
             <button

@@ -7,12 +7,15 @@
  */
 
 import { MessageCircle } from 'lucide-react';
+import KikiSticker, { type KikiMood } from '@/components/mentor/KikiSticker';
 
 export interface KikiInlineHintProps {
   questions: { en: string; bg: string }[];
   lang: 'bg' | 'en';
   /** How many questions to display. Defaults to 2. */
   max?: number;
+  /** Which Kiki sticker reaction to show. Defaults to a thinking sticker. */
+  mood?: KikiMood;
   className?: string;
 }
 
@@ -20,6 +23,7 @@ export default function KikiInlineHint({
   questions,
   lang,
   max = 2,
+  mood = 'thinking',
   className,
 }: KikiInlineHintProps) {
   const picks = (questions ?? []).slice(0, Math.max(1, max));
@@ -34,10 +38,13 @@ export default function KikiInlineHint({
         (className ?? '')
       }
     >
-      <h4 className="text-[11px] uppercase tracking-wide font-semibold text-primary flex items-center gap-1.5">
-        <MessageCircle className="h-3 w-3" />
-        {label}
-      </h4>
+      <div className="flex items-center gap-2">
+        <KikiSticker mood={mood} lang={lang} size={40} decorative />
+        <h4 className="text-[11px] uppercase tracking-wide font-semibold text-primary flex items-center gap-1.5">
+          <MessageCircle className="h-3 w-3" />
+          {label}
+        </h4>
+      </div>
       <ul className="space-y-1.5">
         {picks.map((q, i) => (
           <li

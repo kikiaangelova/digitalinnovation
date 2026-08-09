@@ -1,4 +1,4 @@
-import kikiAvatar from '@/assets/kiki-avatar.png';
+import KikiSticker from '@/components/mentor/KikiSticker';
 
 interface Props {
   variant: 'library' | 'preview';
@@ -52,13 +52,11 @@ export default function KikiCaseLabCard({ variant, lang }: Props) {
       className="rounded-xl border border-primary/20 bg-card p-4 sm:p-5"
     >
       <div className="flex items-start gap-3 sm:gap-4">
-        <img
-          src={kikiAvatar}
-          alt={lang === 'bg' ? 'Kiki, твоят AI ментор' : 'Kiki, your AI mentor'}
-          width={44}
-          height={44}
-          loading="lazy"
-          className="shrink-0 rounded-xl border-2 border-foreground bg-cream"
+        <KikiSticker
+          mood={variant === 'library' ? 'hello' : 'thinking'}
+          lang={lang}
+          size={56}
+          decorative
         />
         <div className="min-w-0">
           {variant === 'library' ? (
