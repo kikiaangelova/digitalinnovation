@@ -358,7 +358,7 @@ function ModuleAccordionItem({
                     {task.kind}
                   </Badge>
                 </div>
-                <p className="text-xs text-muted-foreground mt-1 leading-relaxed">
+                <p className="text-xs text-muted-foreground mt-1 leading-relaxed whitespace-pre-line">
                   {lang === 'bg' ? task.brief_bg : task.brief_en}
                 </p>
                 {task.cefe && (
