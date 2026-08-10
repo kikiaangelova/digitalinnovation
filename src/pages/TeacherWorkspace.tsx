@@ -240,11 +240,17 @@ function WorkspaceHeader({
   classCode,
   inviteLink,
   studentCount,
+  classrooms,
+  selectedId,
+  onSelect,
 }: {
   classroomName: string;
   classCode: string;
   inviteLink: string | null;
   studentCount: number;
+  classrooms: { id: string; name: string }[];
+  selectedId: string;
+  onSelect: (id: string) => void;
 }) {
   const t = useT();
   const copy = (text: string, label: string) => {
@@ -294,6 +300,23 @@ function WorkspaceHeader({
           )}
         </div>
       </div>
+      {classrooms.length > 1 && (
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-muted-foreground">
+            {t('Classroom', 'Класна стая')}
+          </span>
+          <Select value={selectedId} onValueChange={onSelect}>
+            <SelectTrigger className="min-h-[44px] w-full sm:w-72" aria-label={t('Select classroom', 'Избери класна стая')}>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {classrooms.map((c) => (
+                <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      )}
     </Card>
   );
 }
