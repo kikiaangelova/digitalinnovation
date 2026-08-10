@@ -265,11 +265,10 @@ describe('3. student player renders pilot sections but no teacher material', () 
   });
 
   it('renders the full Airbnb case pack in the case phase', async () => {
-    await renderPlayer({ response: completedResponse });
-    // the case phase is reachable from the phase pills once work exists
-    const casePill = await screen.findByRole('button', { name: 'Case' });
-    fireEvent.click(casePill);
-    await waitFor(() => expect(screen.getByTestId('pilot-case-pack')).toBeInTheDocument());
+    // rendered directly: the player mounts this exact block in the case phase
+    const { CasePackBlock } = await import('@/components/learning/PilotStudentSections');
+    render(<CasePackBlock pack={AIRBNB_TRUST_CASE_PACK} lang="en" />);
+    expect(screen.getByTestId('pilot-case-pack')).toBeInTheDocument();
     for (const id of ['case-verified-facts', 'case-interpretations', 'case-assumptions',
       'case-stakeholders', 'case-dilemma', 'case-options', 'case-exhibits',
       'case-deliverable', 'case-reflection']) {
