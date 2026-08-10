@@ -227,3 +227,117 @@ describe('4. existing feedback is loaded and updated', () => {
     expect(inserts).toHaveLength(0);
   });
 });
+
+/* ---------------- 5. insert-then-update, and load-error blocking ---------------- */
+
+function renderDetail(opts: {
+  existing: { id: string; comment: string } | null;
+  loadFails?: boolean;
+  insertId?: string;
+  inserts: any[];
+  updates: any[];
+}) {
+  const supabase = {
+    from: () => {
+      const q: any = {
+        select: (cols?: string) => {
+          q._selectCols = cols;
+          return q;
+        },
+        eq: (col: string, val: string) => {
+          if (col === 'id' && q._pendingUpdate) {
+            opts.updates.push({ payload: q._pendingUpdate, id: val });
+            return Promise.resolve({ error: null });
+          }
+          return q;
+        },
+        maybeSingle: () =>
+          Promise.resolve(
+            opts.loadFails
+              ? { data: null, error: { message: 'boom' } }
+              : { data: opts.existing, error: null },
+          ),
+        single: () =>
+          Promise.resolve({ data: { id: opts.insertId ?? 'new-fb' }, error: null }),
+        update: (payload: any) => {
+          q._pendingUpdate = payload;
+          return q;
+        },
+        insert: (payload: any) => {
+          opts.inserts.push(payload);
+          return q;
+        },
+      };
+      return q;
+    },
+  };
+  return { supabase };
+}
+
+describe('5. feedback save branches', () => {
+  beforeEach(() => vi.resetModules());
+
+  const mountTab = async (supabase: any) => {
+    vi.doMock('@/integrations/supabase/client', () => ({ supabase }));
+    vi.doMock('@/context/AuthContext', () => ({ useAuth: () => ({ user: { id: 'teacher' } }) }));
+    vi.doMock('@/context/LangContext', () => ({ useLang: () => ({ lang: 'en' }) }));
+    vi.doMock('@/hooks/useModuleResponses', () => ({
+      useModuleResponses: () => ({
+        responses: [{
+          id: 'r1', user_id: 's1', module_id: 'db-ne', completed_at: '2026-01-01T00:00:00Z',
+          quiz_score: 4, quiz_max: 5, analytical_answer: 'A', application_answer: 'B',
+        }],
+        loading: false, error: null, refresh: () => {},
+      }),
+    }));
+    const AssignmentsTab = (await import('@/components/teacher-workspace/AssignmentsTab')).default;
+    render(
+      <AssignmentsTab
+        classroomId="c1"
+        subjectKey={PILOT_SUBJECT_KEY}
+        students={[student('s1', 'Ани')]}
+        assignments={[{ id: 'a1', assignment_type: 'module', journey_stage: null, case_id: null, module_slug: 'network-effects', note: null, due_date: null, created_at: '' }] as any}
+        catalog={[mod({ slug: 'network-effects', dbId: 'db-ne', title_en: 'Network Effects' })]}
+        catalogLoading={false}
+        onAssignmentsChanged={() => {}}
+      />,
+    );
+    fireEvent.click(screen.getByRole('button', { name: /View work/i }));
+    return screen.findByLabelText('Your feedback');
+  };
+
+  it('inserts once, captures the new id, then updates that same row', async () => {
+    const inserts: any[] = [];
+    const updates: any[] = [];
+    const { supabase } = renderDetail({ existing: null, insertId: 'fb-new', inserts, updates });
+    const box = await mountTab(supabase);
+
+    fireEvent.change(box, { target: { value: 'First note' } });
+    fireEvent.click(screen.getByRole('button', { name: /Save feedback/i }));
+    await waitFor(() => expect(inserts).toHaveLength(1));
+    expect(inserts[0].comment).toBe('First note');
+    expect(updates).toHaveLength(0);
+
+    fireEvent.change(box, { target: { value: 'Second note' } });
+    fireEvent.click(screen.getByRole('button', { name: /Save feedback/i }));
+    await waitFor(() => expect(updates).toHaveLength(1));
+    expect(updates[0]).toEqual({ payload: { comment: 'Second note' }, id: 'fb-new' });
+    // No duplicate insert on the second save.
+    expect(inserts).toHaveLength(1);
+  });
+
+  it('blocks saving when existing feedback could not be loaded', async () => {
+    const inserts: any[] = [];
+    const updates: any[] = [];
+    const { supabase } = renderDetail({ existing: null, loadFails: true, inserts, updates });
+    const box = await mountTab(supabase);
+
+    await screen.findByText(/Existing feedback could not be loaded/i);
+    fireEvent.change(box, { target: { value: 'Should not save' } });
+    const btn = screen.getByRole('button', { name: /Save feedback/i });
+    expect(btn).toBeDisabled();
+    fireEvent.click(btn);
+    await waitFor(() => expect(inserts).toHaveLength(0));
+    expect(updates).toHaveLength(0);
+  });
+});

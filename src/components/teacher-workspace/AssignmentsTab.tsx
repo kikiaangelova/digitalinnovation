@@ -345,24 +345,40 @@ function EvidenceDetail({
   }
 
   const saveFeedback = async () => {
-    if (!user || comment.trim().length === 0) return;
+    // A failed load means we cannot know whether a row already exists,
+    // so inserting would risk a duplicate — saving stays blocked.
+    if (!user || loadError || comment.trim().length === 0) return;
     setSaving(true);
-    const { error } = feedbackId
-      ? await supabase
-          .from('teacher_feedback')
-          .update({ comment: comment.trim() })
-          .eq('id', feedbackId)
-      : await supabase.from('teacher_feedback').insert({
+    if (feedbackId) {
+      const { error } = await supabase
+        .from('teacher_feedback')
+        .update({ comment: comment.trim() })
+        .eq('id', feedbackId);
+      setSaving(false);
+      if (error) {
+        toast.error(t('Feedback was not saved.', 'Обратната връзка не беше запазена.'));
+        return;
+      }
+    } else {
+      const { data, error } = await supabase
+        .from('teacher_feedback')
+        .insert({
           teacher_id: user.id,
           student_id: studentId,
           target_type: FEEDBACK_TARGET_TYPE,
           target_id: response.id,
           comment: comment.trim(),
-        });
-    setSaving(false);
-    if (error) {
-      toast.error(t('Feedback was not saved.', 'Обратната връзка не беше запазена.'));
-      return;
+        })
+        .select('id')
+        .single();
+      setSaving(false);
+      if (error || !data) {
+        toast.error(t('Feedback was not saved.', 'Обратната връзка не беше запазена.'));
+        return;
+      }
+      // Remember the new row so a second save in the same panel updates
+      // it instead of inserting a duplicate.
+      setFeedbackId(data.id);
     }
     toast.success(t('Feedback saved.', 'Обратната връзка е запазена.'));
     onSaved();
@@ -408,7 +424,7 @@ function EvidenceDetail({
         <Button
           size="sm"
           className="min-h-[44px]"
-          disabled={saving || loadingFeedback || comment.trim().length === 0}
+          disabled={saving || loadingFeedback || !!loadError || comment.trim().length === 0}
           onClick={saveFeedback}
         >
           {saving ? <Loader2 className="h-4 w-4 mr-1 animate-spin" /> : null}
