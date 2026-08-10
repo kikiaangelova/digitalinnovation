@@ -45,6 +45,7 @@ export default function LearningModulePlayer() {
   const [saving, setSaving] = useState(false);
   const [existingResponse, setExistingResponse] = useState<any>(null);
   const [dbModuleId, setDbModuleId] = useState<string | null>(null);
+  const [catalogState, setCatalogState] = useState<'loading' | 'ready' | 'unregistered'>('loading');
   const [scores, setScores] = useState({ concept: 0, analytical: 0, strategic: 0, application: 0 });
 
   // Auto-save state
@@ -53,31 +54,25 @@ export default function LearningModulePlayer() {
   const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [startupSynced, setStartupSynced] = useState(false);
 
-  // Ensure module exists in DB
+  // Look up the registered catalogue row. A learner session never
+  // creates catalogue rows — if the slug is not registered we show an
+  // honest unavailable state instead of writing to `learning_modules`.
   useEffect(() => {
     if (!mod) return;
+    let cancelled = false;
+    setCatalogState('loading');
     supabase.from('learning_modules').select('id').eq('slug', mod.slug).maybeSingle()
-      .then(async ({ data }) => {
+      .then(({ data }) => {
+        if (cancelled) return;
         if (data) {
           setDbModuleId(data.id);
+          setCatalogState('ready');
         } else {
-          // Insert module into DB
-          const { data: inserted } = await supabase.from('learning_modules').insert({
-            slug: mod.slug,
-            title_en: mod.title_en,
-            title_bg: mod.title_bg,
-            theory_en: mod.theory_en,
-            theory_bg: mod.theory_bg,
-            quiz_questions: mod.quiz_questions as any,
-            analytical_question_en: mod.analytical_question_en,
-            analytical_question_bg: mod.analytical_question_bg,
-            application_question_en: mod.application_question_en,
-            application_question_bg: mod.application_question_bg,
-            display_order: mod.display_order,
-          } as any).select('id').single();
-          if (inserted) setDbModuleId(inserted.id);
+          setDbModuleId(null);
+          setCatalogState('unregistered');
         }
       });
+    return () => { cancelled = true; };
   }, [mod]);
 
   // Load existing response
