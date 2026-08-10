@@ -28,6 +28,7 @@ export interface ClassroomSummary {
   invite_link: string | null;
   is_active: boolean;
   created_at: string;
+  subject_key?: string | null;
 }
 
 export interface ClassroomStudent {
@@ -49,7 +50,9 @@ export interface UseClassroomStudentsResult {
   refresh: () => Promise<void>;
 }
 
-export function useClassroomStudents(): UseClassroomStudentsResult {
+export function useClassroomStudents(
+  classroomId?: string | null,
+): UseClassroomStudentsResult {
   const { user } = useAuth();
   const [classroom, setClassroom] = useState<ClassroomSummary | null>(null);
   const [students, setStudents] = useState<ClassroomStudent[]>([]);
@@ -63,15 +66,26 @@ export function useClassroomStudents(): UseClassroomStudentsResult {
       setLoading(false);
       return;
     }
+    // Explicit `null` means "a classroom has not been selected yet".
+    if (classroomId === null) {
+      setClassroom(null);
+      setStudents([]);
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     setError(null);
     try {
-      const { data: cls, error: clsErr } = await supabase
+      let query = supabase
         .from('classrooms')
-        .select('id, name, class_code, invite_link, is_active, created_at')
+        .select('id, name, class_code, invite_link, is_active, created_at, subject_key')
         .eq('teacher_id', user.id)
-        .eq('is_active', true)
-        .maybeSingle();
+        .eq('is_active', true);
+      if (classroomId) query = query.eq('id', classroomId);
+      const { data: rows, error: clsErr } = await query
+        .order('created_at', { ascending: true })
+        .limit(1);
+      const cls = rows?.[0] ?? null;
 
       if (clsErr) throw clsErr;
 

@@ -17,7 +17,7 @@
  * not see it. All other tabs render for both roles.
  */
 
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import AppHeader from '@/components/layout/AppHeader';
 import { Card } from '@/components/ui/card';
@@ -46,9 +46,16 @@ import { useLang } from '@/context/LangContext';
 import { useClassroomStudents } from '@/hooks/useClassroomStudents';
 import { useClassroomAssignments } from '@/hooks/useClassroomAssignments';
 import { useStudentProgress } from '@/hooks/useStudentProgress';
+import { useTeacherClassrooms } from '@/hooks/useTeacherClassrooms';
+import { useModuleCatalog } from '@/hooks/useModuleCatalog';
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from '@/components/ui/select';
+import { PILOT_SUBJECT_KEY } from '@/lib/teacher-assignments';
 import { isFeatureEnabled, enableFeatureFlag } from '@/lib/featureFlags';
 import OverviewTab from '@/components/teacher-workspace/OverviewTab';
 import StudentsTab from '@/components/teacher-workspace/StudentsTab';
+import AssignmentsTab from '@/components/teacher-workspace/AssignmentsTab';
 
 type TabId =
   | 'overview'
@@ -233,11 +240,17 @@ function WorkspaceHeader({
   classCode,
   inviteLink,
   studentCount,
+  classrooms,
+  selectedId,
+  onSelect,
 }: {
   classroomName: string;
   classCode: string;
   inviteLink: string | null;
   studentCount: number;
+  classrooms: { id: string; name: string }[];
+  selectedId: string;
+  onSelect: (id: string) => void;
 }) {
   const t = useT();
   const copy = (text: string, label: string) => {
@@ -287,6 +300,23 @@ function WorkspaceHeader({
           )}
         </div>
       </div>
+      {classrooms.length > 1 && (
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-muted-foreground">
+            {t('Classroom', 'Класна стая')}
+          </span>
+          <Select value={selectedId} onValueChange={onSelect}>
+            <SelectTrigger className="min-h-[44px] w-full sm:w-72" aria-label={t('Select classroom', 'Избери класна стая')}>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {classrooms.map((c) => (
+                <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      )}
     </Card>
   );
 }
@@ -298,9 +328,36 @@ function WorkspaceHeader({
 export default function TeacherWorkspace() {
   const { user, isAdmin, loading: authLoading } = useAuth();
   const t = useT();
-  const { classroom, students, loading, error } = useClassroomStudents();
-  const { assignments, loading: assignmentsLoading } = useClassroomAssignments(
-    classroom?.id ?? null,
+  const {
+    classrooms,
+    loading: classroomsLoading,
+    error: classroomsError,
+  } = useTeacherClassrooms();
+  const [selectedClassroomId, setSelectedClassroomId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (classroomsLoading) return;
+    if (classrooms.length === 0) {
+      setSelectedClassroomId(null);
+      return;
+    }
+    setSelectedClassroomId((prev) =>
+      prev && classrooms.some((c) => c.id === prev) ? prev : classrooms[0].id,
+    );
+  }, [classrooms, classroomsLoading]);
+
+  const { classroom, students, loading, error } =
+    useClassroomStudents(selectedClassroomId);
+  const {
+    assignments,
+    loading: assignmentsLoading,
+    refresh: refreshAssignments,
+  } = useClassroomAssignments(selectedClassroomId);
+  const { catalog, loading: catalogLoading } = useModuleCatalog();
+
+  const selectedClassroom = useMemo(
+    () => classrooms.find((c) => c.id === selectedClassroomId) ?? null,
+    [classrooms, selectedClassroomId],
   );
 
   const studentIds = useMemo(() => students.map((s) => s.student_id), [students]);
@@ -336,7 +393,8 @@ export default function TeacherWorkspace() {
   // Feature-flag gate — soft, reversible
   if (!isFeatureEnabled('teacher-workspace-v2')) return <PreviewGate />;
 
-  if (loading) return <LoadingState />;
+  if (classroomsLoading || loading) return <LoadingState />;
+  if (classroomsError) return <ErrorState message={classroomsError} />;
   if (error) return <ErrorState message={error} />;
   if (!classroom) return <NoClassroomState />;
 
@@ -349,6 +407,9 @@ export default function TeacherWorkspace() {
           classCode={classroom.class_code}
           inviteLink={classroom.invite_link}
           studentCount={students.length}
+          classrooms={classrooms.map((c) => ({ id: c.id, name: c.name }))}
+          selectedId={classroom.id}
+          onSelect={setSelectedClassroomId}
         />
 
         <Tabs defaultValue="overview" className="space-y-4">
@@ -391,6 +452,20 @@ export default function TeacherWorkspace() {
                   metricsById={metricsById}
                   progressById={progressById}
                   loading={progressLoading}
+                />
+              ) : tab.id === 'assignments' ? (
+                <AssignmentsTab
+                  classroomId={classroom.id}
+                  subjectKey={
+                    selectedClassroom?.subject_key ||
+                    classroom.subject_key ||
+                    PILOT_SUBJECT_KEY
+                  }
+                  students={students}
+                  assignments={assignments}
+                  catalog={catalog}
+                  catalogLoading={catalogLoading}
+                  onAssignmentsChanged={refreshAssignments}
                 />
               ) : (
                 <TabPlaceholder tab={tab} />
