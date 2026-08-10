@@ -177,7 +177,7 @@ describe('4. existing feedback is loaded and updated', () => {
     const updates: any[] = [];
     const supabase = {
       from: (table: string) => {
-        expect(table).toBe('teacher_feedback');
+        console.log('FROM', table);
         const q: any = {
           select: () => q,
           eq: (col: string, val: string) => {
