@@ -6,7 +6,7 @@
  * live in `@/lib/teacher-assignments` so they stay testable.
  */
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -30,6 +30,7 @@ import {
   STATUS_LABELS,
   countCompleted,
   deriveAssignmentStatus,
+  dedupeModulesByIdentity,
   filterAssignableModules,
   indexResponses,
   responseKey,
@@ -84,9 +85,11 @@ export default function AssignmentsTab({
 
   const assignedModules = useMemo(
     () =>
-      moduleAssignments
-        .map((a) => catalog.find((c) => c.slug === a.module_slug))
-        .filter((m): m is CatalogModule => !!m && !!m.dbId),
+      dedupeModulesByIdentity(
+        moduleAssignments
+          .map((a) => catalog.find((c) => c.slug === a.module_slug))
+          .filter((m): m is CatalogModule => !!m && !!m.dbId),
+      ),
     [moduleAssignments, catalog],
   );
 
@@ -293,6 +296,42 @@ function EvidenceDetail({
   const t = (en: string, bg: string) => (lang === 'bg' ? bg : en);
   const [comment, setComment] = useState('');
   const [saving, setSaving] = useState(false);
+  const [loadingFeedback, setLoadingFeedback] = useState(false);
+  const [feedbackId, setFeedbackId] = useState<string | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
+
+  const responseId = response?.id ?? null;
+  const teacherId = user?.id ?? null;
+
+  useEffect(() => {
+    let cancelled = false;
+    if (!teacherId || !responseId) return;
+    setLoadingFeedback(true);
+    setLoadError(null);
+    void (async () => {
+      const { data, error } = await supabase
+        .from('teacher_feedback')
+        .select('id, comment')
+        .eq('teacher_id', teacherId)
+        .eq('student_id', studentId)
+        .eq('target_type', FEEDBACK_TARGET_TYPE)
+        .eq('target_id', responseId)
+        .maybeSingle();
+      if (cancelled) return;
+      if (error) {
+        setLoadError(error.message ?? 'load failed');
+      } else if (data) {
+        setFeedbackId(data.id);
+        setComment(data.comment ?? '');
+      } else {
+        setFeedbackId(null);
+      }
+      setLoadingFeedback(false);
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [teacherId, studentId, responseId]);
 
   if (!response) {
     return (
@@ -308,20 +347,11 @@ function EvidenceDetail({
   const saveFeedback = async () => {
     if (!user || comment.trim().length === 0) return;
     setSaving(true);
-    const { data: existing } = await supabase
-      .from('teacher_feedback')
-      .select('id')
-      .eq('teacher_id', user.id)
-      .eq('student_id', studentId)
-      .eq('target_type', FEEDBACK_TARGET_TYPE)
-      .eq('target_id', response.id)
-      .maybeSingle();
-
-    const { error } = existing
+    const { error } = feedbackId
       ? await supabase
           .from('teacher_feedback')
           .update({ comment: comment.trim() })
-          .eq('id', existing.id)
+          .eq('id', feedbackId)
       : await supabase.from('teacher_feedback').insert({
           teacher_id: user.id,
           student_id: studentId,
@@ -358,16 +388,27 @@ function EvidenceDetail({
       </div>
       <div className="space-y-2">
         <Label htmlFor={`fb-${response.id}`}>{t('Your feedback', 'Твоята обратна връзка')}</Label>
+        {loadingFeedback && (
+          <p className="text-xs text-muted-foreground">
+            {t('Loading your feedback…', 'Зареждане на обратната ти връзка…')}
+          </p>
+        )}
+        {loadError && (
+          <p role="alert" className="text-xs text-destructive">
+            {t('Existing feedback could not be loaded.', 'Съществуващата обратна връзка не можа да се зареди.')}
+          </p>
+        )}
         <Textarea
           id={`fb-${response.id}`}
           rows={3}
           value={comment}
+          disabled={loadingFeedback}
           onChange={(e) => setComment(e.target.value)}
         />
         <Button
           size="sm"
           className="min-h-[44px]"
-          disabled={saving || comment.trim().length === 0}
+          disabled={saving || loadingFeedback || comment.trim().length === 0}
           onClick={saveFeedback}
         >
           {saving ? <Loader2 className="h-4 w-4 mr-1 animate-spin" /> : null}

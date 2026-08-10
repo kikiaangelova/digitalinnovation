@@ -114,3 +114,23 @@ export const STATUS_LABELS: Record<AssignmentStatus, { en: string; bg: string }>
 };
 
 export const FEEDBACK_TARGET_TYPE = 'learning_module_response';
+
+/**
+ * Assignment rows may repeat the same module (a teacher can re-assign
+ * it). Progress reporting must show one card per module, so we
+ * de-duplicate by the stable module identity (dbId, falling back to
+ * slug) while leaving the assignment records themselves untouched.
+ */
+export function dedupeModulesByIdentity<
+  T extends { slug: string; dbId?: string | null },
+>(modules: readonly T[]): T[] {
+  const seen = new Set<string>();
+  const out: T[] = [];
+  for (const m of modules) {
+    const key = m.dbId ?? m.slug;
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(m);
+  }
+  return out;
+}
