@@ -25,6 +25,8 @@ import type { ClassroomStudent } from '@/hooks/useClassroomStudents';
 import type { ClassroomAssignment } from '@/hooks/useClassroomAssignments';
 import type { CatalogModule } from '@/hooks/useModuleCatalog';
 import { useModuleResponses } from '@/hooks/useModuleResponses';
+import TeacherRubricPanel from '@/components/teacher-workspace/TeacherRubricPanel';
+import type { TeacherPack } from '@/data/module-pilot-types';
 import {
   FEEDBACK_TARGET_TYPE,
   STATUS_LABELS,
@@ -259,6 +261,7 @@ export default function AssignmentsTab({
                         <EvidenceDetail
                           response={resp ?? null}
                           studentId={s.student_id}
+                          teacherPack={m.staticModule?.teacher_pack ?? null}
                           onSaved={refreshResponses}
                         />
                       )}
@@ -279,6 +282,7 @@ export default function AssignmentsTab({
 function EvidenceDetail({
   response,
   studentId,
+  teacherPack,
   onSaved,
 }: {
   response: {
@@ -289,6 +293,8 @@ function EvidenceDetail({
     application_answer?: string | null;
   } | null;
   studentId: string;
+  /** Teacher-only guidance for pilot modules. Null for other modules. */
+  teacherPack?: TeacherPack | null;
   onSaved: () => void;
 }) {
   const { lang } = useLang();
@@ -404,32 +410,37 @@ function EvidenceDetail({
       </div>
       <div className="space-y-2">
         <Label htmlFor={`fb-${response.id}`}>{t('Your feedback', 'Твоята обратна връзка')}</Label>
-        {loadingFeedback && (
-          <p className="text-xs text-muted-foreground">
-            {t('Loading your feedback…', 'Зареждане на обратната ти връзка…')}
-          </p>
-        )}
-        {loadError && (
-          <p role="alert" className="text-xs text-destructive">
-            {t('Existing feedback could not be loaded.', 'Съществуващата обратна връзка не можа да се зареди.')}
-          </p>
-        )}
-        <Textarea
-          id={`fb-${response.id}`}
-          rows={3}
-          value={comment}
-          disabled={loadingFeedback}
-          onChange={(e) => setComment(e.target.value)}
-        />
-        <Button
-          size="sm"
-          className="min-h-[44px]"
-          disabled={saving || loadingFeedback || !!loadError || comment.trim().length === 0}
-          onClick={saveFeedback}
-        >
-          {saving ? <Loader2 className="h-4 w-4 mr-1 animate-spin" /> : null}
-          {t('Save feedback', 'Запази обратната връзка')}
-        </Button>
+        <div className={teacherPack ? 'grid gap-3 lg:grid-cols-2' : undefined}>
+          <div className="space-y-2">
+            {loadingFeedback && (
+              <p className="text-xs text-muted-foreground">
+                {t('Loading your feedback…', 'Зареждане на обратната ти връзка…')}
+              </p>
+            )}
+            {loadError && (
+              <p role="alert" className="text-xs text-destructive">
+                {t('Existing feedback could not be loaded.', 'Съществуващата обратна връзка не можа да се зареди.')}
+              </p>
+            )}
+            <Textarea
+              id={`fb-${response.id}`}
+              rows={3}
+              value={comment}
+              disabled={loadingFeedback}
+              onChange={(e) => setComment(e.target.value)}
+            />
+            <Button
+              size="sm"
+              className="min-h-[44px]"
+              disabled={saving || loadingFeedback || !!loadError || comment.trim().length === 0}
+              onClick={saveFeedback}
+            >
+              {saving ? <Loader2 className="h-4 w-4 mr-1 animate-spin" /> : null}
+              {t('Save feedback', 'Запази обратната връзка')}
+            </Button>
+          </div>
+          {teacherPack && <TeacherRubricPanel pack={teacherPack} />}
+        </div>
       </div>
     </div>
   );

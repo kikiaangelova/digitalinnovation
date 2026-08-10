@@ -17,15 +17,26 @@ import { toast } from 'sonner';
 import { awardXp } from '@/lib/xp';
 import ReactMarkdown from 'react-markdown';
 import { AutoTermTooltips } from '@/components/ui/term-tooltip';
+import { FEEDBACK_TARGET_TYPE } from '@/lib/teacher-assignments';
+import {
+  CasePackBlock, EntryTaskBlock, LearningOutcomesBlock, MisconceptionsBlock,
+  ModelBoundariesBlock, QualityStatusBadge, SourcePackBlock,
+} from '@/components/learning/PilotStudentSections';
 import {
   ArrowLeft, BookOpen, CheckCircle2, XCircle, Brain, Target,
   Lightbulb, Rocket, Send, ChevronRight, FileText, Zap, BarChart3,
-  Save, Clock, Loader2,
+  Save, Clock, Loader2, MessageSquare, RotateCcw,
 } from 'lucide-react';
 
 type Phase = 'theory' | 'quiz' | 'case_study' | 'sim_decision' | 'analytical' | 'application' | 'results';
 
 type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
+
+/**
+ * Modules where a teacher-feedback driven revision loop is enabled.
+ * Everything else keeps the existing first-completion flow unchanged.
+ */
+const REVISION_ENABLED_SLUGS = ['network-effects'];
 
 export default function LearningModulePlayer() {
   const { slug } = useParams<{ slug: string }>();
@@ -53,6 +64,13 @@ export default function LearningModulePlayer() {
   const [lastSavedAt, setLastSavedAt] = useState<Date | null>(null);
   const autoSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [startupSynced, setStartupSynced] = useState(false);
+
+  // Teacher feedback + revision loop (pilot modules only, no schema change)
+  const [feedback, setFeedback] = useState<{ id: string; comment: string | null } | null>(null);
+  const [feedbackError, setFeedbackError] = useState(false);
+  const [isRevision, setIsRevision] = useState(false);
+  const [resubmitted, setResubmitted] = useState(false);
+  const [revising, setRevising] = useState(false);
 
   // Look up the registered catalogue row. A learner session never
   // creates catalogue rows — if the slug is not registered we show an
@@ -144,6 +162,54 @@ export default function LearningModulePlayer() {
       if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
     };
   }, [analyticalAnswer, applicationAnswer, performAutoSave]);
+
+  // Fetch the student's own teacher feedback for this response. RLS keeps
+  // this scoped to the learner; nothing is written here.
+  const responseId: string | null = existingResponse?.id ?? null;
+  const revisionEnabled = !!mod && REVISION_ENABLED_SLUGS.includes(mod.slug);
+
+  useEffect(() => {
+    if (!user || !responseId || !revisionEnabled) return;
+    let cancelled = false;
+    void (async () => {
+      const { data, error } = await supabase
+        .from('teacher_feedback')
+        .select('id, comment')
+        .eq('student_id', user.id)
+        .eq('target_type', FEEDBACK_TARGET_TYPE)
+        .eq('target_id', responseId)
+        .maybeSingle();
+      if (cancelled) return;
+      if (error) {
+        setFeedbackError(true);
+        setFeedback(null);
+        return;
+      }
+      setFeedbackError(false);
+      setFeedback(data ? { id: data.id, comment: data.comment ?? null } : null);
+    })();
+    return () => { cancelled = true; };
+  }, [user, responseId, revisionEnabled]);
+
+  // Reopen the SAME response row for revision. No insert, no new row.
+  const handleStartRevision = async () => {
+    if (!existingResponse?.id) return;
+    setRevising(true);
+    const { error } = await supabase
+      .from('learning_module_responses')
+      .update({ completed_at: null, updated_at: new Date().toISOString() } as any)
+      .eq('id', existingResponse.id);
+    setRevising(false);
+    if (error) {
+      toast.error(t('Could not reopen your response.', 'Отговорът ти не можа да се отвори отново.'));
+      return;
+    }
+    setExistingResponse({ ...existingResponse, completed_at: null });
+    setIsRevision(true);
+    setResubmitted(false);
+    setPhase('analytical');
+    toast.success(t('Your response is open again.', 'Отговорът ти е отворен отново.'));
+  };
 
   if (!mod) {
     return (
@@ -238,20 +304,31 @@ export default function LearningModulePlayer() {
 
     // NOTE: No auto-sync to startup — user chooses explicitly via "Use in My Startup" button
 
-    // Award XP for theory completion
-    const xpResult = await awardXp('theory_complete', mod.slug);
-    let totalXp = xpResult.xp_awarded;
+    // Completion XP is awarded once, on first completion only. A revision
+    // after teacher feedback improves the work — it does not pay out again.
+    let totalXp = 0;
+    if (!isRevision) {
+      const xpResult = await awardXp('theory_complete', mod.slug);
+      totalXp = xpResult.xp_awarded;
 
-    // Award bonus XP if quiz score >= 60%
-    const quizPct = (quizScore / Math.max(quizMax, 1)) * 100;
-    if (quizPct >= 60) {
-      const quizXpResult = await awardXp('theory_quiz_pass', mod.slug);
-      totalXp += quizXpResult.xp_awarded;
+      const quizPct = (quizScore / Math.max(quizMax, 1)) * 100;
+      if (quizPct >= 60) {
+        const quizXpResult = await awardXp('theory_quiz_pass', mod.slug);
+        totalXp += quizXpResult.xp_awarded;
+      }
     }
 
+    setExistingResponse((prev: any) =>
+      prev ? { ...prev, completed_at: payload.completed_at } : prev,
+    );
     setSaving(false);
     setPhase('results');
     setLastSavedAt(new Date());
+    if (isRevision) {
+      setResubmitted(true);
+      toast.success(t('Revision submitted.', 'Подобреният отговор е изпратен.'));
+      return;
+    }
     const { fireCelebration } = await import('@/components/ui/celebration-overlay');
     fireCelebration({
       xp: totalXp,
@@ -342,6 +419,11 @@ export default function LearningModulePlayer() {
             <BookOpen className="h-5 w-5 text-primary" />
             {lang === 'bg' ? mod.title_bg : mod.title_en}
           </h1>
+          {mod.quality_status && (
+            <div className="mt-2">
+              <QualityStatusBadge status={mod.quality_status} lang={lang as 'en' | 'bg'} />
+            </div>
+          )}
         </div>
 
         {/* Learning Structure Bar */}
@@ -370,6 +452,10 @@ export default function LearningModulePlayer() {
         {/* THEORY PHASE — 4-block structure */}
         {phase === 'theory' && (
           <div className="space-y-4">
+            {/* Optional pilot blocks — student-safe only */}
+            <LearningOutcomesBlock outcomes={mod.learning_outcomes} lang={lang as 'en' | 'bg'} />
+            <EntryTaskBlock task={mod.entry_task} lang={lang as 'en' | 'bg'} />
+
             {/* Block 1: Hook */}
             {mod.hook && (
               <div className="rounded-xl border-2 border-amber-200 dark:border-amber-800 bg-amber-50/50 dark:bg-amber-950/20 p-5">
@@ -418,6 +504,11 @@ export default function LearningModulePlayer() {
                 <p className="text-xs text-muted-foreground pt-1">{t('No right answer here. Think like a founder.', 'Няма верен отговор. Мисли като основател.')}</p>
               </div>
             )}
+
+            {/* Boundaries, misconceptions and sources — student-safe */}
+            <ModelBoundariesBlock boundaries={mod.model_boundaries} lang={lang as 'en' | 'bg'} />
+            <MisconceptionsBlock misconceptions={mod.misconceptions} lang={lang as 'en' | 'bg'} />
+            <SourcePackBlock sources={mod.source_pack} lang={lang as 'en' | 'bg'} />
 
             <div className="flex justify-end pt-2">
               <Button onClick={() => setPhase('quiz')}>
@@ -571,6 +662,9 @@ export default function LearningModulePlayer() {
               </h3>
               <p className="text-sm text-foreground">{lang === 'bg' ? mod.embedded_case.outcome_bg : mod.embedded_case.outcome_en}</p>
             </div>
+
+            {/* Pilot case pack — facts, interpretations, assumptions, exhibits */}
+            <CasePackBlock pack={mod.embedded_case.case_pack} lang={lang as 'en' | 'bg'} />
 
             {/* Analytical Questions */}
             <div className="rounded-xl border border-border bg-card p-5 space-y-4">
@@ -744,6 +838,63 @@ export default function LearningModulePlayer() {
                 </div>
               )}
             </div>
+
+            {/* "Use in My Startup" button — explicit action */}
+            {revisionEnabled && (
+              <div className="rounded-xl border border-border bg-card p-5 space-y-3" data-testid="teacher-feedback-panel">
+                <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
+                  <MessageSquare className="h-4 w-4 text-primary" />
+                  {t('Teacher feedback', 'Обратна връзка от учителя')}
+                </h3>
+                <Badge variant="outline" className="text-[11px]" data-testid="revision-state">
+                  {resubmitted
+                    ? t('Resubmitted after feedback', 'Изпратено отново след обратна връзка')
+                    : isRevision && !existingResponse?.completed_at
+                      ? t('Revision in progress', 'Подобрение в процес')
+                      : feedback
+                        ? t('Feedback received', 'Има обратна връзка')
+                        : t('Submitted · waiting for teacher feedback', 'Изпратено · чака обратна връзка от учителя')}
+                </Badge>
+                {feedbackError ? (
+                  <p role="alert" className="text-xs text-destructive">
+                    {t(
+                      'Feedback could not be loaded right now. This does not affect your submitted work — try again later.',
+                      'Обратната връзка не можа да се зареди в момента. Това не влияе на изпратената ти работа — опитай пак по-късно.',
+                    )}
+                  </p>
+                ) : feedback ? (
+                  <>
+                    <p className="text-sm text-foreground whitespace-pre-line bg-accent/50 rounded-lg p-3">
+                      {feedback.comment?.trim() || t('No comment left.', 'Няма оставен коментар.')}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {t(
+                        'This is your teacher’s comment on the work you submitted. It is not a level or a mastery score.',
+                        'Това е коментарът на учителя ти по изпратената работа. Не е ниво и не е оценка за майсторство.',
+                      )}
+                    </p>
+                    {!!existingResponse?.completed_at && (
+                      <Button
+                        variant="outline"
+                        className="min-h-[44px]"
+                        disabled={revising}
+                        onClick={handleStartRevision}
+                      >
+                        {revising ? <Loader2 className="h-4 w-4 mr-1 animate-spin" /> : <RotateCcw className="h-4 w-4 mr-1" />}
+                        {t('Revise response', 'Подобри отговора')}
+                      </Button>
+                    )}
+                  </>
+                ) : (
+                  <p className="text-xs text-muted-foreground">
+                    {t(
+                      'Your teacher has not left feedback yet. When they do, you will be able to revise this response.',
+                      'Учителят ти още не е оставил обратна връзка. Когато го направи, ще можеш да подобриш този отговор.',
+                    )}
+                  </p>
+                )}
+              </div>
+            )}
 
             {/* "Use in My Startup" button — explicit action */}
             {mod.startup_field && applicationAnswer.trim().length >= 10 && (
