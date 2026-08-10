@@ -328,9 +328,36 @@ function WorkspaceHeader({
 export default function TeacherWorkspace() {
   const { user, isAdmin, loading: authLoading } = useAuth();
   const t = useT();
-  const { classroom, students, loading, error } = useClassroomStudents();
-  const { assignments, loading: assignmentsLoading } = useClassroomAssignments(
-    classroom?.id ?? null,
+  const {
+    classrooms,
+    loading: classroomsLoading,
+    error: classroomsError,
+  } = useTeacherClassrooms();
+  const [selectedClassroomId, setSelectedClassroomId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (classroomsLoading) return;
+    if (classrooms.length === 0) {
+      setSelectedClassroomId(null);
+      return;
+    }
+    setSelectedClassroomId((prev) =>
+      prev && classrooms.some((c) => c.id === prev) ? prev : classrooms[0].id,
+    );
+  }, [classrooms, classroomsLoading]);
+
+  const { classroom, students, loading, error } =
+    useClassroomStudents(selectedClassroomId);
+  const {
+    assignments,
+    loading: assignmentsLoading,
+    refresh: refreshAssignments,
+  } = useClassroomAssignments(selectedClassroomId);
+  const { catalog, loading: catalogLoading } = useModuleCatalog();
+
+  const selectedClassroom = useMemo(
+    () => classrooms.find((c) => c.id === selectedClassroomId) ?? null,
+    [classrooms, selectedClassroomId],
   );
 
   const studentIds = useMemo(() => students.map((s) => s.student_id), [students]);
@@ -366,7 +393,8 @@ export default function TeacherWorkspace() {
   // Feature-flag gate — soft, reversible
   if (!isFeatureEnabled('teacher-workspace-v2')) return <PreviewGate />;
 
-  if (loading) return <LoadingState />;
+  if (classroomsLoading || loading) return <LoadingState />;
+  if (classroomsError) return <ErrorState message={classroomsError} />;
   if (error) return <ErrorState message={error} />;
   if (!classroom) return <NoClassroomState />;
 
@@ -379,6 +407,9 @@ export default function TeacherWorkspace() {
           classCode={classroom.class_code}
           inviteLink={classroom.invite_link}
           studentCount={students.length}
+          classrooms={classrooms.map((c) => ({ id: c.id, name: c.name }))}
+          selectedId={classroom.id}
+          onSelect={setSelectedClassroomId}
         />
 
         <Tabs defaultValue="overview" className="space-y-4">
@@ -421,6 +452,20 @@ export default function TeacherWorkspace() {
                   metricsById={metricsById}
                   progressById={progressById}
                   loading={progressLoading}
+                />
+              ) : tab.id === 'assignments' ? (
+                <AssignmentsTab
+                  classroomId={classroom.id}
+                  subjectKey={
+                    selectedClassroom?.subject_key ||
+                    classroom.subject_key ||
+                    PILOT_SUBJECT_KEY
+                  }
+                  students={students}
+                  assignments={assignments}
+                  catalog={catalog}
+                  catalogLoading={catalogLoading}
+                  onAssignmentsChanged={refreshAssignments}
                 />
               ) : (
                 <TabPlaceholder tab={tab} />
