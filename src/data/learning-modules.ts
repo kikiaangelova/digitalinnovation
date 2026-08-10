@@ -1,3 +1,23 @@
+import type {
+  Bilingual,
+  CasePack,
+  ContentQualityStatus,
+  EntryTask,
+  LearningOutcome,
+  Misconception,
+  SourceRef,
+  TeacherPack,
+} from './module-pilot-types';
+import {
+  AIRBNB_TRUST_CASE_PACK,
+  NETWORK_EFFECTS_BOUNDARIES,
+  NETWORK_EFFECTS_ENTRY_TASK,
+  NETWORK_EFFECTS_MISCONCEPTIONS,
+  NETWORK_EFFECTS_OUTCOMES,
+  NETWORK_EFFECTS_SOURCES,
+  NETWORK_EFFECTS_TEACHER_PACK,
+} from './network-effects-pilot';
+
 export interface QuizOption {
   id: string;
   en: string;
@@ -33,6 +53,8 @@ export interface EmbeddedCaseStudy {
   outcome_bg: string;
   outcome_type: 'success' | 'failure' | 'mixed';
   analytical_questions: CaseAnalyticalQuestion[];
+  /** Optional pilot case-pack extension (facts/interpretations/exhibits…). */
+  case_pack?: CasePack;
 }
 
 /** Structured concept card displayed in the Concept Layer */
@@ -135,6 +157,15 @@ export interface LearningModule {
   framework?: TheoryFramework;
   metaphor?: TheoryMetaphor;
   provocations?: TheoryProvocation[];
+  // ---- Optional pilot content model (additive, non-breaking) ----
+  quality_status?: ContentQualityStatus;
+  learning_outcomes?: LearningOutcome[];
+  source_pack?: SourceRef[];
+  model_boundaries?: Bilingual[];
+  misconceptions?: Misconception[];
+  entry_task?: EntryTask;
+  /** Teacher-only. Must never be rendered in the student module player. */
+  teacher_pack?: TeacherPack;
 }
 
 export const LEARNING_MODULES: LearningModule[] = [
@@ -142,115 +173,166 @@ export const LEARNING_MODULES: LearningModule[] = [
     slug: 'network-effects',
     title_en: 'Network Effects',
     title_bg: 'Мрежови ефекти',
-    hook: { en: 'If your app has 10 users and the competitor has 1,000, you\'re doomed — unless you understand how network effects work and how to build them from zero.', bg: 'Ако имаш приложение с 10 потребители и конкурентът има 1000, ти си обречен — освен ако не разбираш как мрежовите ефекти работят и как да ги изградиш от нулата.' },
-    metaphor: { en: '1 user = 1 connection. 10 users = 45 connections. 100 users = 4,950 connections. Value grows quadratically.', bg: 'Представи си: 1 потребител = 1 връзка. 10 потребители = 45 връзки. 100 потребители = 4950 връзки. Стойността расте квадратично.' },
-    framework: { name: "Metcalfe's Law", bullets_en: ['The value of a network is proportional to the square of the number of users (n²)', 'Explains why platforms become near-monopolies after reaching critical mass', 'Applies to social networks, marketplaces, and communication tools'], bullets_bg: ['Стойността на мрежата е пропорционална на квадрата на броя потребители (n²)', 'Обяснява защо платформите стават почти монополи след критична маса', 'Прилага се за социални мрежи, пазари и комуникационни инструменти'], apply_en: 'Calculate n² for your startup: what is your critical mass number?', apply_bg: 'Изчисли n² за стартъпа си: какъв е твоят брой за критична маса?' },
-    provocations: [{ en: 'When do network effects kill a platform instead of growing it?', bg: 'Кога мрежовият ефект убива платформата вместо да я развие?' }, { en: 'Why did WhatsApp refuse ads while Facebook embraced them?', bg: 'Защо WhatsApp отказа реклами, докато Facebook ги прие?' }],
+    quality_status: 'needs_review',
+    learning_outcomes: NETWORK_EFFECTS_OUTCOMES,
+    source_pack: NETWORK_EFFECTS_SOURCES,
+    model_boundaries: NETWORK_EFFECTS_BOUNDARIES,
+    misconceptions: NETWORK_EFFECTS_MISCONCEPTIONS,
+    entry_task: NETWORK_EFFECTS_ENTRY_TASK,
+    teacher_pack: NETWORK_EFFECTS_TEACHER_PACK,
+    hook: { en: 'Two apps, same city. One has more users, the other gets you a ride in four minutes instead of nineteen. Only one of those numbers is a network effect — and telling them apart is what this module is for.', bg: 'Две приложения, един и същи град. Едното има повече потребители, другото ти намира кола за четири минути вместо за деветнайсет. Само едно от тези числа е мрежови ефект — и този модул е точно за това да ги различаваш.' },
+    metaphor: { en: 'Think of a market square, not a headcount. What matters is whether the people you need are there at the hour you show up — density in one place beats a big number spread thin.', bg: 'Мисли за пазарен площад, не за преброяване. Значение има дали хората, които ти трябват, са там в часа, в който идваш — плътността на едно място бие голямото число, разпръснато нашироко.' },
+    framework: {
+      name: 'Network-effect strength check (five questions)',
+      bullets_en: [
+        'Does a user’s value actually change when others participate — or would the product be just as good with far fewer users?',
+        'Is the effect direct (same side benefits each other) or cross-side (one side benefits from the other)?',
+        'Is the relevant network global or local — which town, campus, category or time slot has to be dense?',
+        'How easily do users multi-home, switch, or find a differentiated alternative?',
+        'Where does the effect turn negative — congestion, spam and fraud, falling match quality, trust breakdown?',
+      ],
+      bullets_bg: [
+        'Променя ли се реално стойността за потребителя, когато другите участват — или продуктът щеше да е също толкова добър и с много по-малко хора?',
+        'Ефектът директен ли е (една страна се ползва от себе си) или кръстосан (една страна се ползва от другата)?',
+        'Релевантната мрежа глобална или локална е — кой град, кампус, категория или часови интервал трябва да е плътен?',
+        'Колко лесно потребителите ползват няколко платформи, сменят или намират различаваща се алтернатива?',
+        'Къде ефектът става отрицателен — претоварване, спам и измами, спадащо качество на съвпаденията, срив на доверието?',
+      ],
+      apply_en: 'Run the five questions on one platform you use daily. Write down which answer you are least sure about — that is your weakest assumption.',
+      apply_bg: 'Приложи петте въпроса към една платформа, която ползваш всеки ден. Запиши в кой отговор си най-несигурен — това е най-слабото ти допускане.',
+    },
+    provocations: [
+      { en: 'When does adding users make a platform worse for the people already on it?', bg: 'Кога добавянето на потребители влошава платформата за хората, които вече са в нея?' },
+      { en: 'If a competitor could win one single city from the market leader, how strong was the network effect really?', bg: 'Ако конкурент може да отнеме един единствен град от лидера, колко силен е бил мрежовият ефект в действителност?' },
+      { en: 'A platform can be trusted at scale and untrusted in your neighbourhood at the same time. Whose problem is that?', bg: 'Една платформа може да е надеждна в глобален мащаб и ненадеждна в твоя квартал едновременно. Чий проблем е това?' },
+    ],
     concepts: [
       {
         id: 'ne-concept-1',
         name_en: 'Network Effects',
         name_bg: 'Мрежови ефекти',
-        explanation_en: 'A product becomes more valuable as more people use it, creating a self-reinforcing growth loop.',
-        explanation_bg: 'Продуктът става по-ценен с увеличаване на потребителите, създавайки самоподсилващ се цикъл на растеж.',
-        example_en: 'WhatsApp — every new user makes the app more valuable for existing users because there are more people to message.',
-        example_bg: 'WhatsApp — всеки нов потребител прави приложението по-ценно за съществуващите, защото има повече хора за комуникация.',
-        takeaway_en: 'Network effects create winner-take-all markets where the largest platform dominates.',
-        takeaway_bg: 'Мрежовите ефекти създават пазари, където победителят взема всичко.',
+        explanation_en: 'A network effect exists when the value one user gets changes because participation or usage by other users changes. Growth on its own is not proof.',
+        explanation_bg: 'Мрежови ефект има, когато стойността за един потребител се променя, защото участието или ползването от други потребители се променя. Само по себе си растежът не е доказателство.',
+        example_en: 'A messaging app is more useful to you when the people you actually need are reachable on it. If they are not, the total user count does not help you.',
+        example_bg: 'Приложение за съобщения ти е по-полезно, когато хората, които реално ти трябват, са достижими в него. Ако не са, общият брой потребители не ти помага.',
+        takeaway_en: 'Test it by subtraction: if the product would be almost as good with far fewer users, the effect is weak or absent.',
+        takeaway_bg: 'Тествай чрез изваждане: ако продуктът щеше да е почти толкова добър с много по-малко потребители, ефектът е слаб или липсва.',
       },
       {
         id: 'ne-concept-2',
-        name_en: 'Direct vs. Indirect Network Effects',
-        name_bg: 'Директни vs. индиректни мрежови ефекти',
-        explanation_en: 'Direct: same-side users benefit each other (social networks). Indirect: one user group benefits from a different group (marketplaces).',
-        explanation_bg: 'Директни: потребители от същата страна се възползват взаимно. Индиректни: една група потребители се възползва от друга група.',
-        example_en: 'Uber — more drivers attract more riders (indirect), while riders don\'t directly benefit from other riders (no direct effect).',
-        example_bg: 'Uber — повече шофьори привличат повече пътници (индиректен), докато пътниците не се възползват директно от други пътници.',
-        takeaway_en: 'Understanding which type of network effect your product creates determines your growth strategy.',
-        takeaway_bg: 'Разбирането на типа мрежови ефект определя стратегията ви за растеж.',
+        name_en: 'Direct (same-side) vs cross-side effects',
+        name_bg: 'Директни (от същата страна) срещу кръстосани ефекти',
+        explanation_en: 'Direct: users on the same side make each other better off. Cross-side: one side gains because the other side grows — the normal case in a two-sided marketplace.',
+        explanation_bg: 'Директни: потребители от една и същата страна взаимно печелят. Кръстосани: една страна печели, защото другата страна расте — обичайният случай в двустранен пазар.',
+        example_en: 'In a marketplace, more relevant sellers can improve buyer choice (cross-side), while extra buyers competing for the same scarce supply can make things worse for other buyers.',
+        example_bg: 'В пазар повече релевантни продавачи могат да подобрят избора за купувачите (кръстосано), докато допълнителни купувачи, състезаващи се за същото ограничено предлагане, могат да влошат нещата за другите купувачи.',
+        takeaway_en: 'Name the two sides and the unit of interaction first. Only then can you say which side you need to grow.',
+        takeaway_bg: 'Първо назови двете страни и единицата на взаимодействие. Само тогава можеш да кажеш коя страна трябва да расте.',
       },
       {
         id: 'ne-concept-3',
-        name_en: 'Critical Mass',
-        name_bg: 'Критична маса',
-        explanation_en: 'The minimum number of users needed before network effects kick in and the platform becomes self-sustaining.',
-        explanation_bg: 'Минималният брой потребители, необходим преди мрежовите ефекти да се активират и платформата да стане самоподдържаща се.',
-        example_en: 'Facebook initially launched only at Harvard, reaching critical mass at one university before expanding to others.',
-        example_bg: 'Facebook първоначално стартира само в Харвард, достигайки критична маса в един университет, преди да се разшири.',
-        takeaway_en: 'Start narrow — dominate one small market before expanding. Critical mass is easier in a niche.',
-        takeaway_bg: 'Започни тясно — доминирай един малък пазар, преди да се разшириш.',
+        name_en: 'Local liquidity and matching quality',
+        name_bg: 'Локална ликвидност и качество на съвпаденията',
+        explanation_en: 'A marketplace works when there is enough relevant supply, close enough, at the right moment, and the matching is good. This is a local property, not a global total.',
+        explanation_bg: 'Пазарът работи, когато има достатъчно релевантно предлагане, достатъчно наблизо, в подходящия момент, и съвпадението е добро. Това е локално свойство, а не глобална сума.',
+        example_en: 'A platform can report huge global volume and still fail you on a Friday night in a small town — the network you need is the one in your area, at your time.',
+        example_bg: 'Платформа може да отчита огромен глобален обем и пак да те провали в петък вечер в малък град — мрежата, която ти трябва, е тази в твоя район, в твоя час.',
+        takeaway_en: 'Define the smallest network that already feels useful, then repeat it. Never quote a global number as proof of local density.',
+        takeaway_bg: 'Определи най-малката мрежа, която вече е полезна, и след това я повтори. Никога не цитирай глобално число като доказателство за локална плътност.',
+      },
+      {
+        id: 'ne-concept-4',
+        name_en: 'What weakens a network effect',
+        name_bg: 'Какво отслабва мрежовия ефект',
+        explanation_en: 'Multi-homing, low switching costs, infrequent use, easy differentiation, weak trust and safety, disintermediation (users taking the deal off-platform) and congestion all reduce how much protection a network gives.',
+        explanation_bg: 'Multi-homing, ниски разходи за смяна, рядко ползване, лесна диференциация, слабо доверие и безопасност, изнасяне на сделката извън платформата и претоварване — всичко това намалява защитата, която мрежата дава.',
+        example_en: 'If both sides keep two apps open and compare prices each time, the leader’s size buys much less than it looks.',
+        example_bg: 'Ако и двете страни държат отворени две приложения и всеки път сравняват цени, размерът на лидера купува много по-малко, отколкото изглежда.',
+        takeaway_en: 'Strong network effects do not guarantee winner-take-all. Competition survives in local markets and differentiated niches.',
+        takeaway_bg: 'Силните мрежови ефекти не гарантират „победителят взема всичко“. Конкуренцията оцелява в локални пазари и в различаващи се ниши.',
       },
     ],
     simulator_decision: {
-      scenario_en: 'Your social platform has 5,000 users. You need to decide how to grow to critical mass.',
-      scenario_bg: 'Вашата социална платформа има 5,000 потребители. Трябва да решите как да достигнете критична маса.',
-      question_en: 'Which growth strategy do you choose?',
-      question_bg: 'Коя стратегия за растеж избирате?',
+      scenario_en: 'Your marketplace has 5,000 registered users spread across nine cities. In no single city does a user reliably find a good match.',
+      scenario_bg: 'Твоят пазар има 5000 регистрирани потребители, разпръснати в девет града. В нито един град потребителят не намира надеждно добро съвпадение.',
+      question_en: 'Which move gives you a usable network first?',
+      question_bg: 'Кой ход първо ти дава работеща мрежа?',
       options: [
-        { id: 'ne-d1', label_en: 'Subsidize one side', label_bg: 'Субсидирай една страна', description_en: 'Offer free premium features to creators to attract supply, then monetize demand.', description_bg: 'Предложи безплатни премиум функции на създателите, за да привлечеш предлагане, след което монетизирай търсенето.' },
-        { id: 'ne-d2', label_en: 'Viral referral program', label_bg: 'Вирусна програма за препоръки', description_en: 'Give both referrer and referred users extra features. Focus on organic word-of-mouth.', description_bg: 'Дай на препоръчващия и препоръчания потребител допълнителни функции. Фокусирай се върху органично разпространение.' },
-        { id: 'ne-d3', label_en: 'Paid advertising blitz', label_bg: 'Блиц платена реклама', description_en: 'Spend heavily on ads to rapidly acquire users. Risk: high CAC, users may not stick.', description_bg: 'Харчете значително за реклами за бързо привличане. Риск: висок CAC, потребителите може да не останат.' },
-        { id: 'ne-d4', label_en: 'Niche-first strategy', label_bg: 'Стратегия „нишата първо"', description_en: 'Dominate one specific community before expanding. Slower but more sustainable.', description_bg: 'Доминирай в една конкретна общност преди разширяване. По-бавно, но по-устойчиво.' },
+        { id: 'ne-d1', label_en: 'Subsidise the scarce side', label_bg: 'Субсидирай оскъдната страна', description_en: 'Pay or reward whichever side is missing until matches become reliable. Costly, and it can attract low-quality participants.', description_bg: 'Плащай или награждавай страната, която липсва, докато съвпаденията станат надеждни. Скъпо е и може да привлече участници с ниско качество.' },
+        { id: 'ne-d2', label_en: 'Concentrate on one city', label_bg: 'Концентрирай се в един град', description_en: 'Pull all effort into the densest city and accept slower headline growth. Trades total users for a network that actually works.', description_bg: 'Насочи всички усилия към най-плътния град и приеми по-бавен видим растеж. Разменя общ брой потребители за мрежа, която реално работи.' },
+        { id: 'ne-d3', label_en: 'Improve matching before growing', label_bg: 'Подобри съвпадението преди растежа', description_en: 'Better filters and ranking make existing supply feel larger. Cheap, but there is a floor you cannot engineer past.', description_bg: 'По-добри филтри и подреждане правят наличното предлагане да изглежда по-голямо. Евтино е, но има дъно, което не можеш да прескочиш с инженерство.' },
+        { id: 'ne-d4', label_en: 'Paid acquisition across all nine cities', label_bg: 'Платено привличане и в деветте града', description_en: 'Grows registrations everywhere at once. Risk: nine thin markets instead of one working one.', description_bg: 'Расте регистрациите навсякъде наведнъж. Риск: девет тънки пазара вместо един работещ.' },
       ],
     },
     embedded_case: {
-      title_en: 'Uber: The Network Effects Engine',
-      title_bg: 'Uber: Двигателят на мрежовите ефекти',
-      learning_goal_en: 'Understand how Uber leveraged indirect network effects to dominate urban mobility and the risks of scaling before profitability.',
-      learning_goal_bg: 'Разберете как Uber използва индиректните мрежови ефекти, за да доминира градската мобилност, и рисковете от мащабиране преди рентабилност.',
-      context_en: `Uber launched in San Francisco in 2010 as "UberCab" — a luxury black car service accessible via smartphone. By 2015, it had expanded to 60+ countries, raised $10B+, and was valued at $50B+. The key insight was a powerful **indirect network effect**: more drivers meant shorter wait times, which attracted more riders, which attracted more drivers.
+      title_en: 'Airbnb: Trust or Friction in a Two-Sided Marketplace',
+      title_bg: 'Airbnb: Доверие или триене в двустранен пазар',
+      learning_goal_en: 'Use sourced facts, exhibits and stakeholder trade-offs to recommend a trust policy for a two-sided marketplace — and to keep facts, interpretations and assumptions apart while you do it.',
+      learning_goal_bg: 'Използваш факти с източник, приложения и компромиси между заинтересованите страни, за да препоръчаш политика за доверие в двустранен пазар — и да държиш отделно фактите, интерпретациите и допусканията.',
+      context_en: `Airbnb matches hosts who offer stays with guests who book them. Nobody in that transaction knows the other person. Whatever trust exists has to be manufactured by the platform.
 
-Uber's strategy was aggressive: subsidize both sides with investor capital. Drivers received guaranteed minimum earnings. Riders got discounts and free rides. In new cities, Uber would "carpet bomb" — flooding the market with subsidies to reach critical mass quickly, then gradually reducing them.
+For the fiscal year ended 31 December 2025, Airbnb's Form 10-K reports **533 million Nights and Seats Booked** and **$91.273 billion in Gross Booking Value** (S1). The same filing lists trust and safety failures, fraud, privacy and data protection, listing quality and the limits of identity verification among its material risks (S1).
 
-By 2019, Uber had 3.9 million drivers and 103 million monthly active riders worldwide. But the company was losing $8.5 billion per year. The question: were the network effects strong enough to eventually make the business profitable?`,
-      context_bg: `Uber стартира в Сан Франциско през 2010 г. като "UberCab" — луксозна услуга за черни коли, достъпна чрез смартфон. До 2015 г. се разшири в 60+ държави, привлече $10B+ и беше оценен на $50B+. Ключовото прозрение беше мощен **индиректен мрежови ефект**: повече шофьори означаваха по-кратко чакане, което привличаше повече пътници, което привличаше повече шофьори.
+Airbnb's identity verification checks the information a person provides against trusted third-party sources or a government ID — and Airbnb states plainly that no verification process is perfect and that verification does not guarantee someone's identity (S2). Reviews must be authentic and first-hand (S3, S4), and AirCover steps in after a booking goes wrong (S5).
 
-Стратегията на Uber беше агресивна: субсидиране на двете страни с капитал от инвеститори. Шофьорите получаваха гарантирани минимални заплати. Пътниците получаваха отстъпки. В нови градове Uber „бомбардираше" пазара със субсидии, за да достигне критична маса бързо.
+Read those numbers carefully. They are global totals. They do not tell you whether one neighbourhood, on one weekend, has enough trustworthy supply.`,
+      context_bg: `Airbnb свързва домакини, които предлагат престой, с гости, които го резервират. Никой в тази сделка не познава другия. Каквото и доверие да съществува, платформата трябва да го произведе.
 
-До 2019 г. Uber имаше 3.9 милиона шофьори и 103 милиона месечни активни пътници. Но компанията губеше $8.5 милиарда годишно.`,
-      problem_en: 'Are Uber\'s network effects strong enough to create a defensible market position, or are ride-hailing platforms fundamentally commoditized services where network effects are weak?',
-      problem_bg: 'Достатъчно силни ли са мрежовите ефекти на Uber, за да създадат защитима позиция, или платформите за споделено пътуване са фундаментално комодитизирани услуги, където мрежовите ефекти са слаби?',
-      key_decision_en: 'Uber chose hyper-aggressive expansion over profitability. They subsidized both sides heavily, accepted billions in losses, and expanded to 10,000+ cities. The bet: once dominant, reduce subsidies and profit from the network effect moat.',
-      key_decision_bg: 'Uber избра хиперагресивна експанзия пред рентабилност. Субсидираха двете страни значително, приеха милиарди загуби и се разшириха в 10,000+ града. Залогът: след като доминират, да намалят субсидиите и печелят от мрежовия ефект.',
-      outcome_en: 'Mixed results. Uber became the dominant ride-hailing platform in most Western markets but network effects proved **weaker than expected** — drivers and riders easily switch to competitors (Lyft, Bolt) based on pricing. Uber only achieved profitability in 2023, 14 years after founding, by diversifying into food delivery (Uber Eats) and freight. **Lesson: network effects in ride-hailing are local and weak compared to platforms like Facebook or WhatsApp.**',
-      outcome_bg: 'Смесени резултати. Uber стана доминираща платформа в повечето западни пазари, но мрежовите ефекти се оказаха **по-слаби от очакваното** — шофьори и пътници лесно превключват към конкуренти (Lyft, Bolt) на база ценообразуване. Uber постигна рентабилност едва през 2023 г., 14 години след основаването, чрез диверсификация в доставката на храна.',
+За финансовата година, приключила на 31 декември 2025 г., Формуляр 10-K на Airbnb отчита **533 милиона Nights and Seats Booked** и **91.273 милиарда долара Gross Booking Value** (S1). Същият документ изброява провалите в доверието и безопасността, измамите, поверителността и защитата на данните, качеството на обявите и ограниченията на верификацията сред съществените си рискове (S1).
+
+Верификацията на самоличност в Airbnb сверява подадената информация с надеждни външни източници или документ за самоличност — и Airbnb директно заявява, че никой процес не е перфектен и че верификацията не гарантира самоличността на човека (S2). Отзивите трябва да са автентични и от личен опит (S3, S4), а AirCover се намесва, след като резервация се обърка (S5).
+
+Чети тези числа внимателно. Те са глобални суми. Не ти казват дали един квартал, през един уикенд, има достатъчно надеждно предлагане.`,
+      problem_en: 'Trust is what makes the cross-side network effect work here: guests come because hosts are worth booking, hosts come because guests are worth hosting. Every mechanism that adds trust also adds friction, collects data, or shuts someone out. Where should the line sit?',
+      problem_bg: 'Доверието е това, което кара кръстосания мрежови ефект да работи тук: гостите идват, защото домакините си струват, домакините идват, защото гостите си струват. Всеки механизъм, който добавя доверие, добавя и триене, събира данни или изключва някого. Къде да мине границата?',
+      key_decision_en: 'HYPOTHETICAL: a product team must pick one trust policy for higher-risk or first-time booking contexts — universal enhanced verification, risk-based enhanced verification, a host-controlled threshold, or reliance on transaction and reputation protections. This scenario is a teaching construction, not a real Airbnb decision.',
+      key_decision_bg: 'ХИПОТЕТИЧНО: продуктов екип трябва да избере една политика за доверие в контексти с по-висок риск или при първа резервация — универсална разширена верификация, разширена верификация на база риск, праг, контролиран от домакина, или разчитане на защити при транзакцията и репутация. Този сценарий е учебна конструкция, а не реално решение на Airbnb.',
+      outcome_en: 'There is no published outcome, because this dilemma is hypothetical. The outcome is the one you argue for: your memo has to say which policy, for which context, with which safeguards, and what evidence would make you reverse it.',
+      outcome_bg: 'Няма публикуван изход, защото тази дилема е хипотетична. Изходът е този, който ти защитиш: меморандумът ти трябва да каже коя политика, за кой контекст, с какви предпазни мерки и какво доказателство би те накарало да я отмениш.',
       outcome_type: 'mixed',
+      case_pack: AIRBNB_TRUST_CASE_PACK,
       analytical_questions: [
-        { id: 'uc1', question_en: 'Why are Uber\'s network effects weaker than those of platforms like Facebook or WhatsApp? What makes some network effects more defensible than others?', question_bg: 'Защо мрежовите ефекти на Uber са по-слаби от тези на Facebook или WhatsApp? Какво прави някои мрежови ефекти по-защитими?' },
-        { id: 'uc2', question_en: 'Was Uber\'s "subsidize and expand" strategy the right approach, or should they have focused on profitability in fewer markets? Justify your answer with data.', question_bg: 'Правилен ли беше подходът на Uber „субсидирай и разширявай", или трябваше да се фокусират върху рентабилност в по-малко пазари?' },
+        { id: 'ab1', question_en: 'Take one claim from Exhibit A and one from Exhibit B. For each, say whether it is a verified fact, an interpretation or a case assumption — and how you can tell.', question_bg: 'Вземи едно твърдение от Приложение A и едно от Приложение B. За всяко кажи дали е проверен факт, интерпретация или допускане в казуса — и по какво личи.' },
+        { id: 'ab2', question_en: 'Using Exhibit C, name one trust mechanism from another platform that would transfer to this case and one that would not. Explain why in terms of who carries the risk.', question_bg: 'С помощта на Приложение C назови един механизъм за доверие от друга платформа, който би се пренесъл в този казус, и един, който не би. Обясни защо през призмата на това кой носи риска.' },
       ],
     },
-    theory_en: `Network effects occur when a product or service becomes more valuable as more people use it. This is one of the most powerful competitive advantages in the digital economy.
+    theory_en: `A network effect exists when the value a user gets from a product **changes because other users participate or use it more**. That is the whole definition, and it is stricter than it sounds. A product can grow fast through advertising, discounts or simply being good, and have no network effect at all. Growth is not proof.
 
-There are two main types: **direct network effects** (same-side), where users benefit from other users on the same platform (e.g., social networks), and **indirect network effects** (cross-side), where one group of users benefits from a different group (e.g., buyers and sellers on a marketplace).
+**Direct (same-side) effects** happen when users on one side make each other better off — the people you need are reachable on the same messaging app. **Cross-side effects** happen in two-sided platforms, where one side gains because the other side grows: guests gain from more suitable hosts, hosts gain from more suitable guests. Name the two sides and the unit of interaction before you argue about strategy.
 
-Network effects create winner-take-all dynamics. Once a platform reaches critical mass, it becomes extremely difficult for competitors to enter. This is why platforms like Facebook, Uber, and Airbnb dominate their markets.
+For marketplaces, the number that matters is not the global user count. It is **relevant local liquidity and matching quality**: enough of the right supply, near enough, at the right time. A platform can report enormous global volume and still leave you without a match on a Friday night in a small town.
 
-However, network effects can also work in reverse. If users start leaving a platform, its value decreases for remaining users, creating a negative spiral. This makes user retention as important as acquisition.
+How strong is the effect? Judge it on several criteria at once: how easily users **multi-home** (keep two apps open), **switching costs**, how **frequent** the use is, how easy **differentiation** is, whether **trust and safety** hold up, whether users can take the deal **off-platform** (disintermediation), and whether **congestion** or low-quality participants are creeping in.
 
-Understanding network effects is essential for designing digital products that grow stronger with each new user, creating sustainable competitive moats.`,
-    theory_bg: `Мрежовите ефекти възникват, когато продукт или услуга стават по-ценни с увеличаването на потребителите. Това е едно от най-мощните конкурентни предимства в дигиталната икономика.
+About Metcalfe's n²: it counts the possible pairwise connections in a network. It is a simplifying heuristic that explains why density feels powerful. It is **not** a valuation law and **not** a way to calculate a startup's critical mass — most possible connections are never used and are not equally valuable (S7).
 
-Има два основни типа: **директни мрежови ефекти** (от същата страна), където потребителите се възползват от други потребители на същата платформа (напр. социални мрежи), и **индиректни мрежови ефекти** (от различна страна), където една група потребители се възползва от различна група (напр. купувачи и продавачи на пазар).
+And strong network effects do not automatically produce a winner-take-all market. Local markets, multi-homing, differentiation and regulation all leave room to compete (S6). Effects can also turn negative: congestion, spam and fraud, falling match quality, and a reverse spiral where people leave and the product gets worse for whoever stays.`,
+    theory_bg: `Мрежови ефект има, когато стойността, която потребителят получава от продукта, **се променя, защото други потребители участват или го ползват повече**. Това е цялата дефиниция и тя е по-строга, отколкото звучи. Един продукт може да расте бързо чрез реклама, отстъпки или просто защото е добър — и изобщо да няма мрежови ефект. Растежът не е доказателство.
 
-Мрежовите ефекти създават динамика „победителят взема всичко". След като платформата достигне критична маса, става изключително трудно за конкурентите да навлязат.
+**Директни ефекти (от същата страна)** има, когато потребителите от една страна взаимно печелят — хората, които ти трябват, са достижими в същото приложение. **Кръстосани ефекти** има в двустранните платформи, където едната страна печели, защото другата расте: гостите печелят от повече подходящи домакини, домакините — от повече подходящи гости. Назови двете страни и единицата на взаимодействие, преди да спориш за стратегия.
 
-Мрежовите ефекти обаче могат да работят и в обратна посока. Ако потребителите започнат да напускат платформата, стойността й намалява за останалите, създавайки негативна спирала.
+За пазарите числото, което има значение, не е глобалният брой потребители. То е **релевантната локална ликвидност и качеството на съвпаденията**: достатъчно подходящо предлагане, достатъчно наблизо, в подходящия момент. Платформа може да отчита огромен глобален обем и пак да те остави без съвпадение в петък вечер в малък град.
 
-Разбирането на мрежовите ефекти е от съществено значение за проектирането на дигитални продукти, които стават по-силни с всеки нов потребител.`,
+Колко силен е ефектът? Преценявай по няколко критерия едновременно: колко лесно потребителите ползват **няколко платформи наведнъж (multi-homing)**, какви са **разходите за смяна**, колко **честа** е употребата, колко лесна е **диференциацията**, дали **доверието и безопасността** издържат, дали потребителите могат да изнесат сделката **извън платформата**, и дали се появяват **претоварване** или участници с ниско качество.
+
+За n² на Меткалф: то брои възможните двойки връзки в мрежата. Това е опростяваща евристика, която обяснява защо плътността изглежда мощна. То **не е** закон за оценка и **не е** начин да изчислиш критичната маса на стартъп — повечето възможни връзки никога не се използват и не са еднакво ценни (S7).
+
+И силните мрежови ефекти не водят автоматично до пазар „победителят взема всичко“. Локалните пазари, multi-homing, диференциацията и регулацията оставят място за конкуренция (S6). Ефектите могат и да станат отрицателни: претоварване, спам и измами, спадащо качество на съвпаденията и обратна спирала, в която хората си тръгват, а продуктът се влошава за останалите.`,
     quiz_questions: [
-      { id: 'ne1', question_en: 'What happens when a platform reaches critical mass with strong network effects?', question_bg: 'Какво се случва, когато платформа достигне критична маса със силни мрежови ефекти?', options: [{ id: 'a', en: 'It becomes nearly impossible for competitors to enter', bg: 'Става почти невъзможно за конкурентите да навлязат', correct: true }, { id: 'b', en: 'Prices automatically increase', bg: 'Цените автоматично се увеличават', correct: false }, { id: 'c', en: 'The platform stops growing', bg: 'Платформата спира да расте', correct: false }] },
-      { id: 'ne2', question_en: 'Which is an example of indirect (cross-side) network effects?', question_bg: 'Кой е пример за индиректни мрежови ефекти?', options: [{ id: 'a', en: 'More friends joining a messaging app', bg: 'Повече приятели се присъединяват към чат приложение', correct: false }, { id: 'b', en: 'More sellers attracting more buyers on a marketplace', bg: 'Повече продавачи привличат повече купувачи на пазар', correct: true }, { id: 'c', en: 'A company hiring more employees', bg: 'Компания наема повече служители', correct: false }] },
-      { id: 'ne3', question_en: 'What is a negative network effect?', question_bg: 'Какво е негативен мрежови ефект?', options: [{ id: 'a', en: 'Users leaving causes further user loss', bg: 'Напускането на потребители причинява допълнителна загуба', correct: true }, { id: 'b', en: 'Too many features confuse users', bg: 'Твърде много функции объркват потребителите', correct: false }, { id: 'c', en: 'High server costs', bg: 'Високи разходи за сървъри', correct: false }] },
+      { id: 'ne1', question_en: 'A note-taking app triples its downloads after a TV campaign. Users never interact. What is the most accurate reading?', question_bg: 'Приложение за бележки утроява свалянията си след телевизионна кампания. Потребителите никога не взаимодействат. Кое е най-точното тълкуване?', options: [{ id: 'a', en: 'Ordinary adoption growth — no network effect, since one user\'s value does not depend on the others', bg: 'Обикновен растеж на приемането — няма мрежови ефект, защото стойността за един потребител не зависи от другите', correct: true }, { id: 'b', en: 'A strong direct network effect, because the user base tripled', bg: 'Силен директен мрежови ефект, защото потребителската база се утрои', correct: false }, { id: 'c', en: 'A cross-side effect between the app and the TV channel', bg: 'Кръстосан ефект между приложението и телевизионния канал', correct: false }] },
+      { id: 'ne2', question_en: 'A ride-hailing app reports 40 million users worldwide, but in your town the wait is 25 minutes. What does the global number prove about your market?', question_bg: 'Приложение за превоз отчита 40 милиона потребители в света, но в твоя град чакането е 25 минути. Какво доказва глобалното число за твоя пазар?', options: [{ id: 'a', en: 'Nothing — network value here depends on local liquidity and matching, not the global total', bg: 'Нищо — стойността на мрежата тук зависи от локалната ликвидност и съвпадението, не от глобалната сума', correct: true }, { id: 'b', en: 'That the local network effect is strong and the wait is a temporary bug', bg: 'Че локалният мрежови ефект е силен, а чакането е временен проблем', correct: false }, { id: 'c', en: 'That the platform has already reached critical mass everywhere', bg: 'Че платформата вече е достигнала критична маса навсякъде', correct: false }] },
+      { id: 'ne3', question_en: 'Drivers and riders both keep two competing apps open and pick whichever is cheaper each time. What does this tell you?', question_bg: 'И шофьорите, и пътниците държат отворени две конкурентни приложения и всеки път избират по-евтиното. Какво ти казва това?', options: [{ id: 'a', en: 'Multi-homing is high, so the leader\'s size protects it much less than its user count suggests', bg: 'Multi-homing е висок, така че размерът на лидера го защитава далеч по-малко, отколкото подсказва броят потребители', correct: true }, { id: 'b', en: 'The market is winner-take-all and will consolidate automatically', bg: 'Пазарът е „победителят взема всичко“ и ще се консолидира автоматично', correct: false }, { id: 'c', en: 'Network effects do not exist in transport marketplaces', bg: 'В транспортните пазари изобщо няма мрежови ефекти', correct: false }] },
+      { id: 'ne4', question_en: 'A pitch deck states: "with 100,000 users our value is 10 billion connection-points, so we will dominate." What is wrong?', question_bg: 'Презентация твърди: „със 100 000 потребители стойността ни е 10 милиарда точки на връзка, значи ще доминираме.“ Къде е грешката?', options: [{ id: 'a', en: 'n² counts possible pairs, not realised value; it is a heuristic, not a valuation or a domination argument (S7)', bg: 'n² брои възможни двойки, не реализирана стойност; това е евристика, а не оценка или аргумент за доминация (S7)', correct: true }, { id: 'b', en: 'The arithmetic is wrong; the correct figure is n log n users', bg: 'Аритметиката е грешна; правилната стойност е n log n потребители', correct: false }, { id: 'c', en: 'Nothing is wrong — Metcalfe\'s Law sets the market value of a network', bg: 'Няма грешка — законът на Меткалф определя пазарната стойност на мрежата', correct: false }] },
+      { id: 'ne5', question_en: 'A marketplace states: "our identity verification means every user on the platform is trustworthy." How should you classify that sentence?', question_bg: 'Пазар твърди: „нашата верификация на самоличност означава, че всеки потребител в платформата е надежден.“ Как да класифицираш това изречение?', options: [{ id: 'a', en: 'An assumption presented as a fact — verification checks information and does not guarantee identity or behaviour (S2)', bg: 'Допускане, представено като факт — верификацията сверява информация и не гарантира самоличност или поведение (S2)', correct: true }, { id: 'b', en: 'A verified fact, because verification is a documented platform feature', bg: 'Проверен факт, защото верификацията е документирана функция на платформата', correct: false }, { id: 'c', en: 'An interpretation of review data', bg: 'Интерпретация на данни от отзиви', correct: false }] },
     ],
-    analytical_question_en: 'Why are network effects considered one of the strongest competitive moats in the digital economy? Provide examples to support your reasoning.',
-    analytical_question_bg: 'Защо мрежовите ефекти се считат за един от най-силните конкурентни защитни механизми в дигиталната икономика? Дайте примери.',
-    application_question_en: 'How could you leverage network effects in your own startup idea? What type of network effect would be most relevant and how would you achieve critical mass?',
-    application_question_bg: 'Как би използвал мрежовите ефекти в твоята стартъп идея? Кой тип мрежови ефект би бил най-подходящ и как би постигнал критична маса?',
+    analytical_question_en: 'Compare three platforms: a messaging app such as WhatsApp, a ride-hailing marketplace, and Airbnb. For each, state (1) whether the main effect is direct or cross-side, (2) whether the relevant network is global or local, and (3) what weakens it — multi-homing, switching costs, frequency, differentiation, trust, disintermediation or congestion. Reference at least two sources or exhibits by ID (S1–S10, A–D).',
+    analytical_question_bg: 'Сравни три платформи: приложение за съобщения като WhatsApp, пазар за превоз и Airbnb. За всяка посочи (1) дали основният ефект е директен или кръстосан, (2) дали релевантната мрежа е глобална или локална, и (3) какво я отслабва — multi-homing, разходи за смяна, честота, диференциация, доверие, изнасяне извън платформата или претоварване. Позовавай се на поне два източника или приложения по идентификатор (S1–S10, A–D).',
+    application_question_en: 'For your own platform or startup idea, write 250–400 words (or an equivalent structured answer) covering: both sides of the network; the unit of interaction; the smallest viable network or geography you would target first; one cold-start intervention; one failure metric that would tell you it is not working; and one ethical or privacy risk your intervention creates.',
+    application_question_bg: 'За твоята платформа или стартъп идея напиши 250–400 думи (или равностоен структуриран отговор), които покриват: двете страни на мрежата; единицата на взаимодействие; най-малката работеща мрежа или география, към която би се насочил първо; една интервенция за студен старт; един показател за провал, който би ти казал, че не работи; и един етичен риск или риск за поверителността, който твоята интервенция създава.',
     display_order: 1,
     related_case_topic: 'Platform Economy',
-    case_transition_en: 'You just learned about network effects. Now analyze how Uber used network effects to dominate the mobility market.',
-    case_transition_bg: 'Току-що научи за мрежовите ефекти. Сега анализирай как Uber ги използва, за да доминира на пазара за мобилност.',
+    case_transition_en: 'You have the concepts. Now use them on a real two-sided marketplace where trust is the constraint.',
+    case_transition_bg: 'Имаш понятията. Сега ги приложи върху реален двустранен пазар, в който доверието е ограничението.',
     related_sim_concepts_en: ['Network Effects', 'Platform Scaling'],
     related_sim_concepts_bg: ['Мрежови ефекти', 'Мащабиране на платформа'],
     sim_transition_en: 'Apply network effects strategy in the startup simulator to test how your platform can grow.',
