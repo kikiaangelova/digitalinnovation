@@ -17,7 +17,14 @@ import { toast } from 'sonner';
 import { awardXp } from '@/lib/xp';
 import ReactMarkdown from 'react-markdown';
 import { AutoTermTooltips } from '@/components/ui/term-tooltip';
-import { FEEDBACK_TARGET_TYPE } from '@/lib/teacher-assignments';
+import {
+  shouldAwardCompletionXp,
+  buildRevisionReopenPayload,
+  buildRevisionRowFilters,
+  buildFeedbackQueryFilters,
+  deriveRevisionState,
+  revisionStateLabel,
+} from '@/lib/content-mvp-revision';
 import {
   CasePackBlock, EntryTaskBlock, LearningOutcomesBlock, MisconceptionsBlock,
   ModelBoundariesBlock, QualityStatusBadge, SourcePackBlock,
@@ -172,12 +179,13 @@ export default function LearningModulePlayer() {
     if (!user || !responseId || !revisionEnabled) return;
     let cancelled = false;
     void (async () => {
+      const filters = buildFeedbackQueryFilters(user.id, responseId);
       const { data, error } = await supabase
         .from('teacher_feedback')
         .select('id, comment')
-        .eq('student_id', user.id)
-        .eq('target_type', FEEDBACK_TARGET_TYPE)
-        .eq('target_id', responseId)
+        .eq('student_id', filters.student_id)
+        .eq('target_type', filters.target_type)
+        .eq('target_id', filters.target_id)
         .maybeSingle();
       if (cancelled) return;
       if (error) {
@@ -195,11 +203,12 @@ export default function LearningModulePlayer() {
   const handleStartRevision = async () => {
     if (!existingResponse?.id || !user?.id) return;
     setRevising(true);
+    const rowFilters = buildRevisionRowFilters(existingResponse.id, user.id);
     const { error } = await supabase
       .from('learning_module_responses')
-      .update({ completed_at: null, updated_at: new Date().toISOString() } as any)
-      .eq('id', existingResponse.id)
-      .eq('user_id', user.id);
+      .update(buildRevisionReopenPayload() as any)
+      .eq('id', rowFilters.id)
+      .eq('user_id', rowFilters.user_id);
     setRevising(false);
     if (error) {
       toast.error(t('Could not reopen your response.', 'Отговорът ти не можа да се отвори отново.'));
@@ -308,7 +317,7 @@ export default function LearningModulePlayer() {
     // Completion XP is awarded once, on first completion only. A revision
     // after teacher feedback improves the work — it does not pay out again.
     let totalXp = 0;
-    if (!isRevision) {
+    if (shouldAwardCompletionXp(isRevision)) {
       const xpResult = await awardXp('theory_complete', mod.slug);
       totalXp = xpResult.xp_awarded;
 
@@ -848,13 +857,15 @@ export default function LearningModulePlayer() {
                   {t('Teacher feedback', 'Обратна връзка от учителя')}
                 </h3>
                 <Badge variant="outline" className="text-[11px]" data-testid="revision-state">
-                  {resubmitted
-                    ? t('Resubmitted after feedback', 'Изпратено отново след обратна връзка')
-                    : isRevision && !existingResponse?.completed_at
-                      ? t('Revision in progress', 'Подобрение в процес')
-                      : feedback
-                        ? t('Feedback received', 'Има обратна връзка')
-                        : t('Submitted · waiting for teacher feedback', 'Изпратено · чака обратна връзка от учителя')}
+                  {revisionStateLabel(
+                    deriveRevisionState({
+                      resubmitted,
+                      isRevision,
+                      isCompleted: !!existingResponse?.completed_at,
+                      hasFeedback: !!feedback,
+                    }),
+                    lang === 'bg' ? 'bg' : 'en',
+                  )}
                 </Badge>
                 {feedbackError ? (
                   <p role="alert" className="text-xs text-destructive">
