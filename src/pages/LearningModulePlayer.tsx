@@ -169,7 +169,7 @@ export default function LearningModulePlayer() {
                 'Съдържанието съществува, но модулът още не е регистриран от учител или админ, затова напредъкът ти не може да се запази. Опитай пак по-късно.',
               )}
             </p>
-            <Button variant="outline" onClick={() => navigate('/learning-modules')} className="min-h-[44px]">
+          <Button variant="outline" onClick={() => navigate('/learn')} className="min-h-[44px]">
               <ArrowLeft className="h-4 w-4 mr-1" /> {t('Back to modules', 'Обратно към модулите')}
             </Button>
           </Card>

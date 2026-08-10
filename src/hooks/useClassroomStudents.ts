@@ -144,7 +144,7 @@ export function useClassroomStudents(
     } finally {
       setLoading(false);
     }
-  }, [user]);
+  }, [user, classroomId]);
 
   useEffect(() => {
     void fetchAll();
