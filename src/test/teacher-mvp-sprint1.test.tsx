@@ -135,33 +135,75 @@ describe('d/e. status mapping and completed-only counting', () => {
 describe('f. evidence detail rendering', () => {
   beforeEach(() => vi.resetModules());
 
-  it('renders analytical and application answers', async () => {
+  it('renders analytical and application answers for a completed student', async () => {
     vi.doMock('@/integrations/supabase/client', () => ({ supabase: {} }));
     vi.doMock('@/context/AuthContext', () => ({ useAuth: () => ({ user: { id: 'teacher' } }) }));
     vi.doMock('@/context/LangContext', () => ({ useLang: () => ({ lang: 'en' }) }));
-    const Mod = await import('@/components/teacher-workspace/AssignmentsTab');
-    const AssignmentsTab = Mod.default;
+    vi.doMock('@/hooks/useModuleResponses', () => ({
+      useModuleResponses: () => ({
+        responses: [
+          {
+            id: 'r1',
+            user_id: 's1',
+            module_id: 'db-ne',
+            completed_at: '2026-01-01T00:00:00Z',
+            quiz_score: 4,
+            quiz_max: 5,
+            analytical_answer: 'My analytical reasoning about network effects.',
+            application_answer: 'My application to a local marketplace.',
+          },
+        ],
+        loading: false,
+        error: null,
+        refresh: () => {},
+      }),
+    }));
+    const AssignmentsTab = (await import('@/components/teacher-workspace/AssignmentsTab')).default;
+    const catalog = [mod({ slug: 'network-effects', dbId: 'db-ne', title_en: 'Network Effects' })];
+    const { default: userEvent } = await import('@testing-library/user-event');
     render(
       <AssignmentsTab
         classroomId="c1"
         subjectKey={PILOT_SUBJECT_KEY}
-        students={[]}
-        assignments={[]}
-        catalog={[]}
+        students={[{ membership_id: 'm1', student_id: 's1', joined_at: '', display_name: 'Ани', full_name: null, avatar_url: null, total_xp: 0, updated_at: '' }]}
+        assignments={[{ id: 'a1', assignment_type: 'module', journey_stage: null, case_id: null, module_slug: 'network-effects', note: null, due_date: null, created_at: '' }]}
+        catalog={catalog}
         catalogLoading={false}
         onAssignmentsChanged={() => {}}
       />,
     );
-    // Empty scoped classroom shows an honest empty state, no cross-class data.
-    expect(screen.getByText(/No module assigned to this classroom yet/i)).toBeInTheDocument();
+    expect(screen.getByText('Completed')).toBeInTheDocument();
+    expect(screen.getByText('1/1 completed')).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: /View work/i }));
+    expect(screen.getByText(/My analytical reasoning/)).toBeInTheDocument();
+    expect(screen.getByText(/My application to a local marketplace/)).toBeInTheDocument();
+    expect(screen.getByText(/4\/5/)).toBeInTheDocument();
+  });
 
-    const src = readFileSync(
-      path.resolve(__dirname, '../components/teacher-workspace/AssignmentsTab.tsx'),
-      'utf8',
+  it('offers no feedback box when the student has not started', async () => {
+    vi.doMock('@/integrations/supabase/client', () => ({ supabase: {} }));
+    vi.doMock('@/context/AuthContext', () => ({ useAuth: () => ({ user: { id: 'teacher' } }) }));
+    vi.doMock('@/context/LangContext', () => ({ useLang: () => ({ lang: 'en' }) }));
+    vi.doMock('@/hooks/useModuleResponses', () => ({
+      useModuleResponses: () => ({ responses: [], loading: false, error: null, refresh: () => {} }),
+    }));
+    const AssignmentsTab = (await import('@/components/teacher-workspace/AssignmentsTab')).default;
+    const { default: userEvent } = await import('@testing-library/user-event');
+    render(
+      <AssignmentsTab
+        classroomId="c1"
+        subjectKey={PILOT_SUBJECT_KEY}
+        students={[{ membership_id: 'm1', student_id: 's1', joined_at: '', display_name: 'Ани', full_name: null, avatar_url: null, total_xp: 0, updated_at: '' }]}
+        assignments={[{ id: 'a1', assignment_type: 'module', journey_stage: null, case_id: null, module_slug: 'network-effects', note: null, due_date: null, created_at: '' }]}
+        catalog={[mod({ slug: 'network-effects', dbId: 'db-ne' })]}
+        catalogLoading={false}
+        onAssignmentsChanged={() => {}}
+      />,
     );
-    expect(src).toContain('analytical_answer');
-    expect(src).toContain('application_answer');
-    expect(src).toContain('learning_module_response');
+    expect(screen.getByText('Not started')).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: /View work/i }));
+    expect(screen.getByText(/has not started the module/i)).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Save feedback/i })).toBeNull();
   });
 });
 
