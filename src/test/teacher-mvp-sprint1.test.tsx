@@ -136,7 +136,18 @@ describe('f. evidence detail rendering', () => {
   beforeEach(() => vi.resetModules());
 
   it('renders analytical and application answers for a completed student', async () => {
-    vi.doMock('@/integrations/supabase/client', () => ({ supabase: {} }));
+    vi.doMock('@/integrations/supabase/client', () => ({
+      supabase: {
+        from: () => {
+          const q: any = {
+            select: () => q,
+            eq: () => q,
+            maybeSingle: () => Promise.resolve({ data: null, error: null }),
+          };
+          return q;
+        },
+      },
+    }));
     vi.doMock('@/context/AuthContext', () => ({ useAuth: () => ({ user: { id: 'teacher' } }) }));
     vi.doMock('@/context/LangContext', () => ({ useLang: () => ({ lang: 'en' }) }));
     vi.doMock('@/hooks/useModuleResponses', () => ({
@@ -180,7 +191,18 @@ describe('f. evidence detail rendering', () => {
   });
 
   it('offers no feedback box when the student has not started', async () => {
-    vi.doMock('@/integrations/supabase/client', () => ({ supabase: {} }));
+    vi.doMock('@/integrations/supabase/client', () => ({
+      supabase: {
+        from: () => {
+          const q: any = {
+            select: () => q,
+            eq: () => q,
+            maybeSingle: () => Promise.resolve({ data: null, error: null }),
+          };
+          return q;
+        },
+      },
+    }));
     vi.doMock('@/context/AuthContext', () => ({ useAuth: () => ({ user: { id: 'teacher' } }) }));
     vi.doMock('@/context/LangContext', () => ({ useLang: () => ({ lang: 'en' }) }));
     vi.doMock('@/hooks/useModuleResponses', () => ({
