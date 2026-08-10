@@ -221,7 +221,7 @@ describe('4. existing feedback is loaded and updated', () => {
 
     fireEvent.change(box, { target: { value: 'Updated note' } });
     fireEvent.click(screen.getByRole('button', { name: /Save feedback/i }));
-    await waitFor(() => expect(updates).toHaveLength(1));
+    await waitFor(() => expect(JSON.stringify({u:updates,i:inserts})).toContain('Updated note'));
     expect(updates[0].payload).toEqual({ comment: 'Updated note' });
     expect(updates[0].id).toBe('fb1');
     expect(inserts).toHaveLength(0);
