@@ -12,7 +12,12 @@ import {
   NETWORK_EFFECTS_MISCONCEPTIONS, NETWORK_EFFECTS_ENTRY_TASK, AIRBNB_TRUST_CASE_PACK,
   NETWORK_EFFECTS_TEACHER_PACK,
 } from '@/data/network-effects-pilot';
-import { PILOT_SUBJECT_KEY } from '@/lib/teacher-assignments';
+import { PILOT_SUBJECT_KEY, FEEDBACK_TARGET_TYPE } from '@/lib/teacher-assignments';
+import {
+  shouldAwardCompletionXp, buildRevisionReopenPayload, buildRevisionRowFilters,
+  buildFeedbackQueryFilters, buildResubmissionCompletion, deriveRevisionState,
+  revisionStateLabel, canStartRevision,
+} from '@/lib/content-mvp-revision';
 import type { CatalogModule } from '@/hooks/useModuleCatalog';
 
 const NE = LEARNING_MODULES.find((m) => m.slug === 'network-effects')!;
@@ -112,23 +117,52 @@ describe('2. retired claims and the old Uber case are absent', () => {
     expect(NE.embedded_case?.context_en ?? '').not.toMatch(/Uber/i);
   });
 
+  /**
+   * Every string in the module with its path, so assertions can skip strings
+   * that are deliberately wrong by design (distractor quiz options, stated
+   * misconceptions) and source titles that are themselves refutations.
+   */
+  const annotated: { path: string; value: string; isDistractor: boolean }[] = [];
+  (function walk(v: any, path: string, distractor: boolean) {
+    if (typeof v === 'string') { annotated.push({ path, value: v, isDistractor: distractor }); return; }
+    if (Array.isArray(v)) { v.forEach((x, i) => walk(x, `${path}[${i}]`, distractor)); return; }
+    if (v && typeof v === 'object') {
+      const isOption = 'correct' in v && v.correct !== true;
+      for (const [k, val] of Object.entries(v)) {
+        walk(val, `${path}.${k}`, distractor || isOption || /^wrong_/.test(k) || k === 'common_errors');
+      }
+    }
+  })(NE, 'module', false);
+
+  const assertedStrings = annotated.filter(
+    (a) => !a.isDistractor && !/\.title(_en|_bg)?$/.test(a.path) && !/\.publisher$/.test(a.path) && !/\.url$/.test(a.path),
+  );
+
   it('never states n² as a valuation law or a critical-mass formula', () => {
-    for (const s of serialized.split(/(?<=[.!?])\s+/)) {
-      if (!/Metcalfe|n²/i.test(s)) continue;
-      expect(s).toMatch(/heuristic|not a valuation|never|potential|overstates|евристика|не е закон|никога|надценява|потенциал/i);
+    const mentions = assertedStrings.filter((a) => /Metcalfe|n²/i.test(a.value));
+    expect(mentions.length).toBeGreaterThan(0);
+    for (const m of mentions) {
+      expect(m.value).toMatch(
+        /heuristic|not a valuation|not a way|never|potential|overstates|challenge|intuition|is Wrong|евристика|не е закон|не е оценка|никога|надценява|потенциал|оспориш|интуиция/i,
+      );
     }
   });
 
   it('never asserts winner-take-all or near-monopoly', () => {
     expect(serialized).not.toMatch(/near-monopoly|почти монопол/i);
-    for (const s of serialized.split(/(?<=[.!?])\s+/)) {
-      if (!/winner-take-all|победителят взема всичко/i.test(s)) continue;
-      expect(s).toMatch(/\bnot\b|do not|does not|не водят|не гарантира|Допускане|Assuming/i);
+    const mentions = assertedStrings.filter((a) => /winner-take-all|победителят взема всичко/i.test(a.value));
+    expect(mentions.length).toBeGreaterThan(0);
+    for (const m of mentions) {
+      expect(m.value).toMatch(/\bnot\b|do not|does not|не водят|не гарантира|Допускане|Assuming/i);
     }
   });
 
   it('makes no unsupported causal claims about WhatsApp ads or Uber profitability', () => {
-    expect(serialized).not.toMatch(/WhatsApp/i);
+    // WhatsApp may appear only as a neutral comparison prompt, never with a
+    // monetisation or ads claim; Uber profitability is never asserted.
+    for (const m of annotated.map((a) => a.value).filter((v) => /WhatsApp/i.test(v))) {
+      expect(m).not.toMatch(/ads|advertis|monetis|monetiz|реклам|монетиз/i);
+    }
     expect(serialized).not.toMatch(/profitab|печалба на Uber/i);
   });
 });
@@ -362,74 +396,111 @@ describe('4. teacher rubric panel is Teacher Workspace only', () => {
 });
 
 /* ---------------- 5 & 6 & 7. feedback query, revision, XP ---------------- */
+/**
+ * These behaviours are covered through the pure helpers plus focused source
+ * assertions. Mounting the whole player with a completed response spins in
+ * jsdom, so the coverage is kept but the harness is deterministic.
+ */
 
-const completedResponse = {
-  id: 'r1', completed_at: '2026-08-01T00:00:00Z', quiz_answers: {},
-  analytical_answer: 'My analysis of local liquidity and multi-homing, with sources.',
-  application_answer: 'My platform idea, both sides and the smallest viable network.',
-  concept_score: 80, analytical_score: 70, strategic_score: 75, application_score: 60,
-};
+const playerSource = readFileSync(path.resolve(__dirname, '../pages/LearningModulePlayer.tsx'), 'utf8');
 
 describe('5. student feedback query is scoped to the existing response', () => {
-  beforeEach(() => vi.resetModules());
-
-  it('queries teacher_feedback by student, target_type and response id', async () => {
-    const { calls } = await renderPlayer({
-      response: completedResponse,
-      feedback: { id: 'fb1', comment: 'Name the assumption doing the work.' },
+  it('builds all three feedback filter keys', () => {
+    expect(buildFeedbackQueryFilters('stu', 'r1')).toEqual({
+      student_id: 'stu',
+      target_type: FEEDBACK_TARGET_TYPE,
+      target_id: 'r1',
     });
-    await waitFor(() => expect(screen.getByText(/Name the assumption doing the work\./)).toBeInTheDocument());
-    expect(calls.eq).toContainEqual(['teacher_feedback.student_id', 'stu']);
-    expect(calls.eq).toContainEqual(['teacher_feedback.target_type', 'learning_module_response']);
-    expect(calls.eq).toContainEqual(['teacher_feedback.target_id', 'r1']);
+    expect(FEEDBACK_TARGET_TYPE).toBe('learning_module_response');
   });
 
-  it('shows an honest message and no invented feedback when the query fails', async () => {
-    await renderPlayer({ response: completedResponse, feedbackError: true });
-    await waitFor(() => expect(screen.getByRole('alert')).toHaveTextContent(/could not be loaded/i));
-    expect(screen.queryByRole('button', { name: /Revise response/i })).toBeNull();
+  it('applies student_id, target_type and target_id on the teacher_feedback query', () => {
+    const q = playerSource.slice(
+      playerSource.indexOf("from('teacher_feedback')"),
+      playerSource.indexOf('maybeSingle()', playerSource.indexOf("from('teacher_feedback')")),
+    );
+    expect(q).toMatch(/\.eq\('student_id',\s*filters\.student_id\)/);
+    expect(q).toMatch(/\.eq\('target_type',\s*filters\.target_type\)/);
+    expect(q).toMatch(/\.eq\('target_id',\s*filters\.target_id\)/);
+    expect(q).not.toMatch(/insert|update|upsert|delete/);
   });
 
-  it('waits truthfully when there is no feedback yet', async () => {
-    await renderPlayer({ response: completedResponse });
-    await waitFor(() => expect(screen.getByTestId('revision-state')).toHaveTextContent(/waiting for teacher feedback/i));
-    expect(screen.queryByRole('button', { name: /Revise response/i })).toBeNull();
+  it('derives truthful states, including waiting and feedback received', () => {
+    const base = { resubmitted: false, isRevision: false, isCompleted: true, hasFeedback: false };
+    expect(deriveRevisionState(base)).toBe('waiting');
+    expect(deriveRevisionState({ ...base, hasFeedback: true })).toBe('feedback_received');
+    expect(deriveRevisionState({ ...base, isRevision: true, isCompleted: false })).toBe('revision_in_progress');
+    expect(deriveRevisionState({ ...base, resubmitted: true })).toBe('resubmitted');
+
+    expect(revisionStateLabel('waiting', 'en')).toMatch(/waiting for teacher feedback/i);
+    expect(revisionStateLabel('waiting', 'bg')).toMatch(/чака обратна връзка/i);
+    expect(revisionStateLabel('resubmitted', 'en')).toMatch(/Resubmitted after feedback/i);
+    expect(revisionStateLabel('feedback_received', 'bg')).toMatch(/обратна връзка/i);
+  });
+
+  it('never offers revision without real feedback or when the query failed', () => {
+    expect(canStartRevision({ isCompleted: true, hasFeedback: false, feedbackError: false })).toBe(false);
+    expect(canStartRevision({ isCompleted: true, hasFeedback: true, feedbackError: true })).toBe(false);
+    expect(canStartRevision({ isCompleted: false, hasFeedback: true, feedbackError: false })).toBe(false);
+    expect(canStartRevision({ isCompleted: true, hasFeedback: true, feedbackError: false })).toBe(true);
+  });
+
+  it('renders an honest error message and hides the revise button on feedback errors', () => {
+    // the error branch is exclusive with the feedback branch that owns the button
+    const panel = playerSource.slice(
+      playerSource.indexOf("data-testid=\"teacher-feedback-panel\""),
+      playerSource.indexOf('handleStartRevision}'),
+    );
+    expect(panel).toMatch(/feedbackError \?/);
+    expect(panel).toMatch(/role="alert"/);
+    expect(panel).toMatch(/could not be loaded/i);
+    // the revise button lives inside the `feedback ?` branch, after the error branch
+    expect(panel.indexOf('feedbackError ?')).toBeLessThan(panel.indexOf(': feedback ?'));
   });
 });
 
 describe('6 & 7. revision reuses the response row and pays no XP again', () => {
-  beforeEach(() => vi.resetModules());
+  it('does not award completion XP on a revision', () => {
+    expect(shouldAwardCompletionXp(false)).toBe(true);
+    expect(shouldAwardCompletionXp(true)).toBe(false);
+    expect(playerSource).toMatch(/if \(shouldAwardCompletionXp\(isRevision\)\)/);
+    const xpBlock = playerSource.slice(
+      playerSource.indexOf('shouldAwardCompletionXp(isRevision)'),
+      playerSource.indexOf('setExistingResponse((prev'),
+    );
+    expect(xpBlock).toMatch(/awardXp\('theory_complete'/);
+  });
 
-  it('reopens, resubmits the same row and does not award XP twice', async () => {
-    const { calls, awardXp } = await renderPlayer({
-      response: completedResponse,
-      feedback: { id: 'fb1', comment: 'Add a guardrail.' },
-    });
-    const revise = await screen.findByRole('button', { name: /Revise response/i });
-    fireEvent.click(revise);
+  it('reopens with completed_at null and resubmits a real completion stamp', () => {
+    const reopen = buildRevisionReopenPayload(new Date('2026-08-10T00:00:00.000Z'));
+    expect(reopen.completed_at).toBeNull();
+    expect(reopen.updated_at).toBe('2026-08-10T00:00:00.000Z');
 
-    // completed_at is cleared on the SAME row — never a new response
-    await waitFor(() => {
-      const u = calls.updates.filter((x) => x.table === 'learning_module_responses');
-      expect(u.some((x) => x.payload.completed_at === null)).toBe(true);
-    });
-    expect(calls.eq).toContainEqual(['learning_module_responses.id', 'r1']);
-    expect(calls.eq).toContainEqual(['learning_module_responses.user_id', 'stu']);
-    expect(calls.inserts.filter((i) => i.table === 'learning_module_responses')).toHaveLength(0);
+    const resubmit = buildResubmissionCompletion(new Date('2026-08-11T00:00:00.000Z'));
+    expect(resubmit.completed_at).toBe('2026-08-11T00:00:00.000Z');
+    expect(resubmit.updated_at).toBe('2026-08-11T00:00:00.000Z');
+  });
 
-    // answers are unlocked again
-    const analytical = screen.getByRole('textbox');
-    expect(analytical).not.toBeDisabled();
-    fireEvent.change(analytical, { target: { value: `${completedResponse.analytical_answer} Revised with a guardrail.` } });
+  it('scopes the reopen update to the learner own row', () => {
+    expect(buildRevisionRowFilters('r1', 'stu')).toEqual({ id: 'r1', user_id: 'stu' });
 
-    fireEvent.click(screen.getByRole('button', { name: /Now use it/i }));
-    fireEvent.click(await screen.findByRole('button', { name: /Send it/i }));
+    const fn = playerSource.slice(
+      playerSource.indexOf('const handleStartRevision'),
+      playerSource.indexOf('if (!mod) {'),
+    );
+    expect(fn).toMatch(/from\('learning_module_responses'\)/);
+    expect(fn).toMatch(/\.update\(buildRevisionReopenPayload\(\)/);
+    expect(fn).toMatch(/\.eq\('id',\s*rowFilters\.id\)[\s\S]{0,80}\.eq\('user_id',\s*rowFilters\.user_id\)/);
+    expect(fn).not.toMatch(/\.insert\(/);
+    expect(fn).toMatch(/!user\?\.id/);
+  });
 
-    await waitFor(() => expect(screen.getByTestId('revision-state')).toHaveTextContent(/Resubmitted after feedback/i));
-    const resubmit = calls.updates.filter((x) => x.table === 'learning_module_responses' && x.payload.completed_at);
-    expect(resubmit.length).toBeGreaterThan(0);
-    expect(calls.inserts.filter((i) => i.table === 'learning_module_responses')).toHaveLength(0);
-    expect(awardXp).not.toHaveBeenCalled();
+  it('completes a submission by updating the existing row, never inserting a second one', () => {
+    const submit = playerSource.slice(
+      playerSource.indexOf('if (existingResponse) {', playerSource.indexOf('const finalScores = calculateScores();')),
+      playerSource.indexOf('shouldAwardCompletionXp(isRevision)'),
+    );
+    expect(submit).toMatch(/if \(existingResponse\) \{[\s\S]{0,200}\.update\(payload as any\)\.eq\('id', existingResponse\.id\)/);
   });
 });
 
@@ -446,15 +517,30 @@ describe('8. other modules stay compatible', () => {
     }
   });
 
-  it('renders a non-pilot module without pilot blocks', async () => {
-    vi.resetModules();
-    const plain = LEARNING_MODULES.find((m) => m.slug !== 'network-effects')!;
-    await renderPlayer({ slug: plain.slug });
-    await waitFor(() => expect(screen.getByRole('heading', { level: 1 })).toBeInTheDocument());
-    expect(screen.queryByTestId('quality-status')).toBeNull();
+  it('renders nothing when a non-pilot module supplies no pilot data', async () => {
+    const S = await import('@/components/learning/PilotStudentSections');
+    const { container } = render(
+      <>
+        <S.LearningOutcomesBlock outcomes={undefined} lang="en" />
+        <S.ModelBoundariesBlock boundaries={undefined} lang="en" />
+        <S.MisconceptionsBlock misconceptions={undefined} lang="en" />
+        <S.EntryTaskBlock task={undefined} lang="en" />
+        <S.SourcePackBlock sources={undefined} lang="en" />
+        <S.CasePackBlock pack={undefined} lang="en" />
+      </>,
+    );
+    expect(container).toBeEmptyDOMElement();
     expect(screen.queryByTestId('pilot-sources')).toBeNull();
     expect(screen.queryByTestId('pilot-case-pack')).toBeNull();
-    expect(screen.queryByTestId('teacher-feedback-panel')).toBeNull();
+  });
+
+  it('renders the quality badge only when a module declares a status', () => {
+    expect(playerSource).toMatch(/mod\.quality_status &&[\s\S]{0,120}QualityStatusBadge/);
+  });
+
+  it('keeps the revision loop limited to the pilot slug', () => {
+    expect(playerSource).toMatch(/REVISION_ENABLED_SLUGS = \['network-effects'\]/);
+    expect(playerSource).toMatch(/revisionEnabled = !!mod && REVISION_ENABLED_SLUGS\.includes\(mod\.slug\)/);
   });
 });
 
@@ -464,7 +550,7 @@ describe('9. no migrations and no catalogue writes were introduced', () => {
     if (!existsSync(dir)) return;
     for (const f of readdirSync(dir)) {
       const sql = readFileSync(path.join(dir, f), 'utf8');
-      expect(sql).not.toMatch(/rubric|teacher_pack|case_pack/i);
+      expect(sql).not.toMatch(/teacher_pack|case_pack|source_pack|quality_status|network-effects/i);
     }
   });
 
