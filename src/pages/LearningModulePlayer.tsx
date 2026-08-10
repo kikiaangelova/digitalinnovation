@@ -193,12 +193,13 @@ export default function LearningModulePlayer() {
 
   // Reopen the SAME response row for revision. No insert, no new row.
   const handleStartRevision = async () => {
-    if (!existingResponse?.id) return;
+    if (!existingResponse?.id || !user?.id) return;
     setRevising(true);
     const { error } = await supabase
       .from('learning_module_responses')
       .update({ completed_at: null, updated_at: new Date().toISOString() } as any)
-      .eq('id', existingResponse.id);
+      .eq('id', existingResponse.id)
+      .eq('user_id', user.id);
     setRevising(false);
     if (error) {
       toast.error(t('Could not reopen your response.', 'Отговорът ти не можа да се отвори отново.'));
