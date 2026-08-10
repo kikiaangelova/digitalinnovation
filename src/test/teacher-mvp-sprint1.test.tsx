@@ -3,7 +3,7 @@
  * status derivation, evidence rendering and player write-safety.
  */
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import { readFileSync } from 'fs';
 import path from 'path';
 import {
@@ -160,7 +160,6 @@ describe('f. evidence detail rendering', () => {
     }));
     const AssignmentsTab = (await import('@/components/teacher-workspace/AssignmentsTab')).default;
     const catalog = [mod({ slug: 'network-effects', dbId: 'db-ne', title_en: 'Network Effects' })];
-    const { default: userEvent } = await import('@testing-library/user-event');
     render(
       <AssignmentsTab
         classroomId="c1"
@@ -174,7 +173,7 @@ describe('f. evidence detail rendering', () => {
     );
     expect(screen.getByText('Completed')).toBeInTheDocument();
     expect(screen.getByText('1/1 completed')).toBeInTheDocument();
-    await userEvent.click(screen.getByRole('button', { name: /View work/i }));
+    fireEvent.click(screen.getByRole('button', { name: /View work/i }));
     expect(screen.getByText(/My analytical reasoning/)).toBeInTheDocument();
     expect(screen.getByText(/My application to a local marketplace/)).toBeInTheDocument();
     expect(screen.getByText(/4\/5/)).toBeInTheDocument();
@@ -188,7 +187,6 @@ describe('f. evidence detail rendering', () => {
       useModuleResponses: () => ({ responses: [], loading: false, error: null, refresh: () => {} }),
     }));
     const AssignmentsTab = (await import('@/components/teacher-workspace/AssignmentsTab')).default;
-    const { default: userEvent } = await import('@testing-library/user-event');
     render(
       <AssignmentsTab
         classroomId="c1"
@@ -201,7 +199,7 @@ describe('f. evidence detail rendering', () => {
       />,
     );
     expect(screen.getByText('Not started')).toBeInTheDocument();
-    await userEvent.click(screen.getByRole('button', { name: /View work/i }));
+    fireEvent.click(screen.getByRole('button', { name: /View work/i }));
     expect(screen.getByText(/has not started the module/i)).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /Save feedback/i })).toBeNull();
   });
