@@ -301,17 +301,18 @@ function EvidenceDetail({
   const [loadError, setLoadError] = useState<string | null>(null);
 
   const responseId = response?.id ?? null;
+  const teacherId = user?.id ?? null;
 
   useEffect(() => {
     let cancelled = false;
-    if (!user || !responseId) return;
+    if (!teacherId || !responseId) return;
     setLoadingFeedback(true);
     setLoadError(null);
     void (async () => {
       const { data, error } = await supabase
         .from('teacher_feedback')
         .select('id, comment')
-        .eq('teacher_id', user.id)
+        .eq('teacher_id', teacherId)
         .eq('student_id', studentId)
         .eq('target_type', FEEDBACK_TARGET_TYPE)
         .eq('target_id', responseId)
@@ -330,7 +331,7 @@ function EvidenceDetail({
     return () => {
       cancelled = true;
     };
-  }, [user, studentId, responseId]);
+  }, [teacherId, studentId, responseId]);
 
   if (!response) {
     return (

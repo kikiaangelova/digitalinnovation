@@ -177,7 +177,7 @@ describe('4. existing feedback is loaded and updated', () => {
     const updates: any[] = [];
     const supabase = {
       from: (table: string) => {
-        console.log('FROM', table);
+        expect(table).toBe('teacher_feedback');
         const q: any = {
           select: () => q,
           eq: (col: string, val: string) => {
@@ -221,7 +221,7 @@ describe('4. existing feedback is loaded and updated', () => {
 
     fireEvent.change(box, { target: { value: 'Updated note' } });
     fireEvent.click(screen.getByRole('button', { name: /Save feedback/i }));
-    await waitFor(() => expect(JSON.stringify({u:updates,i:inserts})).toContain('Updated note'));
+    await waitFor(() => expect(updates).toHaveLength(1));
     expect(updates[0].payload).toEqual({ comment: 'Updated note' });
     expect(updates[0].id).toBe('fb1');
     expect(inserts).toHaveLength(0);
