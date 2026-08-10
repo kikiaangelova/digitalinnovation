@@ -154,6 +154,30 @@ export default function LearningModulePlayer() {
     );
   }
 
+  if (catalogState === 'unregistered') {
+    return (
+      <div className="min-h-screen bg-background">
+        <AppHeader />
+        <div className="mx-auto max-w-xl px-4 py-16">
+          <Card className="p-6 space-y-3 text-center">
+            <h1 className="text-lg font-semibold">
+              {t('This module is not available yet', 'Този модул още не е наличен')}
+            </h1>
+            <p className="text-sm text-muted-foreground">
+              {t(
+                'The content exists, but the module has not been registered by a teacher or admin yet, so your progress could not be saved. Please try again later.',
+                'Съдържанието съществува, но модулът още не е регистриран от учител или админ, затова напредъкът ти не може да се запази. Опитай пак по-късно.',
+              )}
+            </p>
+            <Button variant="outline" onClick={() => navigate('/learning-modules')} className="min-h-[44px]">
+              <ArrowLeft className="h-4 w-4 mr-1" /> {t('Back to modules', 'Обратно към модулите')}
+            </Button>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
   const quizScore = mod.quiz_questions.reduce((acc, q) => {
     const selected = quizAnswers[q.id];
     const correct = q.options.find(o => o.correct)?.id;
