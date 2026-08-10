@@ -1,82 +1,31 @@
+# Sprint 1 — Teacher MVP vertical slice (Digital Innovation pilot)
 
-# Пълен план: DigiInnov Case Lab в гласа на Кики
+Goal: one coherent flow in the preview Teacher Workspace (`/teacher-new`):
+teacher → classroom → module assignment → student work → evidence → feedback → progress.
 
-Целта: платформа, в която Gen Z придобива **знания → умения → growth mindset** през правене, с релевантни 2026 казуси и AI ментор (Кики) до тях.
+## Scope
+- Subject: `digital-innovation`. Pilot module: `network-effects`.
+- Code + tests only. No deploy, no SQL writes, no migrations, no production data changes.
 
-Не мога да напиша всичко в един ход — ще стане претупано и генерично, точно това което не искаш. Затова го разделям на **6 фази**, всяка е самостоятелна доставка (виждаш резултата преди да мина към следващата).
+## Work items
+1. **Classroom selection & scoping** — load all active classrooms owned by the teacher
+   (replaces the single-classroom `.maybeSingle()` assumption), add an explicit selector,
+   and scope roster, assignments, responses and feedback to the selected classroom.
+2. **Safe module assignment** — Assignments tab with a form that only lists modules that are
+   registered in the database, have rich static content and match the classroom subject.
+   Submission stays disabled until a valid target is picked. Bilingual validation states.
+3. **Student player integrity** — the module player no longer inserts a missing
+   `learning_modules` row from a student session; an honest unavailable state is shown instead.
+4. **Progress & evidence** — status derived from `learning_module_responses`:
+   no row = not started, row without `completed_at` = in progress, `completed_at` = completed.
+   Only completed rows count. Teacher detail shows quiz score, analytical and application answers.
+   XP is never used as status or grade.
+5. **Teacher feedback** — create/update through the existing `teacher_feedback` model with
+   `target_type='learning_module_response'`. Unavailable (with explanation) when no response exists.
+6. **Tests** — validation, assignable filtering, classroom scoping, status mapping,
+   completed-only counting, evidence rendering, no catalogue insertion.
 
----
-
-## Фаза 1 — Каноничен глас (пилот) 🎯 *започваме тук*
-1 модул написан докрай в твоя глас, за да служи като шаблон за всичко останало.
-- Тема: **"Черният лебед за предприемачи"** (уговорено миналия ход — чакам А или Б като ъгъл).
-- Съдържание: 7-мин четене BG+EN, TEACR сценарий, 3 речникови термина, 1 микро-казус, 3 въпроса за рефлексия.
-- След одобрение → това е "стилът", по който пиша останалите 11 предмета.
-
-## Фаза 2 — 12-те предмета, преструктурирани
-Групирам темите ти в 12 pathway-а, всеки с ясна цел и "какво можеш в понеделник":
-
-```text
-CORE (задължителни за всички)
-  1. Предприемаческо мислене & Growth Mindset
-  2. Дигитални иновации (Design Thinking + Lean + Blue Ocean + Черен лебед)
-  3. AI за бизнес & Prompt Engineering
-  4. Основи на маркетинга
-
-ELECTIVES (избираеми пътеки)
-  5. Дигитален маркетинг
-  6. Мениджмънт основи
-  7. Project Management (Agile / Scrum / Kanban)
-  8. Стартъпи & стартъп екосистеми
-  9. Бизнес модели & Unit Economics
- 10. UX/UI основи
- 11. Продажби & комуникация
- 12. Финансова грамотност за фаундъри
-```
-
-Всеки pathway: 4-6 микро-урока × 7 мин + TEACR + казус + речникови термини + финална мисия.
-
-## Фаза 3 — 2026 казуси (реални компании)
-6 казуса, всеки 8 секции по формата на платформата, BG+EN:
-- **Lovable** (европейски AI стартъп, product-led growth)
-- **Payhawk** (българският unicorn, B2B fintech, enterprise sales)
-- **Revolut** (super-app, Blue Ocean в банкирането)
-- **Notion** (community-led, PLG)
-- **Duolingo** (gamification като бизнес модел — директно резонира с Gen Z)
-- **Klarna vs. AI поддръжка 2024-2025** (какво стана като замениха хора с AI и защо се върнаха)
-
-Всеки казус е "решаваш заедно с фаундъра", не четеш wiki статия.
-
-## Фаза 4 — Речник (bilingual, contextual)
-- ~80 нови термина покриващи всички 12 pathway-а
-- Всеки термин линкнат към урока/казуса, където се използва (contextual)
-- Тон: "Bottleneck = мястото, в което всичко забива" — не учебник
-
-## Фаза 5 — Kiki AI ментор (upgrade)
-- Обновяване на `KIKI_PERSONA_PROMPT` с новия контекст (20 год. опит, 5-те предмета, философията)
-- Kiki отговаря различно според pathway-а (маркетинг Кики ≠ финанси Кики по тон, но същата личност)
-- 3 mode-а: **Socratic** (питa), **Coach** (окуражава), **Sparring** (предизвиква) — Gen Z обича да е предизвикван
-
-## Фаза 6 — Gen Z полиране
-- Streaks + daily missions (те се връщат)
-- "Skip the theory" бутон → директно в казуса, теорията изскача като just-in-time flashcard
-- Progress без числа — с визуална карта "къде си"
-- 2-мин "no-signup preview" от лендинга: 1 решение от казус, вижда последствие, после регистрация
-
----
-
-## Технически бележки
-
-- Съдържанието живее в `src/data/curriculum-2026.ts` и `src/data/cases-2026.ts` (типизирано, лесно за update).
-- Речниковите термини влизат в `dictionary` таблицата през `supabase--insert` (не migration).
-- Никакви schema промени не са нужни — всички таблици (learning_modules, case_studies, questions) вече ги имаме.
-- Kiki промптът се обновява в `supabase/functions/_shared/kiki-persona.ts`.
-- Всяка фаза е отделен commit с preview, за да можеш да кажеш "звучи като мен" или "не".
-
----
-
-## Какво ми трябва от теб СЕГА, за да тръгна с Фаза 1
-
-**1 отговор:** Черният лебед — ъгъл **А** ("защо планът ти ще се счупи, MVP е отговорът") или **Б** ("антикрехкост, печели от хаос")?
-
-Като кажеш — за ~2 хода имаш пилотния модул на екрана и решаваме дали този глас работи, преди да го мащабирам през всичките 12 предмета.
+## Technical notes
+- New pure helpers in `src/lib/teacher-assignments.ts` keep the rules unit-testable.
+- New hooks: `useTeacherClassrooms`, `useModuleResponses`; `useClassroomStudents` accepts a classroom id.
+- Existing RLS remains the security boundary; client filters are added for clarity.
