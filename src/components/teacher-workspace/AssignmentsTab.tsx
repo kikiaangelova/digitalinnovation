@@ -6,7 +6,7 @@
  * live in `@/lib/teacher-assignments` so they stay testable.
  */
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -30,6 +30,7 @@ import {
   STATUS_LABELS,
   countCompleted,
   deriveAssignmentStatus,
+  dedupeModulesByIdentity,
   filterAssignableModules,
   indexResponses,
   responseKey,
@@ -84,9 +85,11 @@ export default function AssignmentsTab({
 
   const assignedModules = useMemo(
     () =>
-      moduleAssignments
-        .map((a) => catalog.find((c) => c.slug === a.module_slug))
-        .filter((m): m is CatalogModule => !!m && !!m.dbId),
+      dedupeModulesByIdentity(
+        moduleAssignments
+          .map((a) => catalog.find((c) => c.slug === a.module_slug))
+          .filter((m): m is CatalogModule => !!m && !!m.dbId),
+      ),
     [moduleAssignments, catalog],
   );
 
