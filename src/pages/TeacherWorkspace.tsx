@@ -17,7 +17,7 @@
  * not see it. All other tabs render for both roles.
  */
 
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Navigate } from 'react-router-dom';
 import AppHeader from '@/components/layout/AppHeader';
 import { Card } from '@/components/ui/card';
@@ -46,9 +46,16 @@ import { useLang } from '@/context/LangContext';
 import { useClassroomStudents } from '@/hooks/useClassroomStudents';
 import { useClassroomAssignments } from '@/hooks/useClassroomAssignments';
 import { useStudentProgress } from '@/hooks/useStudentProgress';
+import { useTeacherClassrooms } from '@/hooks/useTeacherClassrooms';
+import { useModuleCatalog } from '@/hooks/useModuleCatalog';
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from '@/components/ui/select';
+import { PILOT_SUBJECT_KEY } from '@/lib/teacher-assignments';
 import { isFeatureEnabled, enableFeatureFlag } from '@/lib/featureFlags';
 import OverviewTab from '@/components/teacher-workspace/OverviewTab';
 import StudentsTab from '@/components/teacher-workspace/StudentsTab';
+import AssignmentsTab from '@/components/teacher-workspace/AssignmentsTab';
 
 type TabId =
   | 'overview'
