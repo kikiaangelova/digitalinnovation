@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { useLang } from "@/context/LangContext";
 import AppHeader from "@/components/layout/AppHeader";
+import PageMeta from "@/components/seo/PageMeta";
 import heroBg from "@/assets/hero-bg.mp4.asset.json";
 import kikiAvatar from "@/assets/kiki-avatar.png";
 import {
