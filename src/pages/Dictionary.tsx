@@ -14,6 +14,7 @@ import { awardXp } from '@/lib/xp';
 import { filterTerms } from '@/lib/dictionary-filter';
 import QuickTest from '@/components/dictionary/QuickTest';
 import PhaseBadge from '@/components/ui/phase-badge';
+import PageMeta from '@/components/seo/PageMeta';
 
 const CATEGORY_COLORS: Record<string, string> = {
   Innovation: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20',
