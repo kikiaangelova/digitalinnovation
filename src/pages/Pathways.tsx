@@ -41,6 +41,14 @@ export default function Pathways() {
 
   return (
     <main className="mx-auto max-w-6xl px-4 py-8 md:py-12">
+      <PageMeta
+        path="/pathways"
+        title={t('Learning Pathways — DigiInnov Case Lab', 'Учебни пътища — DigiInnov Case Lab')}
+        description={t(
+          'Explore the DigiInnov learning pathways: digital innovation, entrepreneurship, marketing, finance, AI for business and more, with practice-first modules.',
+          'Разгледай учебните пътища в DigiInnov: дигитални иновации, предприемачество, маркетинг, финанси, AI за бизнеса и още — с модули, ориентирани към практика.',
+        )}
+      />
       <header className="mb-8 space-y-2">
         <div className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
           <Sparkles className="h-3.5 w-3.5" />
