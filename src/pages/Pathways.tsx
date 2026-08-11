@@ -13,6 +13,7 @@ import {
 import { subModulesByPathway, type SubModule } from '@/data/curriculum-2026-content';
 import { ALL_TERMS_2026 } from '@/data/curriculum-2026-dictionary';
 import { getTeacrScenario } from '@/data/curriculum-2026-teacr';
+import PageMeta from '@/components/seo/PageMeta';
 import DecisionConsequenceReflection from '@/components/learning/DecisionConsequenceReflection';
 import { Sparkles, ArrowRight, BookOpen, Clock, Compass, Target } from 'lucide-react';
 import { useState } from 'react';
