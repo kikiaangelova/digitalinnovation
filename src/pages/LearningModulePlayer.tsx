@@ -134,18 +134,27 @@ export default function LearningModulePlayer() {
         user_id: user.id,
         module_id: dbModuleId,
         quiz_answers: quizAnswers,
-        quiz_score: 0,
-        quiz_max: mod?.quiz_questions.length || 0,
         analytical_answer: analyticalAnswer,
         application_answer: applicationAnswer,
         updated_at: new Date().toISOString(),
       };
 
       if (existingResponse) {
-        await supabase.from('learning_module_responses').update(payload as any).eq('id', existingResponse.id);
+        // Never overwrite an already-graded quiz score during a draft/revision
+        // auto-save — only the explicit submit path writes scores.
+        await supabase
+          .from('learning_module_responses')
+          .update(payload as any)
+          .eq('id', existingResponse.id)
+          .eq('user_id', user.id);
       } else {
-        const { data } = await supabase.from('learning_module_responses').insert(payload as any).select('id').single();
-        if (data) setExistingResponse({ ...payload, id: data.id });
+        const insertPayload = {
+          ...payload,
+          quiz_score: 0,
+          quiz_max: mod?.quiz_questions.length || 0,
+        };
+        const { data } = await supabase.from('learning_module_responses').insert(insertPayload as any).select('id').single();
+        if (data) setExistingResponse({ ...insertPayload, id: data.id });
       }
 
       setAutoSaveStatus('saved');
