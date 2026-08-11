@@ -124,6 +124,15 @@ export default function Dictionary() {
   return (
     <div className="min-h-screen bg-background">
       <AppHeader />
+      <PageMeta
+        path="/dictionary"
+        title={lang === 'bg' ? 'Речник на дигиталните иновации — DigiInnov' : 'Digital Innovation Dictionary — DigiInnov'}
+        description={
+          lang === 'bg'
+            ? 'Двуезичен речник с ключови термини за дигитални иновации, стартъпи, маркетинг и бизнес стратегия — с примери и обяснения.'
+            : 'Bilingual dictionary of key terms in digital innovation, startups, marketing and business strategy — with clear examples and explanations.'
+        }
+      />
       <div className="container mx-auto max-w-4xl px-4 py-8">
         {/* Header */}
         <div className="flex items-center gap-3 mb-2">
