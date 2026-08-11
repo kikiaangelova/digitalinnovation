@@ -14,6 +14,7 @@ import { awardXp } from '@/lib/xp';
 import { filterTerms } from '@/lib/dictionary-filter';
 import QuickTest from '@/components/dictionary/QuickTest';
 import PhaseBadge from '@/components/ui/phase-badge';
+import PageMeta from '@/components/seo/PageMeta';
 
 const CATEGORY_COLORS: Record<string, string> = {
   Innovation: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20',
@@ -123,6 +124,15 @@ export default function Dictionary() {
   return (
     <div className="min-h-screen bg-background">
       <AppHeader />
+      <PageMeta
+        path="/dictionary"
+        title={lang === 'bg' ? 'Речник на дигиталните иновации — DigiInnov' : 'Digital Innovation Dictionary — DigiInnov'}
+        description={
+          lang === 'bg'
+            ? 'Двуезичен речник с ключови термини за дигитални иновации, стартъпи, маркетинг и бизнес стратегия — с примери и обяснения.'
+            : 'Bilingual dictionary of key terms in digital innovation, startups, marketing and business strategy — with clear examples and explanations.'
+        }
+      />
       <div className="container mx-auto max-w-4xl px-4 py-8">
         {/* Header */}
         <div className="flex items-center gap-3 mb-2">
@@ -177,9 +187,9 @@ export default function Dictionary() {
                 {lang === 'bg' ? 'Термин на седмицата' : 'Term of the Week'}
               </span>
             </div>
-            <h3 className="font-display font-bold text-foreground text-lg">
+            <h2 className="font-display font-bold text-foreground text-lg">
               {lang === 'bg' ? termOfTheWeek.termBg : termOfTheWeek.term}
-            </h3>
+            </h2>
             <p className="text-sm text-primary/70 font-medium">{lang === 'bg' ? termOfTheWeek.term : termOfTheWeek.termBg}</p>
             <p className="text-sm text-muted-foreground mt-2 leading-relaxed">
               {lang === 'bg' ? termOfTheWeek.definitionBg : termOfTheWeek.definition}
@@ -306,9 +316,9 @@ export default function Dictionary() {
         {filtered.length === 0 ? (
           <div className="text-center py-16 border border-dashed border-border rounded-lg">
             <Book className="h-12 w-12 text-muted-foreground/40 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-foreground mb-2">
+            <h2 className="text-lg font-semibold text-foreground mb-2">
               {lang === 'bg' ? 'Няма съвпадащи термини' : 'No matching terms'}
-            </h3>
+            </h2>
             <p className="text-muted-foreground text-sm">
               {lang === 'bg' ? 'Опитай друга буква, търсене или категория.' : 'Try another letter, search or category.'}
             </p>
@@ -371,7 +381,7 @@ function TermCard({ term: t, catColor, lang, user, viewedTermsRef, isReviewer }:
     >
       <div className="flex items-start justify-between gap-3 p-4 pb-2">
         <div className="flex-1 min-w-0">
-          <h3 className="font-display font-bold text-foreground text-base leading-tight">{t.term}</h3>
+          <h2 className="font-display font-bold text-foreground text-base leading-tight">{t.term}</h2>
           <p className="text-sm text-primary/70 font-medium mt-0.5">{t.termBg}</p>
         </div>
         <div className="flex items-center gap-2 shrink-0 flex-wrap justify-end">

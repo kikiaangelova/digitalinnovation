@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { useLang } from "@/context/LangContext";
 import AppHeader from "@/components/layout/AppHeader";
+import PageMeta from "@/components/seo/PageMeta";
 import heroBg from "@/assets/hero-bg.mp4.asset.json";
 import kikiAvatar from "@/assets/kiki-avatar.png";
 import {
@@ -41,6 +42,14 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background">
       <AppHeader />
+      <PageMeta
+        path="/"
+        title={T('DigiInnov Case Lab — Learn business by doing', 'DigiInnov Case Lab — учи бизнес чрез правене')}
+        description={T(
+          'Structured theory, real business cases, decision-driven simulations and Kiki AI mentorship for students and founders. Bilingual (EN / BG).',
+          'Структурирана теория, реални бизнес казуси, симулации с решения и менторство от Kiki AI за ученици и основатели. Двуезично (EN / BG).',
+        )}
+      />
 
       <main className="mx-auto max-w-3xl px-4 pb-16 pt-4 sm:px-5 sm:pt-6">
         {/* ═══════════ HERO — cinematic video, big Fraunces statement ═══════════ */}

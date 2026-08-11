@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import creatorPortrait from '@/assets/avatars/female-founder-1.png';
+import PageMeta from '@/components/seo/PageMeta';
 
 export default function AboutDigitalInnovation() {
   const { lang } = useLang();
@@ -20,6 +21,14 @@ export default function AboutDigitalInnovation() {
   return (
     <div className="min-h-screen bg-background">
       <AppHeader />
+      <PageMeta
+        path="/about"
+        title={tx('About DigiInnov Case Lab — Learning by Doing', 'За DigiInnov Case Lab — учене чрез правене')}
+        description={tx(
+          'Who builds DigiInnov Case Lab and why: an educator-led platform where students learn digital innovation through real cases, decisions and reflection.',
+          'Кой създава DigiInnov Case Lab и защо: платформа, водена от преподавател, където учениците учат дигитални иновации чрез реални казуси и решения.',
+        )}
+      />
       <main>
         {/* Hero */}
         <section className="py-16 px-4 border-b border-border">

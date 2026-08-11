@@ -1,5 +1,6 @@
 import AppHeader from '@/components/layout/AppHeader';
 import { useLang } from '@/context/LangContext';
+import PageMeta from '@/components/seo/PageMeta';
 
 export default function PrivacyPolicy() {
   const { lang } = useLang();
@@ -8,6 +9,13 @@ export default function PrivacyPolicy() {
   return (
     <div className="min-h-screen bg-background">
       <AppHeader />
+      <PageMeta
+        path="/privacy"
+        title={isBg ? 'Политика за поверителност — DigiInnov Case Lab' : 'Privacy Policy — DigiInnov Case Lab'}
+        description={isBg
+          ? 'Как DigiInnov Case Lab събира, използва и защитава данните на ученици и учители, включително правата по GDPR и сроковете за съхранение.'
+          : 'How DigiInnov Case Lab collects, uses and protects student and teacher data, including GDPR rights and data retention periods.'}
+      />
       <main className="container mx-auto max-w-3xl px-4 py-12">
         <h1 className="typo-h1 mb-2">{isBg ? 'Политика за поверителност' : 'Privacy Policy'}</h1>
         <p className="text-muted-foreground text-sm mb-8">

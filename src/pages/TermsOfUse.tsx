@@ -1,5 +1,6 @@
 import AppHeader from '@/components/layout/AppHeader';
 import { useLang } from '@/context/LangContext';
+import PageMeta from '@/components/seo/PageMeta';
 
 export default function TermsOfUse() {
   const { lang } = useLang();
@@ -8,6 +9,13 @@ export default function TermsOfUse() {
   return (
     <div className="min-h-screen bg-background">
       <AppHeader />
+      <PageMeta
+        path="/terms"
+        title={isBg ? 'Условия за ползване — DigiInnov Case Lab' : 'Terms of Use — DigiInnov Case Lab'}
+        description={isBg
+          ? 'Правилата за използване на DigiInnov Case Lab: кой може да се регистрира, допустимо използване, авторски права и AI функции.'
+          : 'The rules for using DigiInnov Case Lab: who can register, acceptable use, intellectual property and AI feature limits.'}
+      />
       <main className="container mx-auto max-w-3xl px-4 py-12">
         <h1 className="typo-h1 mb-2">{isBg ? 'Условия за ползване' : 'Terms of Use'}</h1>
         <p className="text-muted-foreground text-sm mb-8">

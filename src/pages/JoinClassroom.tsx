@@ -8,6 +8,7 @@ import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { CheckCircle2, X, Users } from 'lucide-react';
+import PageMeta from '@/components/seo/PageMeta';
 
 export default function JoinClassroom() {
   const { code } = useParams<{ code: string }>();
@@ -81,7 +82,18 @@ export default function JoinClassroom() {
   return (
     <div className="min-h-screen bg-background">
       <AppHeader />
+      <PageMeta
+        path="/join"
+        title={t('Join a Classroom — DigiInnov Case Lab', 'Присъедини се към клас — DigiInnov Case Lab')}
+        description={t(
+          'Use your class invite code to join your teacher’s classroom on DigiInnov Case Lab and start working on real business cases.',
+          'Използвай кода за покана, за да се присъединиш към класа на своя учител в DigiInnov Case Lab и да започнеш с реални бизнес казуси.',
+        )}
+      />
       <main className="container mx-auto px-4 py-16 max-w-md">
+        <h1 className="typo-h1 text-2xl text-center mb-6">
+          {t('Join a Classroom', 'Присъедини се към клас')}
+        </h1>
         {loading ? (
           <div className="text-center text-muted-foreground py-20">{t('Loading...', 'Зареждане...')}</div>
         ) : error ? (
